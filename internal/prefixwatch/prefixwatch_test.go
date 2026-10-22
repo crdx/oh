@@ -64,7 +64,7 @@ func TestEveryWayOfRewritingWhatWasSentIsNamed(t *testing.T) {
 		want   string
 	}{
 		"a tool appears": {
-			tools: []string{"read", "job"}, system: "be brief", turns: held, want: ToolsChanged,
+			tools: []string{"read", "task"}, system: "be brief", turns: held, want: ToolsChanged,
 		},
 		"the system prompt gains a block": {
 			tools: []string{"read"}, system: "be brief, and careful", turns: held, want: SystemChanged,

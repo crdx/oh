@@ -21,10 +21,10 @@ Three sources load in order, each overriding the last:
 
 Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, speed dial, and tool output cap. Everything else waits, and waits for one of two things:
 
-| Setting                                                           | Applies             |
-|-------------------------------------------------------------------|---------------------|
-| `[sandbox]`, `[skills]`, `[provider]`, `[ports]`                  | when oh next starts |
-| `[defaults]` but `tool_output`, `[agent]`, `[tools]`, the toolbox | to new sessions     |
+| Setting                                                              | Applies             |
+|----------------------------------------------------------------------|---------------------|
+| `[grants]`, `[skill]`, `[provider]`, `experimental.forward_hostname` | when oh next starts |
+| `[default]` but `tool_output`, `[agent]`, `[tool]`, the toolbox      | to new sessions     |
 
 The first group belongs to the process, so a restart that resumes this very conversation picks it up. The second is frozen into the session when it is first created, and a resumed conversation restores what was frozen, so only a new session reads it afresh.
 
@@ -36,21 +36,21 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 ## Global Config
 
-`~/.config/org.crdx/oh/config.toml` holds what follows the user between projects, and needs a `version` key. An absolute `OH_CONFIG_DIR` replaces `~/.config/org.crdx/oh/` wherever this skill names it. Beside it sit `SYSTEM.md`, prepended to every session, and `snippets/`, where each `<name>.md` is the snippet `//name` without being listed anywhere. Its optional YAML frontmatter sets `description` and `arguments` (`required`, `optional`, or `none`). A `[snippets]` entry of the same name takes precedence, and a workspace has no snippet directory of its own.
+`~/.config/org.crdx/oh/config.toml` holds what follows the user between projects, and needs a `version` key. An absolute `OH_CONFIG_DIR` replaces `~/.config/org.crdx/oh/` wherever this skill names it. Beside it sit `SYSTEM.md`, prepended to every session, and `snippets/`, where each `<name>.md` is the snippet `//name` without being listed anywhere. Its optional YAML frontmatter sets `description` and `arguments` (`required`, `optional`, or `none`). A `[snippet]` entry of the same name takes precedence, and a workspace has no snippet directory of its own.
 
 - `[agent]` — the model a new session talks to: `model`, one `provider/model@effort` selection (written `provider/model` for a model that takes no effort), or `round_robin`, an array of selections or a path, relative to the supplying config, to a file with one selection per line; blank lines are skipped, lines whose first non-whitespace character is `#` are comments, and duplicates add weight. One file may set only one of the two, and a later file's choice replaces an earlier one's whichever it writes
-- `[defaults]` — what anything new starts with: `caps`, the capabilities a new session opens with; `effort` and `fast`, filling in whatever any model selection leaves out; and `tool_output`, the cap on a tool result
+- `[default]` — what anything new starts with: `caps`, the capabilities a new session opens with; `effort` and `fast`, filling in whatever any model selection leaves out; and `tool_output`, the cap on a tool result
 - `[subagent]` — `concurrency` caps how many run at once and reloads live while subagents are offered. The parent chooses a model and effort for each task from the automatic cheap and free model pool. Local sessions delegate only to Ollama models, and remote sessions only to remote models. A follow-up stays on the model its subagent started on
 - `[provider.ollama]` — `host` for a local or LAN endpoint
-- `[snippets]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
+- `[snippet]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`, `[ui.theme.<palette>]`
-- `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys, or `{ rule = "ask", timeout = "2m" }` to change how long its question waits, written as a custom tool's `permission` is
-- `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies
-- `[sandbox]`, `[skills]` — paths each workspace then overrides
+- `[tool]` — built-in tool overrides and custom tools; each custom `[tool.<name>]` names a `command` to run. `[tool.lookup]` and `[tool.fetch]` `permission` and `[tool.bash]` `host_network` say what a granted capability buys: `ask` or `allow`, or `{ rule = "ask", timeout = "2m" }` to change how long its question waits
+- `[grants]`, `[skill]` — paths each workspace then overrides
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
-- `[editor]`, `[ports]` — editor command, forwarded-port hostname
-- A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `ports.hostname` to use the numeric address, and `editor.command` to find an editor
+- `[editor]` — editor command
+- `[experimental]` — opt-in toggles, and `forward_hostname`, the forwarded-port hostname, holding only letters, digits, dots, dashes, and `{session}` once
+- A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `experimental.forward_hostname` to use the numeric address, and `editor.command` to find an editor
 - With no `editor.command`, oh takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and, under `experimental.reply_command`, `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
 
 ## Workspace Config
@@ -62,15 +62,15 @@ Scalars replace. An array replaces rather than merges, so overriding one bar pos
 A workspace file comes with whatever repository you cloned, so it may not set what decides where the agent may reach or what runs on your machine. Setting one of these fails at startup, naming the file and the setting:
 
 - `[editor]`, whose `command` runs on your machine
-- `[sandbox]`, which says where the agent may read, write, and execute
-- `[skills]`, which says what instructions reach the model
+- `[grants]`, which says where the agent may read, write, and execute
+- `[skill]`, which says what instructions reach the model
 - `[provider]`, which says which endpoint the conversation goes to
-- `[tools]`, whose commands run on your machine
+- `[tool]`, which can name host commands and change the instructions or permissions offered to the model
 - `[experimental]`, which is unknown by definition
 
-Those belong to the config that follows you between projects, and paths in them resolve relative to it, with `~` expanded. The table is `[skills]`, plural.
+Those belong to the config that follows you between projects, and paths in them resolve relative to it, with `~` expanded.
 
-Text a workspace file supplies is refused wherever the terminal would obey it rather than draw it. A bar segment's options hold no control characters, and `ports.hostname` holds only letters, digits, dots, dashes, and its one `{session}`.
+Text a workspace file supplies is refused wherever the terminal would obey it rather than draw it, so a bar segment's options hold no control characters.
 
 ## Theme
 
@@ -143,9 +143,9 @@ A paint is either a direct theme paint or one of `normal`, `dim`, `accent`, `sta
 [ui.theme.tool.skill]
 default = { name = "consult-chart", paint = "#e6a8ff bold", focus = "#e6a8ff" }
 
-[ui.theme.tool.job]
-default = { paint = "status_info" }     # every job action that sets no paint of its own
-start = { name = "launch" }
+[ui.theme.tool.task]
+default = { paint = "status_info" }     # every task action that sets no paint of its own
+restart = { name = "relaunch" }
 stop = { name = "scuttle", paint = "status_danger" }
 
 [ui.theme.tool.forward]
@@ -153,40 +153,37 @@ add = { name = "open-gangway" }
 remove = { name = "close-gangway", paint = "status_danger" }
 ```
 
-| Tool      | Action         | Default name | Default paint    | Focus  |
-|-----------|----------------|--------------|------------------|--------|
-| `read`    | `default`      | `read`       | call default     | accent |
-| `skill`   | `default`      | `load`       | `skill`          | skill  |
-| `ls`      | `default`      | `ls`         | call default     | accent |
-| `find`    | `default`      | `find`       | call default     | accent |
-| `grep`    | `default`      | `grep`       | call default     | accent |
-| `write`   | `default`      | `write`      | call default     | accent |
-| `edit`    | `default`      | `edit`       | call default     | accent |
-| `bash`    | `default`      | `$`          | `status_info`    | accent |
-| `bash`    | `host_network` | `$`          | `status_danger`  | accent |
-| `lookup`  | `default`      | `lookup`     | `status_info`    | accent |
-| `fetch`   | `default`      | `fetch`      | `status_info`    | accent |
-| `notify`  | `default`      | `notify`     | call default     | accent |
-| `title`   | `default`      | `title`      | call default     | accent |
-| `job`     | `default`      | `job`        | `status_warning` | accent |
-| `job`     | `start`        | `start`      | `status_warning` | accent |
-| `job`     | `restart`      | `restart`    | `status_warning` | accent |
-| `job`     | `status`       | `status`     | `normal`         | accent |
-| `job`     | `output`       | `cat`        | `normal`         | accent |
-| `job`     | `wait_any`     | `await`      | `normal`         | accent |
-| `job`     | `wait_all`     | `await`      | `normal`         | accent |
-| `job`     | `stop`         | `stop`       | `status_warning` | accent |
-| `job`     | `list`         | `list`       | `normal`         | accent |
-| `job`     | `discard`      | `discard`    | `status_warning` | accent |
-| `job`     | `prune`        | `prune`      | `status_warning` | accent |
-| `forward` | `default`      | `forward`    | `status_warning` | accent |
-| `forward` | `add`          | `forward`    | `status_warning` | accent |
-| `forward` | `remove`       | `close`      | `status_warning` | accent |
-| `forward` | `list`         | `list`       | `normal`         | accent |
+| Tool      | Action         | Default name      | Default paint    | Focus  |
+|-----------|----------------|-------------------|------------------|--------|
+| `read`    | `default`      | `read`            | call default     | accent |
+| `skill`   | `default`      | `load`            | `skill`          | skill  |
+| `ls`      | `default`      | `ls`              | call default     | accent |
+| `find`    | `default`      | `find`            | call default     | accent |
+| `grep`    | `default`      | `grep`            | call default     | accent |
+| `write`   | `default`      | `write`           | call default     | accent |
+| `edit`    | `default`      | `edit`            | call default     | accent |
+| `bash`    | `default`      | `$`               | `status_info`    | accent |
+| `bash`    | `host_network` | `$`               | `status_danger`  | accent |
+| `lookup`  | `default`      | `lookup`          | `status_info`    | accent |
+| `fetch`   | `default`      | `fetch`           | `status_info`    | accent |
+| `notify`  | `default`      | `notify`          | call default     | accent |
+| `title`   | `default`      | `title`           | call default     | accent |
+| `task`    | `default`      | `manage`          | `status_warning` | accent |
+| `task`    | `status`       | `check`           | `normal`         | accent |
+| `task`    | `output`       | `read output for` | `normal`         | accent |
+| `task`    | `restart`      | `restart`         | `status_warning` | accent |
+| `task`    | `discard`      | `discard`         | `status_warning` | accent |
+| `task`    | `stop`         | `stop`            | `status_warning` | accent |
+| `task`    | `list`         | `list`            | `normal`         | accent |
+| `task`    | `prune`        | `prune`           | `status_warning` | accent |
+| `forward` | `default`      | `forward`         | `status_warning` | accent |
+| `forward` | `add`          | `forward`         | `status_warning` | accent |
+| `forward` | `remove`       | `close`           | `status_warning` | accent |
+| `forward` | `list`         | `list`            | `normal`         | accent |
 
-The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. A tool's `default` is also the malformed-call fallback for `job` and `forward`; valid calls use their action. An unlisted custom or removed tool keeps its recorded name and uses that same default, and a custom tool is themed the same way, by its own name.
+The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. A tool's `default` is also the malformed-call fallback for `task` and `forward`; valid calls use their action. An unlisted custom or removed tool keeps its recorded name and uses that same default, and a custom tool is themed the same way, by its own name.
 
-A tool records its semantic kind rather than its themed name, joining the tool and the action with an underscore as in `job_start`, so changing `job.start` rewrites old and new start calls alike when the conversation replays. `skill` is an ordinary tool: its `load` name and mauve paint come entirely from this table rather than a renderer exception. Its subject remains the complete linked skill path.
+A tool records its semantic kind rather than its themed name, joining the tool and the action with an underscore as in `task_restart`, so changing `task.restart` rewrites old and new restart calls alike when the conversation replays. `skill` is an ordinary tool: its `load` name and mauve paint come entirely from this table rather than a renderer exception. Its subject remains the complete linked skill path.
 
 A live theme reload clears and replays the complete conversation, so vocabulary, command colours, and focused argument colours change throughout scrollback at once. Resume, preview, and print also render with the active tool theme.
 
@@ -223,11 +220,11 @@ The right side is drawn whole, and the left and centre are then fitted into what
 | `cache-usage`        | what share of the last request the provider read from cache                    | none                                          |
 | `context-usage`      | the context filled, as a percentage and used over total tokens                 | none                                          |
 | `fast-mode`          | `⚡` for the fast model, `·` for the standard one                              | none                                          |
-| `forwards`           | ports as links, prefixed by associated jobs                                    | none                                          |
+| `forwards`           | ports as links, prefixed by associated tasks                                   | none                                          |
 | `git-branch`         | the workspace's branch, or a short hash when detached                          | `rate`, default `5s`                          |
 | `git-status`         | a dot for clean, dirty, or mid-operation, then `↑` ahead and `↓` behind        | `rate`, default `5s`                          |
 | `grants`             | each granted path, grouped under its access flags, linked to the path it names | `type`: `base`, `short`, or `full`            |
-| `jobs`               | a mark and name per job, a finished one lingering 30 seconds                   | none                                          |
+| `tasks`              | a mark and name per task, a finished one lingering 30 seconds                  | none                                          |
 | `local-time`         | the clock, its refresh following the format's finest field                     | `format`, a Go layout, default `15:04`        |
 | `mode-toggle`        | the capability letters, lit where granted and dim where not                    | none                                          |
 | `scroll-overflow`    | how many input lines are hidden that way, and nothing where none are           | `direction`: `up` or `down`, and no default   |
@@ -243,7 +240,7 @@ A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment re
 
 ## Capability Flags
 
-`defaults.caps` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says. A custom tool may add another flag through its `group`.
+`default.caps` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says. A custom tool may add another flag through its `group`.
 
 | Flag | Grants                                               |
 |------|------------------------------------------------------|
@@ -254,38 +251,57 @@ A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment re
 | `g`  | Write under `.git`, which `w` alone refuses          |
 | `l`  | The lookup tool                                      |
 
-The user toggles capabilities at runtime, so `defaults.caps` is a starting posture, not a ceiling.
+The user toggles capabilities at runtime, so `default.caps` is a starting posture, not a ceiling.
 
-Grant the narrowest set that does the job. Leave `defaults.caps` to the user: propose a string and name the capabilities it adds.
+Grant the narrowest set that does the job. Leave `default.caps` to the user: propose a string and name the capabilities it adds.
+
+## Tool Configuration
+
+`[tool.<name>]` overrides a built-in tool when the name exists, or declares a custom tool when the name is new. Built-in overrides keep the built-in implementation, original argument schema, capability checks, and sandbox. A custom tool runs the command in `command`. The model calls both kinds alike.
+
+Put `[tool]` in the global config. A workspace `oh.toml` that sets it stops startup. Unknown fields under `[tool]` fail startup instead of becoming warnings. A session freezes the tool definition and group it was offered with. Permission rules are checked again when oh restarts, including on resume. Changes to `[tool]` while this process runs wait until its next start, except lookup and fetch `permission` and bash `host_network`, which reload live.
+
+Built-ins accept `description`, `timeout`, `concurrency`, `permission`, `group`, `granted`, `enabled`, and `background` where eligible. A built-in rejects `command`, `parameters`, `subject`, and `version`. `enabled = false` withholds a tool from new sessions and makes it unavailable on resume; it never grants access. `granted = true` grants a configured group at the start of a new session, as adding its letter to `default.caps` does. A built-in group adds a requirement; it never replaces its existing capability check. A built-in timeout is available only for cancellable tools: `bash`, `grep`, `lookup`, `fetch`, `wait`, and `notify`. It can shorten execution but cannot extend a smaller bound inside the tool. Concurrency above one requires a tool already safe to run in parallel.
+
+`permission = "ask"` adds an approval for a built-in that did not ask before. For `lookup` and `fetch`, `permission` is the rule for the gated action itself: lookup allows and fetch asks unless configured otherwise. `[tool.bash] host_network` decides what a `network = "host"` call needs, asking unless configured otherwise, and takes the same values as `permission`. Host networking still requires `n`; `[tool.bash] permission = "allow"` never grants it, and when both rules ask, a host-network call asks once with the shorter timeout. `host_network` on another tool fails startup.
+
+```toml
+[tool.read]
+description = "read a text or image file"
+concurrency = 2
+
+[tool.bash]
+host_network = { rule = "ask", timeout = "2m" }
+```
 
 ## Custom Tools
 
-`[tools.<name>]` adds a custom tool. The model calls it like a built-in tool. The tool runs the command in `command`.
+`[tool.<name>]` with a new name adds a custom tool. The model calls it like a built-in tool. It runs the command in `command`.
 
-The table name is the tool name. Use lowercase letters, digits, and underscores. Start with a letter. A name that a built-in tool already uses stops startup.
+The table name is the tool name. Use lowercase letters, digits, and underscores. Start with a letter. A built-in name selects its overrides instead; it cannot declare a custom command.
 
 The command runs on the host, in the workspace directory. The sandbox does not confine it. A configured `group` gates it through a mode flag, then `permission` decides whether each allowed call needs approval.
 
-Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]` stops startup.
+| Key           | Holds                                                                   |
+|---------------|-------------------------------------------------------------------------|
+| `version`     | positive compatibility version; `1` by default                          |
+| `description` | what the tool does; required                                            |
+| `command`     | the executable and its fixed arguments; required                        |
+| `parameters`  | the arguments the model supplies, each one a table                      |
+| `subject`     | the primary parameter; the first by default                             |
+| `timeout`     | the limit for one call; `30s` by default, `30m` as a task unless longer |
+| `concurrency` | maximum simultaneous calls; `1` by default                              |
+| `permission`  | `ask` by default; a table can set its optional timeout                  |
+| `group`       | one lowercase mode flag that must grant access                          |
+| `enabled`     | offer the tool to new sessions; `true` by default                       |
+| `background`  | permit background calls; `false` by default for custom tools            |
+| `granted`     | grant its group at session start; `false` by default                    |
 
-| Key           | Holds                                                  |
-|---------------|--------------------------------------------------------|
-| `version`     | positive compatibility version; `1` by default         |
-| `description` | what the tool does; required                           |
-| `command`     | the executable and its fixed arguments; required       |
-| `parameters`  | the arguments the model supplies, each one a table     |
-| `subject`     | the primary parameter; the first by default            |
-| `timeout`     | the limit for one call; `30s` by default               |
-| `concurrency` | maximum simultaneous calls; `1` by default             |
-| `permission`  | `ask` by default; a table can set its optional timeout |
-| `group`       | one lowercase mode flag that must grant access         |
-| `enabled`     | grant the tool's group initially; `false` by default   |
+The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments. Remove a tool's table or set `enabled = false` to stop offering it in new sessions.
 
-The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments. Remove a tool's table to stop offering it in new sessions. An ungrouped tool with `enabled = false` is refused at startup, since that setting only controls a group's initial access.
+`concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and oh's global limit of 16 tool calls. Calls beyond the limit wait for a slot without consuming their command timeout. A task waiting for a slot shows as queued, and the wait does not count towards its 30-minute limit. This setting does not split one call into multiple tasks or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls, or when calls run as background tasks. Leave it at one for commands that share mutable state without their own locking.
 
-`concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and oh's global limit of 16 tool calls. Calls beyond the limit wait for a slot without consuming their command timeout. This setting does not split one call into multiple jobs or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls. Leave it at one for commands that share mutable state without their own locking.
-
-A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `defaults.caps` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
+A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `granted = true` on a tool or add its letter to `default.caps` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 
 With `ask`, oh shows the supplied argument names and values after the tool's group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails. The string `permission = "ask"` uses the five-minute approval timeout. To change it, write `permission = { rule = "ask", timeout = "10m" }`; `rule` is required, and the optional positive `timeout` defaults to five minutes. The countdown starts when a queued question reaches the front. This timeout covers approval only; the tool's top-level `timeout` starts after approval and limits the command. `permission = "allow"` runs without a question, and a permission table that combines `allow` with a timeout is refused.
 
@@ -304,7 +320,7 @@ Give each parameter a `name`, a `kind`, and a `description`. Add `optional = tru
 An underscore in a parameter name becomes a dash in the option, so `max_lines` arrives as `--max-lines`. An optional parameter the model leaves out passes nothing. The command reads the tool name from `OH_TOOL`.
 
 ```toml
-[tools.weather]
+[tool.weather]
 version = 1
 description = "report the weather for a city"
 command = ["./tools/forecast"]
@@ -313,7 +329,7 @@ timeout = "10s"
 concurrency = 4
 permission = { rule = "ask", timeout = "5m" }
 group = "a"
-enabled = true
+granted = true
 parameters = [
     { name = "city", kind = "string", description = "the city to report on" },
     { name = "days", kind = "integer", description = "how many days ahead to look", optional = true },
@@ -323,13 +339,23 @@ parameters = [
 
 oh resolves the first word of `command` against the config file when the word holds a `/`. It resolves a later word the same way when the word starts with `./` or `../`. It leaves a bare word to `PATH`. A command oh cannot find stops startup. The message names the config file and the tool.
 
-The result holds standard output and standard error. A non-zero exit reports a failure with that output. A timeout reports a failure the same way.
+The result holds standard output and standard error. A non-zero exit reports a failure with that output. A timeout reports a failure the same way. Custom commands retain the most recent 256 KiB and report omitted bytes. Redirect output to a scratch file for a larger log.
 
-`-t` selects the tools for a session, custom tools included. `-t weather` offers that tool alone. New definitions reach new sessions; an incompatible change disables the tool in sessions that froze its previous contract.
+`-t` selects the tools for a session, custom tools included. `-t weather` also offers `task` when weather permits background calls. New definitions reach new sessions; an incompatible change disables the tool in sessions that froze its previous contract.
+
+A backgroundable tool accepts `background = true` on a call. `bash`, `grep`, and `lookup` permit it by default; other built-ins stay in the foreground. A foreground call to an eligible tool hands its same invocation to the background after 30 active seconds, or after `experimental.background_after_seconds` from the next start. The common limit is 30 active minutes from the first start, or the tool's own `timeout` where that is longer, with time spent queued or awaiting approval excluded. `bash` alone also accepts `respawn = true` beside `background = true`, retaining the same task identity across runs. Use `task` for status, output, restart, stop, discard, list, and prune. The person does the same with `/tasks` and `/task`. A stop or discard from the keyboard tells the model. Stopping a `bash` task kills its whole process group at once with `SIGKILL`, so its `TERM` and `EXIT` traps do not run. A custom tool gets `SIGTERM` first, then `SIGKILL` after a grace of 2 seconds. Completion reports its result and wakes an idle conversation. End the turn rather than waiting or polling. Tasks need an interactive terminal: print mode and sessions without one offer no `task` tool and no `background` argument. A task ends when oh closes and does not restart automatically on resume; `task restart` starts it again.
+
+Set `task_name` beside `background = true` to choose a short role such as `build` or `docs`. Names use 1–10 lowercase letters, digits, or hyphens. A duplicate keeps its whole name and receives a numbered suffix, such as `build-1`. Without a name, oh assigns `task-1`, `task-2`, and so on.
+
+Set `forward_port` beside `background = true` on a `bash` call to expose a server's fixed TCP port. It is offered only where the `forward` tool is offered, or under `--yolo`. In a confined session, oh forwards that sandbox port once the command has started, through the `forward` tool and its permission. The receipt gives the user's URL when the forward opens within 30 seconds; otherwise a notice gives it later. Under `--yolo`, the server uses the host network, so oh returns its host URL directly. A failed publication stops the command and the run fails. Removing the forward also removes the port from the task, so a restart does not forward it again. Stopping or discarding a task leaves its forward open.
+
+`task restart` reuses the saved tool arguments, including after a resume. It stops a running invocation before starting the next run. It checks current access and approvals again. An explicit restart starts a new 30-minute allowance. `task discard` stops and removes one task. `task prune` removes all finished tasks.
+
+`task output` reads collected output while a shell or custom command is still running. The live buffer keeps the most recent 256 KiB and reports omitted bytes. Finished tasks retain their final result and up to eight previous run results. The session's tool-output limit still applies.
 
 ## Sandbox Paths
 
-`[sandbox]` decides which user paths exist; capabilities, starting from `defaults.caps`, decide what may be done with them. The six structured path tools (`read`, `ls`, `find`, `grep`, `write`, and `edit`) share one mounted filesystem root. Sandboxed `bash` and `job` policies are built from the same prepared grants.
+`[grants]` decides which user paths exist; capabilities, starting from `default.caps`, decide what may be done with them. The six structured path tools (`read`, `ls`, `find`, `grep`, `write`, and `edit`) share one mounted filesystem root. Sandboxed `bash` tasks use the same prepared grants as foreground commands.
 
 - `deny` — file or directory name globs that path tools and confined shell commands cannot access anywhere; patterns contain no path separator, and a matched directory denies its whole tree
 - `read` — read-only to path tools and shell commands
@@ -342,12 +368,12 @@ Access combines when the same path is named more than once: `write` adds writing
 
 Temporary `/grant` access takes `r` or `rw`; both let the shell execute files at or under the path whenever shell capability is enabled.
 
-Two implicit sets use the same source functions for both enforcement paths: the system paths needed to run commands (such as `/usr` and selected runtime configuration under `/etc`), and existing directories inherited through `PATH`. Path tools can read both sets; shell commands can also execute the executable directories. Beyond those sets and the exceptions below, a path absent from `[sandbox]` is unreachable however generous the caps.
+Two implicit sets use the same source functions for both enforcement paths: the system paths needed to run commands (such as `/usr` and selected runtime configuration under `/etc`), and existing directories inherited through `PATH`. Path tools can read both sets; shell commands can also execute the executable directories. Beyond those sets and the exceptions below, a path absent from `[grants]` is unreachable however generous the caps.
 
-A confined shell receives a few runtime grants that do not represent ordinary user paths: its namespaced `/proc`, pseudoterminals, synthetic resolver files, host language-package proxy cache, and writable runtime devices. Private `.cache` and `/tmp` are writable to both path tools and shell commands. Clipboard drops are mounted for path tools specifically and are identified that way in the prompt; they are not general shell grants. Each enabled global skill's directory is mounted for path tools and also given to a confined shell to read and execute, so a skill's bundled scripts run without a `[sandbox]` entry; a project skill gets nothing beyond the workspace's own grant. Under `--yolo`, only shell commands become unconfined—structured path tools retain their mounted-root restrictions. A confined `job` uses the same filesystem policy as `bash`, but always stays on private loopback networking; only a foreground `bash` call can request `network=host`.
+A confined shell receives a few runtime grants that do not represent ordinary user paths: its namespaced `/proc`, pseudoterminals, synthetic resolver files, host language-package proxy cache, and writable runtime devices. Private `.cache` and `/tmp` are writable to both path tools and shell commands. Clipboard drops are mounted for path tools specifically and are identified that way in the prompt; they are not general shell grants. Each enabled global skill's directory is mounted for path tools and also given to a confined shell to read and execute, so a skill's bundled scripts run without a `[grants]` entry; a project skill gets nothing beyond the workspace's own grant. Under `--yolo`, only shell commands become unconfined—structured path tools retain their mounted-root restrictions. A background `bash` call uses the same filesystem policy as a foreground one. Only a call explicitly requesting `network=host` asks to leave private loopback networking.
 
 ```toml
-[sandbox]
+[grants]
 deny = [".env", "*.pem", ".ssh"]
 read = ["~/src/reference"]
 write = ["~/.config/org.crdx/oh/skills"]
@@ -360,7 +386,7 @@ An `exec` grant makes a directory runnable, not findable: the shell inherits the
 
 Deny patterns are checked directly by path tools. Before the first confined command uses a set of grants, oh finds matching paths across its reachable trees and reuses that result for later commands with the same grants. A symlink cannot provide another route to a denied name. Under `--yolo`, deny rules do not apply to any tool.
 
-Every setting here is read once, when oh starts. Editing `[sandbox]` changes nothing about the session running now, in either direction, so tell the user the grant waits for oh's next run and that resuming this conversation in that run is enough to collect it.
+Every setting here is read once, when oh starts. Editing `[grants]` changes nothing about the session running now, in either direction, so tell the user the grant waits for oh's next run and that resuming this conversation in that run is enough to collect it.
 
 ## Skills
 
@@ -370,12 +396,12 @@ This one is built in, written to `<state>/skills/oh/SKILL.md` at startup and rew
 
 Project skills live in `<workspace>/.agents/skills/<name>/SKILL.md`, discovered automatically. A workflow confined to one repository belongs here. `<workspace>/.agents.local/skills/` is scanned the same way, after `.agents/skills`, for project skills kept out of version control.
 
-Global skills live in `~/.config/org.crdx/oh/skills/`, always scanned, plus every directory in `skills.include`. Roots deduplicate by resolved symlink.
+Global skills live in `~/.config/org.crdx/oh/skills/`, always scanned, plus every directory in `skill.include`. Roots deduplicate by resolved symlink.
 
 `exclude` takes an individual skill's directory rather than a root, and drops global skills, the built-in one included. A project skill cannot be excluded.
 
 ```toml
-[skills]
+[skill]
 include = ["~/src/dotfiles/oh/skills"]
 exclude = ["~/.local/state/org.crdx/oh/skills/oh"]
 ```

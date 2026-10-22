@@ -19,7 +19,6 @@ import (
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/internal/jobs"
 )
 
 type setting struct {
@@ -29,13 +28,13 @@ type setting struct {
 
 func soundSettings() []setting {
 	return []setting{
-		{"defaults", []string{
+		{"default", []string{
 			"",
-			"[defaults]\ncaps = \"r\"\n",
-			"[defaults]\ncaps = \"rwxngl\"\ntool_output = \"1M\"\n",
-			"[defaults]\ncaps = \"\"\neffort = \"none\"\n",
-			"[defaults]\neffort = \"low\"\nfast = true\ntool_output = \"1024\"\n",
-			"[defaults]\ntool_output = \"64K\"\n",
+			"[default]\ncaps = \"r\"\n",
+			"[default]\ncaps = \"rwxngl\"\ntool_output = \"1M\"\n",
+			"[default]\ncaps = \"\"\neffort = \"none\"\n",
+			"[default]\neffort = \"low\"\nfast = true\ntool_output = \"1024\"\n",
+			"[default]\ntool_output = \"64K\"\n",
 		}},
 		{"editor", []string{
 			"",
@@ -56,26 +55,21 @@ func soundSettings() []setting {
 			"",
 			"[provider.ollama]\nhost = \"http://127.0.0.1:11434\"\n",
 		}},
-		{"ports", []string{
+		{"snippet", []string{
 			"",
-			"[ports]\nhostname = \"{session}\"\n",
-			"[ports]\nhostname = \"{session}.oh.test\"\n",
+			"[snippet]\nreview = \"review {{ .Arg }}\"\n",
+			"[snippet.plan]\nprompt = \"plan it\"\ndescription = \"plan\"\n",
 		}},
-		{"snippets", []string{
+		{"skill", []string{
 			"",
-			"[snippets]\nreview = \"review {{ .Arg }}\"\n",
-			"[snippets.plan]\nprompt = \"plan it\"\ndescription = \"plan\"\n",
+			"[skill]\ninclude = [\"/tmp/skills\"]\nexclude = [\"one\"]\n",
+			"[skill]\ninclude = []\nexclude = []\n",
 		}},
-		{"skills", []string{
+		{"grants", []string{
 			"",
-			"[skills]\ninclude = [\"/tmp/skills\"]\nexclude = [\"one\"]\n",
-			"[skills]\ninclude = []\nexclude = []\n",
-		}},
-		{"sandbox", []string{
-			"",
-			"[sandbox]\nread = [\"/etc\"]\nwrite = [\"/tmp/w\"]\nexec = [\"/usr/bin\"]\n",
-			"[sandbox]\ndeny = [\"secrets.yml\"]\n",
-			"[sandbox]\nread = [\"/etc\", \"/etc\"]\n",
+			"[grants]\nread = [\"/etc\"]\nwrite = [\"/tmp/w\"]\nexec = [\"/usr/bin\"]\n",
+			"[grants]\ndeny = [\"secrets.yml\"]\n",
+			"[grants]\nread = [\"/etc\", \"/etc\"]\n",
 		}},
 		{"ui", []string{
 			"",
@@ -91,10 +85,10 @@ func soundSettings() []setting {
 			"[ui.theme.dark]\ndim = \"default\"\naccent = \"underline:curly\"\n",
 			"[ui.theme.dark]\nuser = \"#ffffff\"\nharness = \"reverse\"\n",
 		}},
-		{"permissions", []string{
+		{"permission", []string{
 			"",
-			"[permissions]\nnetwork = \"allow\"\n",
-			"[permissions]\nnetwork = \"ask\"\nlookup = \"ask\"\nfetch = \"allow\"\n",
+			"[tool.bash]\nhost_network = \"allow\"\n",
+			"[tool.bash]\nhost_network = \"ask\"\n[tool.lookup]\npermission = \"ask\"\n[tool.fetch]\npermission = \"allow\"\n",
 		}},
 		{"debug", []string{
 			"",
@@ -106,6 +100,8 @@ func soundSettings() []setting {
 		{"experimental", []string{
 			"",
 			"[experimental]\n",
+			"[experimental]\nforward_hostname = \"{session}\"\n",
+			"[experimental]\nforward_hostname = \"{session}.oh.test\"\n",
 		}},
 		{"bar", []string{
 			"",
@@ -122,7 +118,7 @@ func soundSettings() []setting {
 				" { segment = \"turn-timer\" }, { segment = \"turn-count\" }," +
 				" { segment = \"session-spend\" }, { segment = \"fast-mode\" }," +
 				" { segment = \"mode-toggle\" }, { segment = \"grants\" }," +
-				" { segment = \"forwards\" }, { segment = \"jobs\" }," +
+				" { segment = \"forwards\" }, { segment = \"tasks\" }," +
 				" { segment = \"active-model\" }]\n",
 		}},
 	}
@@ -180,7 +176,6 @@ func testRegistry() segment.Registry {
 			IsPrefixPending:    func() bool { return false },
 			GetTurnTiming:      func() turn.Timing { return turn.Timing{} },
 			GetTurnCount:       func() int { return 0 },
-			GetJobs:            func() []jobs.Snapshot { return nil },
 		},
 	})
 }

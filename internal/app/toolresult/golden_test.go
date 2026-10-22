@@ -9,21 +9,21 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
-	"crdx.org/oh/internal/jobs"
-	internaltoolresult "crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/edit"
 	"crdx.org/oh/pkg/toolbox/fetch"
 	"crdx.org/oh/pkg/toolbox/find"
 	"crdx.org/oh/pkg/toolbox/grep"
-	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/ls"
 	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
+	"crdx.org/oh/pkg/toolbox/task"
 	"crdx.org/oh/pkg/toolbox/title"
 	"crdx.org/oh/pkg/toolbox/write"
 )
@@ -31,7 +31,7 @@ import (
 func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 	cases := []struct {
 		name     string
-		exchange internaltoolresult.Exchange
+		exchange toolresult.Exchange
 	}{
 		{
 			name: "read source range",
@@ -272,14 +272,14 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				"approval unavailable; fetch did not run"),
 		},
 		{
-			name: "job with invalid name",
-			exchange: resultExchange("job", job.Args{Action: "start", Name: "way-too-long", Command: "true"}, agent.ErrorStatus,
-				invalidJobNameError(t, "way-too-long")),
+			name: "task with invalid name",
+			exchange: resultExchange("task", task.Args{Action: "status", Name: "Way Too Long"}, agent.ErrorStatus,
+				invalidTaskNameError(t, "Way Too Long")),
 		},
 		{
-			name: "job request stopped",
-			exchange: resultExchange("job", job.Args{Action: "list"}, agent.CancelledStatus,
-				"the job request stopped because the user pressed escape"),
+			name: "task request stopped",
+			exchange: resultExchange("task", task.Args{Action: "list"}, agent.CancelledStatus,
+				"the task request stopped because the user pressed escape"),
 		},
 		{
 			name: "title",
@@ -330,22 +330,22 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 	assertGolden(t, "render.ansi", drawn.String())
 }
 
-func invalidJobNameError(t *testing.T, name string) string {
+func invalidTaskNameError(t *testing.T, name string) string {
 	t.Helper()
 
-	err := jobs.ValidateName(name)
+	err := tasks.ValidateName(name)
 	if err == nil {
-		t.Fatalf("expected %q to be an invalid job name", name)
+		t.Fatalf("expected %q to be an invalid task name", name)
 	}
 	return err.Error()
 }
 
-func resultExchange(name string, arguments any, status agent.Status, text string) internaltoolresult.Exchange {
+func resultExchange(name string, arguments any, status agent.Status, text string) toolresult.Exchange {
 	encodedArguments, err := json.Marshal(arguments)
 	if err != nil {
 		panic(err)
 	}
-	return internaltoolresult.Exchange{
+	return toolresult.Exchange{
 		Request: agent.Event{Kind: agent.ToolCallRequestEvent, ID: "call-1", Name: name, Arguments: string(encodedArguments)},
 		Result:  agent.Event{Kind: agent.ToolCallResultEvent, ID: "call-1", Name: name, Status: status, Text: text},
 	}

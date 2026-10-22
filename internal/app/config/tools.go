@@ -11,23 +11,31 @@ import (
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/permission"
+	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 )
 
-const toolsSetting = "tools"
+const (
+	toolsSetting       = "tool"
+	hostNetworkSetting = "host_network"
+)
 
-type CustomTool struct {
-	Description        string            `toml:"description"`
-	Command            []string          `toml:"command"`
-	Parameters         []CustomParameter `toml:"parameters"`
-	Subject            string            `toml:"subject"`
-	Timeout            time.Duration     `toml:"timeout"`
-	Concurrency        int               `toml:"concurrency"`
-	Permission         Permission        `toml:"permission"`
-	Group              string            `toml:"group"`
-	IsEnabledByDefault bool              `toml:"enabled"`
-	Version            int               `toml:"version"`
+type ToolConfig struct {
+	IsOffered        *bool             `toml:"enabled"`
+	IsGranted        bool              `toml:"granted"`
+	IsBackgroundable *bool             `toml:"background"`
+	HostNetwork      Permission        `toml:"host_network"`
+	Description      string            `toml:"description"`
+	Command          []string          `toml:"command"`
+	Parameters       []CustomParameter `toml:"parameters"`
+	Subject          string            `toml:"subject"`
+	Timeout          time.Duration     `toml:"timeout"`
+	Concurrency      int               `toml:"concurrency"`
+	Permission       Permission        `toml:"permission"`
+	Group            string            `toml:"group"`
+	Version          int               `toml:"version"`
 }
 
 type Permission struct {
@@ -116,10 +124,12 @@ func (self *Permission) setting() (permission.Setting, error) {
 	return permission.Setting{Rule: rule, Timeout: self.Timeout}, nil
 }
 
+func (self ToolConfig) offered() bool { return self.IsOffered == nil || *self.IsOffered }
+
 func (self Config) BuildCustomTools(options command.Options) ([]tool.Tool, error) {
 	tools := make([]tool.Tool, 0, len(self.Tools))
 
-	for _, name := range slices.Sorted(maps.Keys(self.Tools)) {
+	for _, name := range self.CustomToolNames() {
 		customTool, err := self.buildCustomTool(name, options)
 		if err != nil {
 			return nil, self.complain(name, err)
@@ -132,16 +142,38 @@ func (self Config) BuildCustomTools(options command.Options) ([]tool.Tool, error
 }
 
 func (self Config) CustomToolNames() []string {
-	return slices.Sorted(maps.Keys(self.Tools))
+	names := slices.Sorted(maps.Keys(self.Tools))
+	return slices.DeleteFunc(names, func(name string) bool {
+		return toolset.IsBuiltin(name) || !self.Tools[name].offered()
+	})
 }
 
-func (self Config) CustomToolGroups() (caps.ToolGroups, error) {
+func (self Config) IsToolBackgroundable(name string) bool {
+	setting := self.Tools[name]
+	if setting.IsBackgroundable != nil {
+		return *setting.IsBackgroundable
+	}
+	return toolset.IsBuiltin(name) && slices.Contains([]string{"bash", "grep", "lookup"}, name)
+}
+
+func (self Config) IsToolOffered(name string) bool {
+	setting, isConfigured := self.Tools[name]
+	return !isConfigured || setting.offered()
+}
+
+func (self Config) ToolGroupNames() []string {
+	names := slices.Sorted(maps.Keys(self.Tools))
+	return slices.DeleteFunc(names, func(name string) bool { return !self.Tools[name].offered() })
+}
+
+func (self Config) ToolGroups() (caps.ToolGroups, error) {
 	groups := make(caps.ToolGroups)
-	for _, name := range self.CustomToolNames() {
-		group := self.Tools[name].Group
+	for _, name := range slices.Sorted(maps.Keys(self.Tools)) {
+		setting := self.Tools[name]
+		group := setting.Group
 		if group == "" {
-			if !self.Tools[name].IsEnabledByDefault && self.getSourcePath(toolsSetting, name, "enabled") != "" {
-				return nil, self.complain(name, errors.New("enabled = false has no effect without a group; add a group or remove the tool"))
+			if !setting.IsGranted && self.getSourcePath(toolsSetting, name, "granted") != "" {
+				return nil, self.complain(name, errors.New("granted = false has no effect without a group; add a group or remove the setting"))
 			}
 			continue
 		}
@@ -155,9 +187,9 @@ func (self Config) CustomToolGroups() (caps.ToolGroups, error) {
 
 func (self Config) DefaultToolGroupFlags(selectedToolNames []string) string {
 	flags := make(map[string]struct{})
-	for _, name := range self.CustomToolNames() {
+	for _, name := range self.ToolGroupNames() {
 		setting := self.Tools[name]
-		if !setting.IsEnabledByDefault || setting.Group == "" {
+		if !setting.IsGranted || setting.Group == "" {
 			continue
 		}
 		if len(selectedToolNames) > 0 && !slices.Contains(selectedToolNames, name) {
@@ -184,6 +216,9 @@ func (self Config) buildCustomTool(name string, options command.Options) (tool.T
 	}
 	if options.GroupForTool != nil {
 		declaration.Group = options.GroupForTool(name)
+	}
+	if self.IsToolBackgroundable(name) && declaration.TimeLimit == 0 {
+		declaration.ManagedLimit = tasks.RunLimit
 	}
 
 	return command.New(declaration, options)

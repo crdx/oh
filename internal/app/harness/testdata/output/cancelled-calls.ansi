@@ -1,12 +1,12 @@
 === narrow ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait    \e[0m\r
-\e[48;2;52;53;65m for check                              \e[0m\r
+\e[48;2;52;53;65m read both of those files, then check   \e[0m\r
+\e[48;2;52;53;65m on the check task                      \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because…\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Ha…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request st…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped …\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -67,19 +67,25 @@
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65mn\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65mw\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65mk\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65mo\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65mc\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
@@ -88,6 +94,14 @@
 \e[48;2;52;53;65me\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mk\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65mk\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
@@ -146,11 +160,11 @@
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m read both of those files, then wait for check\e[0m
+\e[48;2;52;53;65m read both of those files, then check on the check task\e[0m
 \e[48;2;52;53;65m\e[0m
 read \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m
 read \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m
-\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed escape\e[0m
+check \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m
 
 \e[38;2;207;173;0mTurn stopped.\e[0m
 
@@ -160,12 +174,12 @@ read \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;15
 
 === printed ===
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait for check                                                      \e[0m\r
+\e[48;2;52;53;65m read both of those files, then check on the check task                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed es…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -175,12 +189,12 @@ read \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;15
 
 === streamed asap ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait for check                                                      \e[0m\r
+\e[48;2;52;53;65m read both of those files, then check on the check task                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed es…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[70C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -190,12 +204,12 @@ read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait for check                                                      \e[0m\r
+\e[48;2;52;53;65m read both of those files, then check on the check task                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed es…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[70C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -205,12 +219,12 @@ read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait for check                                                      \e[0m\r
+\e[48;2;52;53;65m read both of those files, then check on the check task                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed es…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[70C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -223,13 +237,14 @@ read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l
 \e[48;2;52;53;65m read both  \e[0m\r
 \e[48;2;52;53;65m of those   \e[0m\r
 \e[48;2;52;53;65m files,     \e[0m\r
-\e[48;2;52;53;65m then wait  \e[0m\r
-\e[48;2;52;53;65m for check  \e[0m\r
+\e[48;2;52;53;65m then check \e[0m\r
+\e[48;2;52;53;65m on the     \e[0m\r
+\e[48;2;52;53;65m check task \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone…\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\che…\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
 \r
 \e[38;2;207;173;0mTurn\e[0m\r
 \e[38;2;207;173;0mstopped.\e[0m\r
@@ -242,11 +257,11 @@ read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l
 \e[?25h\e[?2026l
 === unsized ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait for check\e[0m\r
+\e[48;2;52;53;65m read both of those files, then check on the check task\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -256,12 +271,12 @@ read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m read both of those files, then wait for check                                                      \e[0m\r
+\e[48;2;52;53;65m read both of those files, then check on the check task                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe job request stopped because the user pressed es…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r

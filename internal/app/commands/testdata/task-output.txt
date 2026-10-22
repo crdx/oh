@@ -1,0 +1,10 @@
+=== with output ===
+build: done
+built successfully
+=== without output ===
+build: done with no output
+=== failed without output ===
+build: failed with no output, note: SIGKILL stopped the command.
+=== from a respawned run ===
+watch: stopped, run 4
+built in 3s

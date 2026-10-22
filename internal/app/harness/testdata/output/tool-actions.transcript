@@ -17,22 +17,20 @@ show every action-oriented tool label
 
 ```
 forward add: 8000 [ok, forward]
-forward add: docs:8001 [ok, forward-job]
+forward add: docs:8001 [ok, forward-task]
 forward remove: 8000 [ok, unforward]
 forward list: forwards [ok, list-ports]
 forward bogus [error, forward-malformed]
-job start [ok, start]
-job start [ok, restart]
-job status [ok, status]
-job output [ok, output]
-job wait [ok, wait-any]
-job wait [ok, wait-all]
-job stop [ok, stop]
-job list [ok, list-jobs]
-job discard [ok, discard]
-job prune [ok, prune]
+task restart: docs [ok, start]
+task restart: docs [ok, restart]
+task status: docs [ok, status]
+task output: docs [ok, output]
+task stop: docs [ok, stop]
+task list: tasks [ok, list-tasks]
+task discard: docs [ok, discard]
+task prune: finished tasks [ok, prune]
 ```
 
-## Assistant · +31s
+## Assistant · +27s
 
 Those are every action label.

@@ -11,7 +11,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 )
 
-func drawnJobCalls(t *testing.T, introductions *Introductions, events ...agent.Event) string {
+func drawnTaskCalls(t *testing.T, introductions *Introductions, events ...agent.Event) string {
 	t.Helper()
 
 	var screenOutput bytes.Buffer
@@ -29,34 +29,34 @@ func drawnJobCalls(t *testing.T, introductions *Introductions, events ...agent.E
 	return screenOutput.String()
 }
 
-func jobStart(id string, name string, intent string) agent.Event {
-	event := agent.Event{Kind: agent.ToolCallRequestEvent, ID: id, Name: "job"}
-	event.RenderingKind = "job_start"
-	event.Subject = name
+func taskStart(id string, name string, intent string) agent.Event {
+	event := agent.Event{Kind: agent.ToolCallRequestEvent, ID: id, Name: "bash"}
+	event.RenderingKind = "bash"
+	event.Subject = "just " + name
 	event.Intent = intent
 	event.Introduces = name
 	return event
 }
 
-func jobCall(id string, kind string, names ...string) agent.Event {
-	event := agent.Event{Kind: agent.ToolCallRequestEvent, ID: id, Name: "job"}
+func taskCall(id string, kind string, names ...string) agent.Event {
+	event := agent.Event{Kind: agent.ToolCallRequestEvent, ID: id, Name: "task"}
 	event.RenderingKind = kind
 	event.Subject = strings.Join(names, " || ")
 	event.Mentions = names
 	return event
 }
 
-func settledJob(id string) agent.Event {
-	return agent.Event{Kind: agent.ToolCallResultEvent, ID: id, Name: "job", Status: agent.SuccessStatus}
+func settledCall(id string) agent.Event {
+	return agent.Event{Kind: agent.ToolCallResultEvent, ID: id, Name: "task", Status: agent.SuccessStatus}
 }
 
-func TestACallNamingAJobIsRemindedOfItsIntent(t *testing.T) {
-	painted := drawnJobCalls(t, nil,
-		jobStart("1", "docs", "Serving the documentation locally"), settledJob("1"),
-		jobStart("2", "build", "Building every package"), settledJob("2"),
-		jobCall("3", "job_status", "docs"), settledJob("3"),
-		jobCall("4", "job_wait_any", "docs", "build"), settledJob("4"),
-		jobCall("5", "job_status", "other"), settledJob("5"),
+func TestACallNamingATaskIsRemindedOfItsIntent(t *testing.T) {
+	painted := drawnTaskCalls(t, nil,
+		taskStart("1", "docs", "Serving the documentation locally"), settledCall("1"),
+		taskStart("2", "build", "Building every package"), settledCall("2"),
+		taskCall("3", "task_status", "docs"), settledCall("3"),
+		taskCall("4", "task_status", "docs", "build"), settledCall("4"),
+		taskCall("5", "task_status", "other"), settledCall("5"),
 	)
 	drawn := style.Plain(painted)
 
@@ -65,7 +65,7 @@ func TestACallNamingAJobIsRemindedOfItsIntent(t *testing.T) {
 	}
 
 	for _, want := range []string{
-		"status docs (Serving the documentation locally)",
+		"check docs (Serving the documentation locally)",
 		"docs || build (Serving the documentation locally; Building every package)",
 	} {
 		if !strings.Contains(drawn, want) {
@@ -73,20 +73,20 @@ func TestACallNamingAJobIsRemindedOfItsIntent(t *testing.T) {
 		}
 	}
 	if strings.Contains(drawn, "other (") {
-		t.Errorf("drew %q, want no reminder for a job nobody started", drawn)
+		t.Errorf("drew %q, want no reminder for a task nobody started", drawn)
 	}
 }
 
 func TestAReminderComesFromTheStartBeforeIt(t *testing.T) {
-	drawn := style.Plain(drawnJobCalls(t, nil,
-		jobStart("1", "docs", "Serving the documentation locally"), settledJob("1"),
-		jobCall("2", "job_status", "docs"), settledJob("2"),
-		jobStart("3", "docs", "Serving the docs on a new port"), settledJob("3"),
-		jobCall("4", "job_stop", "docs"), settledJob("4"),
+	drawn := style.Plain(drawnTaskCalls(t, nil,
+		taskStart("1", "docs", "Serving the documentation locally"), settledCall("1"),
+		taskCall("2", "task_status", "docs"), settledCall("2"),
+		taskStart("3", "docs", "Serving the docs on a new port"), settledCall("3"),
+		taskCall("4", "task_stop", "docs"), settledCall("4"),
 	))
 
 	for _, want := range []string{
-		"status docs (Serving the documentation locally)",
+		"check docs (Serving the documentation locally)",
 		"stop docs (Serving the docs on a new port)",
 	} {
 		if !strings.Contains(drawn, want) {
@@ -95,17 +95,17 @@ func TestAReminderComesFromTheStartBeforeIt(t *testing.T) {
 	}
 }
 
-func TestAJobStartedInAnEarlierTurnIsStillRemembered(t *testing.T) {
+func TestATaskStartedInAnEarlierTurnIsStillRemembered(t *testing.T) {
 	introductions := NewIntroductions()
-	drawnJobCalls(t, introductions, jobStart("1", "docs", "Serving the documentation locally"), settledJob("1"))
+	drawnTaskCalls(t, introductions, taskStart("1", "docs", "Serving the documentation locally"), settledCall("1"))
 
-	drawn := style.Plain(drawnJobCalls(t, introductions, jobCall("2", "job_status", "docs"), settledJob("2")))
-	if !strings.Contains(drawn, "status docs (Serving the documentation locally)") {
+	drawn := style.Plain(drawnTaskCalls(t, introductions, taskCall("2", "task_status", "docs"), settledCall("2")))
+	if !strings.Contains(drawn, "check docs (Serving the documentation locally)") {
 		t.Errorf("drew %q, want the earlier turn's intent", drawn)
 	}
 
 	introductions.Forget()
-	if drawn := style.Plain(drawnJobCalls(t, introductions, jobCall("3", "job_status", "docs"), settledJob("3"))); strings.Contains(drawn, "(") {
+	if drawn := style.Plain(drawnTaskCalls(t, introductions, taskCall("3", "task_status", "docs"), settledCall("3"))); strings.Contains(drawn, "(") {
 		t.Errorf("drew %q after forgetting, want no reminder", drawn)
 	}
 }

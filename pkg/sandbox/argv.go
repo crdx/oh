@@ -3,13 +3,13 @@ package sandbox
 import (
 	"context"
 
-	internal "crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
-type ArgvRunner = internal.ArgvRunner
+type ArgvRunner = sandbox.ArgvRunner
 
 func DirectArgv() ArgvRunner {
-	return directArgvRunner{inner: internal.DirectArgv()}
+	return directArgvRunner{inner: sandbox.DirectArgv()}
 }
 
 type directArgvRunner struct {

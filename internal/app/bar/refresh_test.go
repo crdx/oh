@@ -19,7 +19,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/tasks"
 )
 
 const (
@@ -33,19 +33,19 @@ type refreshWorld struct {
 	name      string
 	workspace func(t *testing.T) string
 	isRunning bool
-	getJobs   func() []jobs.Snapshot
+	getTasks  func() []tasks.Snapshot
 }
 
 func TestNoSegmentAsksToBeDrawnMoreOftenThanItCanChange(t *testing.T) {
 	t.Setenv("GIT_CONFIG_GLOBAL", os.DevNull)
 	t.Setenv("GIT_CONFIG_NOSYSTEM", "1")
 
-	noJobs := func() []jobs.Snapshot { return nil }
-	liveJob := func() []jobs.Snapshot {
-		return []jobs.Snapshot{{Name: "serve", State: jobs.StateRunning, StartedAt: time.Now()}}
+	noTasks := func() []tasks.Snapshot { return nil }
+	liveTask := func() []tasks.Snapshot {
+		return []tasks.Snapshot{{ID: "serve", State: tasks.Running, StartedAt: time.Now()}}
 	}
-	endedJob := func() []jobs.Snapshot {
-		return []jobs.Snapshot{{Name: "build", State: jobs.StateComplete, StartedAt: time.Now(), EndedAt: time.Now()}}
+	endedTask := func() []tasks.Snapshot {
+		return []tasks.Snapshot{{ID: "build", State: tasks.Done, StartedAt: time.Now(), EndedAt: time.Now()}}
 	}
 
 	var worlds []refreshWorld
@@ -58,16 +58,16 @@ func TestNoSegmentAsksToBeDrawnMoreOftenThanItCanChange(t *testing.T) {
 		{name: "in a broken repository", make: brokenRepositoryWorkspace},
 	} {
 		for _, isRunning := range []bool{false, true} {
-			for jobName, getJobs := range map[string]func() []jobs.Snapshot{"no jobs": noJobs, "a live job": liveJob, "an ended job": endedJob} {
+			for taskName, getTasks := range map[string]func() []tasks.Snapshot{"no tasks": noTasks, "a live task": liveTask, "an ended task": endedTask} {
 				turnState := "idle"
 				if isRunning {
 					turnState = "running"
 				}
 				worlds = append(worlds, refreshWorld{
-					name:      workspace.name + ", " + turnState + ", " + jobName,
+					name:      workspace.name + ", " + turnState + ", " + taskName,
 					workspace: workspace.make,
 					isRunning: isRunning,
-					getJobs:   getJobs,
+					getTasks:  getTasks,
 				})
 			}
 		}
@@ -186,7 +186,7 @@ func refreshRegistry(workspaceDir string, world refreshWorld) segment.Registry {
 			IsPrefixPending:    func() bool { return false },
 			GetTurnTiming:      func() turn.Timing { return turn.Timing{UserTurn: time.Minute, ModelTurn: time.Second} },
 			GetTurnCount:       func() int { return 6 },
-			GetJobs:            world.getJobs,
+			GetTasks:           world.getTasks,
 		},
 	})
 }

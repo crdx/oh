@@ -1170,7 +1170,7 @@ func TestAClosedDropdownLeavesTheScreenAsAFreshDrawWould(t *testing.T) {
 		}},
 		"chosen action taking no name": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
 			rig.show()
-			rig.typeText("/job pr")
+			rig.typeText("/task pr")
 			rig.press(tabKey)
 		}},
 		"provider typed whole": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {

@@ -84,6 +84,8 @@ var configSteps = map[int]configStep{
 	config.NudgeFormat:             migrateConfigFromVersionEleven,
 	config.ForwardNameFormat:       migrateConfigFromVersionTwelve,
 	config.ThemePaletteFormat:      migrateConfigFromVersionThirteen,
+	config.DefaultsFormat:          migrateConfigFromVersionFourteen,
+	config.ToolTableFormat:         migrateConfigFromVersionFifteen,
 }
 
 func migrateConfigFromVersionThirteen(data []byte) ([]byte, error) {
@@ -478,11 +480,17 @@ func rewriteConfigVersion(data []byte, version int) []byte {
 			continue
 		}
 
+		lineEnd := ""
+		if strings.HasSuffix(line, "\r") {
+			lineEnd = "\r"
+			line = strings.TrimSuffix(line, "\r")
+		}
 		indentation := line[:len(line)-len(strings.TrimLeft(line, " \t"))]
 		lines[i] = fmt.Sprintf("%sversion = %d", indentation, version)
 		if _, comment, hasComment := strings.Cut(line, "#"); hasComment {
 			lines[i] += " #" + comment
 		}
+		lines[i] += lineEnd
 		break
 	}
 

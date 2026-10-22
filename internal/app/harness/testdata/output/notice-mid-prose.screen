@@ -244,7 +244,7 @@ Paragraph 24 of something taller than the terminal.
      M a
 
     Exit code: 0
-=== an ended job in the middle of a thought, arriving ===
+=== an ended task in the middle of a thought, arriving ===
 
  explain it
 
@@ -255,7 +255,7 @@ the terminal. Paragraph 5 of something taller than the terminal. Paragraph 6 of 
 than the terminal. Paragraph 7 of something taller than the terminal. Paragraph 8 of something
 taller than the terminal. Paragraph 9 of something taller than the terminal. Paragraph 10 of
 something taller than the terminal. Paragraph 11 of something taller than the terminal. Paragraph 12
-=== an ended job in the middle of a thought, landed ===
+=== an ended task in the middle of a thought, landed ===
 
  explain it
 
@@ -275,11 +275,11 @@ than the terminal. Paragraph 22 of something taller than the terminal. Paragraph
 taller than the terminal. Paragraph 24 of something taller than the terminal.
 
 
- 🤖 Job build exited: failed, exit(2).
+ 🤖 Task build failed: exit status 2.
 
     undefined: getWidth
     exit status 1
-=== an ended job in the middle of an answer, arriving ===
+=== an ended task in the middle of an answer, arriving ===
 
  explain it
 
@@ -307,7 +307,7 @@ Paragraph 10 of something taller than the terminal.
 Paragraph 11 of something taller than the terminal.
 
 Paragraph 12 of something taller than the terminal.
-=== an ended job in the middle of an answer, landed ===
+=== an ended task in the middle of an answer, landed ===
 
  explain it
 
@@ -361,7 +361,7 @@ Paragraph 23 of something taller than the terminal.
 Paragraph 24 of something taller than the terminal.
 
 
- 🤖 Job build exited: failed, exit(2).
+ 🤖 Task build failed: exit status 2.
 
     undefined: getWidth
     exit status 1

@@ -98,7 +98,7 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 				tool.String("model", "the exact provider/model@effort selection from action=models; omit @effort only for a model that takes no effort"),
 				tool.String("prompt", "the whole task for this subagent, with whatever context it needs"),
 				tool.String("intent", "what this subagent is for, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as \"Reviewing the parser for missed errors\""),
-				tool.String("workspace", "the subagent's read-only workspace, any directory you can read; absent means yours").Optional(),
+				tool.String("workspace", "the subagent's read-only workspace, any directory you can read outside your /tmp; absent means yours").Optional(),
 				tool.String("name", "an optional alias of your own for this subagent, unique in this session, which works anywhere its given name does").Optional(),
 			}).Optional(),
 		},

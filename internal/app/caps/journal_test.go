@@ -101,26 +101,26 @@ func TestAChangeTakenBackLeavesTheOnesAfterItSayingWhatTheySaid(t *testing.T) {
 	}
 }
 
-func TestAJobStoppedForARevokedPathNamesThePath(t *testing.T) {
-	notice, isShown := JobStopNotice(JobStoppedForPathEvent("docs", "/reference"))
+func TestATaskStoppedForARevokedPathNamesThePath(t *testing.T) {
+	notice, isShown := TaskStopNotice(TaskStoppedForPathEvent("docs", "/reference"))
 	if !isShown {
-		t.Fatal("a job stopped for a revoked path said nothing")
+		t.Fatal("a task stopped for a revoked path said nothing")
 	}
-	if !strings.Contains(notice, "Job `docs`") || !strings.Contains(notice, "/reference") {
-		t.Errorf("got %q, want it to code the job name and name the path", notice)
-	}
-}
-
-func TestAJobStoppedForACapabilityStillNamesTheCapability(t *testing.T) {
-	notice, isShown := JobStopNotice(JobStopEvent("docs", Write))
-	if !isShown || !strings.Contains(notice, "Job `docs`") || !strings.Contains(notice, "read-only") {
-		t.Errorf("got %q (shown %v), want the coded job name and capability reason preserved", notice, isShown)
+	if !strings.Contains(notice, "Task `docs`") || !strings.Contains(notice, "/reference") {
+		t.Errorf("got %q, want it to code the task name and name the path", notice)
 	}
 }
 
-func TestAJobStoppedOnGitWithdrawalDoesNotClaimItWroteGit(t *testing.T) {
-	notice, isShown := JobStopNotice(JobStopEvent("docs", Git))
-	want := "Job `docs` stopped because g was withdrawn while it had write access."
+func TestATaskStoppedForACapabilityStillNamesTheCapability(t *testing.T) {
+	notice, isShown := TaskStopNotice(TaskStopEvent("docs", Write))
+	if !isShown || !strings.Contains(notice, "Task `docs`") || !strings.Contains(notice, "read-only") {
+		t.Errorf("got %q (shown %v), want the coded task name and capability reason preserved", notice, isShown)
+	}
+}
+
+func TestATaskStoppedOnGitWithdrawalDoesNotClaimItWroteGit(t *testing.T) {
+	notice, isShown := TaskStopNotice(TaskStopEvent("docs", Git))
+	want := "Task `docs` stopped because g was withdrawn while it had write access."
 	if !isShown || notice != want {
 		t.Errorf("got %q (shown %t), want %q", notice, isShown, want)
 	}

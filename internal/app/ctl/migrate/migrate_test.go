@@ -26,6 +26,7 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/store/wire"
 	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
@@ -2058,5 +2059,62 @@ func TestFormatTwentyOneRetriesAfterTheWireWasMovedButTheJournalWasNot(t *testin
 	data, err := os.ReadFile(path) //nolint:gosec // the test's own path
 	if err != nil || string(data) != "already moved" {
 		t.Errorf("the earlier move was not kept: %q, %v", data, err)
+	}
+}
+
+func TestFormatTwentyThreeMigrationTurnsJobFactsIntoTaskFacts(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":23,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"job_listing","state":[{"name":"docs","command":"just docs","state":"running","started_at":"2026-08-01T00:00:00Z"}]}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"job_ended","name":"build","state":{"snapshot":{"name":"build","command":"just build","state":"failed","started_at":"2026-08-01T00:00:00Z","ended_at":"2026-08-01T00:00:02Z","code":2},"output":"undefined: getWidth\n"}}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:03Z","event":{"kind":"jobs_ended_with_session","name":"source","state":["docs"]}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:04Z","event":{"kind":"job_stop","name":"docs","state":{"path":"/reference"}}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:05Z","event":{"kind":"port_grant_change","name":"8080","state":{"ports":[3000,8080],"job_names":{"8080":"docs"},"task_names":{"3000":"api"}}}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:06Z","event":{"kind":"user_message","text":"carry on"}}`,
+	)
+
+	from, err := migrate.Session(options(directory), name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if from != 23 {
+		t.Errorf("migrated from format %d, want 23", from)
+	}
+
+	lines := journalLines(t, directory, name)
+	var events []string
+	for _, line := range lines[1:] {
+		events = append(events, string(line["event"]))
+	}
+	want := []string{
+		`{"kind":"task_run_ended","name":"build","state":{"snapshot":{"id":"build","tool_name":"job","run":1,"is_respawning":false,"state":"failed","started_at":"2026-08-01T00:00:00Z","ended_at":"2026-08-01T00:00:02Z","output":"undefined: getWidth\n","failure":"exit status 2"},"is_final":true}}`,
+		`{"kind":"tasks_ended_with_session","name":"source","state":["docs"]}`,
+		`{"kind":"task_stop","name":"docs","state":{"path":"/reference"}}`,
+		`{"kind":"port_grant_change","name":"8080","state":{"ports":[3000,8080],"task_names":{"3000":"api","8080":"docs"}}}`,
+		`{"kind":"user_message","text":"carry on"}`,
+	}
+	if !slices.Equal(events, want) {
+		t.Errorf("got events\n%s\nwant\n%s", strings.Join(events, "\n"), strings.Join(want, "\n"))
+	}
+
+	var ended agent.Event
+	if err := json.Unmarshal(lines[1]["event"], &ended); err != nil {
+		t.Fatal(err)
+	}
+	if notice, isSaid := taskrecord.EndedNotice(ended); !isSaid || !strings.HasPrefix(notice, "Task `build` failed: exit status 2.") {
+		t.Errorf("the migrated notice reads %q (%t), want the task notice", notice, isSaid)
+	}
+}
+
+func TestFormatTwentyThreeMigrationRefusesAnUnreadableJobConclusion(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":23,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"job_ended","name":"build","state":"not a conclusion"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err == nil || !strings.Contains(err.Error(), "job conclusion") {
+		t.Errorf("got %v, want the unreadable conclusion refused", err)
 	}
 }

@@ -12,8 +12,8 @@ Commands:
   /grant {r|rw} <path>...
   /grants [all]
   /revoke <target>...
-  /jobs
-  /job {status|output|stop|discard} <name> | prune
+  /tasks
+  /task {status|output|stop|restart|discard} <name> | prune
   /subs [all]
   /sub cat <name>
   /fork [-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]

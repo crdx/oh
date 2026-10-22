@@ -8,7 +8,7 @@ const (
 	InterruptionNote NoteKind = "interruption"
 	HostCommandNote  NoteKind = "host_command"
 	EnvironmentNote  NoteKind = "environment"
-	JobNote          NoteKind = "job"
+	TaskNote         NoteKind = "task"
 	TitleNote        NoteKind = "title"
 	PokeNote         NoteKind = "poke"
 	SubagentNote     NoteKind = "subagent"

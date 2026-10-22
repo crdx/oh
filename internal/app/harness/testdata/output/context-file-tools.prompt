@@ -62,7 +62,7 @@
 
 - The workspace (/workspace) is read-write
 - The workspace is not a git repository
-- The session is interactive: questions, approvals, and /! commands for the user are available. A background job wakes the conversation when it ends.
+- The session is interactive: questions, approvals, and /! commands for the user are available. A background task wakes the conversation when it ends.
 
 These states can change at any time. You will be told what changes.
 If a state blocks the work and no workflow below covers it, ask the user to change it.

@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## Task run ended · +0s
+
+```
+Task `task-1` failed: exit status 1.
+```
+
+## User · +0s
+
+what happened to the task
+
+## Assistant · +0s
+
+Task task-1 failed.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

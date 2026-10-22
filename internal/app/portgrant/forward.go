@@ -43,8 +43,8 @@ type ForwardsRestoreResult struct {
 }
 
 type Route struct {
-	Port    uint16
-	JobName string
+	Port     uint16
+	TaskName string
 }
 
 type Forwards struct {
@@ -52,6 +52,7 @@ type Forwards struct {
 	host      string
 	state     *access.State[[]Route]
 	changes   chan agent.Event
+	onRevoke  func(Route)
 	mutex     sync.Mutex
 }
 
@@ -111,32 +112,27 @@ func (self *Forwards) Inject() string {
 }
 
 func (self *Forwards) Forward(port uint16) (agent.Event, error) {
-	return self.forward(port, "")
+	return self.forward(Route{Port: port})
 }
 
 func (self *Forwards) ForwardRoute(route Route) (agent.Event, error) {
-	return self.forward(route.Port, route.JobName)
+	return self.forward(route)
 }
 
-func (self *Forwards) Revoke(port uint16) (agent.Event, error) {
+func (self *Forwards) OnRevoke(handler func(Route)) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	current := self.state.GetCurrent()
-	if !slices.ContainsFunc(current, func(route Route) bool { return route.Port == port }) {
-		return agent.Event{}, fmt.Errorf("port %d is not forwarded", port)
-	}
-	if !self.forwarder.isConfigured() {
-		return agent.Event{}, errors.New("the forwarded port was lost before it could be closed")
-	}
-	if err := self.forwarder.Revoke(port); err != nil {
-		return agent.Event{}, err
+	self.onRevoke = handler
+}
+
+func (self *Forwards) Revoke(port uint16) (agent.Event, error) {
+	event, route, handler, err := self.revoke(port)
+	if route.Port != 0 && handler != nil {
+		handler(route)
 	}
 
-	current = slices.DeleteFunc(current, func(route Route) bool { return route.Port == port })
-	self.state.Replace(current)
-
-	return ForwardChangeEvent(self.host, port, current)
+	return event, err
 }
 
 func URL(host string, port uint16) string {
@@ -156,7 +152,7 @@ func AddressFor(sessionName string) string {
 type forwardEventState struct {
 	Host       string            `json:"host,omitempty"`
 	Ports      []uint16          `json:"ports"`
-	JobNames   map[uint16]string `json:"job_names,omitempty"`
+	TaskNames  map[uint16]string `json:"task_names,omitempty"`
 	IsAdoption bool              `json:"adoption,omitempty"`
 }
 
@@ -169,12 +165,12 @@ func forwardChangeEvent(host string, port uint16, routes []Route, isAdoption boo
 	state := forwardEventState{
 		Host:       host,
 		Ports:      routePorts(routes),
-		JobNames:   make(map[uint16]string),
+		TaskNames:  make(map[uint16]string),
 		IsAdoption: isAdoption,
 	}
 	for _, route := range routes {
-		if route.JobName != "" {
-			state.JobNames[route.Port] = route.JobName
+		if route.TaskName != "" {
+			state.TaskNames[route.Port] = route.TaskName
 		}
 	}
 
@@ -194,7 +190,7 @@ func decodeForwardEvent(event agent.Event) ([]Route, error) {
 
 	routes := make([]Route, 0, len(state.Ports))
 	for _, port := range state.Ports {
-		routes = append(routes, Route{Port: port, JobName: state.JobNames[port]})
+		routes = append(routes, Route{Port: port, TaskName: state.TaskNames[port]})
 	}
 
 	return canonicalRoutes(routes), nil
@@ -249,8 +245,8 @@ func ForwardNotice(event agent.Event) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	if jobName := state.JobNames[port]; state.IsAdoption && jobName != "" {
-		return "Port " + event.Name + " now belongs to job " + jobName + ".", true
+	if taskName := state.TaskNames[port]; state.IsAdoption && taskName != "" {
+		return "Port " + event.Name + " now belongs to task " + taskName + ".", true
 	}
 	if slices.Contains(state.Ports, port) {
 		return "Port " + event.Name + " is now forwarded to " + URL(state.Host, port) + ".", true
@@ -328,40 +324,65 @@ func (self *Forwards) ForModel() ForwardsModelAccess {
 	return ForwardsModelAccess{ports: self}
 }
 
-func (self *Forwards) forward(port uint16, jobName string) (agent.Event, error) {
+func (self *Forwards) forward(route Route) (agent.Event, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
 	current := self.state.GetCurrent()
-	if index := slices.IndexFunc(current, func(route Route) bool { return route.Port == port }); index >= 0 {
-		if jobName == "" || current[index].JobName != "" {
-			return agent.Event{}, fmt.Errorf("port %d is already forwarded", port)
+	if index := slices.IndexFunc(current, func(currentRoute Route) bool { return currentRoute.Port == route.Port }); index >= 0 {
+		if route.TaskName == "" || current[index].TaskName != "" {
+			return agent.Event{}, fmt.Errorf("port %d is already forwarded", route.Port)
 		}
-		current[index].JobName = jobName
+		current[index] = route
 		self.state.Replace(current)
 
-		return forwardChangeEvent(self.host, port, current, true)
+		return forwardChangeEvent(self.host, route.Port, current, true)
 	}
-	if err := self.open(port); err != nil {
+	if err := self.open(route.Port); err != nil {
 		return agent.Event{}, err
 	}
 
-	current = canonicalRoutes(append(current, Route{Port: port, JobName: jobName}))
+	current = canonicalRoutes(append(current, route))
 	self.state.Replace(current)
 
-	return ForwardChangeEvent(self.host, port, current)
+	return ForwardChangeEvent(self.host, route.Port, current)
 }
 
-func (self ForwardsModelAccess) Forward(port uint16, jobName string) (string, error) {
-	if self.ports.isRouted(Route{Port: port, JobName: jobName}) {
+func (self *Forwards) revoke(port uint16) (agent.Event, Route, func(Route), error) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	current := self.state.GetCurrent()
+	index := slices.IndexFunc(current, func(route Route) bool { return route.Port == port })
+	if index < 0 {
+		return agent.Event{}, Route{}, nil, fmt.Errorf("port %d is not forwarded", port)
+	}
+	if !self.forwarder.isConfigured() {
+		return agent.Event{}, Route{}, nil, errors.New("the forwarded port was lost before it could be closed")
+	}
+	if err := self.forwarder.Revoke(port); err != nil {
+		return agent.Event{}, Route{}, nil, err
+	}
+
+	route := current[index]
+	current = slices.DeleteFunc(current, func(route Route) bool { return route.Port == port })
+	self.state.Replace(current)
+
+	event, err := ForwardChangeEvent(self.host, port, current)
+
+	return event, route, self.onRevoke, err
+}
+
+func (self ForwardsModelAccess) Forward(port uint16, taskName string) (string, error) {
+	route := Route{Port: port, TaskName: taskName}
+	if self.ports.isRouted(route) {
 		return self.ports.URL(port), nil
 	}
-	event, err := self.ports.forward(port, jobName)
+	event, err := self.ports.forward(route)
 	if err != nil {
 		return "", err
 	}
 	self.ports.announce(event)
-
 	return self.ports.URL(port), nil
 }
 
@@ -380,9 +401,9 @@ func (self ForwardsModelAccess) List() []forward.Publication {
 	publications := make([]forward.Publication, 0, len(routes))
 	for _, route := range routes {
 		publications = append(publications, forward.Publication{
-			Port:    route.Port,
-			JobName: route.JobName,
-			URL:     self.ports.URL(route.Port),
+			Port:     route.Port,
+			TaskName: route.TaskName,
+			URL:      self.ports.URL(route.Port),
 		})
 	}
 

@@ -1,6 +1,6 @@
-version = 14
+version = 16
 
-[defaults]
+[default]
 caps = "rx"
 effort = "high"
 fast = false
@@ -99,16 +99,15 @@ title.default = { name = "title" }
 default = { name = "$", paint = "status_info" }
 host_network = { name = "$", paint = "status_danger" }
 
-[ui.theme.tool.job]
-default = { name = "job", paint = "status_warning" }
-start = {}
-stop = {}
-restart = {}
-discard = {}
-prune = {}
-status = { paint = "normal" }
-output = { name = "cat", paint = "normal" }
-list = { paint = "normal" }
+[ui.theme.tool.task]
+default = { name = "manage", paint = "status_warning" }
+restart = { name = "restart" }
+discard = { name = "discard" }
+status = { name = "check", paint = "normal" }
+output = { name = "read output for", paint = "normal" }
+stop = { name = "stop" }
+list = { name = "list", paint = "normal" }
+prune = { name = "prune" }
 
 [ui.theme.tool.subagent]
 default = { name = "subagent", paint = "status_warning" }
@@ -126,16 +125,12 @@ add = { name = "forward" }
 remove = { name = "close" }
 list = { paint = "normal" }
 
-[permissions]
-network = "ask"
-fetch = "ask"
-lookup = "allow"
+[snippet]
 
-[snippets]
-
-[tools]
+[tool]
 
 [experimental]
+background_after_seconds = 30
 cache_miss_notices = false
 command_starts_turn = true
 enter_interrupts = false
@@ -154,11 +149,11 @@ concurrency = 5
 
 [provider.ollama]
 
-[skills]
+[skill]
 include = []
 exclude = []
 
-[sandbox]
+[grants]
 deny = []
 read = []
 write = []
@@ -170,7 +165,7 @@ left = [
     { segment = "activity-spinner" },
     { segment = "mode-toggle" },
     { segment = "forwards" },
-    { segment = "jobs" },
+    { segment = "tasks" },
     { segment = "grants", type = "base" },
 ]
 center = [

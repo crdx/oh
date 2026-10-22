@@ -292,9 +292,9 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			lines:    24,
 			commands: completedArgumentsGoldenRegistry,
 			steps: func(rig *pathRefRig) {
-				typing("/job stop ")(rig)
+				typing("/task stop ")(rig)
 				rig.press(tabKey, pathRefDown, tabKey)
-				if got := rig.input.Text(); got != "/job stop docs " {
+				if got := rig.input.Text(); got != "/task stop docs " {
 					rig.t.Errorf("tab left %q in the input", got)
 				}
 			},
@@ -330,9 +330,9 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			lines:    24,
 			commands: completedArgumentsGoldenRegistry,
 			steps: func(rig *pathRefRig) {
-				typing("/job pr")(rig)
+				typing("/task pr")(rig)
 				rig.press(tabKey)
-				if got := rig.input.Text(); got != "/job prune " {
+				if got := rig.input.Text(); got != "/task prune " {
 					rig.t.Errorf("tab left %q in the input", got)
 				}
 			},
@@ -523,7 +523,7 @@ func completedArgumentsGoldenRegistry(t *testing.T) slash.Registry {
 		slash.Command{Name: "fork", Description: "fork the session", Run: slashTestHandler}.
 			WithArgumentUsage("[<model>]").
 			WithArgumentCompletion(containing(manyModels)),
-		slash.Command{Name: "job", Description: "act on a job", Run: slashTestHandler}.
+		slash.Command{Name: "task", Description: "act on a task", Run: slashTestHandler}.
 			WithArgumentUsage("{status|stop} <name> | prune").
 			WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
 				switch {

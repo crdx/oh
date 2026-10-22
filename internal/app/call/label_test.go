@@ -12,10 +12,10 @@ import (
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
-	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/toolbox/task"
 )
 
 func label() call.Label {
@@ -283,7 +283,7 @@ func TestCallNamesAndRolesComeFromStoredRendering(t *testing.T) {
 
 func TestAContinuedShellCallUsesTheShellLabel(t *testing.T) {
 	event := agent.Event{
-		Name: "job",
+		Name: "task",
 		FallbackRendering: agent.FallbackRendering{
 			Subject: "check",
 			Continuation: []tool.CallRendering{{
@@ -333,14 +333,14 @@ func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
 		if name == "pause" {
 			return pause, true
 		}
-		return job.New(jobs.New(nil), nil, nil, nil), true
+		return task.New(tasks.New(t.Context())), true
 	}
 
 	if got := call.LabelFor(pauseEvent, getTool, nil).TimeLimit; got != 20*time.Second {
 		t.Errorf("got %s, want the call to declare the time it gave itself", got)
 	}
 
-	statusEvent := agent.Event{Name: "job", Arguments: `{"intent":"see how the check is doing","action":"status","name":"check"}`}
+	statusEvent := agent.Event{Name: "task", Arguments: `{"action":"status","name":"check"}`}
 	if got := call.LabelFor(statusEvent, getTool, nil).TimeLimit; got != 0 {
 		t.Errorf("got %s, want a call that waits for nothing to declare no bound", got)
 	}

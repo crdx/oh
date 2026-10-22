@@ -1,16 +1,16 @@
-=== 1 a restored job standing ===
+=== 1 a restored task standing ===
 
- ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
-    Restart it if still needed.
+ ⏳ The session closed while docs was running. It stopped and does not restart automatically; task
+    restart starts it again.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 2 a restored job flushed ===
+=== 2 a restored task flushed ===
 
- 🤖 The session was closed and reopened after the last turn. Job docs stopped when it closed.
-    Restart it if still needed.
+ 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
+    restart starts it again.
 
 
 Model returned no reply.
@@ -18,17 +18,17 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 3 an ended job standing ===
+=== 3 an ended task standing ===
 
- ⏳ Job build exited: failed with no output.
+ ⏳ Task build failed.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 4 an ended job flushed ===
+=== 4 an ended task flushed ===
 
- 🤖 Job build exited: failed with no output.
+ 🤖 Task build failed.
 
 
 Model returned no reply.
@@ -56,19 +56,19 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 7 a restored job and one return ===
+=== 7 a restored task and one return ===
 
- ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
-    Restart it if still needed.
+ ⏳ The session closed while docs was running. It stopped and does not restart automatically; task
+    restart starts it again.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 7b a restored job flushed at the window boundary ===
+=== 7b a restored task flushed at the window boundary ===
 
- 🤖 The session was closed and reopened after the last turn. Job docs stopped when it closed.
-    Restart it if still needed.
+ 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
+    restart starts it again.
 
 
 Model returned no reply.
@@ -76,19 +76,19 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 7c a restored job after an expired return pair ===
+=== 7c a restored task after an expired return pair ===
 
- ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
-    Restart it if still needed.
+ ⏳ The session closed while docs was running. It stopped and does not restart automatically; task
+    restart starts it again.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 7d a restored job flushed after an expired pair ===
+=== 7d a restored task flushed after an expired pair ===
 
- 🤖 The session was closed and reopened after the last turn. Job docs stopped when it closed.
-    Restart it if still needed.
+ 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
+    restart starts it again.
 
 
 Model returned no reply.
@@ -96,20 +96,20 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 8 a stopped job standing ===
+=== 8 a stopped task standing ===
 
  ⏳ The workspace is now read-only.
- ⏳ Job web stopped because the workspace was made read-only.
+ ⏳ Task web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 9 a stopped job flushed ===
+=== 9 a stopped task flushed ===
 
  🤖 The workspace is now read-only.
- 🤖 Job web stopped because the workspace was made read-only.
+ 🤖 Task web stopped because the workspace was made read-only.
  🤖 The workspace is now read-write.
 
 

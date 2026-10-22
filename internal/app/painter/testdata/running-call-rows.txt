@@ -51,21 +51,3 @@ Regenerating the harness gold…
 
 ── shell running a long command · 16 columns
 Regenerating th…
-
-── job starting · 120 columns
-start golden $ cd repo/oh && just golden 2>&1 | tail -30 (Regenerating every golden in scratch)
-
-── job starting · 80 columns
-start golden $ cd repo/oh && just golden 2>&1 | tail -30
-
-── job starting · 60 columns
-start golden $ cd repo/oh && just golden 2>&1 | tail -30
-
-── job starting · 44 columns
-start golden $ cd repo/oh && just golden 2>…
-
-── job starting · 30 columns
-start golden $ cd repo/oh && …
-
-── job starting · 16 columns
-start golden $ …

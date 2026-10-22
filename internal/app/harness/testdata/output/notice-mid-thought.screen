@@ -5,8 +5,7 @@
 
 
 
- 🤖 Job build exited: failed after 12s,
-    exit(2).
+ 🤖 Task build failed: exit status 2.
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined:
@@ -102,11 +101,13 @@ s
 
 🤖
 
-J
+T
 
-o
+a
 
-b
+s
+
+k
 
 b
 
@@ -118,20 +119,6 @@ l
 
 d
 
-e
-
-x
-
-i
-
-t
-
-e
-
-d
-
-:
-
 f
 
 a
@@ -144,23 +131,7 @@ e
 
 d
 
-a
-
-f
-
-t
-
-e
-
-r
-
-1
-
-2
-
-s
-
-,
+:
 
 e
 
@@ -170,11 +141,19 @@ i
 
 t
 
-(
+s
+
+t
+
+a
+
+t
+
+u
+
+s
 
 2
-
-)
 
 .
 
@@ -541,7 +520,7 @@ t
 
 
 
- 🤖 Job build exited: failed after 12s, exit(2).
+ 🤖 Task build failed: exit status 2.
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
@@ -563,14 +542,12 @@ The build failed on an undefined getWidth, and the read has to come first.
 
 
 
- 🤖 Job
+ 🤖 Task
     build
-    exited:
-    failed
-    after
-    12s,
-    exit(2)
-    .
+    failed:
+    exit
+    status
+    2.
 
     go
     build
@@ -621,7 +598,7 @@ first.
 
 
 
- 🤖 Job build exited: failed after 12s, exit(2).
+ 🤖 Task build failed: exit status 2.
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth

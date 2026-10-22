@@ -1,0 +1,112 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+tasks-running-into-resume = ["build"]
+
+[[tool]]
+name = "bash"
+outputs = ["restarted command"]
+
+[[tool]]
+name = "task"
+
+[first]
+prompt = "remember this running task"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"I will check it later."}''',
+    '''{"type":"response.output_text.done","text":"I will check it later."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"I will check it later."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"I will check it later."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "what happened to build"
+settle-tasks-after-tool-result = true
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-2","type":"function_call","call_id":"call-1","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-2","delta":"{\"action\":\"status\",\"name\":\"build\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-2","arguments":"{\"action\":\"status\",\"name\":\"build\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-2","type":"function_call","call_id":"call-1","name":"task","arguments":"{\"action\":\"status\",\"name\":\"build\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-3","delta":"{\"action\":\"output\",\"name\":\"build\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-3","arguments":"{\"action\":\"output\",\"name\":\"build\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"task","arguments":"{\"action\":\"output\",\"name\":\"build\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-5","type":"function_call","call_id":"call-4","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-5","delta":"{\"action\":\"list\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-5","arguments":"{\"action\":\"list\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-5","type":"function_call","call_id":"call-4","name":"task","arguments":"{\"action\":\"list\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-6","type":"function_call","call_id":"call-5","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-6","delta":"{\"action\":\"stop\",\"name\":\"build\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-6","arguments":"{\"action\":\"stop\",\"name\":\"build\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-6","type":"function_call","call_id":"call-5","name":"task","arguments":"{\"action\":\"stop\",\"name\":\"build\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-8","type":"function_call","call_id":"call-7","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-8","delta":"{\"action\":\"restart\",\"name\":\"build\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-8","arguments":"{\"action\":\"restart\",\"name\":\"build\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-8","type":"function_call","call_id":"call-7","name":"task","arguments":"{\"action\":\"restart\",\"name\":\"build\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-9","type":"function_call","call_id":"call-8","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-9","delta":"{\"action\":\"output\",\"name\":\"build\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-9","arguments":"{\"action\":\"output\",\"name\":\"build\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-9","type":"function_call","call_id":"call-8","name":"task","arguments":"{\"action\":\"output\",\"name\":\"build\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-10","type":"function_call","call_id":"call-9","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-10","delta":"{\"action\":\"discard\",\"name\":\"build\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-10","arguments":"{\"action\":\"discard\",\"name\":\"build\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-10","type":"function_call","call_id":"call-9","name":"task","arguments":"{\"action\":\"discard\",\"name\":\"build\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-7","type":"function_call","call_id":"call-6","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-7","delta":"{\"action\":\"prune\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-7","arguments":"{\"action\":\"prune\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-7","type":"function_call","call_id":"call-6","name":"task","arguments":"{\"action\":\"prune\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It stopped on close, restarted with its saved arguments, then was discarded."}''',
+    '''{"type":"response.output_text.done","text":"It stopped on close, restarted with its saved arguments, then was discarded."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It stopped on close, restarted with its saved arguments, then was discarded."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"It stopped on close, restarted with its saved arguments, then was discarded."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

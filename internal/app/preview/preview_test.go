@@ -10,17 +10,17 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
-	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
-	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/tasks"
+	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/messageparent"
 )
 
@@ -49,7 +49,7 @@ func conversation() []agent.Event {
 		},
 		{Kind: agent.UserMessageEvent, Text: "rebuild whenever it changes"},
 		respawningStart(),
-		{Kind: agent.ToolCallResultEvent, ID: "call-2", Name: "job", Status: agent.SuccessStatus, Text: "watch: running for 0s, run 1, respawns on exit"},
+		{Kind: agent.ToolCallResultEvent, ID: "call-2", Name: "bash", Status: agent.SuccessStatus, Text: "task watch scheduled"},
 		respawnedRun(),
 		{Kind: agent.UserMessageEvent, Text: "have two subagents look at it"},
 		{
@@ -92,16 +92,12 @@ func respawningStart() agent.Event {
 	event := agent.Event{
 		Kind:      agent.ToolCallRequestEvent,
 		ID:        "call-2",
-		Name:      "job",
-		Arguments: `{"action":"start","name":"watch","command":"just watch","intent":"Rebuilding whenever it changes","respawn":true}`,
+		Name:      "bash",
+		Arguments: `{"command":"just watch","intent":"Rebuilding whenever it changes","background":true,"task_name":"watch","respawn":true}`,
 	}
-	event.SetRendering(job.Describe(job.Args{
-		Action:  "start",
-		Name:    "watch",
-		Command: "just watch",
-		Intent:  "Rebuilding whenever it changes",
-		Respawn: true,
-	}))
+	rendering := bash.DescribeCommand("just watch")
+	rendering.Intent = "Rebuilding whenever it changes"
+	event.SetRendering(rendering)
 
 	return event
 }
@@ -109,17 +105,16 @@ func respawningStart() agent.Event {
 func respawnedRun() agent.Event {
 	startedAt := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
 
-	return jobrecord.EndedEvent(jobs.Conclusion{
-		Snapshot: jobs.Snapshot{
-			Name:      "watch",
-			Command:   "just watch",
-			State:     jobs.StateComplete,
+	return taskrecord.EndedEvent(tasks.Conclusion{
+		Snapshot: tasks.Snapshot{
+			ID:        "watch",
+			ToolName:  "bash",
+			State:     tasks.Done,
 			StartedAt: startedAt,
 			EndedAt:   startedAt.Add(8 * time.Second),
 			Run:       1,
-			Respawn:   jobs.RespawnDone,
+			Output:    "built in 3s\n",
 		},
-		Output: "built in 3s\n",
 	})
 }
 

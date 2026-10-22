@@ -57,7 +57,6 @@ sandbox *args:
     PACKAGES=(
         ./internal/sandbox
         ./internal/sandbox/keeper
-        ./internal/jobs
         ./internal/app/shell
         ./internal/app/segment/gitStatus
         ./pkg/toolbox/bash

@@ -29,7 +29,6 @@ import (
 
 const (
 	shellToolName    = "bash"
-	jobToolName      = "job"
 	lookupToolName   = "lookup"
 	fetchToolName    = "fetch"
 	titleToolName    = "title"
@@ -123,37 +122,38 @@ var (
 )
 
 type harnessContextTemplateData struct {
-	WorkspaceDir      string
-	SessionName       string
-	SessionsDir       string
-	SessionDir        string
-	ConfigFile        string
-	GlobalPath        string
-	TmpDir            string
-	HomeDir           string
-	ExtraPaths        shell.Paths
-	DropsDirectory    string
-	SharesSkills      bool
-	ShellOffered      bool
-	TitleOffered      bool
-	NotifyOffered     bool
-	LookupOffered     bool
-	FetchOffered      bool
-	SubagentOffered   bool
-	Conditions        conditions.Conditions
-	WorkspaceWritable bool
-	IsRepository      bool
-	GitWritable       bool
-	ShellGranted      bool
-	LookupGranted     bool
-	SubagentsGranted  bool
-	JobsGranted       bool
-	NetworkGranted    bool
-	CurrentCaps       caps.Set
-	ToolGroups        caps.ToolGroups
-	GroupStatus       caps.GroupStatus
-	Yolo              bool
-	NoteRule          string
+	WorkspaceDir           string
+	SessionName            string
+	SessionsDir            string
+	SessionDir             string
+	ConfigFile             string
+	GlobalPath             string
+	TmpDir                 string
+	HomeDir                string
+	ExtraPaths             shell.Paths
+	DropsDirectory         string
+	SharesSkills           bool
+	ShellOffered           bool
+	TitleOffered           bool
+	NotifyOffered          bool
+	LookupOffered          bool
+	FetchOffered           bool
+	SubagentOffered        bool
+	Conditions             conditions.Conditions
+	WorkspaceWritable      bool
+	IsRepository           bool
+	GitWritable            bool
+	ShellGranted           bool
+	LookupGranted          bool
+	SubagentsGranted       bool
+	BackgroundShellGranted bool
+	TasksGranted           bool
+	NetworkGranted         bool
+	CurrentCaps            caps.Set
+	ToolGroups             caps.ToolGroups
+	GroupStatus            caps.GroupStatus
+	Yolo                   bool
+	NoteRule               string
 }
 
 func ProjectContextPaths(workspace *work.Space) []string {
@@ -172,26 +172,27 @@ type File struct {
 }
 
 type Config struct {
-	GlobalPath     string
-	Workspace      *work.Space
-	SessionName    string
-	SessionsDir    string
-	SessionDir     string
-	ConfigFile     string
-	TmpDir         string
-	HomeDir        string
-	CurrentCaps    caps.Set
-	ExtraPaths     shell.Paths
-	DropsDirectory string
-	OfferedTools   []string
-	Skills         []skill.Skill
-	Conditions     conditions.Conditions
-	JobsGranted    bool
-	NetworkGranted bool
-	ToolGroups     caps.ToolGroups
-	GroupStatus    caps.GroupStatus
-	Yolo           bool
-	Notes          agent.NoteFormat
+	GlobalPath             string
+	Workspace              *work.Space
+	SessionName            string
+	SessionsDir            string
+	SessionDir             string
+	ConfigFile             string
+	TmpDir                 string
+	HomeDir                string
+	CurrentCaps            caps.Set
+	ExtraPaths             shell.Paths
+	DropsDirectory         string
+	OfferedTools           []string
+	Skills                 []skill.Skill
+	Conditions             conditions.Conditions
+	BackgroundShellGranted bool
+	TasksGranted           bool
+	NetworkGranted         bool
+	ToolGroups             caps.ToolGroups
+	GroupStatus            caps.GroupStatus
+	Yolo                   bool
+	Notes                  agent.NoteFormat
 }
 
 func Load(config Config) (string, []File, error) {
@@ -278,37 +279,38 @@ func globalContext(file *File) string {
 func harnessContext(config Config) string {
 	currentCaps := config.CurrentCaps
 	data := harnessContextTemplateData{
-		WorkspaceDir:      config.Workspace.GetDir(),
-		SessionName:       config.SessionName,
-		SessionsDir:       config.SessionsDir,
-		SessionDir:        config.SessionDir,
-		ConfigFile:        config.ConfigFile,
-		GlobalPath:        config.GlobalPath,
-		TmpDir:            config.TmpDir,
-		HomeDir:           config.HomeDir,
-		ExtraPaths:        config.ExtraPaths,
-		DropsDirectory:    config.DropsDirectory,
-		SharesSkills:      skill.HasGlobal(config.Skills),
-		ShellOffered:      toolset.Offers(config.OfferedTools, shellToolName),
-		TitleOffered:      toolset.Offers(config.OfferedTools, titleToolName),
-		NotifyOffered:     toolset.Offers(config.OfferedTools, notifyToolName),
-		LookupOffered:     toolset.Offers(config.OfferedTools, lookupToolName),
-		FetchOffered:      toolset.Offers(config.OfferedTools, fetchToolName),
-		SubagentOffered:   toolset.Offers(config.OfferedTools, subagentToolName),
-		Conditions:        config.Conditions,
-		WorkspaceWritable: currentCaps.Has(caps.Write),
-		IsRepository:      pathutil.Exists(filepath.Join(config.Workspace.GetDir(), ".git")),
-		GitWritable:       currentCaps.Has(caps.Git),
-		ShellGranted:      currentCaps.Has(caps.Shell),
-		JobsGranted:       config.JobsGranted && toolset.Offers(config.OfferedTools, jobToolName),
-		NetworkGranted:    config.NetworkGranted,
-		CurrentCaps:       currentCaps,
-		LookupGranted:     currentCaps.Has(caps.Lookup),
-		SubagentsGranted:  currentCaps.Has(caps.Subagents),
-		ToolGroups:        config.ToolGroups,
-		GroupStatus:       config.GroupStatus,
-		Yolo:              config.Yolo,
-		NoteRule:          NoteRule(config.Notes),
+		WorkspaceDir:           config.Workspace.GetDir(),
+		SessionName:            config.SessionName,
+		SessionsDir:            config.SessionsDir,
+		SessionDir:             config.SessionDir,
+		ConfigFile:             config.ConfigFile,
+		GlobalPath:             config.GlobalPath,
+		TmpDir:                 config.TmpDir,
+		HomeDir:                config.HomeDir,
+		ExtraPaths:             config.ExtraPaths,
+		DropsDirectory:         config.DropsDirectory,
+		SharesSkills:           skill.HasGlobal(config.Skills),
+		ShellOffered:           toolset.Offers(config.OfferedTools, shellToolName),
+		TitleOffered:           toolset.Offers(config.OfferedTools, titleToolName),
+		NotifyOffered:          toolset.Offers(config.OfferedTools, notifyToolName),
+		LookupOffered:          toolset.Offers(config.OfferedTools, lookupToolName),
+		FetchOffered:           toolset.Offers(config.OfferedTools, fetchToolName),
+		SubagentOffered:        toolset.Offers(config.OfferedTools, subagentToolName),
+		Conditions:             config.Conditions,
+		WorkspaceWritable:      currentCaps.Has(caps.Write),
+		IsRepository:           pathutil.Exists(filepath.Join(config.Workspace.GetDir(), ".git")),
+		GitWritable:            currentCaps.Has(caps.Git),
+		ShellGranted:           currentCaps.Has(caps.Shell),
+		BackgroundShellGranted: config.BackgroundShellGranted && toolset.Offers(config.OfferedTools, shellToolName),
+		TasksGranted:           config.TasksGranted,
+		NetworkGranted:         config.NetworkGranted,
+		CurrentCaps:            currentCaps,
+		LookupGranted:          currentCaps.Has(caps.Lookup),
+		SubagentsGranted:       currentCaps.Has(caps.Subagents),
+		ToolGroups:             config.ToolGroups,
+		GroupStatus:            config.GroupStatus,
+		Yolo:                   config.Yolo,
+		NoteRule:               NoteRule(config.Notes),
 	}
 
 	var renderedText strings.Builder
@@ -618,7 +620,10 @@ func stateRules(data harnessContextTemplateData) string {
 
 	if data.ShellOffered {
 		lines = append(lines, bashAccessRule(data.ShellGranted, data.Yolo))
-		lines = append(lines, leftBehindRule(data.Yolo)+jobSurvival(data.JobsGranted))
+		lines = append(lines, leftBehindRule(data.Yolo)+backgroundSurvival(data.BackgroundShellGranted))
+	}
+	if data.TasksGranted {
+		lines = append(lines, "- A background tool call keeps running after its receipt returns, while this session is open; use the task tool to inspect or stop it")
 	}
 
 	if data.SubagentOffered {
@@ -664,12 +669,12 @@ func leftBehindRule(isYolo bool) string {
 	return "- A process that a bash call leaves running dies when the call ends"
 }
 
-func jobSurvival(areJobsGranted bool) string {
-	if !areJobsGranted {
+func backgroundSurvival(isBackgroundShellGranted bool) string {
+	if !isBackgroundShellGranted {
 		return ""
 	}
 
-	return "; use the job tool for anything that must outlive the call"
+	return "; set background=true for anything that must outlive the call"
 }
 
 func networkRules(data harnessContextTemplateData) string {
@@ -696,12 +701,8 @@ func networkRules(data harnessContextTemplateData) string {
 		loopback,
 	}
 
-	if data.JobsGranted {
-		lines = append(
-			lines,
-			"- A job command has only private loopback and cannot use the host network",
-			"- A service started with the job tool keeps running and stays reachable on 127.0.0.1",
-		)
+	if data.BackgroundShellGranted {
+		lines = append(lines, "- A service started by a background bash call keeps running and stays reachable on 127.0.0.1")
 	}
 
 	canRequestHostNetwork := data.NetworkGranted
@@ -830,21 +831,22 @@ func scratchRules(data harnessContextTemplateData) string {
 }
 
 func waitingForUserSection(data harnessContextTemplateData) string {
-	if !data.JobsGranted {
+	if !data.BackgroundShellGranted {
 		return ""
 	}
 
 	return strings.Join([]string{
 		"# Waiting for the User",
 		"",
-		"- Before ending your turn, start a job watcher when completion can be detected through the filesystem.",
+		"- Before ending your turn, start a watcher as a background bash call when completion can be detected through the filesystem.",
 		"- Note that this will not work with /grant, as it needs to be accessible already to be watchable.",
 		"- Use a continuous `inotifywait --monitor` if available; otherwise poll every 2s",
-		"- With inotifywait, omit `-q`, and end the turn only after the job output shows \"Watches established\"",
-		"- The job must exit once the condition holds; an `exit` inside `inotifywait … | while read` ends only the loop's subshell, so the job never ends",
+		"- With inotifywait, omit `-q`, and end the turn only after the task output shows \"Watches established\"",
+		"- The watcher must exit once the condition holds; an `exit` inside `inotifywait … | while read` ends only the loop's subshell, so the task never ends",
 		"- Feed the loop by process substitution instead, break on success, then kill inotifywait:",
 		"    - `while read -r _; do done_yet && break; done < <(inotifywait --monitor …); kill \"$!\"`",
-		"- When the job ends, continue where you stopped",
+		"- A task stops after 30 active minutes; when the watcher ends without the condition, start it again",
+		"- When the task ends, continue where you stopped",
 	}, "\n") + "\n\n"
 }
 
@@ -900,7 +902,7 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 		"    - Verify a standalone patch applies: "+applyCommand(data)+" --check <patch>",
 		"    - Verify a series by applying its remaining patches first-to-last in a fresh scratch copy",
 	)
-	if data.JobsGranted {
+	if data.BackgroundShellGranted {
 		lines = append(
 			lines,
 			"    - Applying a patch is filesystem-detectable, so start the mandatory watcher from \"Waiting for the User\" before the handoff",

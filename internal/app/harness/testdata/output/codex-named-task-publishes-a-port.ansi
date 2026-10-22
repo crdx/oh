@@ -1,0 +1,26 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m start named background work and publish its port                                                   \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbash\e[0m \e[38;2;150;152;150mtask docs scheduled Use http://127.82.233.168:8000 for the user; use localhost:8000 inside t…\e[0m\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8000 is now forwarded to http://127.82.233.168:8000.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m done.                                                                                 \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mserver ready\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\read output for\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mdiscard\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
+\r
+The named task published its port and was discarded.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Nothing restarted automatically.\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[32C\e[?25h\e[?2026l\r

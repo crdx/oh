@@ -7,7 +7,6 @@ import (
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/subagentrecord"
@@ -24,9 +23,6 @@ func TestEveryHarnessNoticeIsToldAsTheKindOfNoteItIs(t *testing.T) {
 		toolset.AvailabilityChange:         agent.EnvironmentNote,
 		pathgrant.Change:                   agent.EnvironmentNote,
 		portgrant.ForwardChange:            agent.EnvironmentNote,
-		caps.JobStop:                       agent.JobNote,
-		jobrecord.Ended:                    agent.JobNote,
-		jobrecord.EndedWithSession:         agent.JobNote,
 		hostcommand.Ran:                    agent.HostCommandNote,
 		turn.HarnessPoke:                   agent.PokeNote,
 		subagentrecord.ReportsDelivered:    agent.SubagentNote,

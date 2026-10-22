@@ -21,9 +21,9 @@ import (
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 )
 
 func TestGoldenCompletionMatchesGolden(t *testing.T) {
@@ -41,15 +41,16 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/g",
 		"/grant ",
 		"/grants ",
-		"/job ",
-		"/job st",
-		"/job stop ",
-		"/job output d",
-		"/job prune ",
-		"/job stop docs ",
-		"/job discard ",
-		"/job bogus ",
-		"/jobs ",
+		"/task ",
+		"/task st",
+		"/task stop ",
+		"/task output d",
+		"/task restart ",
+		"/task prune ",
+		"/task stop docs ",
+		"/task discard ",
+		"/task bogus ",
+		"/tasks ",
 		"/!",
 		"/!ls",
 		"/n",
@@ -344,12 +345,12 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 	*current = []pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess}}
 	ports, forwarded := fixturePortGrants()
 	*forwarded = []uint16{8080}
-	managedJobs, _ := fixtureJobs()
+	managedTasks, _ := fixtureTasks()
 	return commandEnvironment{
 		configDir:  configDirectory,
 		pathGrants: grants,
 		forwards:   ports,
-		jobs:       managedJobs,
+		tasks:      managedTasks,
 		getModelChoices: func() []model.Choice {
 			return []model.Choice{
 				{Provider: model.AnthropicProvider, ID: "claude-sonnet-5", EffortLevels: []string{"medium", "high"}},
@@ -606,100 +607,91 @@ func TestGoldenSnippetExpansionMatchesGolden(t *testing.T) {
 	assertGolden(t, "snippet-expansion.txt", output.String())
 }
 
-func TestGoldenJobListingMatchesGolden(t *testing.T) {
+func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		startedAt := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
-		finishedJob := func(name string, command string) jobs.Snapshot {
-			return jobs.Snapshot{
-				Name:      name,
-				Command:   command,
-				State:     jobs.StateComplete,
-				StartedAt: startedAt,
-				EndedAt:   startedAt.Add(3 * time.Second),
+		finishedTask := func(name string, command string) tasks.Snapshot {
+			return tasks.Snapshot{
+				ID:         name,
+				ToolName:   "bash",
+				Invocation: bashInvocation(command),
+				State:      tasks.Done,
+				Run:        1,
+				StartedAt:  startedAt,
+				EndedAt:    startedAt.Add(3 * time.Second),
 			}
 		}
-		failedJob := func(name string, command string) jobs.Snapshot {
-			snapshot := finishedJob(name, command)
-			snapshot.State = jobs.StateFailed
-			snapshot.ExitCode = 1
+		failedTask := func(name string, command string) tasks.Snapshot {
+			snapshot := finishedTask(name, command)
+			snapshot.State = tasks.Failed
+			snapshot.Failure = "exit status 1"
 			return snapshot
 		}
-		stoppedJob := func(name string, command string) jobs.Snapshot {
-			snapshot := finishedJob(name, command)
-			snapshot.State = jobs.StateStopped
-			snapshot.ExitCode = -1
+		stoppedTask := func(name string, command string) tasks.Snapshot {
+			snapshot := finishedTask(name, command)
+			snapshot.State = tasks.Stopped
 			snapshot.Failure = "the command stopped. The command ran for 22m 46s\nnote: SIGKILL stopped the command."
 			return snapshot
 		}
-
-		respawningJob := func(name string) jobs.Snapshot {
-			return jobs.Snapshot{
-				Name:      name,
-				Command:   "just " + name,
-				State:     jobs.StateRunning,
-				StartedAt: time.Now(),
-				Run:       3,
-				Respawn:   jobs.RespawnOnExit,
+		timedOutTask := func(name string, command string) tasks.Snapshot {
+			snapshot := finishedTask(name, command)
+			snapshot.State = tasks.TimedOut
+			snapshot.Failure = "task exceeded its 30m0s execution limit: context deadline exceeded"
+			return snapshot
+		}
+		queuedTask := func(name string, command string) tasks.Snapshot {
+			return tasks.Snapshot{ID: name, ToolName: "bash", Invocation: bashInvocation(command), State: tasks.Queued, Run: 1}
+		}
+		respawningTask := func(name string) tasks.Snapshot {
+			return tasks.Snapshot{
+				ID:           name,
+				ToolName:     "bash",
+				Invocation:   bashInvocation("just " + name),
+				State:        tasks.Running,
+				StartedAt:    time.Now(),
+				Run:          3,
+				IsRespawning: true,
 			}
 		}
-		stoppedRespawningJob := func(name string) jobs.Snapshot {
-			snapshot := finishedJob(name, "just "+name)
-			snapshot.State = jobs.StateStopped
+		stoppedRespawningTask := func(name string) tasks.Snapshot {
+			snapshot := finishedTask(name, "just "+name)
+			snapshot.State = tasks.Stopped
 			snapshot.Run = 2
-			return snapshot
-		}
-		abandonedJob := func(name string) jobs.Snapshot {
-			snapshot := failedJob(name, "just "+name)
-			snapshot.ExitCode = 127
-			snapshot.Run = jobs.QuickRunsTolerated + 1
-			snapshot.Respawn = jobs.RespawnAbandoned
-			return snapshot
-		}
-		unrespawnableJob := func(name string) jobs.Snapshot {
-			snapshot := failedJob(name, "just "+name)
-			snapshot.ExitCode = 0
-			snapshot.Run = 2
-			snapshot.Failure = "the job could not be respawned: no namespaces left"
-			return snapshot
-		}
-		endedRespawningJob := func(name string) jobs.Snapshot {
-			snapshot := finishedJob(name, "just "+name)
-			snapshot.State = jobs.StateEnded
-			snapshot.Run = 4
 			return snapshot
 		}
 
 		var output strings.Builder
 		for _, test := range []struct {
 			label   string
-			listing []jobs.Snapshot
+			listing []tasks.Snapshot
 		}{
-			{label: "no jobs"},
-			{label: "ordinary and multiline commands", listing: []jobs.Snapshot{
-				finishedJob("build", "GOCACHE=/tmp/cache just build && echo done"),
-				failedJob("docs", "python3 -m http.server 8080\n  --bind localhost"),
+			{label: "no tasks"},
+			{label: "ordinary and multiline commands", listing: []tasks.Snapshot{
+				finishedTask("build", "GOCACHE=/tmp/cache just build && echo done"),
+				failedTask("docs", "python3 -m http.server 8080\n  --bind localhost"),
 			}},
-			{label: "heredoc command", listing: []jobs.Snapshot{
-				finishedJob("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
+			{label: "heredoc command", listing: []tasks.Snapshot{
+				finishedTask("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
 			}},
-			{label: "malformed stored command", listing: []jobs.Snapshot{
-				finishedJob("broken", "echo 'unterminated\necho later"),
+			{label: "malformed stored command", listing: []tasks.Snapshot{
+				finishedTask("broken", "echo 'unterminated\necho later"),
 			}},
-			{label: "multiline failure", listing: []jobs.Snapshot{
-				stoppedJob("witness", "python3 /tmp/model-witness.py"),
+			{label: "multiline failure", listing: []tasks.Snapshot{
+				stoppedTask("witness", "python3 /tmp/model-witness.py"),
 			}},
-			{label: "respawning jobs", listing: []jobs.Snapshot{
-				respawningJob("watch"),
-				stoppedRespawningJob("serve"),
-				abandonedJob("lint"),
-				unrespawnableJob("index"),
-				endedRespawningJob("check"),
+			{label: "queued and timed out", listing: []tasks.Snapshot{
+				queuedTask("third", "just check"),
+				timedOutTask("slow", "just soak"),
+			}},
+			{label: "respawning tasks", listing: []tasks.Snapshot{
+				respawningTask("watch"),
+				stoppedRespawningTask("serve"),
 			}},
 		} {
-			managedJobs, _ := fixtureJobs()
-			managedJobs.List = func() []jobs.Snapshot { return test.listing }
+			managedTasks, _ := fixtureTasks()
+			managedTasks.List = func() []tasks.Snapshot { return test.listing }
 
-			context, err := invokeJobCommand(t, managedJobs, "/jobs")
+			context, err := invokeTaskCommand(t, managedTasks, "/tasks")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -736,46 +728,40 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 			}
 		}
 
-		assertGolden(t, "job-listing.txt", output.String())
+		assertGolden(t, "task-listing.txt", output.String())
 	})
 }
 
-func TestGoldenJobOutputMatchesGolden(t *testing.T) {
+func TestGoldenTaskOutputMatchesGolden(t *testing.T) {
 	var output strings.Builder
 	for _, test := range []struct {
 		label    string
-		output   string
-		snapshot jobs.Snapshot
+		snapshot tasks.Snapshot
 	}{
-		{label: "with output", output: "built successfully\n"},
-		{label: "without output", output: " \n\t"},
-		{label: "failed without output", output: "", snapshot: jobs.Snapshot{
-			Name:     "build",
-			State:    jobs.StateFailed,
-			ExitCode: 2,
-			Failure:  "note: SIGKILL stopped the command.",
+		{label: "with output", snapshot: tasks.Snapshot{ID: "build", State: tasks.Done, Output: "built successfully\n"}},
+		{label: "without output", snapshot: tasks.Snapshot{ID: "build", State: tasks.Done, Output: " \n\t"}},
+		{label: "failed without output", snapshot: tasks.Snapshot{
+			ID:      "build",
+			State:   tasks.Failed,
+			Failure: "note: SIGKILL stopped the command.",
 		}},
-		{label: "from a respawned run", output: "built in 3s\n", snapshot: jobs.Snapshot{
-			Name:  "watch",
-			State: jobs.StateStopped,
-			Run:   4,
+		{label: "from a respawned run", snapshot: tasks.Snapshot{
+			ID:     "watch",
+			State:  tasks.Stopped,
+			Run:    4,
+			Output: "built in 3s\n",
 		}},
 	} {
-		managedJobs, _ := fixtureJobs()
-		managedJobs.Output = func(string) (string, jobs.Snapshot, error) {
-			if test.snapshot.Name != "" {
-				return test.output, test.snapshot, nil
-			}
-			return test.output, jobs.Snapshot{Name: "build", State: jobs.StateComplete}, nil
-		}
-		context, err := invokeJobCommand(t, managedJobs, "/job output build")
+		managedTasks, _ := fixtureTasks()
+		managedTasks.Output = func(string) (tasks.Snapshot, error) { return test.snapshot, nil }
+		context, err := invokeTaskCommand(t, managedTasks, "/task output build")
 		if err != nil {
 			t.Fatal(err)
 		}
 		fmt.Fprintf(&output, "=== %s ===\n%s\n", test.label, context.notice)
 	}
 
-	assertGolden(t, "job-output.txt", output.String())
+	assertGolden(t, "task-output.txt", output.String())
 }
 
 var updateGoldens = flag.Bool("update", false, "write command output back to the golden files")

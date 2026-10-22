@@ -18,11 +18,11 @@ type recordedPorts struct {
 	refusal error
 }
 
-func (self *recordedPorts) Forward(port uint16, jobName string) (string, error) {
+func (self *recordedPorts) Forward(port uint16, taskName string) (string, error) {
 	if self.refusal != nil {
 		return "", self.refusal
 	}
-	self.open = append(self.open, Publication{Port: port, JobName: jobName})
+	self.open = append(self.open, Publication{Port: port, TaskName: taskName})
 
 	return "http://127.9.9.9:" + strconv.Itoa(int(port)), nil
 }
@@ -73,7 +73,7 @@ func TestForwardingSaysWhereTheUserCanOpenIt(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(ports.open) != 1 || ports.open[0].Port != 8080 || ports.open[0].JobName != "" {
+	if len(ports.open) != 1 || ports.open[0].Port != 8080 || ports.open[0].TaskName != "" {
 		t.Errorf("got open ports %v, want [8080]", ports.open)
 	}
 	if !strings.Contains(said, "http://127.9.9.9:8080") {
@@ -85,13 +85,13 @@ func TestForwardingSaysWhereTheUserCanOpenIt(t *testing.T) {
 	}
 }
 
-func TestForwardingCanAssociateThePortWithAJob(t *testing.T) {
+func TestForwardingCanAssociateThePortWithATask(t *testing.T) {
 	ports := &recordedPorts{}
 
-	if _, err := run(ports, Args{Action: actionAdd, Port: 8080, JobName: "docs"}); err != nil {
+	if _, err := run(ports, Args{Action: actionAdd, Port: 8080, TaskName: "docs"}); err != nil {
 		t.Fatal(err)
 	}
-	if len(ports.open) != 1 || ports.open[0] != (Publication{Port: 8080, JobName: "docs"}) {
+	if len(ports.open) != 1 || ports.open[0] != (Publication{Port: 8080, TaskName: "docs"}) {
 		t.Errorf("got open ports %#v, want docs associated with 8080", ports.open)
 	}
 }
@@ -120,7 +120,7 @@ func TestListingSaysWhatIsOpenOrThatNothingIs(t *testing.T) {
 		t.Errorf("got %q", said)
 	}
 
-	said, err = run(&recordedPorts{open: []Publication{{Port: 3000}, {Port: 8080, JobName: "docs"}}}, Args{Action: actionList})
+	said, err = run(&recordedPorts{open: []Publication{{Port: 3000}, {Port: 8080, TaskName: "docs"}}}, Args{Action: actionList})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -149,9 +149,9 @@ func TestACallIsRefusedBeforeItReachesTheHarness(t *testing.T) {
 		"no port":           {Action: actionAdd},
 		"port out of range": {Action: actionAdd, Port: 70000},
 		"port with list":    {Action: actionList, Port: 8080},
-		"job with list":     {Action: actionList, JobName: "docs"},
-		"job with remove":   {Action: actionRemove, Port: 8080, JobName: "docs"},
-		"invalid job name":  {Action: actionAdd, Port: 8080, JobName: "Docs"},
+		"task with list":    {Action: actionList, TaskName: "docs"},
+		"task with remove":  {Action: actionRemove, Port: 8080, TaskName: "docs"},
+		"invalid task name": {Action: actionAdd, Port: 8080, TaskName: "Docs"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := validate(args); err == nil {
@@ -161,10 +161,11 @@ func TestACallIsRefusedBeforeItReachesTheHarness(t *testing.T) {
 	}
 
 	for name, args := range map[string]Args{
-		"publish":          {Action: actionAdd, Port: 8080},
-		"publish with job": {Action: actionAdd, Port: 8080, JobName: "docs"},
-		"unpublish":        {Action: actionRemove, Port: 8080},
-		"list":             {Action: actionList},
+		"publish":                      {Action: actionAdd, Port: 8080},
+		"publish with task":            {Action: actionAdd, Port: 8080, TaskName: "docs"},
+		"publish with a numbered task": {Action: actionAdd, Port: 8080, TaskName: "abcdefghij-1"},
+		"unpublish":                    {Action: actionRemove, Port: 8080},
+		"list":                         {Action: actionList},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := validate(args); err != nil {
@@ -184,7 +185,7 @@ func TestACallIsRenderedByItsAction(t *testing.T) {
 			want: tool.CallRendering{Kind: "forward_add", ReportsStatus: true, Subject: "8080"},
 		},
 		"associated forward": {
-			args: Args{Action: actionAdd, Port: 8080, JobName: "docs"},
+			args: Args{Action: actionAdd, Port: 8080, TaskName: "docs"},
 			want: tool.CallRendering{Kind: "forward_add", ReportsStatus: true, Subject: "docs:8080"},
 		},
 		"unforward": {

@@ -270,7 +270,7 @@ func isLeafTable(path []string) bool {
 	if len(path) != 2 {
 		return false
 	}
-	return path[0] == snippetsSetting || (path[0] == uiSetting && path[1] == themeSetting)
+	return path[0] == snippetSetting || (path[0] == uiSetting && path[1] == themeSetting)
 }
 
 func leafTableOf(key toml.Key) toml.Key {
@@ -357,7 +357,7 @@ func snippetSettings(settings Config) map[string][]string {
 	names := make(map[string][]string, len(settings.snippetFileSnapshots))
 	for _, name := range slices.Sorted(maps.Keys(settings.Snippets)) {
 		if path := settings.Snippets[name].File; path != "" {
-			names[path] = append(names[path], snippetsSetting+"."+name)
+			names[path] = append(names[path], snippetSetting+"."+name)
 		}
 	}
 	return names

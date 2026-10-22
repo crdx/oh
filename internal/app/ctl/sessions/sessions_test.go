@@ -16,7 +16,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 
-	ohSessions "crdx.org/oh/internal/app/sessions"
+	"crdx.org/oh/internal/app/sessions"
 )
 
 func TestARunningSessionIsReportedAsRunningAndAnEndedOneAsEnded(t *testing.T) {
@@ -212,7 +212,7 @@ func columnStart(t *testing.T, line string, marker string) int {
 func load(t *testing.T, directory string, isRunningOnly bool) []Listing {
 	t.Helper()
 
-	stored, err := ohSessions.Load(directory)
+	stored, err := sessions.Load(directory)
 	if err != nil {
 		t.Fatal(err)
 	}

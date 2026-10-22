@@ -15,6 +15,8 @@ const (
 	ForwardNameFormat       = 12
 	ThemePaletteFormat      = 13
 	DefaultsFormat          = 14
+	ToolTableFormat         = 15
+	SingularConfigFormat    = 16
 
-	Format = DefaultsFormat
+	Format = SingularConfigFormat
 )

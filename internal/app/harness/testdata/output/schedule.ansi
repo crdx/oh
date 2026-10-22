@@ -1,4 +1,4 @@
-=== a finished job lingers on the bar and then goes ===
+=== a finished task lingers on the bar and then goes ===
       +1s  \e[38;2;129;162;190m● check\e[0m
       +2s  \e[38;2;129;162;190m● check\e[0m
       +3s  \e[38;2;150;152;150m○ check\e[0m

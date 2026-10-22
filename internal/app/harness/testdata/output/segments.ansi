@@ -121,35 +121,31 @@ GPTS\e[38;2;150;152;150m5.6\e[0m
 \e[38;2;192;128;80m⚡\e[0m
 === fast-mode / standard ===
 \e[38;2;150;152;150m·\e[0m
-=== forwards / associated absent job ===
+=== forwards / associated absent task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== forwards / associated complete job ===
-\e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
-\e[38;2;150;152;150m+1\e[0m
-\e[38;2;150;152;150m+\e[0m
-=== forwards / associated failed job ===
+=== forwards / associated failed task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;204;102;102mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== forwards / associated job ended with session ===
+=== forwards / associated finished task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== forwards / associated running job ===
+=== forwards / associated queued task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;129;162;190mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== forwards / associated starting job ===
+=== forwards / associated running task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;129;162;190mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== forwards / associated stopped job ===
+=== forwards / associated stopped task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== forwards / associated stopping job ===
+=== forwards / associated stopping task ===
 \e]8;;http://127.82.233.168:8000\e\\\e[38;2;207;173;0mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+\e[0m
@@ -221,24 +217,6 @@ GPTS\e[38;2;150;152;150m5.6\e[0m
 \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150m[\e[0m\e]8;;file:///reference\e\\reference\e]8;;\e\\\e[38;2;150;152;150m]\e[0m\e[38;2;150;152;150m, \e[0m\e[38;2;150;152;150m+1\e[0m
 \e[38;2;150;152;150m+2\e[0m
 \e[38;2;150;152;150m+\e[0m
-=== jobs / a ghost beside a live job ===
-\e[38;2;129;162;190m● docs\e[0m \e[38;2;150;152;150m○ builder\e[0m
-=== jobs / a ghost whose linger is up ===
-\e[38;2;129;162;190m● docs\e[0m
-=== jobs / associated job named by port ===
-\e[38;2;129;162;190m● watch\e[0m
-=== jobs / failures alone ===
-\e[38;2;204;102;102m✗ builder\e[0m \e[38;2;204;102;102m✗ api\e[0m
-=== jobs / failures beside those running ===
-\e[38;2;129;162;190m● docs\e[0m \e[38;2;204;102;102m✗ builder\e[0m
-=== jobs / none ===
-
-=== jobs / nothing is left of a closed session ===
-
-=== jobs / one being stopped among those running ===
-\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m \e[38;2;207;173;0m● api\e[0m
-=== jobs / running ===
-\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m
 === local-time / custom format ===
 \e[38;2;150;152;150m14:32:09\e[0m
 === local-time / default format ===
@@ -414,6 +392,26 @@ usage \e[38;2;204;102;102mfailed\e[0m
 \e[38;2;76;154;44m●\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150m5h\e[0m\e]8;;\e\\ \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m
 \e[38;2;76;154;44m●\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m
 
+=== tasks / a ghost beside a live task ===
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;150;152;150m○ builder\e[0m
+=== tasks / a ghost whose linger is up ===
+\e[38;2;129;162;190m● docs\e[0m
+=== tasks / associated task named by port ===
+\e[38;2;129;162;190m● watch\e[0m
+=== tasks / failures alone ===
+\e[38;2;204;102;102m✗ builder\e[0m \e[38;2;204;102;102m✗ api\e[0m
+=== tasks / failures beside those running ===
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;204;102;102m✗ builder\e[0m
+=== tasks / none ===
+
+=== tasks / nothing is left of a closed session ===
+
+=== tasks / one being stopped among those running ===
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m \e[38;2;207;173;0m● api\e[0m
+=== tasks / queued, running and failed together ===
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● checks\e[0m \e[38;2;129;162;190m● build\e[0m \e[38;2;204;102;102m✗ lint\e[0m
+=== tasks / running ===
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m
 === turn-count / nothing asked yet ===
 
 === turn-count / third turn ===

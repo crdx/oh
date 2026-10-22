@@ -16,13 +16,11 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/file"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/forward"
-	"crdx.org/oh/pkg/toolbox/job"
 )
 
 const (
@@ -506,6 +504,11 @@ func New(
 		if err == nil && !isYolo {
 			policy = parent.confine(policy)
 		}
+		if err == nil {
+			if bound, isBound := ctx.Value(taskPolicyKey{}).(sandbox.Policy); isBound {
+				policy = restrictTaskPolicy(policy, bound)
+			}
+		}
 		return policy, parent.withheld(err)
 	}
 	networkApproval := func(ctx context.Context, command string, intent string) error {
@@ -517,35 +520,6 @@ func New(
 	}
 
 	return bash.New(files, fresh, networkApproval, runner, !isYolo)
-}
-
-func NewJob(
-	manager *jobs.Manager,
-	workspaceDir string,
-	roots Roots,
-	pathAccess *PathAccess,
-	mode *caps.Mode,
-	files *file.Root,
-	isYolo bool,
-	ports forward.Ports,
-) tool.Tool {
-	fresh := func(ctx context.Context) (sandbox.Policy, error) {
-		policy, err := freshPolicy(ctx, workspaceDir, roots, pathAccess, mode, isYolo)
-		if err != nil {
-			return policy, err
-		}
-
-		policy.Timeout = 0
-		policy.MaxCPUTime = 0
-
-		return policy, nil
-	}
-
-	if isYolo {
-		return job.NewOnHost(manager, files, fresh)
-	}
-
-	return job.New(manager, files, fresh, ports)
 }
 
 func StoppedBy(withdrawnCaps caps.Set, workspaceDir string) (func(sandbox.Policy) bool, bool) {
@@ -596,6 +570,41 @@ func StoppedByPath(path string) func(sandbox.Policy) bool {
 	}
 }
 
+type taskPolicyKey struct{}
+
+func BindTaskPolicy(ctx context.Context, policy sandbox.Policy) context.Context {
+	return context.WithValue(ctx, taskPolicyKey{}, policy.Clone())
+}
+
+func restrictTaskPolicy(current sandbox.Policy, initial sandbox.Policy) sandbox.Policy {
+	if current.Yolo {
+		return current
+	}
+	current.Read = slices.DeleteFunc(current.Read, func(path string) bool { return !slices.Contains(initial.Read, path) })
+	current.Write = slices.DeleteFunc(current.Write, func(path string) bool { return !slices.Contains(initial.Write, path) })
+	current.Exec = slices.DeleteFunc(current.Exec, func(path string) bool { return !slices.Contains(initial.Exec, path) })
+	current.Sockets = slices.DeleteFunc(current.Sockets, func(path string) bool { return !slices.Contains(initial.Sockets, path) })
+	current.OptionalPaths = slices.DeleteFunc(current.OptionalPaths, func(path string) bool {
+		return !slices.Contains(initial.OptionalPaths, path)
+	})
+	current.ParentWritable = slices.DeleteFunc(current.ParentWritable, func(path string) bool {
+		return !slices.Contains(initial.ParentWritable, path)
+	})
+	return current
+}
+
+func TaskPolicy(
+	workspaceDir string,
+	roots Roots,
+	pathAccess *PathAccess,
+	mode *caps.Mode,
+	isYolo bool,
+) func(context.Context) (sandbox.Policy, error) {
+	return func(ctx context.Context) (sandbox.Policy, error) {
+		return freshPolicy(ctx, workspaceDir, roots, pathAccess, mode, isYolo)
+	}
+}
+
 func freshPolicy(
 	ctx context.Context,
 	workspaceDir string,
@@ -611,7 +620,11 @@ func freshPolicy(
 	}
 
 	if isYolo {
-		return YoloPolicy(roots.HomeDirectory, roots.ScratchDirectory), nil
+		policy := YoloPolicy(roots.HomeDirectory, roots.ScratchDirectory)
+		if tasks.Managed(ctx) {
+			policy.Timeout = tasks.RunLimit
+		}
+		return policy, nil
 	}
 
 	extraPaths, optionalPaths := pathAccess.getPaths()
@@ -631,6 +644,10 @@ func freshPolicy(
 		return policy, fmt.Errorf("the shell cannot be confined: %w", err)
 	}
 
+	if tasks.Managed(ctx) {
+		policy.Timeout = tasks.RunLimit
+		policy.MaxCPUTime = tasks.RunLimit * time.Duration(runtime.NumCPU()) * shellCPUPercent / 100
+	}
 	policy.DenyPaths, err = pathAccess.getDenyPaths(policy)
 	if err != nil {
 		return policy, fmt.Errorf("the shell cannot resolve sandbox denials: %w", err)

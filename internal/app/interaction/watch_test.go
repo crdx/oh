@@ -7,7 +7,6 @@ import (
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/turn"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -46,7 +45,6 @@ func TestEveryHandlerIsWatchedUnderItsOwnName(t *testing.T) {
 		OnResize:         func() {},
 		OnBeat:           func() {},
 		OnDraw:           func() {},
-		OnJobEnded:       func(jobs.Conclusion) {},
 		OnForwardChange:  func(agent.Event) {},
 		OnQuestionChange: func() {},
 		OnTriggerChange:  func() {},
@@ -63,7 +61,6 @@ func TestEveryHandlerIsWatchedUnderItsOwnName(t *testing.T) {
 	handler.OnResize()
 	handler.OnBeat()
 	handler.OnDraw()
-	handler.OnJobEnded(jobs.Conclusion{})
 	handler.OnForwardChange(agent.Event{})
 	handler.OnQuestionChange()
 	handler.OnTriggerChange()
@@ -71,7 +68,7 @@ func TestEveryHandlerIsWatchedUnderItsOwnName(t *testing.T) {
 
 	want := []string{
 		"keypress", "turn event", "turn finished", "resize", "beat", "draw",
-		"job ended", "port change", "question change", "trigger change", "config change",
+		"port change", "question change", "trigger change", "config change",
 	}
 	if !slices.Equal(watchedWork, want) {
 		t.Errorf("got %q, want %q", watchedWork, want)

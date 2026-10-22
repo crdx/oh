@@ -248,7 +248,7 @@ func TestACommandCompletingItsOwnArgumentsIsToldWhatWasWritten(t *testing.T) {
 	}
 	var requests []request
 	registry := mustRegistry(t, mustSet(t, "/",
-		slash.Command{Name: "job", Run: commandHandler}.
+		slash.Command{Name: "task", Run: commandHandler}.
 			WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
 				requests = append(requests, request{writtenArguments: writtenArguments, partial: partial})
 				if len(writtenArguments) == 1 {
@@ -258,8 +258,8 @@ func TestACommandCompletingItsOwnArgumentsIsToldWhatWasWritten(t *testing.T) {
 			}),
 	))
 
-	assertCompletions(t, registry, "/job stop  z", []string{"/job stop  zebra", "/job stop  aardvark"})
-	if registry.Completes("/job ") {
+	assertCompletions(t, registry, "/task stop  z", []string{"/task stop  zebra", "/task stop  aardvark"})
+	if registry.Completes("/task ") {
 		t.Error("Completes held where the command completed nothing")
 	}
 	want := request{writtenArguments: []string{"stop"}, partial: "z"}
@@ -267,8 +267,8 @@ func TestACommandCompletingItsOwnArgumentsIsToldWhatWasWritten(t *testing.T) {
 		t.Errorf("got requests %+v, want %+v first", requests, want)
 	}
 
-	wantCommand := []slash.Completion{{Text: "/job", Label: "/job", TakesArguments: true}}
-	if got := registry.Completions("/jo"); !slices.Equal(got, wantCommand) {
+	wantCommand := []slash.Completion{{Text: "/task", Label: "/task", TakesArguments: true}}
+	if got := registry.Completions("/ta"); !slices.Equal(got, wantCommand) {
 		t.Errorf("got %+v, want %+v", got, wantCommand)
 	}
 }

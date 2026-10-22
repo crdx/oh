@@ -11,8 +11,14 @@
 - Refuse a child workspace inside the parent's scratch
 - Verify the workspace path before bash, grep and job run
 - Sweep inherited descriptors before a confined command starts
+- Unify tool settings in config file, and singularise key name
+- Replace jobs with tasks, and make all tools asyncable
+- Let a custom tool override the built-in limit
+- Run bash, grep, lookup async, and allow custom tools to opt in
 - Run agent commands at lower CPU priority
 - Bound custom tool output during execution
+- Singularise config tables and move the forwarding hostname
+- Retire the deprecated permissions config key
 
 ## [0.21.0] — 2026-10-22
 

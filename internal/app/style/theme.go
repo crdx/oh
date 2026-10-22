@@ -181,17 +181,16 @@ var defaultTheme = Theme{
 				"host_network": {Name: "$", Paint: "status_danger"},
 			},
 		},
-		"job": {
-			Default: ToolAppearance{Name: "job", Paint: "status_warning"},
+		"task": {
+			Default: ToolAppearance{Name: "manage", Paint: "status_warning"},
 			Actions: map[string]ToolAppearance{
-				"start":   {},
-				"stop":    {},
-				"restart": {},
-				"discard": {},
-				"prune":   {},
-				"status":  {Paint: "normal"},
-				"output":  {Name: "cat", Paint: "normal"},
-				"list":    {Paint: "normal"},
+				"status":  {Name: "check", Paint: "normal"},
+				"output":  {Name: "read output for", Paint: "normal"},
+				"restart": {Name: "restart"},
+				"discard": {Name: "discard"},
+				"stop":    {Name: "stop"},
+				"list":    {Name: "list", Paint: "normal"},
+				"prune":   {Name: "prune"},
 			},
 		},
 		"subagent": {

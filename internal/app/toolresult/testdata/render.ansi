@@ -381,27 +381,24 @@ Plain page.
 \e[38;2;204;102;102mError\e[0m
 \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m
 
-=== job with invalid name ===
-\e[38;2;207;173;0mjob\e[0m
+=== task with invalid name ===
+\e[38;2;207;173;0mtask\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"start"\e[0m,
-    "name": \e[38;2;181;189;104m"way-too-long"\e[0m,
-    "command": \e[38;2;181;189;104m"true"\e[0m
+    "action": \e[38;2;181;189;104m"status"\e[0m,
+    "name": \e[38;2;181;189;104m"Way Too Long"\e[0m
 }
 
-job name must match [a-z0-9-]{1,10}
+task name must match [a-z0-9-]{1,10}
 
-=== job request stopped ===
-\e[38;2;207;173;0mjob\e[0m
+=== task request stopped ===
+\e[38;2;207;173;0mtask\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"list"\e[0m,
-    "name": \e[38;2;181;189;104m""\e[0m,
-    "command": \e[38;2;181;189;104m""\e[0m
+    "action": \e[38;2;181;189;104m"list"\e[0m
 }
 
-the job request stopped because the user pressed escape
+the task request stopped because the user pressed escape
 
 === title ===
 \e[38;2;207;173;0mtitle\e[0m · \e[38;2;192;128;80mrender-useful-results\e[0m

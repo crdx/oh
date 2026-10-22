@@ -11,26 +11,40 @@ const (
 )
 
 var reaches = map[string]Reach{
-	"sandbox":  ReachNextRun,
-	"skills":   ReachNextRun,
+	"grants":   ReachNextRun,
+	"skill":    ReachNextRun,
 	"provider": ReachNextRun,
-	"ports":    ReachNextRun,
 	"debug":    ReachNextRun,
-	"defaults": ReachNextSession,
+	"default":  ReachNextSession,
 	"agent":    ReachNextSession,
-	"tools":    ReachNextSession,
+	"tool":     ReachNextSession,
 }
 
 var settingReaches = map[string]Reach{
-	"debug.wire":                 ReachNextSession,
-	"defaults.tool_output":       ReachLive,
-	"experimental.reply_command": ReachNextRun,
+	"debug.wire":                            ReachNextSession,
+	"default.tool_output":                   ReachLive,
+	"experimental.background_after_seconds": ReachNextRun,
+	"experimental.forward_hostname":         ReachNextRun,
+	"experimental.reply_command":            ReachNextRun,
+	"tool.bash.host_network":                ReachLive,
+	"tool.fetch.permission":                 ReachLive,
+	"tool.lookup.permission":                ReachLive,
 }
 
 func ReachOf(setting string) Reach {
-	if reach, isListed := settingReaches[setting]; isListed {
-		return reach
+	for candidate := setting; candidate != ""; candidate = parentSetting(candidate) {
+		if reach, isListed := settingReaches[candidate]; isListed {
+			return reach
+		}
 	}
 	table, _, _ := strings.Cut(setting, ".")
 	return reaches[table]
+}
+
+func parentSetting(setting string) string {
+	end := strings.LastIndexByte(setting, '.')
+	if end < 0 {
+		return ""
+	}
+	return setting[:end]
 }

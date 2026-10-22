@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-	"time"
 	"unicode"
 
 	"mvdan.cc/sh/v3/syntax"
@@ -18,6 +17,7 @@ import (
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -37,7 +37,9 @@ type Args struct {
 	Network Network `json:"network,omitempty"`
 }
 
-const CommandTimeout = 10 * time.Minute
+const Name = "bash"
+
+const CommandTimeout = tasks.RunLimit
 
 const IntentDescription = `what you are doing, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as "Regenerating every golden in the scratch copy"`
 
@@ -77,7 +79,7 @@ func New(
 
 	return tool.Implement(
 		tool.Definition{
-			Name:        "bash",
+			Name:        Name,
 			Description: "run a shell command",
 			Schema:      schema,
 		},
@@ -329,7 +331,13 @@ func exec(
 	if err := root.VerifyPath(); err != nil {
 		return "", tool.ToolCallMetrics{}, fmt.Errorf("the workspace changed on disk: %w", err)
 	}
-	result, err := runner.Run(ctx, root.Name(), args.Command, policy)
+	var result sandbox.Result
+	var err error
+	if output := tool.LiveOutput(ctx); output != nil {
+		result, err = runLive(ctx, runner, root, policy, args, output)
+	} else {
+		result, err = runner.Run(ctx, root.Name(), args.Command, policy)
+	}
 	metrics := tool.ToolCallMetrics{
 		Kind:       tool.MetricResources,
 		CPUTime:    result.CPUTime,
@@ -349,6 +357,29 @@ func exec(
 }
 
 var ErrCommandFailed = errors.New("the command failed")
+
+func runLive(
+	ctx context.Context,
+	runner sandbox.Runner,
+	root *file.Root,
+	policy sandbox.Policy,
+	args Args,
+	output *tool.OutputBuffer,
+) (sandbox.Result, error) {
+	process, err := runner.Start(ctx, root.Name(), args.Command, policy, output)
+	if err != nil {
+		return sandbox.Result{}, err
+	}
+	var result sandbox.Result
+	if err = tool.Launched(ctx); err != nil {
+		process.Stop()
+		result, _ = process.Wait()
+	} else {
+		result, err = process.Wait()
+	}
+	result.Output = output.Report()
+	return result, err
+}
 
 func measured(reportText string, metrics *tool.ToolCallMetrics) string {
 	metrics.Lines = int64(len(strutil.Lines(reportText)))

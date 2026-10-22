@@ -6,7 +6,7 @@
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -42,7 +42,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -78,7 +78,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -114,7 +114,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -150,7 +150,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -186,7 +186,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -222,7 +222,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -258,7 +258,7 @@ See the notes (https://example.com/paint).
 Looking for where the spinner is drawn.
 $ git status --short
 $ go build ./... ✗ exit(1)
-start docs
+restart docs
 load skills/tidy/SKILL.md
 
 Why it stutters
@@ -396,9 +396,9 @@ model answer
  show themed actions
 
 
-start docs
+restart docs
 scuttle docs
-cat docs
+read output for docs
 forward 8080
 close-gangway 8080
 

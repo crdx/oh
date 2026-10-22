@@ -16,7 +16,7 @@ import (
 	"crdx.org/oh/pkg/session"
 
 	"crdx.org/oh/internal/app/model"
-	sessionpicker "crdx.org/oh/internal/app/sessions/picker"
+	"crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/money"
@@ -345,7 +345,7 @@ func TestNoStoredConversationAnywhereSaysSo(t *testing.T) {
 
 func TestSessionsOutsideTheCurrentWorkspaceAreMarked(t *testing.T) {
 	workspaceDir := t.TempDir()
-	sessions := []*sessionpicker.Session{
+	sessions := []*picker.Session{
 		{WorkspaceDir: workspaceDir},
 		{WorkspaceDir: t.TempDir()},
 	}

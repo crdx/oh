@@ -10,6 +10,14 @@ import (
 
 var HeadlessTools = []string{"read", "ls", "find", "grep", "bash", "write", "edit"}
 
+var BuiltinNames = []string{
+	"read", "ls", "find", "grep", "write", "edit",
+	"bash", "task", "forward", "wait", "subagent",
+	"notify", "title", "lookup", "fetch",
+}
+
+func IsBuiltin(name string) bool { return slices.Contains(BuiltinNames, name) }
+
 func Headless(tools []tool.Tool) []tool.Tool {
 	return slices.DeleteFunc(slices.Clone(tools), func(candidate tool.Tool) bool {
 		return !slices.Contains(HeadlessTools, candidate.Name())

@@ -2,12 +2,14 @@ package harness
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"slices"
 	"strings"
 	"time"
@@ -30,7 +32,6 @@ import (
 	"crdx.org/oh/internal/app/input"
 	"crdx.org/oh/internal/app/interaction"
 	"crdx.org/oh/internal/app/interrupt"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/location"
@@ -51,17 +52,19 @@ import (
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/ask"
 	"crdx.org/oh/pkg/session"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox/title"
 )
@@ -93,9 +96,9 @@ func (self *pendingNotices) takeBack(index int) {
 	self.items = slices.Delete(self.items, index, index+1)
 }
 
-func (self *pendingNotices) hasStoppedJobsAfter(index int, whichCaps caps.Set) bool {
+func (self *pendingNotices) hasStoppedWorkAfter(index int, whichCaps caps.Set) bool {
 	for _, item := range self.items[index+1:] {
-		if item.state.Kind != caps.JobStop {
+		if item.state.Kind != caps.TaskStop {
 			continue
 		}
 
@@ -134,10 +137,6 @@ func (self *pendingNotices) modelNotes() []agent.Note {
 		if item.state.Kind == environment.Change {
 			itemNotices, areSaid = environment.ModelNotice(item.state)
 		}
-		if item.state.Kind == jobrecord.EndedWithSession {
-			modelNotice, isSaid := jobrecord.EndedWithSessionModelNotice(item.state)
-			itemNotices, areSaid = []string{modelNotice}, isSaid
-		}
 		if areSaid {
 			notes = append(notes, agent.Note{
 				Kind: painter.HarnessNoteKind(item.state.Kind),
@@ -152,7 +151,7 @@ func (self *pendingNotices) accessNotices() []string {
 	var notices []string
 	for _, item := range self.items {
 		kind := item.state.Kind
-		isAccessChange := kind == caps.ModeChange || kind == caps.JobStop ||
+		isAccessChange := kind == caps.ModeChange || kind == caps.TaskStop ||
 			kind == toolset.AvailabilityChange || kind == environment.Change ||
 			kind == pathgrant.Change || kind == portgrant.ForwardChange
 		if !isAccessChange {
@@ -164,13 +163,6 @@ func (self *pendingNotices) accessNotices() []string {
 		}
 	}
 	return notices
-}
-
-type jobState struct {
-	manager         *jobs.Manager
-	recordedListing string
-	hasRecorded     bool
-	doesWake        bool
 }
 
 type displayState struct {
@@ -206,60 +198,64 @@ type questionState struct {
 }
 
 type App struct {
-	agent           *agent.Agent
-	recordedEvents  []agent.Event
-	introductions   *painter.Introductions
-	describer       *call.Describer
-	openingEvents   []agent.Event
-	screen          *output.Screen
-	recorder        *record.Recorder
-	configObserver  *config.Observer
-	currency        currencyState
-	inputLine       *edit.Input
-	editorConfig    *editor.Config
-	mode            *caps.Mode
-	conditions      *conditions.State
-	environment     *environment.State
-	pathGrants      *pathgrant.Grants
-	forwards        *portgrant.Forwards
-	jobs            jobState
-	children        childState
-	settledNotes    []agent.Note
-	settledCaps     caps.Set
-	pendingNotices  pendingNotices
-	feedback        feedback.State
-	terminal        terminal.Terminal
-	metrics         metrics.Tracker
-	toolOutputLimit *truncate.Limit
-	saveOverflow    truncate.Saver
-	experimental    *experimental.Toggles
-	isReplyOffered  bool
-	permissions     *permission.Live
-	onFailure       func(failure error)
-	onQuestion      func(question ask.Question) func()
-	savePastedImage func(mediaType string, data []byte) (string, error)
-	watchStalls     func(work string) func()
-	pasteExchange   paste.Exchange
-	workspace       *work.Space
-	nudge           string
-	speedDial       speedDial
-	display         displayState
-	runMode         runMode
-	commands        slash.Registry
-	completer       *trigger.Completer
-	question        questionState
-	transition      cycle.Transition
-	queuedTurn      turn.Queue
-	queueRevealAt   time.Time
-	currentTurn     Turn
-	startedAt       time.Time
-	keyboard        *os.File
-	termination     terminationState
-	hostCommand     hostCommandState
-	externalEdit    externalEditState
-	keypresses      *interaction.Keyboard
-	restoreTTY      func()
-	now             func() time.Time
+	agent                *agent.Agent
+	recordedEvents       []agent.Event
+	introductions        *painter.Introductions
+	describer            *call.Describer
+	openingEvents        []agent.Event
+	screen               *output.Screen
+	recorder             *record.Recorder
+	configObserver       *config.Observer
+	currency             currencyState
+	inputLine            *edit.Input
+	editorConfig         *editor.Config
+	mode                 *caps.Mode
+	conditions           *conditions.State
+	environment          *environment.State
+	pathGrants           *pathgrant.Grants
+	forwards             *portgrant.Forwards
+	tasks                *tasks.Manager
+	tasksDoWake          bool
+	tasksHasRecorded     bool
+	tasksRecordedListing string
+	children             childState
+	settledNotes         []agent.Note
+	settledCaps          caps.Set
+	pendingNotices       pendingNotices
+	feedback             feedback.State
+	terminal             terminal.Terminal
+	metrics              metrics.Tracker
+	toolOutputLimit      *truncate.Limit
+	saveOverflow         truncate.Saver
+	experimental         *experimental.Toggles
+	isReplyOffered       bool
+	permissions          *permission.Live
+	bashApproval         config.BashApproval
+	onFailure            func(failure error)
+	onQuestion           func(question ask.Question) func()
+	savePastedImage      func(mediaType string, data []byte) (string, error)
+	watchStalls          func(work string) func()
+	pasteExchange        paste.Exchange
+	workspace            *work.Space
+	nudge                string
+	speedDial            speedDial
+	display              displayState
+	runMode              runMode
+	commands             slash.Registry
+	completer            *trigger.Completer
+	question             questionState
+	transition           cycle.Transition
+	queuedTurn           turn.Queue
+	queueRevealAt        time.Time
+	currentTurn          Turn
+	startedAt            time.Time
+	keyboard             *os.File
+	termination          terminationState
+	hostCommand          hostCommandState
+	externalEdit         externalEditState
+	keypresses           *interaction.Keyboard
+	restoreTTY           func()
+	now                  func() time.Time
 }
 
 type Turn struct {
@@ -349,8 +345,8 @@ func (self *App) begin(message string) cycle.Transition {
 		OnBeat:            self.screen.RefreshProgress,
 		Changes:           self.configObserver.Changes(),
 		OnChange:          self.reloadConfig,
-		Conclusions:       self.jobConclusions(),
-		OnJobEnded:        self.jobEnded,
+		TaskChanges:       self.taskChanges(),
+		OnTasksChanged:    self.tasksChanged,
 		SubagentEvents:    self.subagentEvents(),
 		SubagentActivity:  self.subagentActivity(),
 		OnSubagentEvent:   self.subagentEvent,
@@ -899,7 +895,7 @@ func (self *App) toggleCap(whichCaps caps.Set) {
 	self.queueModeChange(whichCaps.Flag(), whichCaps)
 
 	if isWithdrawn {
-		self.stopJobsLosingAccess(whichCaps)
+		self.stopTasksLosingAccess(whichCaps)
 		self.stopChildrenLosing(whichCaps)
 	}
 
@@ -919,6 +915,9 @@ func (self *App) toggleToolGroup(flag string) {
 	}
 
 	self.queueModeChange(flag, 0)
+	if !self.mode.Allows(flag) {
+		self.stopTasksInGroup(flag)
+	}
 	self.interruptForAccessChange()
 }
 
@@ -929,23 +928,23 @@ func (self *App) interruptForAccessChange() {
 	}
 }
 
-func (self *App) queueModeChange(flag string, stoppedJobsCaps caps.Set) {
-	if i, isPending := self.pendingModeChange(flag, stoppedJobsCaps); isPending {
+func (self *App) queueModeChange(flag string, stoppedWorkCaps caps.Set) {
+	if i, isPending := self.pendingModeChange(flag, stoppedWorkCaps); isPending {
 		self.takeBackModeChange(i, flag)
 	} else {
 		self.showModeChange(flag)
 	}
 }
 
-func (self *App) pendingModeChange(flag string, stoppedJobsCaps caps.Set) (int, bool) {
+func (self *App) pendingModeChange(flag string, stoppedWorkCaps caps.Set) (int, bool) {
 	for index, item := range slices.Backward(self.pendingNotices.items) {
 		if item.state.Kind != caps.ModeChange || item.state.Name != flag {
 			continue
 		}
 
-		isTakebackPreventedByStoppedJobs := stoppedJobsCaps != 0 &&
-			self.pendingNotices.hasStoppedJobsAfter(index, stoppedJobsCaps)
-		return index, !isTakebackPreventedByStoppedJobs
+		isTakebackPreventedByStoppedWork := stoppedWorkCaps != 0 &&
+			self.pendingNotices.hasStoppedWorkAfter(index, stoppedWorkCaps)
+		return index, !isTakebackPreventedByStoppedWork
 	}
 
 	return 0, false
@@ -1309,21 +1308,13 @@ func (self *App) getBarSources() bar.Sources {
 		IsPrefixPending:    self.isPrefixPending,
 		GetTurnTiming:      self.turnTiming,
 		GetTurnCount:       self.turnCount,
-		GetJobs:            self.getJobs,
+		GetTasks:           self.getTasks,
 		GetSubagents:       self.getSubagents,
 	}
 }
 
 func (self *App) isSessionPersisted() bool {
 	return self.recorder != nil && self.recorder.IsPersisted()
-}
-
-func (self *App) getJobs() []jobs.Snapshot {
-	if self.jobs.manager == nil {
-		return nil
-	}
-
-	return self.jobs.manager.List()
 }
 
 func (self *App) questionChanges() <-chan struct{} {
@@ -1437,20 +1428,92 @@ func (self *App) drainForwardChanges() {
 	}
 }
 
-func (self *App) jobConclusions() <-chan jobs.Conclusion {
-	if self.jobs.manager == nil {
-		return nil
+func (self *App) describeTaskCall(snapshot tasks.Snapshot) string {
+	event := agent.Event{Name: snapshot.ToolName}
+	if snapshot.Invocation != nil {
+		event.Arguments = snapshot.Invocation.Arguments
 	}
-
-	return self.jobs.manager.Conclusions()
+	return call.LabelFor(event, self.agent.Tool, self.workspace).Render()
 }
 
-func (self *App) jobEnded(conclusion jobs.Conclusion) {
-	conclusion.Output = self.withinToolOutputLimit(conclusion.Output)
+func (self *App) getTasks() []tasks.Snapshot {
+	if self.tasks == nil {
+		return nil
+	}
+	return self.tasks.List()
+}
 
-	if self.holdNotice(jobrecord.EndedEvent(conclusion)) && self.jobs.doesWake {
+func (self *App) taskChanges() <-chan struct{} {
+	if self.tasks == nil {
+		return nil
+	}
+	return self.tasks.Changes()
+}
+
+func (self *App) tasksChanged() {
+	if self.tasks == nil {
+		return
+	}
+	for _, conclusion := range self.tasks.Drain() {
+		self.taskEnded(conclusion)
+	}
+	self.recordTaskListing()
+}
+
+func (self *App) taskEnded(conclusion tasks.Conclusion) {
+	conclusion.Snapshot = self.boundedSnapshot(conclusion.Snapshot)
+	if err := self.recordTaskFact(conclusion); err != nil {
+		self.notifyFailure(err.Error())
+	}
+	if conclusion.IsSilent {
+		return
+	}
+	if self.holdNotice(taskrecord.EndedEvent(conclusion)) && self.tasksDoWake {
 		self.startTurn()
 	}
+}
+
+func (self *App) recordTaskFact(conclusion tasks.Conclusion) error {
+	var failures []error
+	if len(conclusion.Result.State) > 0 {
+		if subject, isKnown := self.agent.Tool(conclusion.Snapshot.ToolName); isKnown && subject.StateKey() != "" {
+			stateChange := agent.Event{
+				Kind:  agent.StateChangeEvent,
+				Name:  subject.StateKey(),
+				ID:    conclusion.Snapshot.ID,
+				State: conclusion.Result.State,
+			}
+			if err := self.agent.RestoreState([]agent.Event{stateChange}); err != nil {
+				failures = append(failures, fmt.Errorf("the task state could not be restored: %w", err))
+			} else {
+				failures = append(failures, self.recordUndrawnFact(stateChange))
+			}
+		}
+	}
+	failures = append(failures, self.recordUndrawnFact(taskrecord.FinishedEvent(conclusion)))
+	return errors.Join(failures...)
+}
+
+func (self *App) recordUndrawnFact(event agent.Event) error {
+	self.recordedEvents = append(self.recordedEvents, event)
+	if self.currentTurn.Running() && self.currentTurn.painter != nil {
+		self.currentTurn.painter.CountUndrawnEvent()
+	}
+	return self.recorder.Event(event)
+}
+
+func (self *App) endTasks() error {
+	if self.tasks == nil {
+		return nil
+	}
+	self.tasks.Close()
+	var failures []error
+	for _, conclusion := range self.tasks.Drain() {
+		conclusion.Snapshot = self.boundedSnapshot(conclusion.Snapshot)
+		failures = append(failures, self.recordTaskFact(conclusion))
+	}
+	failures = append(failures, self.recordTaskSnapshots(self.tasks.Checkpoint()))
+	return errors.Join(failures...)
 }
 
 func (self *App) withinToolOutputLimit(output string) string {
@@ -1461,32 +1524,73 @@ func (self *App) withinToolOutputLimit(output string) string {
 	return truncate.Output(output, self.toolOutputLimit, self.saveOverflow)
 }
 
-func (self *App) stopJobsHoldingPath(path string) {
-	if self.jobs.manager == nil {
+func (self *App) stopTasksHoldingPath(path string) {
+	if self.tasks == nil {
 		return
 	}
 
-	for _, name := range self.jobs.manager.StopHolding(shell.StoppedByPath(path)) {
-		self.showStoppedJob(caps.JobStoppedForPathEvent(name, path))
+	holds := shell.StoppedByPath(path)
+	for _, id := range self.tasks.StopWhere(func(_ string, policy any) bool {
+		access, isTask := policy.(taskAccess)
+		return isTask && (access.ToolName == "grep" && taskSearchAffected(access.SearchPath, path) ||
+			access.ToolName == "bash" && holds(access.Policy))
+	}) {
+		self.showStoppedWork(caps.TaskStoppedForPathEvent(id, path))
 	}
 }
 
-func (self *App) stopJobsLosingAccess(withdrawnCaps caps.Set) {
-	if self.jobs.manager == nil {
+func taskSearchAffected(searchPath string, revokedPath string) bool {
+	if searchPath == "" {
+		return true
+	}
+	revokedPath, err := filepath.EvalSymlinks(revokedPath)
+	if err != nil {
+		return true
+	}
+	withinSearch, searchErr := filepath.Rel(searchPath, revokedPath)
+	withinRevoked, revokeErr := filepath.Rel(revokedPath, searchPath)
+	return searchErr != nil || revokeErr != nil || filepath.IsLocal(withinSearch) || filepath.IsLocal(withinRevoked)
+}
+
+func (self *App) stopTasksLosingAccess(withdrawnCaps caps.Set) {
+	if self.tasks == nil {
 		return
 	}
 
 	holds, doesStop := shell.StoppedBy(withdrawnCaps, self.workspace.GetDir())
-	if !doesStop {
-		return
-	}
-
-	for _, name := range self.jobs.manager.StopHolding(holds) {
-		self.showStoppedJob(caps.JobStopEvent(name, withdrawnCaps))
+	for _, id := range self.tasks.StopWhere(func(_ string, policy any) bool {
+		access, isTask := policy.(taskAccess)
+		return isTask && taskAccessLost(access, withdrawnCaps, holds, doesStop)
+	}) {
+		self.showStoppedWork(caps.TaskStopEvent(id, withdrawnCaps))
 	}
 }
 
-func (self *App) showStoppedJob(event agent.Event) {
+func taskAccessLost(access taskAccess, withdrawnCaps caps.Set, holds func(sandbox.Policy) bool, doesStop bool) bool {
+	switch access.ToolName {
+	case "bash":
+		return doesStop && holds(access.Policy) || withdrawnCaps.Has(caps.Network) && access.IsHostNetwork
+	case "grep":
+		return withdrawnCaps.Has(caps.Read)
+	case "lookup":
+		return withdrawnCaps.Has(caps.Lookup)
+	}
+	return false
+}
+
+func (self *App) stopTasksInGroup(group string) {
+	if self.tasks == nil {
+		return
+	}
+	for _, id := range self.tasks.StopWhere(func(_ string, policy any) bool {
+		access, isTask := policy.(taskAccess)
+		return isTask && access.Group == group
+	}) {
+		self.showStoppedWork(caps.TaskStoppedForGroupEvent(id, group))
+	}
+}
+
+func (self *App) showStoppedWork(event agent.Event) {
 	self.pendingNotices.add(event)
 
 	if !self.currentTurn.Running() {
@@ -1564,7 +1668,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		self.toolOutputLimit.Replace(result.LiveConfig.ToolOutputBytes)
 		self.experimental.Replace(result.LiveConfig.Experimental)
 		if self.permissions != nil {
-			self.permissions.Replace(result.LiveConfig.Permissions)
+			self.permissions.Replace(self.bashApproval.Combine(result.LiveConfig.Permissions))
 		}
 		self.display.bar.ReplaceLayout(result.LiveConfig.SegmentLayout)
 		self.feedback.Clear(feedback.Config)
@@ -1862,7 +1966,7 @@ func (self *App) restore(storedSession *store.Session) {
 
 	self.agent.RestoreCache(storedSession.CacheReading)
 	self.metrics.Restore(storedSession.Events, storedSession.Turns)
-	self.restoreJobs(storedSession.Events)
+	self.restoreTasks(storedSession.Events)
 	self.restoreChildren(storedSession.Events)
 
 	self.replayFromTop(len(self.recordedEvents))
@@ -2084,54 +2188,87 @@ func (self *App) takeSettledNotes() []agent.Note {
 	return notes
 }
 
-func (self *App) recordJobListing() {
-	if self.jobs.manager == nil {
+func (self *App) recordTaskListing() {
+	if self.tasks == nil {
 		return
 	}
-
-	listing := self.jobs.manager.List()
-	if len(listing) == 0 && !self.jobs.hasRecorded {
-		return
-	}
-
-	event := jobrecord.ListingEvent(listing)
-	if string(event.State) == self.jobs.recordedListing {
-		return
-	}
-
-	self.jobs.recordedListing = string(event.State)
-	self.jobs.hasRecorded = true
-	self.recordedEvents = append(self.recordedEvents, event)
-	self.storeEvent(event)
-}
-
-func (self *App) restoreJobs(events []agent.Event) {
-	if live := self.rememberJobs(events); len(live) > 0 {
-		self.pendingNotices.add(jobrecord.EndedWithSessionEvent(live))
+	if err := self.recordTaskSnapshots(self.tasks.Checkpoint()); err != nil {
+		self.notifyFailure(err.Error())
 	}
 }
 
-func (self *App) rememberJobs(events []agent.Event) []string {
-	if self.jobs.manager == nil {
+func (self *App) boundedSnapshot(snapshot tasks.Snapshot) tasks.Snapshot {
+	snapshot.Output = self.withinToolOutputLimit(snapshot.Output)
+	if self.toolOutputLimit != nil {
+		for index := range snapshot.Previous {
+			snapshot.Previous[index].Output = truncate.Output(snapshot.Previous[index].Output, self.toolOutputLimit, nil)
+		}
+	}
+	return snapshot
+}
+
+func (self *App) recordTaskSnapshots(listing []tasks.Snapshot) error {
+	if len(listing) == 0 && !self.tasksHasRecorded {
 		return nil
 	}
+	if self.toolOutputLimit != nil {
+		for index := range listing {
+			listing[index].Output = truncate.Output(listing[index].Output, self.toolOutputLimit, nil)
+			for previous := range listing[index].Previous {
+				listing[index].Previous[previous].Output = truncate.Output(listing[index].Previous[previous].Output, self.toolOutputLimit, nil)
+			}
+		}
+	}
+	event := taskrecord.ListingEvent(listing)
+	if string(event.State) == self.tasksRecordedListing {
+		return nil
+	}
+	self.tasksRecordedListing = string(event.State)
+	self.tasksHasRecorded = true
+	return self.recordUndrawnFact(event)
+}
 
-	rememberedJobs, wasRecorded := jobrecord.LastRecorded(events)
+func (self *App) restoreTasks(events []agent.Event) {
+	snapshots, wasRecorded := taskrecord.LastRecorded(events)
+	if !wasRecorded {
+		for _, notice := range taskrecord.PendingNotices(events) {
+			self.pendingNotices.add(notice)
+		}
+		return
+	}
+	self.tasksHasRecorded = true
+	self.tasksRecordedListing = string(taskrecord.ListingEvent(snapshots).State)
+	if taskNames := self.rememberTasks(events); len(taskNames) > 0 {
+		self.pendingNotices.add(taskrecord.EndedWithSessionEvent(taskNames))
+	}
+	for _, notice := range taskrecord.PendingNotices(events) {
+		self.pendingNotices.add(notice)
+	}
+}
+
+func (self *App) rememberTasks(events []agent.Event) []string {
+	snapshots, wasRecorded := taskrecord.LastRecorded(events)
 	if !wasRecorded {
 		return nil
 	}
-
-	self.jobs.manager.Restore(rememberedJobs)
-	self.jobs.hasRecorded = true
-
-	var live []string
-	for _, snapshot := range rememberedJobs {
-		if snapshot.IsLive() {
-			live = append(live, snapshot.Name)
+	var taskNames []string
+	if self.tasks != nil {
+		taskNames = self.tasks.Restore(snapshots)
+		snapshots = self.tasks.List()
+	} else {
+		for index := range snapshots {
+			if snapshots[index].State == tasks.Queued || snapshots[index].State == tasks.Running || snapshots[index].State == tasks.Stopping {
+				taskNames = append(taskNames, snapshots[index].ID)
+				snapshots[index].State = tasks.Stopped
+				snapshots[index].IsRespawning = false
+				snapshots[index].Failure = "the task did not carry over into this session"
+			}
 		}
 	}
-
-	return live
+	if err := self.recordTaskSnapshots(snapshots); err != nil {
+		self.notifyFailure(err.Error())
+	}
+	return taskNames
 }
 
 func (self *App) carryOver(forkSource *sessions.ForkSource) {
@@ -2160,12 +2297,24 @@ func (self *App) carryOver(forkSource *sessions.ForkSource) {
 		self.pendingNotices.add(event)
 	}
 
-	self.carryJobs(events, forkSource.GetName())
+	self.carryTasks(events, forkSource.GetName())
 }
 
-func (self *App) carryJobs(events []agent.Event, sourceName string) {
-	if live := self.rememberJobs(events); len(live) > 0 {
-		self.pendingNotices.add(jobrecord.EndedWithSourceSessionEvent(sourceName, live))
+func (self *App) carryTasks(events []agent.Event, sourceName string) {
+	taskNames := self.rememberTasks(events)
+	for _, notice := range taskrecord.PendingNotices(events) {
+		var names []string
+		if notice.Kind == taskrecord.EndedWithSession && json.Unmarshal(notice.State, &names) == nil {
+			taskNames = append(taskNames, names...)
+			continue
+		}
+		self.pendingNotices.add(notice)
+	}
+	if len(taskNames) > 0 {
+		slices.Sort(taskNames)
+		event := taskrecord.EndedWithSessionEvent(slices.Compact(taskNames))
+		event.Name = sourceName
+		self.pendingNotices.add(event)
 	}
 }
 
@@ -2324,7 +2473,7 @@ func (self *App) finish() {
 
 	self.agent.AddNotes(self.untoldNotes())
 
-	self.recordJobListing()
+	self.recordTaskListing()
 
 	if self.storeProviderState() {
 		if err := self.recorder.CompleteTurn(self.turnSummary()); err != nil {

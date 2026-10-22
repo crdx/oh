@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
-	osexec "os/exec"
+	"os/exec"
 	"sync"
 	"syscall"
 
@@ -37,7 +37,7 @@ func (self *Runner) StartArgv(
 	_ sandbox.Policy,
 	output sandbox.Output,
 ) (sandbox.Command, error) {
-	child := osexec.CommandContext(ctx, arguments[0], arguments[1:]...) //nolint:gosec // test stand-in for the sandbox
+	child := exec.CommandContext(ctx, arguments[0], arguments[1:]...) //nolint:gosec // test stand-in for the sandbox
 	child.Dir = directory
 	child.Env = append(os.Environ(), StandInVariable+"=1")
 	child.Stdout = output
@@ -49,14 +49,14 @@ func (self *Runner) StartArgv(
 }
 
 type testCommand struct {
-	child  *osexec.Cmd
+	child  *exec.Cmd
 	output sandbox.Output
 }
 
 func (self *testCommand) Wait() (sandbox.Result, error) {
 	err := self.child.Wait()
 	result := sandbox.Result{Output: self.output.String()}
-	if exit, isExit := errors.AsType[*osexec.ExitError](err); isExit {
+	if exit, isExit := errors.AsType[*exec.ExitError](err); isExit {
 		result.ExitCode = exit.ExitCode()
 		return result, nil
 	}

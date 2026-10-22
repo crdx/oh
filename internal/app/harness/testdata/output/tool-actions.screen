@@ -8,16 +8,14 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, o…
-start docs:8002 $ serve docs
 restart docs
-status docs
-cat docs
-job wait Handling this job for the test
-job wait Handling this job for the test
+restart docs
+check docs
+read output for docs
 stop docs
-list jobs
+list tasks
 discard docs
-prune jobs
+prune finished tasks
 
 Those are every action label.
 === one column ===
@@ -103,8 +101,6 @@ l
 …
 …
 …
-…
-…
 
 T
 h
@@ -141,16 +137,14 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
-start docs:8002 $ serve docs (Handling this job for the test)
-restart docs (Handling this job for the test)
-status docs (Handling this job for the test)
-cat docs (Handling this job for the test)
-job wait Handling this job for the test
-job wait Handling this job for the test
-stop docs (Handling this job for the test)
-list jobs
-discard docs (Handling this job for the test)
-prune jobs
+restart docs
+restart docs
+check docs
+read output for docs
+stop docs
+list tasks
+discard docs
+prune finished tasks
 
 Those are every action label.
 === tiny ===
@@ -166,16 +160,14 @@ forward doc…
 close 8000
 list forwar…
 for… ✗ acti…
-start docs:…
 restart docs
-status docs
-cat docs
-job wait Ha…
-job wait Ha…
+restart docs
+check docs
+read output…
 stop docs
-list jobs
+list tasks
 discard docs
-prune jobs
+prune finis…
 
 Those are
 every action
@@ -190,15 +182,13 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
-start docs:8002 $ serve docs (Handling this job for the test)
-restart docs (Handling this job for the test)
-status docs (Handling this job for the test)
-cat docs (Handling this job for the test)
-job wait Handling this job for the test
-job wait Handling this job for the test
-stop docs (Handling this job for the test)
-list jobs
-discard docs (Handling this job for the test)
-prune jobs
+restart docs
+restart docs
+check docs
+read output for docs
+stop docs
+list tasks
+discard docs
+prune finished tasks
 
 Those are every action label.

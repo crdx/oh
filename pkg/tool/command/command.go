@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -40,6 +41,7 @@ const (
 	stopGrace              = 2 * time.Second
 	strayOutputGrace       = time.Second
 	toolVariable           = "OH_TOOL"
+	groupWithheldFormat    = "%s access unavailable; ctrl+x %s grants it"
 )
 
 var namePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
@@ -61,6 +63,7 @@ type Declaration struct {
 	Parameters      []Parameter
 	Subject         string
 	TimeLimit       time.Duration
+	ManagedLimit    time.Duration
 	Concurrency     int
 	MustAsk         bool
 	ApprovalTimeout time.Duration
@@ -158,27 +161,20 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 				return options.IsGroupAllowed != nil && options.IsGroupAllowed(declaration.Group)
 			},
 			fmt.Errorf(
-				"%s access unavailable; ctrl+x %s grants it",
+				groupWithheldFormat,
 				declaration.Name,
 				declaration.Group,
 			),
 		)
 	}
 
-	var slots chan struct{}
-	if concurrency > 1 {
-		slots = make(chan struct{}, concurrency)
-	}
+	slots := make(chan struct{}, concurrency)
 
 	return builder.Plain(func(ctx context.Context, arguments tool.Arguments) (string, error) {
-		if slots != nil {
-			select {
-			case slots <- struct{}{}:
-				defer func() { <-slots }()
-			case <-ctx.Done():
-				return "", stop.Error(ctx, "the command")
-			}
+		if err := tool.TakeSlot(ctx, slots); err != nil {
+			return "", stop.Error(ctx, "the command")
 		}
+		defer func() { <-slots }()
 		return run(ctx, declaration, executable, arguments, options, timeLimit, approvalTimeout)
 	}), nil
 }
@@ -340,6 +336,16 @@ func run(
 		}
 	}
 
+	if ctx.Err() != nil {
+		return "", stop.Error(ctx, "the command")
+	}
+	if declaration.Group != "" && (options.IsGroupAllowed == nil || !options.IsGroupAllowed(declaration.Group)) {
+		return "", fmt.Errorf(groupWithheldFormat, declaration.Name, declaration.Group)
+	}
+
+	if declaration.ManagedLimit > 0 && tasks.Managed(ctx) {
+		timeLimit = declaration.ManagedLimit
+	}
 	runContext, cancel := context.WithTimeout(ctx, timeLimit)
 	defer cancel()
 

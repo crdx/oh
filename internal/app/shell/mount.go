@@ -379,9 +379,9 @@ func warnAboutCoveredPaths(paths Paths, warnings io.Writer) {
 		name  string
 		paths []string
 	}{
-		{"sandbox.write", paths.Write},
-		{"sandbox.exec", paths.Exec},
-		{"sandbox.path", paths.Path},
+		{"grants.write", paths.Write},
+		{"grants.exec", paths.Exec},
+		{"grants.path", paths.Path},
 	}
 
 	for _, path := range paths.Read {
@@ -392,7 +392,7 @@ func warnAboutCoveredPaths(paths Paths, warnings io.Writer) {
 
 			style.WriteWarningf(
 				warnings,
-				"configured path %s is redundant in [sandbox.read] due to %s",
+				"configured path %s is redundant in grants.read due to %s",
 				pathutil.Shorten(path),
 				coveringList.name,
 			)
@@ -411,9 +411,9 @@ type containment struct {
 
 func warnAboutContainedPaths(paths Paths, warnings io.Writer) {
 	for _, pair := range []containment{
-		{paths.Write, paths.Read, "is writable but holds the read-only", "sandbox.read"},
-		{paths.Exec, paths.Read, "is executable but holds the read-only", "sandbox.read"},
-		{paths.Path, paths.Read, "is executable but holds the read-only", "sandbox.read"},
+		{paths.Write, paths.Read, "is writable but holds the read-only", "grants.read"},
+		{paths.Exec, paths.Read, "is executable but holds the read-only", "grants.read"},
+		{paths.Path, paths.Read, "is executable but holds the read-only", "grants.read"},
 	} {
 		reportContainment(warnings, pair)
 	}

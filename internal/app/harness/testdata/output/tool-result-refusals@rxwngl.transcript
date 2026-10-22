@@ -25,7 +25,7 @@ Checking each refusal and failure shape.
 write: config.yaml [error, call_1]
 write: config.yaml [error, call_2]
 grep: hello [error, call_3]
-job start: way-too-long [error, call_4]
+task restart: way-too-long [error, call_4]
 bash: curl example.com [error, call_5]
 bash: curl example.com [error, call_6]
 lookup: modern Go release [error, call_7]

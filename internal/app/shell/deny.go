@@ -11,7 +11,7 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 )
 
-var ErrDenied = errors.New("the path is denied by sandbox.deny")
+var ErrDenied = errors.New("the path is denied by grants.deny")
 
 type pathDenials struct {
 	patterns      []string
@@ -23,7 +23,7 @@ func newPathDenials(entries []string) (pathDenials, error) {
 	denials := pathDenials{patterns: slices.Clone(entries)}
 	for _, entry := range entries {
 		if err := util.ValidateDenyEntry(entry); err != nil {
-			return pathDenials{}, fmt.Errorf("invalid sandbox.deny entry %q: %w", entry, err)
+			return pathDenials{}, fmt.Errorf("invalid grants.deny entry %q: %w", entry, err)
 		}
 		if filepath.IsAbs(entry) {
 			if _, err := os.Stat(entry); err != nil {

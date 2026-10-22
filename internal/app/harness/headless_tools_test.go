@@ -31,8 +31,8 @@ func TestAnInteractiveSessionResumedHeadlessKeepsItsToolsButDisablesWhatNeedsWak
 	if len(storedSessions) != 1 {
 		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
 	}
-	if !slices.Contains(storedSessions[0].Meta.Tools, "job") {
-		t.Fatalf("the interactive session offered %v, want job among them", storedSessions[0].Meta.Tools)
+	if !slices.Contains(storedSessions[0].Meta.Tools, "task") {
+		t.Fatalf("the interactive session offered %v, want task control", storedSessions[0].Meta.Tools)
 	}
 
 	runTestBinary(t, rig.binary, rig.workspace, rig.environment, "-p", "-r", storedSessions[0].Name, "carry on")

@@ -189,43 +189,59 @@ func encodeMode(record modeRecord) json.RawMessage {
 	return encodedMode
 }
 
-const JobStop agent.Kind = "job_stop"
-
-func JobStopEvent(jobName string, withdrawnCaps Set) agent.Event {
-	return agent.Event{Kind: JobStop, Name: jobName, State: encodeFlags(withdrawnCaps)}
-}
-
-type jobStopReason struct {
+type taskStopReason struct {
 	Path string `json:"path,omitempty"`
 }
 
-func JobStoppedForPathEvent(jobName string, path string) agent.Event {
-	encodedReason, err := json.Marshal(jobStopReason{Path: path})
+const TaskStop agent.Kind = "task_stop"
+
+func TaskStopEvent(taskID string, withdrawnCaps Set) agent.Event {
+	return agent.Event{Kind: TaskStop, Name: taskID, State: encodeFlags(withdrawnCaps)}
+}
+
+func TaskStoppedForPathEvent(taskID string, path string) agent.Event {
+	encodedReason, err := json.Marshal(taskStopReason{Path: path})
 	if err != nil {
 		return agent.Event{}
 	}
 
-	return agent.Event{Kind: JobStop, Name: jobName, State: encodedReason}
+	return agent.Event{Kind: TaskStop, Name: taskID, State: encodedReason}
 }
 
-func JobStoppedByUserEvent(jobName string) agent.Event {
-	return agent.Event{Kind: JobStop, Name: jobName}
+func TaskStoppedForGroupEvent(taskID string, group string) agent.Event {
+	encodedReason, err := json.Marshal(struct {
+		Group string `json:"group"`
+	}{Group: group})
+	if err != nil {
+		return agent.Event{}
+	}
+	return agent.Event{Kind: TaskStop, Name: taskID, State: encodedReason}
 }
 
-func JobStopNotice(event agent.Event) (string, bool) {
+func TaskStoppedByUserEvent(taskID string) agent.Event {
+	return agent.Event{Kind: TaskStop, Name: taskID}
+}
+
+func TaskStopNotice(event agent.Event) (string, bool) {
 	if event.Name == "" {
 		return "", false
 	}
 
 	if len(event.State) == 0 {
-		return fmt.Sprintf("Job %s stopped from the keyboard.", markdown.CodeSpan(event.Name)), true
+		return fmt.Sprintf("Task %s stopped from the keyboard.", markdown.CodeSpan(event.Name)), true
 	}
 
-	var stopReason jobStopReason
+	var stopReason taskStopReason
 	if err := json.Unmarshal(event.State, &stopReason); err == nil && stopReason.Path != "" {
 		return fmt.Sprintf(
-			"Job %s stopped because access to %s was revoked.", markdown.CodeSpan(event.Name), stopReason.Path,
+			"Task %s stopped because access to %s was revoked.", markdown.CodeSpan(event.Name), stopReason.Path,
 		), true
+	}
+	var groupReason struct {
+		Group string `json:"group"`
+	}
+	if err := json.Unmarshal(event.State, &groupReason); err == nil && groupReason.Group != "" {
+		return fmt.Sprintf("Task %s stopped because tool group %s was withdrawn.", markdown.CodeSpan(event.Name), groupReason.Group), true
 	}
 
 	withdrawnCaps, err := GrantedBy(event)
@@ -238,5 +254,5 @@ func JobStopNotice(event agent.Event) (string, bool) {
 		return "", false
 	}
 
-	return fmt.Sprintf("Job %s stopped because %s.", markdown.CodeSpan(event.Name), reason), true
+	return fmt.Sprintf("Task %s stopped because %s.", markdown.CodeSpan(event.Name), reason), true
 }

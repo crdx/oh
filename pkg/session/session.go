@@ -25,7 +25,7 @@ import (
 const journalTailChunk = 64 << 10
 
 const (
-	JournalFormat = 23
+	JournalFormat = 24
 	MetaFormat    = 3
 )
 

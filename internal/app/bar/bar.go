@@ -19,7 +19,6 @@ import (
 	"crdx.org/oh/internal/app/segment/forwardedPorts"
 	"crdx.org/oh/internal/app/segment/gitBranch"
 	"crdx.org/oh/internal/app/segment/gitStatus"
-	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/segment/localTime"
 	"crdx.org/oh/internal/app/segment/modeToggle"
 	"crdx.org/oh/internal/app/segment/pathGrants"
@@ -29,6 +28,7 @@ import (
 	"crdx.org/oh/internal/app/segment/sessionSpend"
 	"crdx.org/oh/internal/app/segment/subUsage"
 	"crdx.org/oh/internal/app/segment/subagentCounts"
+	"crdx.org/oh/internal/app/segment/taskNames"
 	"crdx.org/oh/internal/app/segment/turnCount"
 	"crdx.org/oh/internal/app/segment/turnTimer"
 	"crdx.org/oh/internal/app/segment/workspaceDir"
@@ -37,10 +37,10 @@ import (
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 )
 
 const (
@@ -63,7 +63,7 @@ const (
 	gitStatusSegment       = "git-status"
 	sessionSpendSegment    = "session-spend"
 	subUsageSegment        = "subscription-usage"
-	jobNamesSegment        = "jobs"
+	taskNamesSegment       = "tasks"
 	subagentCountsSegment  = "subagents"
 )
 
@@ -97,7 +97,7 @@ type Sources struct {
 	IsPrefixPending    func() bool
 	GetTurnTiming      func() turn.Timing
 	GetTurnCount       func() int
-	GetJobs            func() []jobs.Snapshot
+	GetTasks           func() []tasks.Snapshot
 	GetSubagents       func() []subagents.Snapshot
 }
 
@@ -111,7 +111,7 @@ func NewRegistry(options Options) segment.Registry {
 		grantsSegment:          pathGrants.New(options.Sources.GetPathGrants),
 		forwardsSegment: forwardedPorts.New(forwardedPorts.Routes{
 			GetRoutes: options.Sources.GetForwardedRoutes,
-			GetJobs:   options.Sources.GetJobs,
+			GetTasks:  options.Sources.GetTasks,
 			Hostname:  options.SandboxHostname,
 		}),
 		workspaceDirSegment: workspaceDir.New(options.Workspace),
@@ -135,7 +135,7 @@ func NewRegistry(options Options) segment.Registry {
 		turnCountSegment:      turnCount.New(options.Sources.GetTurnCount),
 		gitBranchSegment:      gitBranch.New(options.Workspace.GetDir()),
 		gitStatusSegment:      gitStatus.New(options.Workspace.GetDir(), sandbox.ArgvFor(options.IsUnconfined)),
-		jobNamesSegment:       jobNames.New(options.Sources.GetJobs, options.Sources.GetForwardedRoutes, time.Now),
+		taskNamesSegment:      taskNames.New(options.Sources.GetTasks, options.Sources.GetForwardedRoutes, time.Now),
 		subagentCountsSegment: subagentCounts.New(options.Sources.GetSubagents, time.Now),
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,

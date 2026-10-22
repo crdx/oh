@@ -10,8 +10,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- 🤖 Job docs exited: complete after 12s
-    with no output.
+ 🤖 Task docs done.
 
 
 Both still mention the spinner.
@@ -120,89 +119,29 @@ r
 
 🤖
 
-J
-
-o
-
-b
-
-d
-
-o
-
-c
-
-s
-
-e
-
-x
-
-i
-
-t
-
-e
-
-d
-
-:
-
-c
-
-o
-
-m
-
-p
-
-l
-
-e
-
-t
-
-e
+T
 
 a
 
-f
+s
 
-t
+k
 
-e
+d
 
-r
+o
 
-1
-
-2
+c
 
 s
 
-w
+d
 
-i
-
-t
-
-h
+o
 
 n
 
-o
-
-o
-
-u
-
-t
-
-p
-
-u
-
-t
+e
 
 .
 
@@ -245,7 +184,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- 🤖 Job docs exited: complete after 12s with no output.
+ 🤖 Task docs done.
 
 
 Both still mention the spinner.
@@ -266,14 +205,9 @@ read scr… 3L
 grep spi… 1L
 
 
- 🤖 Job
+ 🤖 Task
     docs
-    exited:
-    complet
-    e after
-    12s
-    with no
-    output.
+    done.
 
 
 Both still
@@ -290,7 +224,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- 🤖 Job docs exited: complete after 12s with no output.
+ 🤖 Task docs done.
 
 
 Both still mention the spinner.

@@ -125,13 +125,13 @@ func TestARestoredSessionOpensThePortsItRecordedAndReportsTheRest(t *testing.T) 
 			return nil
 		},
 		Revoke: func(uint16) error { return nil },
-	}, testHost, []Route{{Port: 3000}, {Port: 8080, JobName: "docs"}})
+	}, testHost, []Route{{Port: 3000}, {Port: 8080, TaskName: "docs"}})
 
 	if !slices.Equal(ports.GetCurrent(), []uint16{8080}) {
 		t.Errorf("got current ports %v, want [8080]", ports.GetCurrent())
 	}
-	if routes := ports.GetRoutes(); !slices.Equal(routes, []Route{{Port: 8080, JobName: "docs"}}) {
-		t.Errorf("got routes %#v, want the restored job association", routes)
+	if routes := ports.GetRoutes(); !slices.Equal(routes, []Route{{Port: 8080, TaskName: "docs"}}) {
+		t.Errorf("got routes %#v, want the restored task association", routes)
 	}
 	if len(result.Failures) != 1 || result.Failures[0].Port != 3000 {
 		t.Fatalf("got failures %v, want the port that could not be opened", result.Failures)
@@ -143,7 +143,7 @@ func TestARestoredSessionOpensThePortsItRecordedAndReportsTheRest(t *testing.T) 
 
 func TestARestoredSessionSaysNothingAboutThePortsItWasAlreadyToldOf(t *testing.T) {
 	var forwarded []uint16
-	ports, _ := NewRestoredForwards(recordingForwarder(&forwarded), testHost, []Route{{Port: 8080, JobName: "docs"}})
+	ports, _ := NewRestoredForwards(recordingForwarder(&forwarded), testHost, []Route{{Port: 8080, TaskName: "docs"}})
 
 	if told := ports.Peek(); told != "" {
 		t.Errorf("got %q, want nothing said about a restored port", told)
@@ -226,7 +226,7 @@ func TestASummaryCountsTheForwardedPorts(t *testing.T) {
 	}
 }
 
-func TestAnOlderPortEventRestoresWithoutAJobAssociation(t *testing.T) {
+func TestAnOlderPortEventRestoresWithoutATaskAssociation(t *testing.T) {
 	event := agent.Event{
 		Kind:  ForwardChange,
 		State: []byte(`{"host":"127.9.9.9","ports":[8080]}`),
@@ -296,7 +296,7 @@ func TestWhatTheModelForwardsIsAnnouncedToTheHarness(t *testing.T) {
 	if address != URL(testHost, 8080) {
 		t.Errorf("got %q, want the address the user can open", address)
 	}
-	if publications := access.List(); len(publications) != 1 || publications[0].Port != 8080 || publications[0].JobName != "docs" {
+	if publications := access.List(); len(publications) != 1 || publications[0].Port != 8080 || publications[0].TaskName != "docs" {
 		t.Errorf("got %#v, want the forwarded port", publications)
 	}
 
@@ -305,8 +305,8 @@ func TestWhatTheModelForwardsIsAnnouncedToTheHarness(t *testing.T) {
 		t.Errorf("got %#v, want the port that was forwarded", event)
 	}
 	recorded, found := LastRecordedForwards([]agent.Event{event})
-	if !found || !slices.Equal(recorded, []Route{{Port: 8080, JobName: "docs"}}) {
-		t.Errorf("got recorded routes %#v and %t, want the job association", recorded, found)
+	if !found || !slices.Equal(recorded, []Route{{Port: 8080, TaskName: "docs"}}) {
+		t.Errorf("got recorded routes %#v and %t, want the task association", recorded, found)
 	}
 
 	if err := access.Revoke(8080); err != nil {
@@ -339,7 +339,7 @@ func TestWhatTheModelCannotForwardIsNotAnnounced(t *testing.T) {
 	}
 }
 
-func TestTheModelForwardingAPortAlreadyForwardedForTheSameJobChangesNothing(t *testing.T) {
+func TestTheModelForwardingAPortAlreadyForwardedForTheSameTaskChangesNothing(t *testing.T) {
 	var forwarded []uint16
 	ports := NewForwards(recordingForwarder(&forwarded), testHost)
 	access := ports.ForModel()
@@ -366,7 +366,7 @@ func TestTheModelForwardingAPortAlreadyForwardedForTheSameJobChangesNothing(t *t
 	}
 }
 
-func TestTheModelForwardingAPortAlreadyForwardedForAnotherJobIsRefused(t *testing.T) {
+func TestTheModelForwardingAPortAlreadyForwardedForAnotherTaskIsRefused(t *testing.T) {
 	var forwarded []uint16
 	ports := NewForwards(recordingForwarder(&forwarded), testHost)
 	access := ports.ForModel()
@@ -375,11 +375,11 @@ func TestTheModelForwardingAPortAlreadyForwardedForAnotherJobIsRefused(t *testin
 		t.Fatal(err)
 	}
 	if _, err := access.Forward(8080, "api"); err == nil {
-		t.Fatal("a port forwarded for one job was taken by another")
+		t.Fatal("a port forwarded for one task was taken by another")
 	}
 }
 
-func TestTheModelStartingAJobOnAPortForwardedForNoJobTakesTheForwardOver(t *testing.T) {
+func TestTheModelStartingATaskOnAPortForwardedForNoTaskTakesTheForwardOver(t *testing.T) {
 	var forwarded []uint16
 	ports := NewForwards(recordingForwarder(&forwarded), testHost)
 	access := ports.ForModel()
@@ -402,15 +402,15 @@ func TestTheModelStartingAJobOnAPortForwardedForNoJobTakesTheForwardOver(t *test
 
 	event := <-ports.Changes()
 	recorded, found := LastRecordedForwards([]agent.Event{event})
-	if !found || !slices.Equal(recorded, []Route{{Port: 8080, JobName: "docs"}}) {
-		t.Errorf("got recorded routes %#v and %t, want the job association", recorded, found)
+	if !found || !slices.Equal(recorded, []Route{{Port: 8080, TaskName: "docs"}}) {
+		t.Errorf("got recorded routes %#v and %t, want the task association", recorded, found)
 	}
-	if notice, _ := ForwardNotice(event); notice != "Port 8080 now belongs to job docs." {
-		t.Errorf("got notice %q, want the port handed to the job", notice)
+	if notice, _ := ForwardNotice(event); notice != "Port 8080 now belongs to task docs." {
+		t.Errorf("got notice %q, want the port handed to the task", notice)
 	}
 }
 
-func TestAForwardHeldByAJobIsNotGivenUpToNoJob(t *testing.T) {
+func TestAForwardHeldByATaskIsNotGivenUpToNoTask(t *testing.T) {
 	var forwarded []uint16
 	ports := NewForwards(recordingForwarder(&forwarded), testHost)
 	access := ports.ForModel()
@@ -419,7 +419,7 @@ func TestAForwardHeldByAJobIsNotGivenUpToNoJob(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := access.Forward(8080, ""); err == nil {
-		t.Fatal("a port forwarded for a job was taken back from it")
+		t.Fatal("a port forwarded for a task was taken back from it")
 	}
 }
 
@@ -551,5 +551,68 @@ func TestOnlyAForwardChangeIsRestoredFromTheJournal(t *testing.T) {
 	}
 	if _, isSaid := ForwardNotice(other); isSaid {
 		t.Error("an event of another kind was rendered as a forward")
+	}
+}
+
+func TestATaskOwnsItsPublishedPortAcrossRestoration(t *testing.T) {
+	var opened []uint16
+	ports := NewForwards(recordingForwarder(&opened), testHost)
+	access := ports.ForModel()
+	address, err := access.Forward(8000, "docs")
+	if err != nil || address != "http://127.0.0.1:8000" {
+		t.Fatalf("task publication returned %q, %v", address, err)
+	}
+	event := <-ports.Changes()
+	routes, isRecorded := LastRecordedForwards([]agent.Event{event})
+	if !isRecorded || !slices.Equal(routes, []Route{{Port: 8000, TaskName: "docs"}}) {
+		t.Fatalf("task ownership was not recorded: %+v", routes)
+	}
+	if _, err := access.Forward(8000, "docs"); err != nil || len(opened) != 1 {
+		t.Errorf("the same task could not retain its port: %v, %v", err, opened)
+	}
+	if _, err := access.Forward(8000, "api"); err == nil {
+		t.Error("another task stole the published port")
+	}
+	var reopened []uint16
+	restored, _ := NewRestoredForwards(recordingForwarder(&reopened), testHost, routes)
+	if !slices.Equal(restored.GetRoutes(), routes) || !slices.Equal(reopened, []uint16{8000}) {
+		t.Errorf("restoration lost task ownership: %+v, %v", restored.GetRoutes(), reopened)
+	}
+}
+
+func TestATaskCanAdoptAnUnownedForward(t *testing.T) {
+	var opened []uint16
+	ports := NewForwards(recordingForwarder(&opened), testHost)
+	if _, err := ports.Forward(8000); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := ports.ForModel().Forward(8000, "docs"); err != nil {
+		t.Fatal(err)
+	}
+	event := <-ports.Changes()
+	if notice, isDrawn := ForwardNotice(event); !isDrawn || !strings.Contains(notice, "belongs to task docs") {
+		t.Errorf("task adoption was not described: %q, %t", notice, isDrawn)
+	}
+	if len(opened) != 1 {
+		t.Errorf("adoption opened another forward: %v", opened)
+	}
+}
+
+func TestRevokingAPortNamesTheTaskThatOwnedIt(t *testing.T) {
+	var opened []uint16
+	ports := NewForwards(recordingForwarder(&opened), testHost)
+	var revoked []Route
+	ports.OnRevoke(func(route Route) { revoked = append(revoked, route) })
+	if _, err := ports.ForModel().Forward(8000, "docs"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := ports.Revoke(8000); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := ports.Revoke(8000); err == nil {
+		t.Error("a port was revoked twice")
+	}
+	if !slices.Equal(revoked, []Route{{Port: 8000, TaskName: "docs"}}) {
+		t.Errorf("revocation reported %+v", revoked)
 	}
 }

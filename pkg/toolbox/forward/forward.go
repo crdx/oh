@@ -8,10 +8,12 @@ import (
 	"strconv"
 	"strings"
 
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
+
+const Name = "forward"
 
 const (
 	actionAdd     = "add"
@@ -23,33 +25,33 @@ const (
 var actions = []string{actionAdd, actionRemove, actionList}
 
 type Publication struct {
-	Port    uint16
-	JobName string
-	URL     string
+	Port     uint16
+	TaskName string
+	URL      string
 }
 
 type Ports interface {
-	Forward(port uint16, jobName string) (string, error)
+	Forward(port uint16, taskName string) (string, error)
 	Revoke(port uint16) error
 	List() []Publication
 }
 
 type Args struct {
-	Action  string `json:"action"`
-	Port    int    `json:"port,omitempty"`
-	JobName string `json:"job_name,omitempty"`
+	Action   string `json:"action"`
+	Port     int    `json:"port,omitempty"`
+	TaskName string `json:"task_name,omitempty"`
 }
 
 func New(ports Ports) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
-			Name: "forward",
+			Name: Name,
 			Description: "forward a port of this sandbox to the user's machine, " +
-				"so a server started with the job tool can be opened in their browser",
+				"so a server started in the background can be opened in their browser",
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
 				tool.Integer("port", "the TCP port inside the sandbox (for add and remove)").Optional(),
-				tool.String("job_name", fmt.Sprintf("an optional associated job name; 1–%d characters from [a-z0-9-] (for add)", jobs.NameLengthLimit)).Optional(),
+				tool.String("task_name", "an optional associated task name or id (for add)").Optional(),
 			},
 		},
 		Describe,
@@ -71,8 +73,8 @@ func Describe(args Args) tool.CallRendering {
 	port := strconv.Itoa(args.Port)
 	switch args.Action {
 	case actionAdd:
-		if args.JobName != "" {
-			port = args.JobName + ":" + port
+		if args.TaskName != "" {
+			port = args.TaskName + ":" + port
 		}
 		return tool.CallRendering{Kind: "forward_add", Subject: port, ReportsStatus: true}
 	case actionRemove:
@@ -92,8 +94,8 @@ func validate(args Args) error {
 		if args.Port != 0 {
 			return errors.New("list does not accept port")
 		}
-		if args.JobName != "" {
-			return errors.New("list does not accept job_name")
+		if args.TaskName != "" {
+			return errors.New("list does not accept task_name")
 		}
 
 		return nil
@@ -101,11 +103,11 @@ func validate(args Args) error {
 	if args.Port < 1 || args.Port > 65535 {
 		return fmt.Errorf("port must be 1–65535 (got %d)", args.Port)
 	}
-	if args.Action == actionRemove && args.JobName != "" {
-		return errors.New("remove does not accept job_name")
+	if args.Action == actionRemove && args.TaskName != "" {
+		return errors.New("remove does not accept task_name")
 	}
-	if args.JobName != "" {
-		return jobs.ValidateName(args.JobName)
+	if args.TaskName != "" {
+		return tasks.ValidateID(args.TaskName)
 	}
 
 	return nil
@@ -119,7 +121,7 @@ func run(ports Ports, args Args) (string, error) {
 
 	switch args.Action {
 	case actionAdd:
-		return Publish(ports, port, args.JobName)
+		return Publish(ports, port, args.TaskName)
 	case actionRemove:
 		if err := ports.Revoke(port); err != nil {
 			return "", err
@@ -133,14 +135,17 @@ func run(ports Ports, args Args) (string, error) {
 	return "", fmt.Errorf("unknown action %q", args.Action)
 }
 
-func Publish(ports Ports, port uint16, jobName string) (string, error) {
-	address, err := ports.Forward(port, jobName)
+func Publish(ports Ports, port uint16, taskName string) (string, error) {
+	address, err := ports.Forward(port, taskName)
 	if err != nil {
 		return "", err
 	}
 
-	return "Use " + address + " for the user; use localhost:" + strconv.Itoa(int(port)) +
-		" inside the sandbox.", nil
+	return publication(address, port), nil
+}
+
+func publication(address string, port uint16) string {
+	return "Use " + address + " for the user; use localhost:" + strconv.Itoa(int(port)) + " inside the sandbox."
 }
 
 func portOf(args Args) (uint16, error) {
@@ -163,8 +168,8 @@ func list(ports Ports) string {
 	lines := make([]string, 0, len(publications))
 	for _, publication := range publications {
 		name := strconv.Itoa(int(publication.Port))
-		if publication.JobName != "" {
-			name = publication.JobName + ":" + name
+		if publication.TaskName != "" {
+			name = publication.TaskName + ":" + name
 		}
 		lines = append(lines, name+"  "+publication.URL)
 	}

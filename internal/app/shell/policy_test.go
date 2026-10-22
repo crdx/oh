@@ -100,8 +100,8 @@ func newTestPathAccess(t *testing.T, files *file.Root, mode *caps.Mode) *PathAcc
 }
 
 func TestOnlyACommandSaturatingTheMachineReachesTheProcessorLimit(t *testing.T) {
-	if shellTimeout != 10*time.Minute {
-		t.Errorf("got a shell timeout of %s, want 10m", shellTimeout)
+	if shellTimeout != 30*time.Minute {
+		t.Errorf("got a shell timeout of %s, want 30m", shellTimeout)
 	}
 
 	limit := shellCPUTime()
@@ -692,7 +692,7 @@ func TestAGoModuleCacheThatIsNotADirectoryIsRejected(t *testing.T) {
 	}
 }
 
-func TestWithdrawingACapabilityStopsOnlyTheJobsThatRelyOnIt(t *testing.T) {
+func TestWithdrawingACapabilityStopsOnlyTheTasksThatRelyOnIt(t *testing.T) {
 	workspace := "/workspace"
 	writing := sandbox.Policy{Write: []string{workspace}}
 	reading := sandbox.Policy{}
@@ -716,22 +716,22 @@ func TestWithdrawingACapabilityStopsOnlyTheJobsThatRelyOnIt(t *testing.T) {
 				return
 			}
 			if got := isStopped(writing); got != testCase.stopsWriting {
-				t.Errorf("a job writing the workspace stopped=%t, want %t", got, testCase.stopsWriting)
+				t.Errorf("a task writing the workspace stopped=%t, want %t", got, testCase.stopsWriting)
 			}
 			if got := isStopped(reading); got != testCase.stopsReading {
-				t.Errorf("a job only reading stopped=%t, want %t", got, testCase.stopsReading)
+				t.Errorf("a task only reading stopped=%t, want %t", got, testCase.stopsReading)
 			}
 		})
 	}
 }
 
-func TestGitWithdrawalStopsEveryJobWithWritesBeyondItsPrivateCaches(t *testing.T) {
+func TestGitWithdrawalStopsEveryTaskWithWritesBeyondItsPrivateCaches(t *testing.T) {
 	workspace := "/workspace"
 	home := "/session-home"
 	cache := filepath.Join(home, ".cache")
 	stops, doesStop := StoppedBy(caps.Git, workspace)
 	if !doesStop {
-		t.Fatal("withdrawing g did not stop any jobs")
+		t.Fatal("withdrawing g did not stop any tasks")
 	}
 	for _, testCase := range []struct {
 		name       string
@@ -755,10 +755,10 @@ func TestWriteWithdrawalStopsHomeWritersButKeepsConfiguredWrites(t *testing.T) {
 	home := "/session-home"
 	stops, doesStop := StoppedBy(caps.Write, "/workspace")
 	if !doesStop {
-		t.Fatal("withdrawing w did not stop any jobs")
+		t.Fatal("withdrawing w did not stop any tasks")
 	}
 	if !stops(sandbox.Policy{Write: []string{home}, SetEnv: map[string]string{"HOME": home}}) {
-		t.Error("a job writing the shell home kept running after w was withdrawn")
+		t.Error("a task writing the shell home kept running after w was withdrawn")
 	}
 	if stops(sandbox.Policy{Write: []string{"/reference"}, SetEnv: map[string]string{"HOME": home}}) {
 		t.Error("a configured write path was lost when w was withdrawn")
@@ -1383,7 +1383,7 @@ func TestTheProcessLimitClearsAConcurrentBuild(t *testing.T) {
 	}
 }
 
-func TestWithdrawingWriteLeavesAReadOnlyJobAlone(t *testing.T) {
+func TestWithdrawingWriteLeavesAReadOnlyTaskAlone(t *testing.T) {
 	holds, doesStop := StoppedBy(caps.Write, "/workspace")
 	if !doesStop {
 		t.Fatal("withdrawing write stopped nothing at all")
@@ -1391,12 +1391,12 @@ func TestWithdrawingWriteLeavesAReadOnlyJobAlone(t *testing.T) {
 
 	readOnly := sandbox.Policy{Read: []string{"/workspace"}, Write: []string{"/state/home/.cache"}}
 	if holds(readOnly) {
-		t.Error("a read-only job was stopped by a write withdrawal")
+		t.Error("a read-only task was stopped by a write withdrawal")
 	}
 
 	writable := sandbox.Policy{Write: []string{"/workspace", "/state/home/.cache"}}
 	if !holds(writable) {
-		t.Error("a job holding the writable workspace was not stopped")
+		t.Error("a task holding the writable workspace was not stopped")
 	}
 }
 
@@ -1429,7 +1429,7 @@ func TestThePathIsLeftAloneWithoutAConfiguredPathDirectory(t *testing.T) {
 	}
 
 	if _, isOverridden := policy.SetEnv["PATH"]; isOverridden {
-		t.Errorf("PATH was overridden with no sandbox.path configured: %q", policy.SetEnv["PATH"])
+		t.Errorf("PATH was overridden with no grants.path configured: %q", policy.SetEnv["PATH"])
 	}
 	if !slices.Contains(policy.Env, "PATH") {
 		t.Errorf("expected PATH to pass through, got %v", policy.Env)
@@ -1629,5 +1629,26 @@ func TestASymlinkedWorkspaceStillProtectsNestedMetadata(t *testing.T) {
 	}
 	if !slices.Contains(policy.Read, metadata) {
 		t.Errorf("metadata under symlinked workspace is writable: %v", policy.Read)
+	}
+}
+
+func TestABoundBashTaskCannotGainAQueuedWorkspaceGrant(t *testing.T) {
+	initial := sandbox.Policy{
+		Read: []string{"/workspace", "/existing"}, Write: []string{"/scratch"},
+		Exec: []string{"/bin"}, Sockets: []string{"/run/existing.sock"},
+	}
+	current := sandbox.Policy{
+		Read:    []string{"/workspace", "/existing", "/new"},
+		Write:   []string{"/scratch", "/workspace"},
+		Exec:    []string{"/bin", "/new/bin"},
+		Sockets: []string{"/run/existing.sock", "/run/new.sock"},
+	}
+	bounded := restrictTaskPolicy(current, initial)
+	if !slices.Equal(bounded.Read, initial.Read) || !slices.Equal(bounded.Write, initial.Write) ||
+		!slices.Equal(bounded.Exec, initial.Exec) || !slices.Equal(bounded.Sockets, initial.Sockets) {
+		t.Errorf("a queued task gained new access: %+v", bounded)
+	}
+	if got := BindTaskPolicy(t.Context(), initial).Value(taskPolicyKey{}); got == nil {
+		t.Error("the bound policy was not carried into tool execution")
 	}
 }

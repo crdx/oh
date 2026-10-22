@@ -69,10 +69,10 @@ func TestEveryUnavailableToolIsNamedAtOnce(t *testing.T) {
 }
 
 func TestTheToolsOfAConversationCanBeNamedAndReducedBackToThemselves(t *testing.T) {
-	offered := []tool.Tool{namedTool("Read"), namedTool("Bash"), namedTool("job")}
+	offered := []tool.Tool{namedTool("Read"), namedTool("Bash"), namedTool("task")}
 
 	names := Names(offered)
-	if !slices.Equal(names, []string{"Read", "Bash", "job"}) {
+	if !slices.Equal(names, []string{"Read", "Bash", "task"}) {
 		t.Fatalf("got %v", names)
 	}
 
@@ -87,13 +87,13 @@ func TestTheToolsOfAConversationCanBeNamedAndReducedBackToThemselves(t *testing.
 }
 
 func TestAConversationOpensWithoutTheToolsThatHaveGoneAway(t *testing.T) {
-	held := Names([]tool.Tool{namedTool("Read"), namedTool("job"), namedTool("Bash")})
+	held := Names([]tool.Tool{namedTool("Read"), namedTool("task"), namedTool("Bash")})
 
 	present, absent := Partition([]tool.Tool{namedTool("Read"), namedTool("Bash")}, held)
 	if !slices.Equal(present, []string{"Read", "Bash"}) {
 		t.Errorf("got %v", present)
 	}
-	if !slices.Equal(absent, []string{"job"}) {
+	if !slices.Equal(absent, []string{"task"}) {
 		t.Errorf("got %v", absent)
 	}
 
@@ -199,7 +199,7 @@ func TestAToolRetiredUnderItsOldNameStaysOnTheWireAndIsRefused(t *testing.T) {
 
 func TestAHeadlessSessionKeepsOnlyTheToolsThatWorkAlone(t *testing.T) {
 	var tools []tool.Tool
-	for _, name := range []string{"read", "job", "bash", "title", "weather", "edit", "forward", "subagent", "wait"} {
+	for _, name := range []string{"read", "task", "bash", "title", "weather", "edit", "forward", "subagent", "wait"} {
 		tools = append(tools, namedTool(name))
 	}
 
@@ -212,17 +212,17 @@ func TestAHeadlessSessionRefusesEveryToolOutsideItsOwnOnce(t *testing.T) {
 	if err := RefuseOutsideHeadless(HeadlessTools); err != nil {
 		t.Errorf("refused its own tools: %v", err)
 	}
-	err := RefuseOutsideHeadless([]string{"read", "job", "weather", "job"})
-	if err == nil || !strings.HasSuffix(err.Error(), "so it cannot offer job, weather") {
-		t.Errorf("got %v, want job and weather refused once each", err)
+	err := RefuseOutsideHeadless([]string{"read", "task", "weather", "task"})
+	if err == nil || !strings.HasSuffix(err.Error(), "so it cannot offer task, weather") {
+		t.Errorf("got %v, want task and weather refused once each", err)
 	}
 }
 
 func TestAToolWithheldFromAHeadlessSessionIsToldAsWithheldAndComesBackLater(t *testing.T) {
-	snapshots := []tool.Snapshot{tool.TakeSnapshot(namedTool("read")), tool.TakeSnapshot(namedTool("job"))}
+	snapshots := []tool.Snapshot{tool.TakeSnapshot(namedTool("read")), tool.TakeSnapshot(namedTool("task"))}
 
-	restored := Restore([]tool.Tool{namedTool("read")}, snapshots, []string{"job"})
-	if restored.Availability["job"] != ToolWithheld || restored.Availability["read"] != ToolAvailable {
+	restored := Restore([]tool.Tool{namedTool("read")}, snapshots, []string{"task"})
+	if restored.Availability["task"] != ToolWithheld || restored.Availability["read"] != ToolAvailable {
 		t.Fatalf("got availability %#v", restored.Availability)
 	}
 	call, err := restored.OfferedTools[1].Parse(`{"path":"x"}`)
@@ -234,10 +234,10 @@ func TestAToolWithheldFromAHeadlessSessionIsToldAsWithheldAndComesBackLater(t *t
 	}
 
 	for known, want := range map[ToolStatus]string{
-		ToolAvailable: "The `job` tool needs somebody there, so it is disabled while this session is headless.",
+		ToolAvailable: "The `task` tool needs somebody there, so it is disabled while this session is headless.",
 		ToolWithheld:  "",
 	} {
-		event, err := AvailabilityChangeEvent(Availability{"read": ToolAvailable, "job": known}, restored.Availability)
+		event, err := AvailabilityChangeEvent(Availability{"read": ToolAvailable, "task": known}, restored.Availability)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -247,18 +247,18 @@ func TestAToolWithheldFromAHeadlessSessionIsToldAsWithheldAndComesBackLater(t *t
 		}
 	}
 
-	event, err := AvailabilityChangeEvent(restored.Availability, Availability{"read": ToolAvailable, "job": ToolAvailable})
+	event, err := AvailabilityChangeEvent(restored.Availability, Availability{"read": ToolAvailable, "task": ToolAvailable})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if notices, _ := AvailabilityNotice(event); !slices.Equal(notices, []string{"The `job` tool is available again."}) {
+	if notices, _ := AvailabilityNotice(event); !slices.Equal(notices, []string{"The `task` tool is available again."}) {
 		t.Errorf("an interactive resume told the model %q", notices)
 	}
 }
 
 func TestOnlyToolsOutsideAHeadlessSessionAreWithheld(t *testing.T) {
-	tools := []tool.Tool{namedTool("read"), namedTool("job"), namedTool("bash"), namedTool("title")}
-	if got := WithheldFromHeadless(tools); !slices.Equal(got, []string{"job", "title"}) {
+	tools := []tool.Tool{namedTool("read"), namedTool("task"), namedTool("bash"), namedTool("title")}
+	if got := WithheldFromHeadless(tools); !slices.Equal(got, []string{"task", "title"}) {
 		t.Errorf("got %v", got)
 	}
 }

@@ -238,13 +238,32 @@ func TestGoldenExecutableCompletionReadsTheConfiguredTools(t *testing.T) {
 			run := newStartupRun(t, "")
 			return run.run(t, "--complete", "tool", "re") + run.run(t, "--complete", "tool", "we")
 		},
+		"a disabled built-in tool": func() string {
+			run := newStartupRun(t, "[tool.read]\nenabled = false\n")
+			return run.run(t, "--complete", "tool", "re")
+		},
 		"a declared tool and its capability group": func() string {
-			run := newStartupRun(t, "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"a\"\n")
+			run := newStartupRun(t, "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"a\"\n")
 			return run.run(t, "--complete", "tool", "we") + run.run(t, "--complete", "caps", "rxwngl")
 		},
 		"invalid config keeps the built-in tools": func() string {
-			run := newStartupRun(t, "[tools.weather]\ngroup = 5\n")
+			run := newStartupRun(t, "[tool.weather]\ngroup = 5\n")
 			return run.run(t, "--complete", "tool", "re") + run.run(t, "--complete", "tool", "we")
+		},
+	})
+}
+
+func TestGoldenHostNetworkSettingBelongsOnlyToBash(t *testing.T) {
+	compareWithGolden(t, "tool-network-setting", ".txt", map[string]func() string{
+		"a read tool cannot take host-network settings": func() string {
+			run := newStartupRun(t, "[tool.read]\nhost_network = \"ask\"\n")
+			output := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question")
+			path := regexp.MustCompile(`\S+/org\.crdx/oh/config\.toml`)
+			return path.ReplaceAllString(output, "<config>/config.toml")
+		},
+		"bash can hold host-network settings": func() string {
+			run := newStartupRun(t, "[tool.bash]\nhost_network = \"ask\"\n", "A safe answer.")
+			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question")
 		},
 	})
 }
@@ -499,7 +518,7 @@ func withoutMachineDependentTools(text string) string {
 }
 
 func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
-	const everythingElse = "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngroup = \"a\"\n"
+	const everythingElse = "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngroup = \"a\"\n"
 	compareWithGolden(t, "headless-tools", ".txt", map[string]func() string{
 		"a headless session beside every other kind of tool": func() string {
 			run := newStartupRun(t, everythingElse, "Headless answer.")
@@ -511,7 +530,7 @@ func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
 		},
 		"a headless session naming tools that need somebody there": func() string {
 			run := newStartupRun(t, everythingElse)
-			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-t", "read", "-t", "job", "-t", "weather", "a question") +
+			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-t", "read", "-t", "task", "-t", "weather", "a question") +
 				run.sessionTools(t)
 		},
 		"an interactive session resumed headless": func() string {

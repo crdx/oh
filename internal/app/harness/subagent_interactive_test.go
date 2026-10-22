@@ -405,12 +405,12 @@ func TestANewSessionOffersSubagentsWithoutAConfiguredRotation(t *testing.T) {
 	}{
 		{
 			name:   "defaulted on with no subagent model",
-			config: "[defaults]\ncaps = \"rs\"\n",
+			config: "[default]\ncaps = \"rs\"\n",
 			want:   caps.Unconfined() | caps.Subagents,
 		},
 		{
 			name:   "defaulted on with a concurrency limit",
-			config: "[defaults]\ncaps = \"rs\"\n\n[subagent]\nconcurrency = 2\n",
+			config: "[default]\ncaps = \"rs\"\n\n[subagent]\nconcurrency = 2\n",
 			want:   caps.Unconfined() | caps.Subagents,
 		},
 		{

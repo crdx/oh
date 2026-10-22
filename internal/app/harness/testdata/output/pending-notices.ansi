@@ -1,39 +1,39 @@
-=== 1 a restored job standing ===
+=== 1 a restored task standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
-\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\r
+\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 2 a restored job flushed ===
+=== 2 a restored task flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
-\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\r
+\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\e[2B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m 🤖 The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\e[2B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 3 an ended job standing ===
+=== 3 an ended task standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed with no output.                                                        \e[0m\r
+\e[48;2;48;58;67m ⏳ Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m failed.                                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 4 an ended job flushed ===
+=== 4 an ended task flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed with no output.                                                        \e[0m\r
+\e[48;2;48;58;67m ⏳ Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m failed.                                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[4A\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed with no output.                                                        \e[0m\e[1B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[4A\r\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m failed.                                                                              \e[0m\e[1B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 5 a mode change flushed ===
@@ -56,66 +56,66 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 7 a restored job and one return ===
+=== 7 a restored task and one return ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
-\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\r
+\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 7b a restored job flushed at the window boundary ===
+=== 7b a restored task flushed at the window boundary ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
-\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\r
+\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\e[2B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m 🤖 The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\e[2B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 7c a restored job after an expired return pair ===
+=== 7c a restored task after an expired return pair ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
-\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\r
+\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 7d a restored job flushed after an expired pair ===
+=== 7d a restored task flushed after an expired pair ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
-\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\r
+\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\e[2B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m 🤖 The session closed while docs was running. It stopped and does not restart automatically; task  \e[0m\e[2B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 8 a stopped job standing ===
+=== 8 a stopped task standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
-\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Task \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
-=== 9 a stopped job flushed ===
+=== 9 a stopped task flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
-\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Task \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m 🤖 The workspace is now read-only.                                                                 \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The workspace is now read-write.                                                                \e[0m\e[1B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m 🤖 The workspace is now read-only.                                                                 \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The workspace is now read-write.                                                                \e[0m\e[1B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagent 1 restored and standing ===

@@ -1,7 +1,7 @@
 provider = "codex"
 model = "gpt-5.6-sol"
 effort = "medium"
-job-holding-configured = "docs"
+task-holding-configured = "docs"
 toggle-before-first = "g"
 
 [environment]

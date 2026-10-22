@@ -10,7 +10,7 @@ import (
 
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/style"
-	internaltoolresult "crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -32,7 +32,7 @@ const (
 	partSeparator    = " · "
 )
 
-func render(exchange internaltoolresult.Exchange, columns int) string {
+func render(exchange toolresult.Exchange, columns int) string {
 	var resultView string
 	var err error
 
@@ -68,7 +68,7 @@ func render(exchange internaltoolresult.Exchange, columns int) string {
 	return resultView
 }
 
-func renderRead(exchange internaltoolresult.Exchange) (string, error) {
+func renderRead(exchange toolresult.Exchange) (string, error) {
 	var arguments read.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -80,7 +80,7 @@ func renderRead(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(header+"\n\n"+body, exchange), nil
 }
 
-func renderWrite(exchange internaltoolresult.Exchange) (string, error) {
+func renderWrite(exchange toolresult.Exchange) (string, error) {
 	var arguments write.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -92,7 +92,7 @@ func renderWrite(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(header+"\n\n"+body, exchange), nil
 }
 
-func renderEdit(exchange internaltoolresult.Exchange) (string, error) {
+func renderEdit(exchange toolresult.Exchange) (string, error) {
 	var arguments edit.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -104,7 +104,7 @@ func renderEdit(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(header+"\n\n"+body, exchange), nil
 }
 
-func renderBash(exchange internaltoolresult.Exchange) (string, error) {
+func renderBash(exchange toolresult.Exchange) (string, error) {
 	var arguments bash.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -132,7 +132,7 @@ func renderBash(exchange internaltoolresult.Exchange) (string, error) {
 	return strings.Join(commandLines, "\n") + "\n\n" + output, nil
 }
 
-func renderList(exchange internaltoolresult.Exchange) (string, error) {
+func renderList(exchange toolresult.Exchange) (string, error) {
 	var arguments ls.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -146,7 +146,7 @@ func renderList(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(heading("ls", path)+"\n\n"+body, exchange), nil
 }
 
-func renderFind(exchange internaltoolresult.Exchange) (string, error) {
+func renderFind(exchange toolresult.Exchange) (string, error) {
 	var arguments find.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -160,7 +160,7 @@ func renderFind(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(heading("find", subject)+"\n\n"+body, exchange), nil
 }
 
-func renderGrep(exchange internaltoolresult.Exchange) (string, error) {
+func renderGrep(exchange toolresult.Exchange) (string, error) {
 	var arguments grep.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -175,7 +175,7 @@ func renderGrep(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(style.Heading("grep")+partSeparator+subject+"\n\n"+body, exchange), nil
 }
 
-func renderLookup(exchange internaltoolresult.Exchange, columns int) (string, error) {
+func renderLookup(exchange toolresult.Exchange, columns int) (string, error) {
 	var arguments lookup.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -185,7 +185,7 @@ func renderLookup(exchange internaltoolresult.Exchange, columns int) (string, er
 	return withFailure(heading("lookup", safe(arguments.Query))+"\n\n"+body, exchange), nil
 }
 
-func renderFetch(exchange internaltoolresult.Exchange, columns int) (string, error) {
+func renderFetch(exchange toolresult.Exchange, columns int) (string, error) {
 	var arguments fetch.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -207,7 +207,7 @@ func renderFetch(exchange internaltoolresult.Exchange, columns int) (string, err
 	return withFailure(style.Heading("fetch")+partSeparator+subject+"\n\n"+body, exchange), nil
 }
 
-func renderTitle(exchange internaltoolresult.Exchange) (string, error) {
+func renderTitle(exchange toolresult.Exchange) (string, error) {
 	var arguments title.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -215,7 +215,7 @@ func renderTitle(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(heading("title", safe(arguments.Title))+"\n\n"+successfulText(exchange), exchange), nil
 }
 
-func renderNotification(exchange internaltoolresult.Exchange) (string, error) {
+func renderNotification(exchange toolresult.Exchange) (string, error) {
 	var arguments notify.Args
 	if err := decodeArguments(exchange, &arguments); err != nil {
 		return "", err
@@ -226,7 +226,7 @@ func renderNotification(exchange internaltoolresult.Exchange) (string, error) {
 	return withFailure(header+"\n\n"+body, exchange), nil
 }
 
-func renderFallback(exchange internaltoolresult.Exchange) string {
+func renderFallback(exchange toolresult.Exchange) string {
 	header := heading(safe(exchange.Request.Name), "")
 	var arguments bytes.Buffer
 	if err := json.Indent(&arguments, []byte(exchange.Request.Arguments), "", "    "); err != nil {
@@ -243,7 +243,7 @@ func renderFallback(exchange internaltoolresult.Exchange) string {
 	return strings.Join(parts, "\n\n")
 }
 
-func decodeArguments(exchange internaltoolresult.Exchange, destination any) error {
+func decodeArguments(exchange toolresult.Exchange, destination any) error {
 	return json.Unmarshal([]byte(exchange.Request.Arguments), destination)
 }
 
@@ -279,14 +279,14 @@ func lineRange(offset int, limit int) string {
 	}
 }
 
-func successfulText(exchange internaltoolresult.Exchange) string {
+func successfulText(exchange toolresult.Exchange) string {
 	if exchange.Result.Status != agent.SuccessStatus && exchange.Result.Status != agent.InfoStatus {
 		return ""
 	}
 	return safe(exchange.Result.Text)
 }
 
-func withFailure(resultView string, exchange internaltoolresult.Exchange) string {
+func withFailure(resultView string, exchange toolresult.Exchange) string {
 	if exchange.Result.Status == agent.SuccessStatus || exchange.Result.Status == agent.InfoStatus {
 		return resultView
 	}

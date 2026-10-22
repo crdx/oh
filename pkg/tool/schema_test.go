@@ -52,7 +52,7 @@ func TestABooleanParameterHasABooleanSchema(t *testing.T) {
 
 func TestAStringArrayDescribesItsItems(t *testing.T) {
 	schema := tool.Schema{
-		tool.StringArray("names", "jobs to watch"),
+		tool.StringArray("names", "tasks to watch"),
 	}
 
 	schemaJSON, err := json.Marshal(schema)
@@ -61,7 +61,7 @@ func TestAStringArrayDescribesItsItems(t *testing.T) {
 	}
 
 	expectedJSON := `{"type":"object","properties":{` +
-		`"names":{"type":"array","description":"jobs to watch","items":{"type":"string"}}},` +
+		`"names":{"type":"array","description":"tasks to watch","items":{"type":"string"}}},` +
 		`"required":["names"],"additionalProperties":false}`
 
 	if string(schemaJSON) != expectedJSON {

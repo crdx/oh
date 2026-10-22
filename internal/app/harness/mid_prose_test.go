@@ -53,20 +53,20 @@ func TestGoldenNoticesArrivingMidProseKeepTheirOrderInEveryMode(t *testing.T) {
 	passes := map[string]func() string{}
 
 	for name, scene := range map[string]arrivingNotices{
-		"an ended job and a host command in the middle of an answer": {
+		"an ended task and a host command in the middle of an answer": {
 			mode:    output.StreamingModeLine,
 			kind:    agent.ModelMessageEvent,
-			notices: []string{"an ended job", "a host command"},
+			notices: []string{"an ended task", "a host command"},
 		},
-		"an ended job in the middle of an answer drawn as it arrives": {
+		"an ended task in the middle of an answer drawn as it arrives": {
 			mode:    output.StreamingModeASAP,
 			kind:    agent.ModelMessageEvent,
-			notices: []string{"an ended job"},
+			notices: []string{"an ended task"},
 		},
-		"an ended job in the middle of a thought drawn in paced steps": {
+		"an ended task in the middle of a thought drawn in paced steps": {
 			mode:    output.StreamingModePaced,
 			kind:    agent.ModelReasoningEvent,
-			notices: []string{"an ended job"},
+			notices: []string{"an ended task"},
 		},
 	} {
 		arriving, landed := drawNoticesMidProse(t, name, scene)

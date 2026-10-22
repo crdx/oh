@@ -1,5 +1,5 @@
 === screen ===
-[38;2;150;152;150mcopies kept in [0m/state/sessions_pre_v23
-[38;2;150;152;150mmigrated[0m tame-impala [38;2;150;152;150m22 → 23[0m
+[38;2;150;152;150mcopies kept in [0m/state/sessions_pre_v24
+[38;2;150;152;150mmigrated[0m tame-impala [38;2;150;152;150m22 → 24[0m
 [38;2;150;152;150m1 of 1 migrated[0m
 === failure ===

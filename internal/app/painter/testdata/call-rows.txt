@@ -406,326 +406,110 @@ Checking the … ✓
 Vetting every… ✗
 Pausing for t… –
 
-── job start · 120 columns
-start docs $ python3 -m http.server 8080 (Serving the documentation locally)
-
-── job start · 80 columns
-start docs $ python3 -m http.server 8080 (Serving the documentation locally)
-
-── job start · 60 columns
-start docs $ python3 -m http.server 8080
-
-── job start · 44 columns
-start docs $ python3 -m http.server 8080
-
-── job start · 30 columns
-start docs $ python3 -m http.…
-
-── job start · 16 columns
-start docs $ py…
-
-── job start with a forwarded port · 120 columns
-start docs:8080 $ just docs (Serving the docs on the forwarded port)
-
-── job start with a forwarded port · 80 columns
-start docs:8080 $ just docs (Serving the docs on the forwarded port)
-
-── job start with a forwarded port · 60 columns
-start docs:8080 $ just docs
-
-── job start with a forwarded port · 44 columns
-start docs:8080 $ just docs
-
-── job start with a forwarded port · 30 columns
-start docs:8080 $ just docs
-
-── job start with a forwarded port · 16 columns
-start docs:8080
-
-── job start with a multi-line command · 120 columns
-start watch $ while true; do just build; sleep 5; done 4L (Rebuilding every five seconds)
-
-── job start with a multi-line command · 80 columns
-start watch $ while true; do just build; sleep 5; done 4L
-
-── job start with a multi-line command · 60 columns
-start watch $ while true; do just build; sleep 5; done 4L
-
-── job start with a multi-line command · 44 columns
-start watch $ while true; do just build; sl…
-
-── job start with a multi-line command · 30 columns
-start watch $ while true; do …
-
-── job start with a multi-line command · 16 columns
-start watch $ w…
-
-── job restart · 120 columns
-restart docs (Restarting the documentation server)
-
-── job restart · 80 columns
-restart docs (Restarting the documentation server)
-
-── job restart · 60 columns
-restart docs (Restarting the documentation server)
-
-── job restart · 44 columns
+── task calls · 120 columns
+check docs
+read output for docs 2L
 restart docs
-
-── job restart · 30 columns
-restart docs
-
-── job restart · 16 columns
-restart docs
-
-── job restart with a port · 120 columns
-restart docs:8080 (Restarting the docs on its port)
-
-── job restart with a port · 80 columns
-restart docs:8080 (Restarting the docs on its port)
-
-── job restart with a port · 60 columns
-restart docs:8080 (Restarting the docs on its port)
-
-── job restart with a port · 44 columns
-restart docs:8080
-
-── job restart with a port · 30 columns
-restart docs:8080
-
-── job restart with a port · 16 columns
-restart docs:80…
-
-── job start refused · 120 columns
-start docs $ just docs ✗ a job of that name is already running (Serving the documentation locally)
-
-── job start refused · 80 columns
-start docs $ just docs ✗ a job of that name is already running
-
-── job start refused · 60 columns
-start docs $ just docs ✗ a job of that name is already runn…
-
-── job start refused · 44 columns
-start docs $ just d… ✗ a job of that name i…
-
-── job start refused · 30 columns
-start docs $ ✗ a job of that…
-
-── job start refused · 16 columns
-start ✗ a job …
-
-── job start without an intent · 120 columns
-start docs $ just docs ✗ intent is required to start a job
-
-── job start without an intent · 80 columns
-start docs $ just docs ✗ intent is required to start a job
-
-── job start without an intent · 60 columns
-start docs $ just docs ✗ intent is required to start a job
-
-── job start without an intent · 44 columns
-start docs $ just d… ✗ intent is required t…
-
-── job start without an intent · 30 columns
-start docs $ ✗ intent is req…
-
-── job start without an intent · 16 columns
-start ✗ intent…
-
-── job start with an invalid name · 120 columns
-start way-too-long-a-name $ true ✗ job name must match [a-z0-9-]{1,10} (Trying a name that is too long)
-
-── job start with an invalid name · 80 columns
-start way-too-long-a-name $ true ✗ job name must match [a-z0-9-]{1,10}
-
-── job start with an invalid name · 60 columns
-start way-too-long-a-name $ ✗ job name must match [a-z0-9-…
-
-── job start with an invalid name · 44 columns
-start way-too-long-… ✗ job name must match …
-
-── job start with an invalid name · 30 columns
-start way-to… ✗ job name must…
-
-── job start with an invalid name · 16 columns
-start ✗ job na…
-
-── job calls naming nobody's job · 120 columns
-status docs
-cat docs 1L
-
-── job calls naming nobody's job · 80 columns
-status docs
-cat docs 1L
-
-── job calls naming nobody's job · 60 columns
-status docs
-cat docs 1L
-
-── job calls naming nobody's job · 44 columns
-status docs
-cat docs 1L
-
-── job calls naming nobody's job · 30 columns
-status docs
-cat docs 1L
-
-── job calls naming nobody's job · 16 columns
-status docs
-cat docs 1L
-
-── job calls reminded of their job · 120 columns
-start docs $ just docs (Serving the documentation locally)
-status docs (Serving the documentation locally)
-cat docs 2L (Serving the documentation locally)
-stop docs (Serving the documentation locally)
-discard docs (Serving the documentation locally)
-
-── job calls reminded of their job · 80 columns
-start docs $ just docs (Serving the documentation locally)
-status docs (Serving the documentation locally)
-cat docs 2L (Serving the documentation locally)
-stop docs (Serving the documentation locally)
-discard docs (Serving the documentation locally)
-
-── job calls reminded of their job · 60 columns
-start docs $ just docs (Serving the documentation locally)
-status docs (Serving the documentation locally)
-cat docs 2L (Serving the documentation locally)
-stop docs (Serving the documentation locally)
-discard docs (Serving the documentation locally)
-
-── job calls reminded of their job · 44 columns
-start docs $ just docs
-status docs
-cat docs 2L
 stop docs
 discard docs
 
-── job calls reminded of their job · 30 columns
-start docs $ just docs
-status docs
-cat docs 2L
+── task calls · 80 columns
+check docs
+read output for docs 2L
+restart docs
 stop docs
 discard docs
 
-── job calls reminded of their job · 16 columns
-start docs $ ju…
-status docs
-cat docs 2L
+── task calls · 60 columns
+check docs
+read output for docs 2L
+restart docs
 stop docs
 discard docs
 
-── job reminded of its newest start · 120 columns
-start docs $ just docs (Serving the documentation locally)
-status docs (Serving the documentation locally)
-start docs $ just docs (Serving the docs on a new port)
-status docs (Serving the docs on a new port)
+── task calls · 44 columns
+check docs
+read output for docs 2L
+restart docs
+stop docs
+discard docs
 
-── job reminded of its newest start · 80 columns
-start docs $ just docs (Serving the documentation locally)
-status docs (Serving the documentation locally)
-start docs $ just docs (Serving the docs on a new port)
-status docs (Serving the docs on a new port)
+── task calls · 30 columns
+check docs
+read output for docs 2L
+restart docs
+stop docs
+discard docs
 
-── job reminded of its newest start · 60 columns
-start docs $ just docs (Serving the documentation locally)
-status docs (Serving the documentation locally)
-start docs $ just docs (Serving the docs on a new port)
-status docs (Serving the docs on a new port)
+── task calls · 16 columns
+check docs
+read output … 2L
+restart docs
+stop docs
+discard docs
 
-── job reminded of its newest start · 44 columns
-start docs $ just docs
-status docs
-start docs $ just docs
-status docs (Serving the docs on a new port)
+── task calls naming no task · 120 columns
+list tasks 2L
+prune finished tasks
 
-── job reminded of its newest start · 30 columns
-start docs $ just docs
-status docs
-start docs $ just docs
-status docs
+── task calls naming no task · 80 columns
+list tasks 2L
+prune finished tasks
 
-── job reminded of its newest start · 16 columns
-start docs $ ju…
-status docs
-start docs $ ju…
-status docs
+── task calls naming no task · 60 columns
+list tasks 2L
+prune finished tasks
 
-── job calls naming no job · 120 columns
-start docs $ just docs (Serving the documentation locally)
-list jobs 2L
-prune jobs
+── task calls naming no task · 44 columns
+list tasks 2L
+prune finished tasks
 
-── job calls naming no job · 80 columns
-start docs $ just docs (Serving the documentation locally)
-list jobs 2L
-prune jobs
+── task calls naming no task · 30 columns
+list tasks 2L
+prune finished tasks
 
-── job calls naming no job · 60 columns
-start docs $ just docs (Serving the documentation locally)
-list jobs 2L
-prune jobs
+── task calls naming no task · 16 columns
+list tasks 2L
+prune finished …
 
-── job calls naming no job · 44 columns
-start docs $ just docs
-list jobs 2L
-prune jobs
+── task call with an unknown action · 120 columns
+manage explode docs ✗ action must be one of: status, output, stop, list, prune, restart, discard
 
-── job calls naming no job · 30 columns
-start docs $ just docs
-list jobs 2L
-prune jobs
+── task call with an unknown action · 80 columns
+manage explode docs ✗ action must be one of: status, output, stop, list, prune,…
 
-── job calls naming no job · 16 columns
-start docs $ ju…
-list jobs 2L
-prune jobs
+── task call with an unknown action · 60 columns
+manage explode docs ✗ action must be one of: status, output…
 
-── job call with an unknown action · 120 columns
-job explode docs ✗ action must be start, status, output, stop, discard, prune, or list
+── task call with an unknown action · 44 columns
+manage explode docs ✗ action must be one of…
 
-── job call with an unknown action · 80 columns
-job explode docs ✗ action must be start, status, output, stop, discard, prune, …
+── task call with an unknown action · 30 columns
+manage explo… ✗ action must b…
 
-── job call with an unknown action · 60 columns
-job explode docs ✗ action must be start, status, output, st…
+── task call with an unknown action · 16 columns
+manage ✗ action…
 
-── job call with an unknown action · 44 columns
-job explode docs ✗ action must be start, st…
-
-── job call with an unknown action · 30 columns
-job explode … ✗ action must b…
-
-── job call with an unknown action · 16 columns
-job e… ✗ action…
-
-── shell and job calls mixed in one round · 120 columns
-start docs $ just docs (Serving the documentation locally)
+── shell and task calls mixed in one round · 120 columns
 Checking the docs answer requests $ curl -s localhost:8080 | head -1 ✓ 0.2s 1L 28M <!DOCTYPE html>
-stop docs (Serving the documentation locally)
+stop docs
 
-── shell and job calls mixed in one round · 80 columns
-start docs $ just docs (Serving the documentation locally)
+── shell and task calls mixed in one round · 80 columns
 Checking the docs answer requests $ curl -s localhost:8080 | head… ✓ 0.2s 1L 28M
-stop docs (Serving the documentation locally)
+stop docs
 
-── shell and job calls mixed in one round · 60 columns
-start docs $ just docs (Serving the documentation locally)
+── shell and task calls mixed in one round · 60 columns
 Checking the docs answer requests $ curl -s l… ✓ 0.2s 1L 28M
-stop docs (Serving the documentation locally)
+stop docs
 
-── shell and job calls mixed in one round · 44 columns
-start docs $ just docs
+── shell and task calls mixed in one round · 44 columns
 Checking the docs answer requests $ curl … ✓
 stop docs
 
-── shell and job calls mixed in one round · 30 columns
-start docs $ just docs
+── shell and task calls mixed in one round · 30 columns
 Checking the docs answer re… ✓
 stop docs
 
-── shell and job calls mixed in one round · 16 columns
-start docs $ ju…
+── shell and task calls mixed in one round · 16 columns
 Checking the … ✓
 stop docs

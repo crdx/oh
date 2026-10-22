@@ -128,7 +128,7 @@ func TestConcurrentInitialModelsDoNotOverwriteEachOther(t *testing.T) {
 func TestSetInitialModelLooksPastAModelHeaderInsideASnippet(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
 	prompt := "x = \"\"\"\n[agent]\nkeep me\n\"\"\"\n"
-	contents := fmt.Sprintf("version = %d\n\n[snippets]\n%s", config.Format, prompt)
+	contents := fmt.Sprintf("version = %d\n\n[snippet]\n%s", config.Format, prompt)
 	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -154,7 +154,7 @@ func TestSetInitialModelLooksPastAModelHeaderInsideASnippet(t *testing.T) {
 }
 
 func TestSetInitialModelFindsAHeaderAfterASnippetHasClosed(t *testing.T) {
-	body := "\n[snippets]\nx = '''\n[agent]\n'''\ny = \"a \\\"quoted\\\" word\"\n\n[agent]\n"
+	body := "\n[snippet]\nx = '''\n[agent]\n'''\ny = \"a \\\"quoted\\\" word\"\n\n[agent]\n"
 	contents := fmt.Sprintf("version = %d\n%s", config.Format, body)
 	want := contents + "model = \"anthropic/two@high\"\n"
 

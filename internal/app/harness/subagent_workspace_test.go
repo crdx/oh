@@ -129,7 +129,7 @@ func TestAChildOfAnUnconfinedParentWorksInAnyHostDirectoryOutsideHostTmp(t *test
 	}
 }
 
-var childPromptSettings = config.Config{Sandbox: shell.Paths{
+var childPromptSettings = config.Config{Grants: shell.Paths{
 	Read: []string{"/srv/docs"},
 	Home: []string{"/users/person/.local/share/notes", "/etc/person"},
 	Exec: []string{"/opt"},
@@ -215,7 +215,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 	farmReadable := childOptions{
 		userHome:      "/users/person",
 		scratchParent: "/state/farm/tame-impala",
-		settings:      config.Config{Sandbox: shell.Paths{Read: []string{"/state/farm"}}},
+		settings:      config.Config{Grants: shell.Paths{Read: []string{"/state/farm"}}},
 	}
 	compareWithGolden(t, "subagent-prompt", ".txt", map[string]func() string{
 		"confined with a shell":                                    prompt(false, caps.Read|caps.Shell, "", plainBrief),

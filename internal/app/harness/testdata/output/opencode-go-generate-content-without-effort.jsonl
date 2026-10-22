@@ -1,4 +1,4 @@
-{"kind":"head","version":23,"meta":{"model":"gemini-9-flash","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":24,"meta":{"model":"gemini-9-flash","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"reason, then call two tools at once"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Use both tools.","usage":{"input_tokens":300,"output_tokens":60,"cache":{"read_tokens":0}}}}

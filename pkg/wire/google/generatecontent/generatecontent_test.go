@@ -363,7 +363,7 @@ func TestCallsAreHandedOverAndAnsweredWhereTheModelAskedThem(t *testing.T) {
 		{ID: "fc-1", Output: "raining"},
 		{ID: "call_1_2", Output: "no such city", IsError: true},
 	})
-	restored.AddUserMessage("<system-reminder>\na job ended\n</system-reminder>")
+	restored.AddUserMessage("<system-reminder>\na task ended\n</system-reminder>")
 	if _, err := restored.Send(t.Context(), ignore); err != nil {
 		t.Fatal(err)
 	}
@@ -376,7 +376,7 @@ func TestCallsAreHandedOverAndAnsweredWhereTheModelAskedThem(t *testing.T) {
 		`{"functionCall":{"name":"weather","args":{}}}]},` +
 		`{"role":"user","parts":[` +
 		`{"functionResponse":{"id":"fc-1","name":"weather","response":{"output":"raining"}}},` +
-		`{"functionResponse":{"name":"weather","response":{"error":"no such city\n\n\u003csystem-reminder\u003e\na job ended\n\u003c/system-reminder\u003e"}}}]}]`
+		`{"functionResponse":{"name":"weather","response":{"error":"no such city\n\n\u003csystem-reminder\u003e\na task ended\n\u003c/system-reminder\u003e"}}}]}]`
 	if !strings.Contains(sent, wantContents) {
 		t.Errorf("expected the calls verbatim, and their answers in one turn carrying what followed them, got %s", sent)
 	}

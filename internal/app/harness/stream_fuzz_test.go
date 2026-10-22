@@ -8,9 +8,9 @@ import (
 
 	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/dynamic"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -70,7 +70,7 @@ const (
 
 	streamStepRunes  = 0x0f
 	streamStepAction = 4
-	jobEndedAction   = 0x0e
+	taskEndedAction  = 0x0e
 
 	linkDefinitionMarker = "]:"
 )
@@ -94,7 +94,7 @@ func (self *streamSteps) next() (int, byte) {
 type fuzzedStream struct {
 	drawn          string
 	recordedEvents []agent.Event
-	endedJobs      int
+	endedTasks     int
 }
 
 func streamWithSteps(
@@ -116,11 +116,11 @@ func streamWithSteps(
 	rig.chat.currentTurn = Turn{Stream: testRunningTurnStream(), painter: rig.chat.newPainter(true)}
 	rig.chat.screen.ReportProgress(true)
 
-	endedJobs := 0
+	endedTasks := 0
 	act := func(action byte) {
-		if action == jobEndedAction {
-			rig.chat.jobEnded(endedJobConclusion())
-			endedJobs++
+		if action == taskEndedAction {
+			rig.chat.taskEnded(endedTaskConclusion())
+			endedTasks++
 		}
 	}
 
@@ -158,14 +158,14 @@ func streamWithSteps(
 	return fuzzedStream{
 		drawn:          rig.drawn(),
 		recordedEvents: rig.chat.recordedEvents,
-		endedJobs:      endedJobs,
+		endedTasks:     endedTasks,
 	}
 }
 
-func endedJobsIn(entries []replayEntry) int {
+func endedTasksIn(entries []replayEntry) int {
 	count := 0
 	for _, entry := range entries {
-		if entry.Event.Kind == jobrecord.Ended {
+		if entry.Event.Kind == taskrecord.RunEnded {
 			count++
 		}
 	}
@@ -270,8 +270,8 @@ func FuzzAStreamedConversationDrawsWhatItsReplayDraws(fuzzer *testing.F) {
 		if !strings.Contains(prose, linkDefinitionMarker) && strings.Contains(streamed.drawn, ansi.EraseScrollback) {
 			t.Error("streaming cleared the scrollback, which scrolls whoever is reading it to the bottom")
 		}
-		if recordedJobs := endedJobsIn(recorded) - endedJobsIn(entries); recordedJobs != streamed.endedJobs {
-			t.Errorf("%d jobs ended while streaming but %d were recorded", streamed.endedJobs, recordedJobs)
+		if recordedTasks := endedTasksIn(recorded) - endedTasksIn(entries); recordedTasks != streamed.endedTasks {
+			t.Errorf("%d tasks ended while streaming but %d were recorded", streamed.endedTasks, recordedTasks)
 		}
 		played := playScreenOfSize(t, streamed.drawn, columns, lines)
 		if played.wasDrawnAboveTheScreen {

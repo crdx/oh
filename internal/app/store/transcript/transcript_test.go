@@ -16,13 +16,13 @@ import (
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/interrupt"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store/transcript"
 	"crdx.org/oh/internal/app/subagentrecord"
-	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -929,9 +929,9 @@ func TestEveryNoticeSectionIsHeadedByATitleRatherThanItsKind(t *testing.T) {
 		event agent.Event
 		title string
 	}{
-		{caps.JobStoppedByUserEvent("web"), "Job stopped"},
-		{jobrecord.EndedEvent(jobs.Conclusion{Snapshot: jobs.Snapshot{Name: "web", State: jobs.StateComplete}}), "Job ended"},
-		{jobrecord.EndedWithSessionEvent([]string{"web"}), "Jobs ended with the session"},
+		{caps.TaskStoppedByUserEvent("web"), "Task stopped"},
+		{taskrecord.EndedEvent(tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "web", Run: 1, State: tasks.Done}}), "Task run ended"},
+		{taskrecord.EndedWithSessionEvent([]string{"web"}), "Tasks ended with the session"},
 		{subagentrecord.AccessWithdrawnStopEvent([]string{"tame-adder"}, caps.Shell), "Subagents stopped"},
 		{subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder finished:", []subagentrecord.Report{
 			{Name: "tame-adder", State: subagentrecord.Done, Answer: "done"},
@@ -958,13 +958,13 @@ func TestEveryNoticeSectionIsHeadedByATitleRatherThanItsKind(t *testing.T) {
 	}
 }
 
-func TestTranscriptOmitsTheJobListing(t *testing.T) {
+func TestTranscriptOmitsTheTaskListing(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "transcript.md")
 	recorder, err := transcript.Open(path, transcript.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0), Model: "model"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := recorder.Event(time.Unix(2, 0), jobrecord.ListingEvent([]jobs.Snapshot{{Name: "web"}})); err != nil {
+	if err := recorder.Event(time.Unix(2, 0), taskrecord.ListingEvent([]tasks.Snapshot{{ID: "web"}})); err != nil {
 		t.Fatal(err)
 	}
 	if err := recorder.Close(); err != nil {
@@ -975,6 +975,6 @@ func TestTranscriptOmitsTheJobListing(t *testing.T) {
 		t.Fatal(err)
 	}
 	if strings.Contains(string(stored), "\n## ") {
-		t.Errorf("the job listing, which says nothing, took a section:\n%s", stored)
+		t.Errorf("the task listing, which says nothing, took a section:\n%s", stored)
 	}
 }

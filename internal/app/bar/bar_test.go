@@ -18,7 +18,6 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/util/strutil"
 )
 
@@ -69,7 +68,7 @@ func TestInfoDrawsEveryAvailableNonemptySegmentAndSummarisesTheEmptyOnes(t *test
 	registry := segment.Registry{
 		activitySpinnerSegment: fixedFactory("·✦·"),
 		cacheUsageSegment:      fixedFactory("unused configured value"),
-		jobNamesSegment:        fixedFactory(""),
+		taskNamesSegment:       fixedFactory(""),
 		modeToggleSegment:      fixedFactory(modeValue),
 		scrollOverflowSegment:  fixedFactory("↑ 3"),
 	}
@@ -215,7 +214,6 @@ func TestInfoLeavesTheStylingOfEveryRealSegmentToTheSegment(t *testing.T) {
 			IsPrefixPending:    func() bool { return false },
 			GetTurnTiming:      func() turn.Timing { return turn.Timing{UserTurn: time.Minute, ModelTurn: 2 * time.Minute} },
 			GetTurnCount:       func() int { return 6 },
-			GetJobs:            func() []jobs.Snapshot { return nil },
 		},
 	})
 	registry[localTimeSegment] = localTime.New(func() time.Time {

@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/style"
-	internaltoolresult "crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 )
@@ -119,7 +119,7 @@ func toolResultFixture(t *testing.T) (string, string) {
 		t.Fatal(err)
 	}
 
-	return directory, internaltoolresult.URL(name, "call-1")
+	return directory, toolresult.URL(name, "call-1")
 }
 
 func TestAResultIsHandedToThePagerWhole(t *testing.T) {

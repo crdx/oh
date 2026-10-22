@@ -24,7 +24,7 @@ func FuzzABarIsBuiltAndDrawnWithoutFallingOver(fuzzer *testing.F) {
 		"[bar.bottom]\ncenter = [{ segment = \"subscription-usage\", rate = \"1m\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"git-branch\", rate = \"1s\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"cache-usage\" }, { segment = \"context-usage\" }]\n",
-		"[bar.top]\nleft = [{ segment = \"jobs\" }, { segment = \"forwards\" }]\n",
+		"[bar.top]\nleft = [{ segment = \"tasks\" }, { segment = \"forwards\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"turn-timer\" }, { segment = \"turn-count\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"session-spend\" }, { segment = \"active-model\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"fast-mode\" }, { segment = \"mode-toggle\" }]\n",

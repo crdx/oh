@@ -16,10 +16,10 @@ func FuzzAnInitialModelIsWrittenWhereItWillBeRead(fuzzer *testing.F) {
 		"[agent] # models live here\n",
 		"[model]\n",
 		"[editor]\ncommand = [\"vim\"]\n",
-		"[snippets]\nx = \"\"\"\n[agent]\n\"\"\"\n",
-		"[snippets]\nx = '''\n[agent]\n'''\n",
-		"[snippets]\nx = \"a \\\"[agent]\\\" word\"\n",
-		"[ui]\ncurrency = \"GBP\"\n\n[defaults]\neffort = \"low\"\n",
+		"[snippet]\nx = \"\"\"\n[agent]\n\"\"\"\n",
+		"[snippet]\nx = '''\n[agent]\n'''\n",
+		"[snippet]\nx = \"a \\\"[agent]\\\" word\"\n",
+		"[ui]\ncurrency = \"GBP\"\n\n[default]\neffort = \"low\"\n",
 	} {
 		fuzzer.Add(seed)
 	}

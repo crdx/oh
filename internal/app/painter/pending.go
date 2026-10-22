@@ -8,7 +8,6 @@ import (
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/output"
@@ -16,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
@@ -200,16 +200,16 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 	switch event.Kind {
 	case caps.ModeChange:
 		return caps.ModeNotice(event)
-	case caps.JobStop:
-		return oneNotice(caps.JobStopNotice(event))
-	case jobrecord.Ended:
-		return oneNotice(jobrecord.EndedNotice(event))
+	case caps.TaskStop:
+		return oneNotice(caps.TaskStopNotice(event))
+	case taskrecord.RunEnded:
+		return oneNotice(taskrecord.EndedNotice(event))
+	case taskrecord.EndedWithSession:
+		return oneNotice(taskrecord.EndedWithSessionNotice(event))
 	case subagentrecord.ReportsDelivered:
 		return oneNotice(event.Text, true)
 	case subagentrecord.AccessWithdrawnStop:
 		return oneNotice(subagentrecord.AccessWithdrawnStopNotice(event))
-	case jobrecord.EndedWithSession:
-		return oneNotice(jobrecord.EndedWithSessionNotice(event))
 	case hostcommand.Ran:
 		return oneNotice(hostcommand.Notice(event))
 	case conditions.Change:
@@ -226,7 +226,7 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return oneNotice(turn.PokeNotice(event))
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.CacheRebuildEvent, agent.PrefixRewriteEvent,
 		agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,
-		agent.ToolCallResultEvent, agent.StateChangeEvent, agent.InterruptionEvent,
+		agent.ToolCallResultEvent, agent.StateChangeEvent, taskrecord.Listing, taskrecord.Finished, agent.InterruptionEvent,
 		agent.RetryingEvent, agent.FailureEvent:
 		return nil, false
 	}
@@ -262,8 +262,8 @@ func DrawnNotices(event agent.Event, introductions *Introductions) ([]Notice, bo
 
 func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
 	switch kind {
-	case caps.JobStop, jobrecord.Ended, jobrecord.EndedWithSession:
-		return agent.JobNote
+	case caps.TaskStop, taskrecord.RunEnded, taskrecord.EndedWithSession:
+		return agent.TaskNote
 	case hostcommand.Ran:
 		return agent.HostCommandNote
 	case turn.HarnessPoke:
@@ -275,7 +275,7 @@ func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
 		return agent.EnvironmentNote
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.CacheRebuildEvent, agent.PrefixRewriteEvent,
 		agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,
-		agent.ToolCallResultEvent, agent.StateChangeEvent, agent.InterruptionEvent,
+		agent.ToolCallResultEvent, agent.StateChangeEvent, taskrecord.Listing, taskrecord.Finished, agent.InterruptionEvent,
 		agent.RetryingEvent, agent.FailureEvent:
 		return ""
 	}

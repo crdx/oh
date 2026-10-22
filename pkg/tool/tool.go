@@ -77,6 +77,7 @@ func (self CallRendering) HasArguments() bool {
 
 type ToolCallResult struct {
 	Output    string
+	IsPending bool
 	Image     Image
 	Metrics   ToolCallMetrics
 	State     json.RawMessage

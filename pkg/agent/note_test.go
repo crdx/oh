@@ -69,9 +69,9 @@ func TestAProviderWrapsNotesItsOwnWay(t *testing.T) {
 	provider := &formattedProvider{notedProvider{format: taggedNotes{}}}
 	assistant := agent.New("", provider, nil)
 
-	assistant.AddNotes([]agent.Note{{Kind: agent.JobNote, Text: "Job `web` ended."}})
+	assistant.AddNotes([]agent.Note{{Kind: agent.TaskNote, Text: "Task `web` done."}})
 
-	want := []string{"<context source=\"job\">\nJob `web` ended.\n</context>"}
+	want := []string{"<context source=\"task\">\nTask `web` done.\n</context>"}
 	if !slices.Equal(provider.messages, want) {
 		t.Errorf("got %q, want %q", provider.messages, want)
 	}

@@ -37,7 +37,7 @@ func TestGoldenShellPoliciesHandleFilesystemChanges(t *testing.T) {
 		"=== nested write grant scope ===\n" + nestedWriteGrantGolden(t),
 		"=== aliased write grant scope ===\n" + aliasedWriteGrantGolden(t),
 		"=== configured mount changed before use ===\n" + changedMountedPathGolden(t),
-		"=== git withdrawal job scope ===\n" + gitWithdrawalGolden(),
+		"=== git withdrawal task scope ===\n" + gitWithdrawalGolden(),
 		"=== absolute denied home secret ===\n" + absoluteDenyGolden(t),
 		"=== host tmp aliases refused ===\n" + hostTmpAliasGolden(t),
 		"=== virtual tmp mount attribution ===\n" + virtualTmpMountGolden(t),
@@ -419,7 +419,7 @@ func gitWithdrawalGolden() string {
 	metadata := sandbox.Policy{Write: []string{"/workspace/.git"}, SetEnv: map[string]string{"HOME": home}}
 	configured := sandbox.Policy{Write: []string{"/reference"}, SetEnv: map[string]string{"HOME": home}}
 	caches := sandbox.Policy{Write: []string{filepath.Join(home, ".cache"), sandbox.TmpDir}, SetEnv: map[string]string{"HOME": home}}
-	return fmt.Sprintf("metadata job stopped: %t\nconfigured writer stopped: %t\ncache-only job kept: %t",
+	return fmt.Sprintf("metadata task stopped: %t\nconfigured writer stopped: %t\ncache-only task kept: %t",
 		stops(metadata), stops(configured), !stops(caches))
 }
 

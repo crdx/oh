@@ -7,14 +7,14 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/fit"
-	"crdx.org/oh/internal/app/segment/jobNames"
+	"crdx.org/oh/internal/app/segment/taskNames"
 	"crdx.org/oh/internal/app/style"
-	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/tasks"
 )
 
 type Routes struct {
 	GetRoutes func() []portgrant.Route
-	GetJobs   func() []jobs.Snapshot
+	GetTasks  func() []tasks.Snapshot
 	Hostname  string
 }
 
@@ -50,9 +50,8 @@ func (self state) getParts() []string {
 		port := route.Port
 		portName := strconv.Itoa(int(port))
 		text := style.Normal(portName)
-		if route.JobName != "" {
-			text = jobNames.RenderState(getJobState(self.routes.GetJobs, route.JobName), route.JobName) +
-				style.Dim(":"+portName)
+		if route.TaskName != "" {
+			text = taskNames.RenderState(getTaskState(self.routes.GetTasks, route.TaskName), route.TaskName) + style.Dim(":"+portName)
 		}
 		parts = append(parts, link.RenderURL(text, portgrant.URL(self.routes.Hostname, port)))
 	}
@@ -60,14 +59,13 @@ func (self state) getParts() []string {
 	return parts
 }
 
-func getJobState(getJobs func() []jobs.Snapshot, name string) jobs.State {
-	if getJobs != nil {
-		for _, snapshot := range getJobs() {
-			if snapshot.Name == name {
+func getTaskState(getTasks func() []tasks.Snapshot, name string) tasks.State {
+	if getTasks != nil {
+		for _, snapshot := range getTasks() {
+			if snapshot.ID == name {
 				return snapshot.State
 			}
 		}
 	}
-
-	return jobs.StateEnded
+	return ""
 }

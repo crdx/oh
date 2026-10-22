@@ -7,7 +7,6 @@ import (
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/turn"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -34,9 +33,6 @@ func watched(handler Handler) Handler {
 	}
 	if onDraw := handler.OnDraw; onDraw != nil {
 		handler.OnDraw = func() { defer watch("draw")(); onDraw() }
-	}
-	if onJobEnded := handler.OnJobEnded; onJobEnded != nil {
-		handler.OnJobEnded = func(conclusion jobs.Conclusion) { defer watch("job ended")(); onJobEnded(conclusion) }
 	}
 	if onPortChange := handler.OnForwardChange; onPortChange != nil {
 		handler.OnForwardChange = func(event agent.Event) { defer watch("port change")(); onPortChange(event) }

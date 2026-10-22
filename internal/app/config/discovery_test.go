@@ -108,7 +108,7 @@ func TestAConfiguredSnippetOutranksADiscoveredOneOfTheSameName(t *testing.T) {
 	directory := t.TempDir()
 	writeSnippetFile(t, directory, "review.md", "---\ndescription: from the file\n---\nFrom the file.")
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[snippets]\nreview = \"From the config.\"\n"); err != nil {
+	if err := writeConfigFile(configPath, "[snippet]\nreview = \"From the config.\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -125,7 +125,7 @@ func TestASnippetFileTheConfigNamesIsNotDiscoveredUnderItsOwnName(t *testing.T) 
 	directory := t.TempDir()
 	writeSnippetFile(t, directory, "review.md", "Review it.")
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[snippets]\nr = { file = \"snippets/review.md\" }\n"); err != nil {
+	if err := writeConfigFile(configPath, "[snippet]\nr = { file = \"snippets/review.md\" }\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -142,7 +142,7 @@ func TestATableDescriptionOutranksTheFrontmatter(t *testing.T) {
 	directory := t.TempDir()
 	writeSnippetFile(t, directory, "review.md", "---\ndescription: from the file\narguments: none\n---\nReview {{ .Arg }}.")
 	configPath := filepath.Join(directory, "config.toml")
-	contents := "[snippets]\nreview = { file = \"snippets/review.md\", description = \"from the config\" }\n"
+	contents := "[snippet]\nreview = { file = \"snippets/review.md\", description = \"from the config\" }\n"
 	if err := writeConfigFile(configPath, contents); err != nil {
 		t.Fatal(err)
 	}
@@ -225,7 +225,7 @@ func TestAddingASnippetFileReloadsIt(t *testing.T) {
 		t.Errorf("got %v, want the new snippet", got)
 	}
 	if len(applied.Changes) != 1 || applied.Changes[0].Path != "review.md" ||
-		!slices.Equal(applied.Changes[0].Settings, []string{"snippets.review"}) {
+		!slices.Equal(applied.Changes[0].Settings, []string{"snippet.review"}) {
 		t.Errorf("got %#v, want the new file", applied.Changes)
 	}
 }
@@ -248,7 +248,7 @@ func TestRemovingASnippetFileReloadsWithoutIt(t *testing.T) {
 		t.Errorf("got %v, want the snippet gone", got)
 	}
 	if len(applied.Changes) != 1 || !applied.Changes[0].IsRemoved ||
-		!slices.Equal(applied.Changes[0].Settings, []string{"snippets.review"}) {
+		!slices.Equal(applied.Changes[0].Settings, []string{"snippet.review"}) {
 		t.Errorf("got %#v, want the removed file", applied.Changes)
 	}
 }

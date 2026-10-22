@@ -47,33 +47,34 @@ const (
 )
 
 const (
-	versionSetting    = "version"
-	snippetsSetting   = "snippets"
-	uiSetting         = "ui"
-	themeSetting      = "theme"
-	agentSetting      = "agent"
-	modelSetting      = "model"
-	roundRobinSetting = "round_robin"
+	versionSetting      = "version"
+	snippetSetting      = "snippet"
+	defaultSetting      = "default"
+	grantsSetting       = "grants"
+	experimentalSetting = "experimental"
+	uiSetting           = "ui"
+	themeSetting        = "theme"
+	agentSetting        = "agent"
+	modelSetting        = "model"
+	roundRobinSetting   = "round_robin"
 )
 
 type Config struct {
 	Version  int                            `toml:"version"`
-	Defaults Defaults                       `toml:"defaults"`
+	Defaults Defaults                       `toml:"default"`
 	Editor   Editor                         `toml:"editor"`
 	Input    Input                          `toml:"input"`
 	Agent    Agent                          `toml:"agent"`
 	Subagent Subagent                       `toml:"subagent"`
 	Provider Provider                       `toml:"provider"`
-	Ports    Ports                          `toml:"ports"`
-	Snippets map[string]snippets.Definition `toml:"snippets"`
-	Tools    map[string]CustomTool          `toml:"tools"`
-	Skills   SkillPaths                     `toml:"skills"`
-	Sandbox  sandbox                        `toml:"sandbox"`
+	Snippets map[string]snippets.Definition `toml:"snippet"`
+	Tools    map[string]ToolConfig          `toml:"tool"`
+	Skills   SkillPaths                     `toml:"skill"`
+	Grants   grants                         `toml:"grants"`
 	Bar      Bar                            `toml:"bar"`
 	Ui       Ui                             `toml:"ui"`
 
-	Permissions Permissions `toml:"permissions"`
-	Debug       Debug       `toml:"debug"`
+	Debug Debug `toml:"debug"`
 
 	Experimental map[string]any `toml:"experimental"`
 
@@ -113,7 +114,7 @@ func (self *DefaultCaps) UnmarshalText(text []byte) error {
 }
 
 func (self Config) ParseCaps(flags string) (caps.Set, string, error) {
-	toolGroups, err := self.CustomToolGroups()
+	toolGroups, err := self.ToolGroups()
 	if err != nil {
 		return 0, "", err
 	}
@@ -202,15 +203,12 @@ type Ollama struct {
 	Host string `toml:"host"`
 }
 
-type Ports struct {
-	Hostname string `toml:"hostname"`
-}
-
-func (self Ports) GetHostname(sessionName string, fallbackHostname string) string {
-	if self.Hostname == "" {
+func (self Config) GetHostname(sessionName string, fallbackHostname string) string {
+	hostname := self.getHostname()
+	if hostname == "" {
 		return fallbackHostname
 	}
-	return strings.ReplaceAll(self.Hostname, sessionPlaceholder, sessionName)
+	return strings.ReplaceAll(hostname, sessionPlaceholder, sessionName)
 }
 
 type Ui struct {
@@ -228,36 +226,63 @@ type Debug struct {
 	ShouldRecordWire   bool `toml:"wire"`
 }
 
-type Permissions struct {
-	Network Permission `toml:"network"`
-	Lookup  Permission `toml:"lookup"`
-	Fetch   Permission `toml:"fetch"`
+var defaultPermissions = permission.Set{
+	Network: permission.Setting{Rule: permission.Ask},
+	Lookup:  permission.Setting{Rule: permission.Allow},
+	Fetch:   permission.Setting{Rule: permission.Ask},
 }
 
 func (self Config) BuildPermissions() (permission.Set, error) {
-	return self.Permissions.build()
+	set := defaultPermissions
+	for _, entry := range []struct {
+		setting []string
+		value   Permission
+		target  *permission.Setting
+	}{
+		{setting: []string{toolsSetting, "bash", hostNetworkSetting}, value: self.Tools["bash"].HostNetwork, target: &set.Network},
+		{setting: []string{toolsSetting, "lookup", "permission"}, value: self.Tools["lookup"].Permission, target: &set.Lookup},
+		{setting: []string{toolsSetting, "fetch", "permission"}, value: self.Tools["fetch"].Permission, target: &set.Fetch},
+	} {
+		path := self.getSourcePath(entry.setting...)
+		if path == "" {
+			continue
+		}
+		permissionSetting, err := entry.value.setting()
+		if err != nil {
+			return set, fmt.Errorf("%s: %s: %w", path, strings.Join(entry.setting, "."), err)
+		}
+		*entry.target = permissionSetting
+	}
+	return set, nil
 }
 
-func (self Permissions) build() (permission.Set, error) {
-	var set permission.Set
+type BashApproval struct {
+	setting      permission.Setting
+	isConfigured bool
+}
 
-	for _, entry := range []struct {
-		key     string
-		value   Permission
-		setting *permission.Setting
-	}{
-		{key: "network", value: self.Network, setting: &set.Network},
-		{key: "lookup", value: self.Lookup, setting: &set.Lookup},
-		{key: "fetch", value: self.Fetch, setting: &set.Fetch},
-	} {
-		setting, err := entry.value.setting()
-		if err != nil {
-			return permission.Set{}, fmt.Errorf("permissions.%s: %w", entry.key, err)
-		}
-		*entry.setting = setting
+func (self Config) GetBashApproval() (BashApproval, error) {
+	if self.getSourcePath(toolsSetting, "bash", "permission") == "" {
+		return BashApproval{}, nil
 	}
+	bashTool := self.Tools["bash"]
+	setting, err := bashTool.Permission.setting()
+	if err != nil {
+		return BashApproval{}, fmt.Errorf("tool.bash.permission: %w", err)
+	}
+	return BashApproval{setting: setting, isConfigured: true}, nil
+}
 
-	return set, nil
+func (self BashApproval) Combine(set permission.Set) permission.Set {
+	if !self.isConfigured || self.setting.IsAllowed() {
+		return set
+	}
+	if set.Network.IsAllowed() {
+		set.Network = self.setting
+	} else if self.setting.TimeoutOr(permission.DefaultApprovalTimeout) < set.Network.TimeoutOr(permission.DefaultApprovalTimeout) {
+		set.Network.Timeout = self.setting.Timeout
+	}
+	return set
 }
 
 type SkillPaths struct {
@@ -265,7 +290,7 @@ type SkillPaths struct {
 	Exclude []string `toml:"exclude"`
 }
 
-type sandbox = shell.Paths
+type grants = shell.Paths
 
 type Bar struct {
 	Top    Rule `toml:"top"`
@@ -304,19 +329,15 @@ func (self Config) BuildLive(registry segment.Registry) (LiveConfig, error) {
 	}
 	snippetCommandSet, err := snippets.New(self.Snippets)
 	if err != nil {
-		path := self.getSourcePath("snippets")
+		path := self.getSourcePath(snippetSetting)
 		if path == "" {
-			return LiveConfig{}, fmt.Errorf("snippets: %w", err)
+			return LiveConfig{}, fmt.Errorf("%s: %w", snippetSetting, err)
 		}
-		return LiveConfig{}, fmt.Errorf("%s: snippets: %w", path, err)
+		return LiveConfig{}, fmt.Errorf("%s: %s: %w", path, snippetSetting, err)
 	}
-	permissions, err := self.Permissions.build()
+	permissions, err := self.BuildPermissions()
 	if err != nil {
-		path := self.getSourcePath("permissions")
-		if path == "" {
-			return LiveConfig{}, err
-		}
-		return LiveConfig{}, fmt.Errorf("%s: %w", path, err)
+		return LiveConfig{}, err
 	}
 	return LiveConfig{
 		Nudge:              self.Input.Nudge,
@@ -502,12 +523,17 @@ func (self Config) UnknownSettings() []string {
 	return append(reports, self.experimentalReports()...)
 }
 
+func (self Config) getHostname() string {
+	hostname, _ := self.Experimental[string(experimental.ForwardHostname)].(string)
+	return hostname
+}
+
 func (self Config) experimentalReports() []string {
 	var reports []string
 
 	for _, complaint := range experimental.Check(self.Experimental) {
 		setting := "experimental." + complaint.Name
-		if path := self.getSourcePath("experimental", complaint.Name); path != "" {
+		if path := self.getSourcePath(experimentalSetting, complaint.Name); path != "" {
 			setting = path + ": " + setting
 		}
 		reports = append(reports, fmt.Sprintf("%s: %s", setting, complaint.Reason))
@@ -517,7 +543,7 @@ func (self Config) experimentalReports() []string {
 }
 
 func isExperimental(key toml.Key) bool {
-	return len(key) > 0 && key[0] == "experimental"
+	return len(key) > 0 && key[0] == experimentalSetting
 }
 
 func (self Config) isShadowed(sourceIndex int, key toml.Key) bool {
@@ -633,12 +659,16 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 		}
 	}
 
-	toolGroups, err := config.CustomToolGroups()
+	if err := config.validateToolSettings(); err != nil {
+		return config, err
+	}
+
+	toolGroups, err := config.ToolGroups()
 	if err != nil {
 		return config, err
 	}
 	if _, _, err := caps.ParseWithGroups(string(config.Defaults.Caps), toolGroups.CustomFlags()); err != nil {
-		return config, fmt.Errorf("defaults.caps: %w", err)
+		return config, fmt.Errorf("%s.caps: %w", defaultSetting, err)
 	}
 
 	return config, nil
@@ -682,14 +712,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	if err := applyModelChoice(&config.Agent.ModelChoice, agentSetting, meta, source.source.Path); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
-	config.Provider.Ollama.Host = strings.TrimSpace(config.Provider.Ollama.Host)
-	config.Ports.Hostname = strings.TrimSpace(config.Ports.Hostname)
-	if err := validateHostSettings(
-		config.Provider.Ollama.Host,
-		meta.IsDefined("provider", "ollama", "host"),
-		config.Ports.Hostname,
-		meta.IsDefined("ports", "hostname"),
-	); err != nil {
+	if err := normaliseHosts(config, meta); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 	if err := refuseEmptySettings(config, meta); err != nil {
@@ -701,14 +724,14 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
 		return fmt.Errorf("%s: subagent.concurrency must be at least 1, got %d", displayPath, config.Subagent.Concurrency)
 	}
-	if meta.IsDefined("defaults", "tool_output") && config.Defaults.ToolOutput.Bytes < minimumToolOutputBytes {
+	if meta.IsDefined(defaultSetting, "tool_output") && config.Defaults.ToolOutput.Bytes < minimumToolOutputBytes {
 		return fmt.Errorf(
-			"%s: defaults.tool_output is too small to say anything with; write at least %d bytes",
-			displayPath, minimumToolOutputBytes,
+			"%s: %s.tool_output is too small to say anything with; write at least %d bytes",
+			displayPath, defaultSetting, minimumToolOutputBytes,
 		)
 	}
 	for _, name := range slices.Sorted(maps.Keys(config.Snippets)) {
-		if !meta.IsDefined("snippets", name) {
+		if !meta.IsDefined(snippetSetting, name) {
 			continue
 		}
 		if previous, exists := previousSnippets[name]; exists && previous.File != "" {
@@ -718,7 +741,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		if definition.File != "" {
 			resolvedPath, err := resolveConfigPath(source.source.Path, definition.File)
 			if err != nil {
-				return fmt.Errorf("%s: snippets.%s.file: %w", displayPath, name, err)
+				return fmt.Errorf("%s: snippet.%s.file: %w", displayPath, name, err)
 			}
 			definition.File = resolvedPath
 			config.Snippets[name] = definition
@@ -730,7 +753,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 			config.snippetFileSnapshots[resolvedPath] = current
 			if current.failure != nil {
 				return fmt.Errorf(
-					"%s: snippets.%s: could not read %s: %w",
+					"%s: snippet.%s: could not read %s: %w",
 					displayPath,
 					name,
 					resolvedPath,
@@ -738,7 +761,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 				)
 			}
 			if err := definition.LoadFileContents(resolvedPath, current.data); err != nil {
-				return fmt.Errorf("%s: snippets.%s: %w", displayPath, name, err)
+				return fmt.Errorf("%s: snippet.%s: %w", displayPath, name, err)
 			}
 		}
 		config.Snippets[name] = definition
@@ -748,13 +771,13 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		name   string
 		values *[]string
 	}{
-		{"skills.include", &config.Skills.Include},
-		{"skills.exclude", &config.Skills.Exclude},
-		{"sandbox.read", &config.Sandbox.Read},
-		{"sandbox.write", &config.Sandbox.Write},
-		{"sandbox.exec", &config.Sandbox.Exec},
-		{"sandbox.path", &config.Sandbox.Path},
-		{"sandbox.home", &config.Sandbox.Home},
+		{"skill.include", &config.Skills.Include},
+		{"skill.exclude", &config.Skills.Exclude},
+		{"grants.read", &config.Grants.Read},
+		{"grants.write", &config.Grants.Write},
+		{"grants.exec", &config.Grants.Exec},
+		{"grants.path", &config.Grants.Path},
+		{"grants.home", &config.Grants.Home},
 	}
 	for _, list := range lists {
 		if !meta.IsDefined(strings.Split(list.name, ".")...) {
@@ -770,10 +793,10 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		*list.values = deduplicate(*list.values)
 	}
 
-	for _, mappedPath := range config.Sandbox.Home {
+	for _, mappedPath := range config.Grants.Home {
 		if _, below := shell.HomeRelativePath(mappedPath); !below {
 			return fmt.Errorf(
-				"%s: sandbox.home: %s is not below the home directory, so it has nowhere to land",
+				"%s: grants.home: %s is not below the home directory, so it has nowhere to land",
 				displayPath, mappedPath,
 			)
 		}
@@ -961,10 +984,10 @@ func deduplicate[Value comparable](values []Value) []Value {
 
 var settingsAWorkspaceMayNotSet = []string{
 	"editor",
-	"experimental",
+	experimentalSetting,
 	"provider",
-	"sandbox",
-	"skills",
+	grantsSetting,
+	"skill",
 	toolsSetting,
 }
 
@@ -996,18 +1019,33 @@ func refuseEmptySettings(config *Config, meta toml.MetaData) error {
 	return nil
 }
 
-func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string, hasHostname bool) error {
+func normaliseHosts(config *Config, meta toml.MetaData) error {
+	config.Provider.Ollama.Host = strings.TrimSpace(config.Provider.Ollama.Host)
+	hasHostname := meta.IsDefined(experimentalSetting, string(experimental.ForwardHostname))
+	hostname, isText := config.Experimental[string(experimental.ForwardHostname)].(string)
+	if hasHostname && isText {
+		config.Experimental[string(experimental.ForwardHostname)] = strings.TrimSpace(hostname)
+	}
+	return validateHostSettings(
+		config.Provider.Ollama.Host,
+		meta.IsDefined("provider", "ollama", "host"),
+		config.getHostname(),
+		hasHostname && isText && config.getHostname() == "",
+	)
+}
+
+func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string, isHostnameEmpty bool) error {
 	if hasOllamaHost && ollamaHost == "" {
 		return errors.New("provider.ollama.host is empty")
 	}
-	if hasHostname && hostname == "" {
-		return errors.New("ports.hostname is empty; leave it out to use the numeric address")
+	if isHostnameEmpty {
+		return errors.New("experimental.forward_hostname is empty; leave it out to use the numeric address")
 	}
 	if hostname == "" {
 		return nil
 	}
 	if strings.Count(hostname, sessionPlaceholder) != 1 {
-		return errors.New("ports.hostname must contain {session} exactly once")
+		return errors.New("experimental.forward_hostname must contain {session} exactly once")
 	}
 	return validateHostname(hostname)
 }
@@ -1015,7 +1053,7 @@ func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string
 func validateHostname(hostname string) error {
 	if len(hostname) > hostnameLimit {
 		return fmt.Errorf(
-			"ports.hostname is %d characters long, and a hostname is at most %d",
+			"experimental.forward_hostname is %d characters long, and a hostname is at most %d",
 			len(hostname), hostnameLimit,
 		)
 	}
@@ -1023,7 +1061,7 @@ func validateHostname(hostname string) error {
 	for _, character := range strings.ReplaceAll(hostname, sessionPlaceholder, "") {
 		if !isHostnameCharacter(character) {
 			return fmt.Errorf(
-				"ports.hostname holds %q, and a hostname is letters, digits, dots, and dashes",
+				"experimental.forward_hostname holds %q, and a hostname is letters, digits, dots, and dashes",
 				character,
 			)
 		}

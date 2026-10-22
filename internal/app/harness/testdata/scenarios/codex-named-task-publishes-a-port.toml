@@ -1,0 +1,66 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "bash"
+outputs = ["server ready"]
+
+[[tool]]
+name = "task"
+
+[first]
+prompt = "start named background work and publish its port"
+settle-tasks-after-tool-result = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"background\":true,\"task_name\":\"docs\",\"forward_port\":8000}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"background\":true,\"task_name\":\"docs\",\"forward_port\":8000}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":"{\"background\":true,\"task_name\":\"docs\",\"forward_port\":8000}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-2","delta":"{\"action\":\"output\",\"name\":\"docs\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-2","arguments":"{\"action\":\"output\",\"name\":\"docs\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"task","arguments":"{\"action\":\"output\",\"name\":\"docs\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-3","type":"function_call","call_id":"call-3","name":"task","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-3","delta":"{\"action\":\"discard\",\"name\":\"docs\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-3","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-3","type":"function_call","call_id":"call-3","name":"task","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The named task published its port and was discarded."}''',
+    '''{"type":"response.output_text.done","text":"The named task published its port and was discarded."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The named task published its port and was discarded."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"The named task published its port and was discarded."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-5","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Nothing restarted automatically."}''',
+    '''{"type":"response.output_text.done","text":"Nothing restarted automatically."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Nothing restarted automatically."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-5","type":"message","role":"assistant","content":[{"type":"output_text","text":"Nothing restarted automatically."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

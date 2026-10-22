@@ -2,6 +2,7 @@ package harness
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -15,7 +16,6 @@ import (
 
 	"golang.org/x/term"
 
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/sandbox/keeper"
@@ -24,8 +24,10 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
+	"crdx.org/oh/pkg/tool/middleware/async"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/fetch"
@@ -33,6 +35,7 @@ import (
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/subagent"
+	"crdx.org/oh/pkg/toolbox/task"
 	"crdx.org/oh/pkg/toolbox/title"
 
 	"crdx.org/oh/internal/app/backend"
@@ -88,7 +91,7 @@ import (
 )
 
 const (
-	approvalLimit               = 5 * time.Minute
+	approvalLimit               = permission.DefaultApprovalTimeout
 	notificationWithdrawalGrace = 2 * time.Second
 	sessionNameStaleAfter       = 5 * time.Second
 )
@@ -230,7 +233,7 @@ var completableToolNames = []string{
 	"write",
 	"edit",
 	"bash",
-	"job",
+	"task",
 	"notify",
 	title.Name,
 	"lookup",
@@ -253,12 +256,15 @@ func completionSources() cli.Sources {
 	if err != nil {
 		return sources
 	}
+	sources.ToolNames = slices.DeleteFunc(sources.ToolNames, func(name string) bool {
+		return !settings.IsToolOffered(name)
+	})
 	for _, name := range settings.CustomToolNames() {
 		if !slices.Contains(sources.ToolNames, name) {
 			sources.ToolNames = append(sources.ToolNames, name)
 		}
 	}
-	if toolGroups, err := settings.CustomToolGroups(); err == nil {
+	if toolGroups, err := settings.ToolGroups(); err == nil {
 		sources.CustomCapFlags = toolGroups.CustomFlags()
 	}
 
@@ -383,7 +389,7 @@ func currentCustomCapFlags(sources []config.Source) string {
 	if err != nil {
 		return ""
 	}
-	toolGroups, err := settings.CustomToolGroups()
+	toolGroups, err := settings.ToolGroups()
 	if err != nil {
 		return ""
 	}
@@ -577,6 +583,13 @@ func prepareLegacyTools(
 			))
 		}
 	}
+	if resumedSession == nil && len(enabledNames) > 0 && slices.ContainsFunc(toolboxTools, func(subject tool.Tool) bool {
+		return subject.Name() == task.Name
+	}) && slices.ContainsFunc(toolboxTools, func(subject tool.Tool) bool {
+		return slices.Contains(enabledNames, subject.Name()) && subject.Schema().Find("background") != nil
+	}) {
+		enabledNames = append(slices.Clone(enabledNames), task.Name)
+	}
 	offeredTools, err := toolset.Reduce(toolboxTools, enabledNames)
 	if err != nil {
 		return preparedTools{}, err
@@ -623,6 +636,93 @@ func sandboxPathsForMode(paths shell.Paths, isYolo bool) shell.Paths {
 		paths.Deny = nil
 	}
 	return paths
+}
+
+func selectedGroupToolNames(configuredNames []string, offeredNames []string, groups caps.ToolGroups, isResumed bool) []string {
+	selectedNames := slices.DeleteFunc(slices.Clone(configuredNames), func(name string) bool {
+		return !toolset.Offers(offeredNames, name)
+	})
+	if isResumed {
+		for _, names := range groups {
+			for _, name := range names {
+				if toolset.Offers(offeredNames, name) && !slices.Contains(selectedNames, name) {
+					selectedNames = append(selectedNames, name)
+				}
+			}
+		}
+	}
+	return selectedNames
+}
+
+func taskStartsAvailable(settings config.Config, selectedTools []string) bool {
+	if !settings.IsToolOffered(task.Name) {
+		return false
+	}
+	names := append([]string{"bash", "grep", "lookup"}, settings.CustomToolNames()...)
+	return slices.ContainsFunc(names, func(name string) bool {
+		return toolset.Offers(selectedTools, name) && settings.IsToolOffered(name) && settings.IsToolBackgroundable(name)
+	})
+}
+
+type taskAccess struct {
+	ToolName      string
+	Group         string
+	Policy        sandbox.Policy
+	SearchPath    string
+	IsHostNetwork bool
+}
+
+func taskPolicyFor(
+	toolName string,
+	group string,
+	workspaceDir string,
+	roots shell.Roots,
+	pathAccess *shell.PathAccess,
+	mode *caps.Mode,
+	isYolo bool,
+) func(context.Context, string) (any, error) {
+	var shellPolicy func(context.Context) (sandbox.Policy, error)
+	if toolName == "bash" {
+		shellPolicy = shell.TaskPolicy(workspaceDir, roots, pathAccess, mode, isYolo)
+	}
+	return func(ctx context.Context, arguments string) (any, error) {
+		access := taskAccess{ToolName: toolName, Group: group}
+		if shellPolicy != nil {
+			var err error
+			access.Policy, err = shellPolicy(ctx)
+			if err != nil {
+				return nil, err
+			}
+			var call struct {
+				Network string `json:"network"`
+			}
+			if json.Unmarshal([]byte(arguments), &call) == nil {
+				access.IsHostNetwork = call.Network == "host"
+			}
+		}
+		if toolName == "grep" {
+			var call struct {
+				Path string `json:"path"`
+			}
+			if json.Unmarshal([]byte(arguments), &call) == nil {
+				searchPath := call.Path
+				if searchPath == "" {
+					searchPath = workspaceDir
+				} else if !filepath.IsAbs(searchPath) {
+					searchPath = filepath.Join(workspaceDir, searchPath)
+				}
+				access.SearchPath, _ = filepath.EvalSymlinks(searchPath)
+			}
+		}
+		return access, nil
+	}
+}
+
+func (self taskAccess) ForExecution(ctx context.Context) context.Context {
+	if self.ToolName == "bash" {
+		return shell.BindTaskPolicy(ctx, self.Policy)
+	}
+	return ctx
 }
 
 func applySimulationOptions(options *cli.Options) {
@@ -823,7 +923,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		inputArgs.Model = chosenModel.String()
 	}
 
-	configuredToolGroups, err := settings.CustomToolGroups()
+	configuredToolGroups, err := settings.ToolGroups()
 	if err != nil {
 		return "", err
 	}
@@ -888,15 +988,18 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if resumedSession != nil && len(resumedSession.Meta.Tools) > 0 {
 		enabledToolNamesForGroups = resumedSession.Meta.Tools
 	}
-	selectedCustomToolNames := slices.DeleteFunc(settings.CustomToolNames(), func(name string) bool {
-		return !toolset.Offers(enabledToolNamesForGroups, name)
-	})
-	if resumedSession == nil {
-		frozenToolGroups = frozenToolGroups.Only(selectedCustomToolNames)
+	if resumedSession == nil && len(enabledToolNamesForGroups) > 0 && taskStartsAvailable(settings, enabledToolNamesForGroups) {
+		enabledToolNamesForGroups = append(slices.Clone(enabledToolNamesForGroups), task.Name)
 	}
-	activeToolGroups := frozenToolGroups.Only(selectedCustomToolNames)
+	selectedToolGroupNames := selectedGroupToolNames(
+		settings.ToolGroupNames(), enabledToolNamesForGroups, frozenToolGroups, resumedSession != nil,
+	)
+	if resumedSession == nil {
+		frozenToolGroups = frozenToolGroups.Only(selectedToolGroupNames)
+	}
+	activeToolGroups := frozenToolGroups.Only(selectedToolGroupNames)
 
-	settings.Sandbox = sandboxPathsForMode(settings.Sandbox, args.Yolo)
+	settings.Grants = sandboxPathsForMode(settings.Grants, args.Yolo)
 
 	if err := workspace.Validate(); err != nil {
 		return "", err
@@ -959,7 +1062,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	mode := caps.NewModeWithGroups(args.Caps, args.GroupFlags, frozenToolGroups, activeToolGroups)
 
-	settings.Sandbox, err = shell.PreparePathsForMode(settings.Sandbox, os.Stderr, args.Yolo)
+	settings.Grants, err = shell.PreparePathsForMode(settings.Grants, os.Stderr, args.Yolo)
 	if err != nil {
 		return "", err
 	}
@@ -1046,7 +1149,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	state, err = buildAgentState(agentOptions{
 		workspace:        workspace,
 		mode:             mode,
-		paths:            settings.Sandbox,
+		paths:            settings.Grants,
 		isUnconfined:     args.Yolo,
 		roots:            roots,
 		releaseRoots:     func() { _ = roots.Close() },
@@ -1077,15 +1180,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		args.Message = startup.JoinPrompt(initialFilesMessage, args.Message)
 	}
 
-	sandboxRunner, jobManager, keeperProcess, closeKeeper, keeperRefusal := openRunner(ctx, args.Yolo)
+	sandboxRunner, keeperProcess, closeKeeper, keeperRefusal := openRunner(ctx, args.Yolo)
 	defer closeKeeper()
 
-	if jobManager != nil {
-		defer func() { _ = jobManager.Close() }()
-	}
 	if keeperRefusal != nil {
 		_, _ = fmt.Fprintln(notices, style.Change(
-			"background jobs and inter-command networking are unavailable: "+keeperRefusal.Error(),
+			"inter-command networking is unavailable: "+keeperRefusal.Error(),
 		))
 	}
 
@@ -1102,13 +1202,13 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	forwardsAddress := portgrant.AddressFor(log.Name())
-	forwardsHostname := settings.Ports.GetHostname(log.Name(), forwardsAddress)
+	forwardsHostname := settings.GetHostname(log.Name(), forwardsAddress)
 	wireLogPath := ""
 	if log.RecordsWire() {
 		wireLogPath = "debug/wire.http.zst"
 	}
 	currentEnvironment := environment.Capture(
-		settings.Sandbox,
+		settings.Grants,
 		availableSkills,
 		pathutil.Exists(filepath.Join(workspace.GetDir(), ".git")),
 		forwardsHostname,
@@ -1151,12 +1251,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			TmpDir:         tmpDir,
 			HomeDir:        homeDir,
 			CurrentCaps:    args.Caps,
-			ExtraPaths:     settings.Sandbox,
+			ExtraPaths:     settings.Grants,
 			DropsDirectory: dropKeeper.GetDirectory(),
 			Skills:         availableSkills,
 			OfferedTools:   args.Tools,
 			Conditions:     currentConditions,
-			JobsGranted:    jobManager != nil,
+			TasksGranted:   canSuperviseTasks(args.IsPrinting, keyboard) && taskStartsAvailable(settings, args.Tools),
+			BackgroundShellGranted: canSuperviseTasks(args.IsPrinting, keyboard) && settings.IsToolOffered(task.Name) &&
+				settings.IsToolBackgroundable(bash.Name),
 			NetworkGranted: args.Caps.Has(caps.Network),
 			ToolGroups:     activeToolGroups,
 			GroupStatus:    mode.Groups(),
@@ -1242,27 +1344,31 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		return "", err
 	}
-	permissions := permission.New(permissionSet)
+	bashApproval, err := settings.GetBashApproval()
+	if err != nil {
+		return "", err
+	}
+	permissions := permission.New(bashApproval.Combine(permissionSet))
 	approveNetwork := func(ctx context.Context, command string, intent string) error {
 		return approveHostNetwork(ctx, askBroker, permissions.Network(), command, intent)
 	}
 	shellTool := state.shell(approveNetwork, sandboxRunner)
 
 	doesWake := !args.IsPrinting
+	var taskManager *tasks.Manager
+	if canSuperviseTasks(args.IsPrinting, keyboard) {
+		taskManager = tasks.New(ctx)
+		defer taskManager.Close()
+		taskManager.SetForegroundLimit(time.Duration(experimentalToggles.GetWholeNumber(experimental.BackgroundAfterSeconds, 0)) * time.Second)
+		toolsBeforeShell = append(toolsBeforeShell, task.New(taskManager))
+		forwards.OnRevoke(func(route portgrant.Route) {
+			if route.TaskName != "" {
+				taskManager.ForgetPort(route.TaskName, route.Port)
+			}
+		})
+	}
 
 	var toolsAfterShell []tool.Tool
-	if jobManager != nil {
-		toolsAfterShell = append(toolsAfterShell, shell.NewJob(
-			jobManager,
-			workspace.GetDir(),
-			roots,
-			pathAccess,
-			mode,
-			files,
-			args.Yolo,
-			forwards.ForModel(),
-		))
-	}
 	if keeperProcess != nil {
 		toolsAfterShell = append(toolsAfterShell, forward.New(forwards.ForModel()))
 	}
@@ -1312,9 +1418,37 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		return "", err
 	}
+	toolboxTools, err = settings.ConfigureBuiltins(toolboxTools, config.BuiltinToolOptions{
+		IsGroupAllowed: mode.Allows,
+		GroupForTool:   frozenToolGroups.GroupOf,
+		Approve: func(ctx context.Context, name string, arguments string, setting permission.Setting) error {
+			return customToolApproval(name).askFor(ctx, askBroker, setting, ask.Confirmation{
+				Label:    "Run the " + name + " tool?",
+				Detail:   arguments,
+				Language: "json",
+			})
+		},
+	})
+	if err != nil {
+		return "", err
+	}
+	toolboxTools, err = backgroundTools(toolboxTools, backgroundOptions{
+		settings:         settings,
+		manager:          taskManager,
+		resumedSession:   resumedSession,
+		isPrinting:       args.IsPrinting,
+		isYolo:           args.Yolo,
+		isForwardOffered: keeperProcess != nil && isOffered(resumedSession, args.Tools, forward.Name),
+		policyFor: func(name string) func(context.Context, string) (any, error) {
+			return taskPolicyFor(name, frozenToolGroups.GroupOf(name), workspace.GetDir(), roots, pathAccess, mode, args.Yolo)
+		},
+	})
+	if err != nil {
+		return "", err
+	}
 	var withheldTools []string
 	if args.IsPrinting {
-		withheldTools = append(toolset.WithheldFromHeadless(toolboxTools), subagent.Name)
+		withheldTools = append(toolset.WithheldFromHeadless(toolboxTools), subagent.Name, task.Name)
 		toolboxTools = toolset.Headless(toolboxTools)
 	}
 
@@ -1336,6 +1470,13 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	registeredTools := preparedToolbox.registeredTools
 	offeredTools := preparedToolbox.offeredTools
 	availabilityRestoration := preparedToolbox.availabilityRestoration
+	for _, offeredTool := range offeredTools {
+		for _, current := range toolboxTools {
+			if current.Name() == offeredTool.Name() && tool.IsCompatible(current, tool.TakeSnapshot(offeredTool)) {
+				async.Bind(current, offeredTool.Schema())
+			}
+		}
+	}
 
 	if resumedSession == nil {
 		meta.SystemPrompt = systemPrompt
@@ -1408,21 +1549,21 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		}),
 		Output: os.Stdout,
 		PathGrants: commands.PathGrants{
-			DenyPatterns: settings.Sandbox.Deny,
+			DenyPatterns: settings.Grants.Deny,
 			Grant:        pathGrants.Grant,
 			Revoke: func(path string) (agent.Event, error) {
 				event, err := pathGrants.Revoke(path)
 				if err != nil {
 					return event, err
 				}
-				app.stopJobsHoldingPath(path)
+				app.stopTasksHoldingPath(event.Name)
 
 				return event, nil
 			},
 			GetCurrent: pathGrants.GetCurrent,
 			GetPermanent: func() []shell.ScopedPathGrant {
 				grants := shell.PermanentGrants(
-					workspace.GetDir(), homeDir, settings.Sandbox, mode.Current(), args.Yolo,
+					workspace.GetDir(), homeDir, settings.Grants, mode.Current(), args.Yolo,
 				)
 				grants = append(grants, shell.SkillGrants(
 					skill.EnabledDirectories(availableSkills),
@@ -1444,7 +1585,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			GetCurrent: forwards.GetCurrent,
 			GetURL:     forwards.URL,
 		},
-		Jobs: managedJobs(jobManager),
+		Tasks: managedTasks(ctx, taskManager, func(snapshot tasks.Snapshot) string { return app.describeTaskCall(snapshot) }),
 		Subagents: commands.Subagents{
 			List:     func() []commands.SubagentListing { return app.listSubagents() },
 			Progress: func() []commands.SubagentProgress { return app.subagentProgress() },
@@ -1515,13 +1656,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		environment:     restoredEnvironment.State,
 		pathGrants:      pathGrants,
 		forwards:        forwards,
-		jobs: jobState{
-			manager:  jobManager,
-			doesWake: doesWake,
-		},
-		configObserver: configObserver,
-		runMode:        runMode{isPrinting: args.IsPrinting, isYolo: args.Yolo, isSimulated: isSimulated},
-		question:       questionState{broker: askBroker},
+		tasks:           taskManager,
+		tasksDoWake:     doesWake,
+		configObserver:  configObserver,
+		runMode:         runMode{isPrinting: args.IsPrinting, isYolo: args.Yolo, isSimulated: isSimulated},
+		question:        questionState{broker: askBroker},
 		completer: trigger.New(
 			pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames)),
 			slash.NewSource(func() slash.Registry { return app.commands }),
@@ -1608,6 +1747,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 	app.commands = commandRegistry
 	app.permissions = permissions
+	app.bashApproval = bashApproval
 	app.notifyUnknownSettings(liveConfig.UnknownSettings)
 	app.nudge = liveConfig.Nudge
 	app.speedDial.Configure(liveConfig.SpeedDial)
@@ -1683,6 +1823,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	hasStarted = true
 	hooks.EmitSessionStarted(ctx, cycle.SessionStarted{Session: sessionInfo})
 	transition := app.begin(args.Message)
+	if err := app.endTasks(); err != nil {
+		_, _ = fmt.Fprintln(notices, style.Error(fmt.Errorf("the final task state could not be stored: %w", err)))
+	}
 	app.endChildren()
 	questionNotifications.WithdrawAll(notificationWithdrawalGrace)
 	*requestedTransition = transition
@@ -1725,20 +1868,20 @@ func isSessionLeftToResume(isPersisted bool, isSimulated bool, kind cycle.Transi
 
 func openRunner(
 	ctx context.Context, isYolo bool,
-) (sandbox.Runner, *jobs.Manager, *keeper.Keeper, func(), error) {
+) (sandbox.Runner, *keeper.Keeper, func(), error) {
 	if isYolo {
 		runner := sandbox.Direct()
-		return runner, jobs.New(runner), nil, func() {}, nil
+		return runner, nil, func() {}, nil
 	}
 
 	keeperProcess, err := keeper.Open(ctx)
 	if err != nil {
-		return sandbox.Direct(), nil, nil, func() {}, err
+		return sandbox.Direct(), nil, func() {}, err
 	}
 
 	runner := sandbox.Wrapped(keeperProcess)
 
-	return runner, jobs.New(runner), keeperProcess, func() { _ = keeperProcess.Close() }, nil
+	return runner, keeperProcess, func() { _ = keeperProcess.Close() }, nil
 }
 
 func newForwarder(
@@ -1754,24 +1897,23 @@ func newForwarder(
 	}
 }
 
-func managedJobs(manager *jobs.Manager) commands.Jobs {
+func managedTasks(ctx context.Context, manager *tasks.Manager, describeCall func(tasks.Snapshot) string) commands.Tasks {
 	if manager == nil {
-		return commands.Jobs{}
+		return commands.Tasks{}
 	}
 
-	return commands.Jobs{
+	return commands.Tasks{
 		List:   manager.List,
 		Status: manager.Status,
 		Output: manager.Output,
-		Stop: func(name string) (agent.Event, error) {
-			snapshot, err := manager.Stop(name)
-			if err != nil {
-				return agent.Event{}, err
-			}
-
-			return caps.JobStoppedByUserEvent(snapshot.Name), nil
+		Stop:   manager.Stop,
+		Restart: func(name string) (tasks.Snapshot, error) {
+			return manager.Restart(ctx, name)
 		},
-		Discard:       manager.Discard,
+		Discard: func(name string) (tasks.Snapshot, error) {
+			return manager.Discard(ctx, name)
+		},
 		PruneFinished: manager.PruneFinished,
+		DescribeCall:  describeCall,
 	}
 }

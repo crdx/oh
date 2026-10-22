@@ -1,0 +1,16 @@
+\e[?2026h\e[?25l\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 .git is now read-only.                                                                          \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mmeta\e[0m\e[48;2;48;58;67m stopped because g was withdrawn while it had write access.                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m is the preview still up                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+No. The metadata task stopped when g was withdrawn.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m start it again                                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+g is withheld, so it cannot write repository metadata.\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\r

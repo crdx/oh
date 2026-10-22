@@ -13,7 +13,7 @@ func declaredSchema() tool.Schema {
 		tool.String("path", "the file to read"),
 		tool.Integer("limit", "how many lines to return").Optional(),
 		tool.Boolean("recursive", "whether to descend").Optional(),
-		tool.StringArray("names", "the jobs to watch").Optional(),
+		tool.StringArray("names", "the tasks to watch").Optional(),
 		tool.Enum("network", "which network to use", "loopback", "host").Optional(),
 	}
 }

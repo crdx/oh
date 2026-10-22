@@ -11,14 +11,14 @@
 
 ## User · +0s
 
-read both of those files, then wait for check
+read both of those files, then check on the check task
 
 ## Tool calls · +1s
 
 ```
 read: one.txt [ok, 1 line, 4B, call_1]
 read: two.txt [cancelled, call_2]
-job wait: check [cancelled, 1 line, 55B, call_3]
+task status: check [cancelled, 1 line, 56B, call_3]
 ```
 
 ## Interrupted · +7s

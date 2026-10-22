@@ -23,7 +23,7 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/session"
 
-	ohSessions "crdx.org/oh/internal/app/sessions"
+	"crdx.org/oh/internal/app/sessions"
 )
 
 const Usage = `oh --ctl sessions — list or delete stored sessions
@@ -102,7 +102,7 @@ func run(options *inputOpts, output console.Output) error {
 
 	storedSessions, unlistedCount, err := loadRequestedSessions(directory, options, output.Failure)
 	if err != nil {
-		if migrationError := ohSessions.ValidateFormats(directory); migrationError != nil {
+		if migrationError := sessions.ValidateFormats(directory); migrationError != nil {
 			return migrationError
 		}
 		return err
@@ -113,7 +113,7 @@ func run(options *inputOpts, output console.Output) error {
 		if err != nil {
 			return fmt.Errorf("could not resolve the workspace path: %w", err)
 		}
-		storedSessions = ohSessions.InWorkspace(storedSessions, work.At(workspaceDir))
+		storedSessions = sessions.InWorkspace(storedSessions, work.At(workspaceDir))
 	}
 
 	storedSessions = matching(storedSessions, options.Filter)
@@ -151,7 +151,7 @@ func loadRequestedSessions(directory string, options *inputOpts, failure io.Writ
 		return loadNewestSessions(directory, failure)
 	}
 
-	if err := ohSessions.RefreshListings(directory, failure); err != nil {
+	if err := sessions.RefreshListings(directory, failure); err != nil {
 		return nil, 0, err
 	}
 	storedSessions, err := loadSessions(directory, options.Archived)
@@ -159,15 +159,15 @@ func loadRequestedSessions(directory string, options *inputOpts, failure io.Writ
 }
 
 func loadNewestSessions(directory string, failure io.Writer) ([]*picker.Session, int, error) {
-	storedSessions, total, err := ohSessions.LoadNewest(directory, listLimit)
+	storedSessions, total, err := sessions.LoadNewest(directory, listLimit)
 	if err == nil {
 		return storedSessions, total - len(storedSessions), nil
 	}
-	if refreshError := ohSessions.RefreshListings(directory, failure); refreshError != nil {
+	if refreshError := sessions.RefreshListings(directory, failure); refreshError != nil {
 		return nil, 0, refreshError
 	}
 
-	storedSessions, total, err = ohSessions.LoadNewest(directory, listLimit)
+	storedSessions, total, err = sessions.LoadNewest(directory, listLimit)
 	return storedSessions, total - len(storedSessions), err
 }
 
@@ -177,10 +177,10 @@ func canLoadNewest(options *inputOpts) bool {
 
 func loadSessions(directory string, isArchivedWanted bool) ([]*picker.Session, error) {
 	if isArchivedWanted {
-		return ohSessions.LoadArchived(directory)
+		return sessions.LoadArchived(directory)
 	}
 
-	return ohSessions.Load(directory)
+	return sessions.Load(directory)
 }
 
 func matching(storedSessions []*picker.Session, filter string) []*picker.Session {
@@ -213,7 +213,7 @@ func withinLimit(listings []Listing, total int, filter string, failure io.Writer
 
 func measure(listings []Listing) {
 	for index := range listings {
-		listings[index].Bytes = ohSessions.Occupied(listings[index].SessionDir)
+		listings[index].Bytes = sessions.Occupied(listings[index].SessionDir)
 	}
 }
 
@@ -233,7 +233,7 @@ func describe(directory string, storedSessions []*picker.Session, isRunningOnly 
 			Title:        oneLine(storedSession.Title),
 			WorkspaceDir: storedSession.WorkspaceDir,
 			ScratchDir:   location.GetTmpDir(storedSession.Name),
-			SessionDir:   ohSessions.Path(directory, storedSession),
+			SessionDir:   sessions.Path(directory, storedSession),
 			Model:        storedSession.ModelID,
 			Effort:       storedSession.Effort,
 			Messages:     storedSession.MessageCount,

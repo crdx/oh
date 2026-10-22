@@ -13,10 +13,10 @@
 
 think it through while the build finishes
 
-## Job ended · +1s
+## Task run ended · +1s
 
 ````
-Job `build` exited: failed after 12s, exit(2).
+Task `build` failed: exit status 2.
 
 ```
 go build ./...

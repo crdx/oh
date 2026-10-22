@@ -1,8 +1,8 @@
 === a grant that waits for the next run ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ config.toml: sandbox.read                                                                      │
- │ applies when oh next starts: sandbox.read (dismissing in 10s)                                  │
+ │ config.toml: grants.read                                                                       │
+ │ applies when oh next starts: grants.read (dismissing in 10s)                                   │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -16,14 +16,22 @@
 === a snippet file the revision itself names ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ config.toml: snippets.review (dismissing in 10s)                                               │
+ │ config.toml: snippet.review (dismissing in 10s)                                                │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a snippet file two snippets share ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ review.md: snippets.check, snippets.review (dismissing in 10s)                                 │
+ │ review.md: snippet.check, snippet.review (dismissing in 10s)                                   │
+─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tool permission that lands live ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Configuration reloaded automatically                                                           │
+ │ config.toml: tool.lookup.permission, tool.read.description                                     │
+ │ applies to new sessions: tool.read.description (dismissing in 10s)                             │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -82,7 +90,7 @@
 === reloaded snippet file ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ review.md: snippets.review (dismissing in 10s)                                                 │
+ │ review.md: snippet.review (dismissing in 10s)                                                  │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

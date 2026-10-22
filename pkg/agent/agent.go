@@ -811,6 +811,9 @@ func (self *Agent) runBatch(
 			}
 
 			status := resultStatus(ctx, ok)
+			if ok && executionResult.IsPending {
+				status = InfoStatus
+			}
 
 			completion := completedToolCall{result: Event{
 				Kind:    ToolCallResultEvent,

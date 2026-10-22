@@ -1,6 +1,6 @@
 === screen ===
 [38;2;150;152;150mrebuilt[0m listing metadata of 1 session
-[38;2;150;152;150mcopies kept in [0m/state/sessions_pre_v23
+[38;2;150;152;150mcopies kept in [0m/state/sessions_pre_v24
 === failure ===
 [38;2;204;102;102mtame-impala: line 3 could not be read: unexpected EOF[0m
 === error ===

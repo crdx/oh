@@ -21,7 +21,7 @@ func TestEachKindOfNoteTakesTheTagCodexGivesIt(t *testing.T) {
 		{agent.InterruptionNote, "<turn_aborted>\nnote\n</turn_aborted>"},
 		{agent.HostCommandNote, "<user_shell_command>\nnote\n</user_shell_command>"},
 		{agent.EnvironmentNote, "<environment_context>\nnote\n</environment_context>"},
-		{agent.JobNote, "<codex_internal_context source=\"job\">\nnote\n</codex_internal_context>"},
+		{agent.TaskNote, "<codex_internal_context source=\"task\">\nnote\n</codex_internal_context>"},
 		{agent.TitleNote, "<codex_internal_context source=\"title\">\nnote\n</codex_internal_context>"},
 		{agent.PokeNote, "<codex_internal_context source=\"poke\">\nnote\n</codex_internal_context>"},
 	} {

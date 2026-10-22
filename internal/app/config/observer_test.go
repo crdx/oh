@@ -81,7 +81,7 @@ func TestWritingAnObservedSnippetFileLoadsTheNewPrompt(t *testing.T) {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[snippets]\nreview = { file = \"snippets/review.md\" }\n"); err != nil {
+	if err := writeConfigFile(configPath, "[snippet]\nreview = { file = \"snippets/review.md\" }\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -141,7 +141,7 @@ func TestCreatingAMissingObservedSnippetFileRecoversTheConfig(t *testing.T) {
 	}
 	_, observer := observeConfig(t, configPath)
 
-	if err := writeConfigFile(configPath, "[snippets]\nreview = { file = \"new/review.md\" }\n"); err != nil {
+	if err := writeConfigFile(configPath, "[snippet]\nreview = { file = \"new/review.md\" }\n"); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := awaitObservedConfig(t, observer); err == nil {
@@ -625,21 +625,21 @@ func TestAValidConfigAfterATransientFailureStillReportsRealDiscoveredSnippetChan
 				return os.WriteFile(filepath.Join(directory, "done.md"), []byte("Do something else.\n"), 0o600)
 			},
 			path:    "done.md",
-			setting: "snippets.done",
+			setting: "snippet.done",
 		},
 		"created": {
 			change: func(directory string) error {
 				return os.WriteFile(filepath.Join(directory, "new.md"), []byte("Do something new.\n"), 0o600)
 			},
 			path:    "new.md",
-			setting: "snippets.new",
+			setting: "snippet.new",
 		},
 		"removed": {
 			change: func(directory string) error {
 				return os.Remove(filepath.Join(directory, "done.md"))
 			},
 			path:      "done.md",
-			setting:   "snippets.done",
+			setting:   "snippet.done",
 			isRemoved: true,
 		},
 	} {
@@ -687,7 +687,7 @@ func TestAChangedSnippetFileIsNamedBesideTheConfigThatReferencesIt(t *testing.T)
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[snippets]\nreview = { file = \"snippets/review.md\" }\n"); err != nil {
+	if err := writeConfigFile(configPath, "[snippet]\nreview = { file = \"snippets/review.md\" }\n"); err != nil {
 		t.Fatal(err)
 	}
 	_, observer := observeConfig(t, configPath)
@@ -703,7 +703,7 @@ func TestAChangedSnippetFileIsNamedBesideTheConfigThatReferencesIt(t *testing.T)
 	if len(applied.Changes) != 1 || !strings.HasSuffix(applied.Changes[0].Path, "review.md") {
 		t.Fatalf("got %v, want the snippet file alone", applied.Changes)
 	}
-	if want := []string{"snippets.review"}; !slices.Equal(applied.Changes[0].Settings, want) {
+	if want := []string{"snippet.review"}; !slices.Equal(applied.Changes[0].Settings, want) {
 		t.Errorf("got %v, want the snippet it supplies: %v", applied.Changes[0].Settings, want)
 	}
 }
@@ -720,7 +720,7 @@ func TestASnippetFileTheChangedConfigAlreadyNamesIsNotRepeated(t *testing.T) {
 	}
 	_, observer := observeConfig(t, configPath)
 
-	if err := writeConfigFile(configPath, "[snippets]\nreview = { file = \"review.md\" }\n"); err != nil {
+	if err := writeConfigFile(configPath, "[snippet]\nreview = { file = \"review.md\" }\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -791,7 +791,7 @@ func readFixture(t *testing.T) (string, Observable) {
 	if err := os.WriteFile(filepath.Join(directory, "models.txt"), []byte("anthropic/one@high\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	body := "[agent]\nround_robin = \"models.txt\"\n[snippets]\ninline = { prompt = \"Inline.\" }\n"
+	body := "[agent]\nround_robin = \"models.txt\"\n[snippet]\ninline = { prompt = \"Inline.\" }\n"
 	if err := writeConfigFile(filepath.Join(directory, "config.toml"), body); err != nil {
 		t.Fatal(err)
 	}

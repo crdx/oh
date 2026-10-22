@@ -14,6 +14,8 @@ const (
 	Allow Rule = "allow"
 )
 
+const DefaultApprovalTimeout = 5 * time.Minute
+
 var rules = []Rule{Ask, Allow}
 
 func ParseRule(value string) (Rule, error) {

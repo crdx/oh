@@ -4,6 +4,8 @@ import (
 	"errors"
 	"strings"
 	"testing"
+	"unicode"
+	"unicode/utf8"
 )
 
 func enableColor(t *testing.T) {
@@ -239,9 +241,9 @@ func TestObservationalActionsUseNormalPaintWithinToolsThatMayChangeThings(t *tes
 	enableColor(t)
 
 	for _, kind := range []string{
-		"job_status",
-		"job_output",
-		"job_list",
+		"task_status",
+		"task_output",
+		"task_list",
 		"forward_list",
 	} {
 		_, nameStyle, _ := ToolCallAppearance(kind, "", false)
@@ -545,9 +547,9 @@ func TestNoBuiltInToolHasAnActionNamedLikeItsDefault(t *testing.T) {
 
 func TestAThemeCannotBeChangedThroughAClone(t *testing.T) {
 	theme := DefaultTheme()
-	theme.Tool["job"].Actions["start"] = ToolAppearance{Name: "launch"}
+	theme.Tool["task"].Actions["restart"] = ToolAppearance{Name: "launch"}
 
-	if got := DefaultTheme().Tool["job"].Actions["start"].Name; got != "" {
+	if got := DefaultTheme().Tool["task"].Actions["restart"].Name; got != "restart" {
 		t.Errorf("a change to a copy reached the built-in theme: %q", got)
 	}
 }
@@ -558,15 +560,14 @@ func TestEveryBuiltInToolKindKeepsItsNameAndPaint(t *testing.T) {
 		"skill":             {Name: "load", Paint: "skill", Focus: "skill"},
 		"bash":              {Name: "$", Paint: "status_info"},
 		"bash_host_network": {Name: "$", Paint: "status_danger"},
-		"job":               {Name: "job", Paint: "status_warning"},
-		"job_start":         {Name: "start", Paint: "status_warning"},
-		"job_stop":          {Name: "stop", Paint: "status_warning"},
-		"job_restart":       {Name: "restart", Paint: "status_warning"},
-		"job_discard":       {Name: "discard", Paint: "status_warning"},
-		"job_prune":         {Name: "prune", Paint: "status_warning"},
-		"job_status":        {Name: "status", Paint: "normal"},
-		"job_output":        {Name: "cat", Paint: "normal"},
-		"job_list":          {Name: "list", Paint: "normal"},
+		"task":              {Name: "manage", Paint: "status_warning"},
+		"task_status":       {Name: "check", Paint: "normal"},
+		"task_output":       {Name: "read output for", Paint: "normal"},
+		"task_restart":      {Name: "restart", Paint: "status_warning"},
+		"task_discard":      {Name: "discard", Paint: "status_warning"},
+		"task_stop":         {Name: "stop", Paint: "status_warning"},
+		"task_list":         {Name: "list", Paint: "normal"},
+		"task_prune":        {Name: "prune", Paint: "status_warning"},
 		"forward":           {Name: "forward", Paint: "status_warning"},
 		"forward_add":       {Name: "forward", Paint: "status_warning"},
 		"forward_remove":    {Name: "close", Paint: "status_warning"},
@@ -580,5 +581,22 @@ func TestEveryBuiltInToolKindKeepsItsNameAndPaint(t *testing.T) {
 		if got := resolved[kind]; got != appearance {
 			t.Errorf("%s resolves to %+v, want %+v", kind, got, appearance)
 		}
+	}
+}
+
+func TestDefaultToolLabelsDoNotStartWithUppercaseLetters(t *testing.T) {
+	theme := DefaultTheme()
+	for kind, appearance := range theme.Tool.Resolved() {
+		letter, _ := utf8.DecodeRuneInString(string(appearance.Name))
+		if unicode.IsUpper(letter) {
+			t.Errorf("%s starts with an uppercase label %q", kind, appearance.Name)
+		}
+	}
+}
+
+func TestTheTaskThemeHasNoWaitAction(t *testing.T) {
+	theme := DefaultTheme()
+	if _, isKnown := theme.Tool.Resolved()["task_wait"]; isKnown {
+		t.Error("the default task theme still defines the removed wait action")
 	}
 }

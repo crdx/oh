@@ -101,35 +101,31 @@ GPTS5.6
 ⚡
 === fast-mode / standard ===
 ·
-=== forwards / associated absent job ===
+=== forwards / associated absent task ===
 docs:8000
 +1
 +
-=== forwards / associated complete job ===
+=== forwards / associated failed task ===
 docs:8000
 +1
 +
-=== forwards / associated failed job ===
+=== forwards / associated finished task ===
 docs:8000
 +1
 +
-=== forwards / associated job ended with session ===
+=== forwards / associated queued task ===
 docs:8000
 +1
 +
-=== forwards / associated running job ===
+=== forwards / associated running task ===
 docs:8000
 +1
 +
-=== forwards / associated starting job ===
+=== forwards / associated stopped task ===
 docs:8000
 +1
 +
-=== forwards / associated stopped job ===
-docs:8000
-+1
-+
-=== forwards / associated stopping job ===
+=== forwards / associated stopping task ===
 docs:8000
 +1
 +
@@ -197,24 +193,6 @@ r[reference], rw[output]
 r[reference], +1
 +2
 +
-=== jobs / a ghost beside a live job ===
-● docs ○ builder
-=== jobs / a ghost whose linger is up ===
-● docs
-=== jobs / associated job named by port ===
-● watch
-=== jobs / failures alone ===
-✗ builder ✗ api
-=== jobs / failures beside those running ===
-● docs ✗ builder
-=== jobs / none ===
-
-=== jobs / nothing is left of a closed session ===
-
-=== jobs / one being stopped among those running ===
-● docs ● watch ● api
-=== jobs / running ===
-● docs ● watch
 === local-time / custom format ===
 14:32:09
 === local-time / default format ===
@@ -374,6 +352,26 @@ usage failed
 ● 5h 40% ███░┃░░░
 ● 5h ███░┃░░░
 ● ███░┃░░░
+=== tasks / a ghost beside a live task ===
+● docs ○ builder
+=== tasks / a ghost whose linger is up ===
+● docs
+=== tasks / associated task named by port ===
+● watch
+=== tasks / failures alone ===
+✗ builder ✗ api
+=== tasks / failures beside those running ===
+● docs ✗ builder
+=== tasks / none ===
+
+=== tasks / nothing is left of a closed session ===
+
+=== tasks / one being stopped among those running ===
+● docs ● watch ● api
+=== tasks / queued, running and failed together ===
+● docs ● checks ● build ✗ lint
+=== tasks / running ===
+● docs ● watch
 === turn-count / nothing asked yet ===
 
 === turn-count / third turn ===

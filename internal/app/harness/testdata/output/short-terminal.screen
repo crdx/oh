@@ -38,7 +38,7 @@ read –
 read –
 
 
- 🤖 Job build exited: failed, exit(2).
+ 🤖 Task build failed: exit status 2.
 
     undefined: getWidth
     exit status 1

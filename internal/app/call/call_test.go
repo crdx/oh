@@ -251,11 +251,11 @@ func TestAContinuedBashCommandUsesTheOrdinaryBashLabel(t *testing.T) {
 		Subject:   "cd /work && just check",
 		Emphasis:  tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"},
 	}
-	label := Label{Name: "job", Subject: "check", Continuation: []Label{bashLabel}}
+	label := Label{Name: "task", Subject: "check", Continuation: []Label{bashLabel}}
 
-	want := style.Change("job") + " " + style.Subject("check") + " " + bashLabel.Render()
+	want := style.Change("task") + " " + style.Subject("check") + " " + bashLabel.Render()
 	if got := label.Render(); got != want {
-		t.Errorf("got %q, want the exact bash label after the job name", got)
+		t.Errorf("got %q, want the exact bash label after the task name", got)
 	}
 }
 

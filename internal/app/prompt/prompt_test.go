@@ -700,14 +700,14 @@ func TestASandboxedSessionIsNeverToldThereIsNoSandbox(t *testing.T) {
 
 func TestAToolThatIsNotOfferedIsNeverMentioned(t *testing.T) {
 	got := harnessContext(Config{
-		Workspace:    work.At("/workspace"),
-		SessionName:  "session-id",
-		TmpDir:       "/tmp/x",
-		HomeDir:      "/state/home",
-		CurrentCaps:  caps.Read | caps.Shell | caps.Network | caps.Lookup,
-		ExtraPaths:   shell.Paths{Exec: []string{"/commands"}},
-		OfferedTools: []string{"read", "ls", "grep"},
-		JobsGranted:  true,
+		Workspace:              work.At("/workspace"),
+		SessionName:            "session-id",
+		TmpDir:                 "/tmp/x",
+		HomeDir:                "/state/home",
+		CurrentCaps:            caps.Read | caps.Shell | caps.Network | caps.Lookup,
+		ExtraPaths:             shell.Paths{Exec: []string{"/commands"}},
+		OfferedTools:           []string{"read", "ls", "grep"},
+		BackgroundShellGranted: true,
 	})
 
 	for _, unwanted := range []string{
@@ -715,7 +715,7 @@ func TestAToolThatIsNotOfferedIsNeverMentioned(t *testing.T) {
 		"bash",
 		"lookup tool",
 		"fetch tool",
-		"job tool",
+		"background=true",
 		"The shell may execute files",
 		"git clone --shared",
 	} {
@@ -745,20 +745,20 @@ func TestASessionWithNoShellIsNeverToldWhatItsShellCouldDo(t *testing.T) {
 
 func TestAnOfferedToolIsStillMentioned(t *testing.T) {
 	got := harnessContext(Config{
-		Workspace:    work.At("/workspace"),
-		SessionName:  "session-id",
-		TmpDir:       "/tmp/x",
-		HomeDir:      "/state/home",
-		CurrentCaps:  caps.Read | caps.Shell,
-		ExtraPaths:   shell.Paths{Exec: []string{"/commands"}},
-		OfferedTools: []string{"read", "bash", "job"},
-		JobsGranted:  true,
+		Workspace:              work.At("/workspace"),
+		SessionName:            "session-id",
+		TmpDir:                 "/tmp/x",
+		HomeDir:                "/state/home",
+		CurrentCaps:            caps.Read | caps.Shell,
+		ExtraPaths:             shell.Paths{Exec: []string{"/commands"}},
+		OfferedTools:           []string{"read", "bash"},
+		BackgroundShellGranted: true,
 	})
 
 	for _, want := range []string{
 		"# Network",
 		"The bash tool is granted",
-		"A service started with the job tool",
+		"A service started by a background bash call keeps running and stays reachable on 127.0.0.1",
 		"Configured executable path /commands is read-only to path tools, and the shell can execute files at or under it.",
 		"cp -r <workspace> <destination>",
 	} {
@@ -912,26 +912,26 @@ func TestYoloDoesNotReportDenyPatterns(t *testing.T) {
 	}
 }
 
-func TestAnUnconfinedShellSaysWhatItLeavesBehindAndWhereJobsLive(t *testing.T) {
-	for _, areJobsGranted := range []bool{false, true} {
+func TestAnUnconfinedShellSaysWhatItLeavesBehindAndHowWorkOutlivesACall(t *testing.T) {
+	for _, isBackgroundShellGranted := range []bool{false, true} {
 		got := harnessContext(Config{
-			Workspace:    work.At("/workspace"),
-			SessionName:  "session-id",
-			TmpDir:       "/state/farm/session",
-			HomeDir:      "/state/home",
-			CurrentCaps:  caps.Read | caps.Shell,
-			OfferedTools: []string{"bash", "job"},
-			JobsGranted:  areJobsGranted,
-			Yolo:         true,
+			Workspace:              work.At("/workspace"),
+			SessionName:            "session-id",
+			TmpDir:                 "/state/farm/session",
+			HomeDir:                "/state/home",
+			CurrentCaps:            caps.Read | caps.Shell,
+			OfferedTools:           []string{"bash"},
+			BackgroundShellGranted: isBackgroundShellGranted,
+			Yolo:                   true,
 		})
 
 		const leftBehind = "- A process that a bash call leaves running in its process group dies when the call ends"
 		if !strings.Contains(got, leftBehind) {
-			t.Errorf("jobs granted %v: harness context does not contain %q: %q", areJobsGranted, leftBehind, got)
+			t.Errorf("background shell granted %v: harness context does not contain %q: %q", isBackgroundShellGranted, leftBehind, got)
 		}
-		const survival = "use the job tool for anything that must outlive the call"
-		if strings.Contains(got, survival) != areJobsGranted {
-			t.Errorf("jobs granted %v: got %q", areJobsGranted, got)
+		const survival = "set background=true for anything that must outlive the call"
+		if strings.Contains(got, survival) != isBackgroundShellGranted {
+			t.Errorf("background shell granted %v: got %q", isBackgroundShellGranted, got)
 		}
 	}
 }
@@ -955,16 +955,16 @@ func TestAnUnconfinedShellReportsNoExecutableDirectories(t *testing.T) {
 
 func TestTheHarnessDisclosesThatABashCallTakesItsProcessesWithIt(t *testing.T) {
 	got := harnessContext(Config{
-		Workspace:    work.At("/workspace"),
-		SessionName:  "session-id",
-		TmpDir:       "/state/farm/session",
-		HomeDir:      "/state/home",
-		CurrentCaps:  caps.Read | caps.Shell,
-		OfferedTools: []string{"bash", "job"},
-		JobsGranted:  true,
+		Workspace:              work.At("/workspace"),
+		SessionName:            "session-id",
+		TmpDir:                 "/state/farm/session",
+		HomeDir:                "/state/home",
+		CurrentCaps:            caps.Read | caps.Shell,
+		OfferedTools:           []string{"bash"},
+		BackgroundShellGranted: true,
 	})
 
-	want := "A process that a bash call leaves running dies when the call ends; use the job tool " +
+	want := "A process that a bash call leaves running dies when the call ends; set background=true " +
 		"for anything that must outlive the call"
 	if !strings.Contains(got, want) {
 		t.Errorf("harness context does not contain %q: %q", want, got)
@@ -978,13 +978,13 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 	}
 
 	got := harnessContext(Config{
-		Workspace:    workspace,
-		SessionName:  "session-id",
-		TmpDir:       "/state/farm/session",
-		HomeDir:      "/state/home",
-		CurrentCaps:  caps.Read | caps.Shell,
-		OfferedTools: []string{"bash", "job"},
-		JobsGranted:  true,
+		Workspace:              workspace,
+		SessionName:            "session-id",
+		TmpDir:                 "/state/farm/session",
+		HomeDir:                "/state/home",
+		CurrentCaps:            caps.Read | caps.Shell,
+		OfferedTools:           []string{"bash"},
+		BackgroundShellGranted: true,
 	})
 
 	for _, rule := range []string{
@@ -1029,37 +1029,38 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 	}
 }
 
-func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
+func TestWaitingForTheUserFollowsBackgroundShellAvailability(t *testing.T) {
 	for name, testCase := range map[string]struct {
-		jobsGranted bool
-		expected    bool
+		isBackgroundShellGranted bool
+		expected                 bool
 	}{
-		"available":   {jobsGranted: true, expected: true},
-		"unavailable": {jobsGranted: false, expected: false},
+		"available":   {isBackgroundShellGranted: true, expected: true},
+		"unavailable": {isBackgroundShellGranted: false, expected: false},
 	} {
 		t.Run(name, func(t *testing.T) {
 			got := harnessContext(Config{
-				Workspace:    work.At("/workspace"),
-				SessionName:  "session-id",
-				TmpDir:       "/state/farm/session",
-				HomeDir:      "/state/home",
-				CurrentCaps:  caps.Read | caps.Shell,
-				OfferedTools: []string{"bash", "job"},
-				JobsGranted:  testCase.jobsGranted,
+				Workspace:              work.At("/workspace"),
+				SessionName:            "session-id",
+				TmpDir:                 "/state/farm/session",
+				HomeDir:                "/state/home",
+				CurrentCaps:            caps.Read | caps.Shell,
+				OfferedTools:           []string{"bash"},
+				BackgroundShellGranted: testCase.isBackgroundShellGranted,
 			})
 
 			for _, rule := range []string{
 				"# Waiting for the User",
-				"Before ending your turn, start a job watcher",
+				"Before ending your turn, start a watcher as a background bash call",
 				"when completion can be detected through the filesystem",
 				"Note that this will not work with /grant",
 				"it needs to be accessible already to be watchable",
 				"Use a continuous `inotifywait --monitor` if available",
-				"With inotifywait, omit `-q`, and end the turn only after the job output shows \"Watches established\"",
-				"The job must exit once the condition holds",
+				"With inotifywait, omit `-q`, and end the turn only after the task output shows \"Watches established\"",
+				"The watcher must exit once the condition holds",
 				"done < <(inotifywait --monitor …); kill \"$!\"",
 				"otherwise poll every 2s",
-				"When the job ends, continue",
+				"A task stops after 30 active minutes; when the watcher ends without the condition, start it again",
+				"When the task ends, continue",
 			} {
 				present := strings.Contains(got, rule)
 				if present != testCase.expected {
@@ -1070,14 +1071,11 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 			if patchWatcher != testCase.expected {
 				t.Errorf("patch watcher presence is %t, want %t: %q", patchWatcher, testCase.expected, got)
 			}
-			if unwanted := "Before handing a patch off, start a background job"; strings.Contains(got, unwanted) {
-				t.Errorf("old patch-specific waiting rule remains in the harness context: %q", got)
-			}
 		})
 	}
 }
 
-func TestTheHarnessOffersNoJobToolForAProcessThatMustOutliveACall(t *testing.T) {
+func TestTheHarnessOffersNoBackgroundCallWithoutTasks(t *testing.T) {
 	got := harnessContext(Config{
 		Workspace:    work.At("/workspace"),
 		SessionName:  "session-id",
@@ -1091,7 +1089,7 @@ func TestTheHarnessOffersNoJobToolForAProcessThatMustOutliveACall(t *testing.T) 
 	if !strings.Contains(got, want) {
 		t.Errorf("harness context does not contain %q: %q", want, got)
 	}
-	if unwanted := "use the job tool"; strings.Contains(got, unwanted) {
+	if unwanted := "background=true"; strings.Contains(got, unwanted) {
 		t.Errorf("harness context offers %q with no such tool: %q", unwanted, got)
 	}
 }
@@ -1126,18 +1124,18 @@ func TestEveryConfiguredPathKindHasItsFileToolAccessDocumented(t *testing.T) {
 	}
 }
 
-func TestAConfinedJobDocumentsItsNetworkDifferenceFromBash(t *testing.T) {
+func TestABackgroundServiceIsReachableOnLoopbackInTheSandbox(t *testing.T) {
 	got := harnessContext(Config{
-		Workspace:    work.At("/workspace"),
-		SessionName:  "session-id",
-		TmpDir:       "/state/farm/session",
-		HomeDir:      "/state/home",
-		CurrentCaps:  caps.Read | caps.Shell | caps.Network,
-		OfferedTools: []string{"bash", "job"},
-		JobsGranted:  true,
+		Workspace:              work.At("/workspace"),
+		SessionName:            "session-id",
+		TmpDir:                 "/state/farm/session",
+		HomeDir:                "/state/home",
+		CurrentCaps:            caps.Read | caps.Shell | caps.Network,
+		OfferedTools:           []string{"bash"},
+		BackgroundShellGranted: true,
 	})
 
-	if want := "A job command has only private loopback and cannot use the host network"; !strings.Contains(got, want) {
+	if want := "A service started by a background bash call keeps running and stays reachable on 127.0.0.1"; !strings.Contains(got, want) {
 		t.Errorf("harness context does not contain %q: %q", want, got)
 	}
 	if want := "The bash tool takes network=loopback (the default) or network=host"; !strings.Contains(got, want) {
@@ -1527,5 +1525,18 @@ func TestARepositoryWorkspaceAppliesWithoutACeiling(t *testing.T) {
 	}
 	if want := "Tell the user to apply it with: /!git apply <user's path to patch>"; !strings.Contains(got, want) {
 		t.Errorf("harness context does not contain %q: %q", want, got)
+	}
+}
+
+func TestATaskEnabledPromptDescribesTheSupervisedCall(t *testing.T) {
+	got := harnessContext(Config{
+		Workspace: work.At("/workspace"), SessionName: "session-id",
+		TmpDir: "/state/farm/session", HomeDir: "/state/home",
+		OfferedTools: []string{"bash", "task"}, CurrentCaps: caps.Read | caps.Shell,
+		TasksGranted: true,
+	})
+	if !strings.Contains(got, "background tool call keeps running after its receipt returns") ||
+		!strings.Contains(got, "use the task tool") {
+		t.Errorf("new-session prompt describes unavailable work: %q", got)
 	}
 }

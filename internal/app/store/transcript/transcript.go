@@ -20,10 +20,10 @@ import (
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/money"
@@ -109,7 +109,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		return os.ErrClosed
 	}
 	switch event.Kind {
-	case agent.StateChangeEvent, agent.ModelReasoningEvent, jobrecord.Listing:
+	case agent.StateChangeEvent, agent.ModelReasoningEvent, taskrecord.Listing, taskrecord.Finished:
 		return nil
 	case conditions.Change, environment.Change:
 		if _, isSaid := harnessNotice(event); !isSaid {
@@ -165,7 +165,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		output.fence(agent.CacheRebuildNotice(event, self.cacheRebuildCost(event)))
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
-	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop,
+	case turn.HarnessPoke, taskrecord.RunEnded, taskrecord.EndedWithSession, caps.TaskStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.ForwardChange, hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
@@ -193,12 +193,12 @@ func harnessNotice(event agent.Event) (string, bool) {
 		return event.Text, true
 	case subagentrecord.AccessWithdrawnStop:
 		return subagentrecord.AccessWithdrawnStopNotice(event)
-	case jobrecord.Ended:
-		return jobrecord.EndedNotice(event)
-	case jobrecord.EndedWithSession:
-		return jobrecord.EndedWithSessionNotice(event)
-	case caps.JobStop:
-		return caps.JobStopNotice(event)
+	case taskrecord.RunEnded:
+		return taskrecord.EndedNotice(event)
+	case taskrecord.EndedWithSession:
+		return taskrecord.EndedWithSessionNotice(event)
+	case caps.TaskStop:
+		return caps.TaskStopNotice(event)
 	case hostcommand.Ran:
 		return hostcommand.Notice(event)
 	case caps.ModeChange:
@@ -528,16 +528,9 @@ func title(kind agent.Kind) string {
 		return "Poke"
 	case hostcommand.Ran:
 		return "Host command"
-	case caps.JobStop:
-		return "Job stopped"
-	case jobrecord.Ended:
-		return "Job ended"
-	case jobrecord.EndedWithSession:
-		return "Jobs ended with the session"
-	case subagentrecord.AccessWithdrawnStop:
-		return "Subagents stopped"
-	case subagentrecord.ReportsDelivered:
-		return "Subagent reports"
+	case caps.TaskStop, taskrecord.RunEnded, taskrecord.EndedWithSession,
+		subagentrecord.AccessWithdrawnStop, subagentrecord.ReportsDelivered:
+		return stoppedTitles[kind]
 	case agent.SilentTurnEvent:
 		return "Silent turn"
 	case agent.CacheRebuildEvent:
@@ -555,6 +548,14 @@ func title(kind agent.Kind) string {
 	default:
 		return string(kind)
 	}
+}
+
+var stoppedTitles = map[agent.Kind]string{
+	caps.TaskStop:                      "Task stopped",
+	taskrecord.RunEnded:                "Task run ended",
+	taskrecord.EndedWithSession:        "Tasks ended with the session",
+	subagentrecord.AccessWithdrawnStop: "Subagents stopped",
+	subagentrecord.ReportsDelivered:    "Subagent reports",
 }
 
 type document struct {

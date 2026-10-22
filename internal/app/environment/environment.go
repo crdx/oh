@@ -172,7 +172,7 @@ func changeNotices(
 	denyExplanation := "Paths matching a sandbox deny pattern appear empty and unreadable; treat them as sandbox artefacts."
 	if slices.ContainsFunc(slices.Concat(knownEnvironment.Sandbox.DenyPatterns, current.Sandbox.DenyPatterns), filepath.IsAbs) {
 		denyLabel = "Sandbox deny entries"
-		denyExplanation = "Paths denied by sandbox.deny appear empty and unreadable; treat them as sandbox artefacts."
+		denyExplanation = "Paths denied by grants.deny appear empty and unreadable; treat them as sandbox artefacts."
 	}
 	notices = append(notices, setChangeNotices(denyLabel, knownEnvironment.Sandbox.DenyPatterns, current.Sandbox.DenyPatterns)...)
 	if len(difference(current.Sandbox.DenyPatterns, knownEnvironment.Sandbox.DenyPatterns)) > 0 {

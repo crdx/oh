@@ -12,13 +12,13 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/sandbox"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -86,7 +86,7 @@ func confined(root *file.Root, name string) error {
 	return nil
 }
 
-const searchTimeout = 4*time.Minute + 30*time.Second
+const searchTimeout = tasks.RunLimit
 
 func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRunner) (string, tool.ToolCallMetrics, error) {
 	if args.Pattern == "" {

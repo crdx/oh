@@ -10,7 +10,7 @@ import (
 func requireADrawableHostname(t *testing.T, config Config) {
 	t.Helper()
 
-	hostname := config.Ports.GetHostname("session", "127.0.0.1")
+	hostname := config.GetHostname("session", "127.0.0.1")
 
 	for _, character := range hostname {
 		if !isHostnameCharacter(character) {
@@ -26,14 +26,14 @@ func FuzzAConfigFileIsReadWithoutFallingOver(fuzzer *testing.F) {
 		"[ui.theme.dark]\nnormal = \"underline:curly\"\n",
 		"[ui]\nstreaming = \"asap\"\ngrouping = [\"answer\"]\n",
 		"[bar.top]\nleft = [{ name = \"model\" }]\n",
-		"[sandbox]\nread = [\"~/x\"]\n",
-		"[permissions]\nnetwork = \"ask\"\n",
-		"[snippets]\nx = \"y\"\n",
-		"[defaults]\ntool_output = \"12K\"\n",
-		"[defaults]\ncaps = \"rwxng\"\n",
+		"[grants]\nread = [\"~/x\"]\n",
+		"[tool.bash]\nhost_network = \"ask\"\n",
+		"[snippet]\nx = \"y\"\n",
+		"[default]\ntool_output = \"12K\"\n",
+		"[default]\ncaps = \"rwxng\"\n",
 		"[agent]\nround_robin = [\"a\", \"b\"]\n",
-		"[ports]\nhostname = \"{session}\"\n",
-		"[ports]\nhostname = \"\x1b[2J{session}\"\n",
+		"[experimental]\nforward_hostname = \"{session}\"\n",
+		"[experimental]\nforward_hostname = \"\x1b[2J{session}\"\n",
 		"[experimental]\nx = 1\n",
 	} {
 		fuzzer.Add(seed)
@@ -42,7 +42,7 @@ func FuzzAConfigFileIsReadWithoutFallingOver(fuzzer *testing.F) {
 	for _, seed := range []string{
 		"[ui.theme.dark]\naccent = \"#040506 faint\"\n",
 		"[bar.bottom]\nright = []\n",
-		"[skills]\ninclude = [\"x\"]\n",
+		"[skill]\ninclude = [\"x\"]\n",
 	} {
 		fuzzer.Add(seed)
 	}

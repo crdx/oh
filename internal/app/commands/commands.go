@@ -55,7 +55,7 @@ type Options struct {
 	Output            io.Writer
 	PathGrants        PathGrants
 	Forwards          Forwards
-	Jobs              Jobs
+	Tasks             Tasks
 	Subagents         Subagents
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
@@ -111,7 +111,7 @@ type commandEnvironment struct {
 	startHostCommand  func(directory string, command string) error
 	pathGrants        PathGrants
 	forwards          Forwards
-	jobs              Jobs
+	tasks             Tasks
 	subagents         Subagents
 	getInfo           func() (string, error)
 	getContextSources func() ContextSources
@@ -160,7 +160,7 @@ func New(options Options) (slash.CommandSet, error) {
 		startHostCommand:  options.StartHostCommand,
 		pathGrants:        options.PathGrants,
 		forwards:          options.Forwards,
-		jobs:              options.Jobs,
+		tasks:             options.Tasks,
 		subagents:         options.Subagents,
 		getInfo:           options.GetInfo,
 		getContextSources: options.GetContextSources,
@@ -243,8 +243,8 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 			environment.forwards,
 		)...)
 	}
-	if environment.jobs.isConfigured() {
-		commands = append(commands, jobCommands(environment.jobs)...)
+	if environment.tasks.isConfigured() {
+		commands = append(commands, taskCommands(environment.tasks)...)
 	}
 	if environment.subagents.isConfigured() {
 		commands = append(commands, subagentCommands(environment.subagents)...)

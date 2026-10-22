@@ -13,6 +13,16 @@ func TestEveryDeclaredToggleNamesItselfInSnakeCase(t *testing.T) {
 	}
 }
 
+func TestBackgroundAfterSecondsIsAWholeNumberToggle(t *testing.T) {
+	if complaints := Check(map[string]any{string(BackgroundAfterSeconds): int64(45)}); len(complaints) != 0 {
+		t.Errorf("got complaints %v", complaints)
+	}
+	complaints := Check(map[string]any{string(BackgroundAfterSeconds): "45s"})
+	if len(complaints) != 1 || !strings.Contains(complaints[0].Reason, "a whole number") {
+		t.Errorf("got complaints %v, want the toggle to require a whole number", complaints)
+	}
+}
+
 func TestCommandStartsTurnIsABooleanToggle(t *testing.T) {
 	if complaints := Check(map[string]any{string(CommandStartsTurn): true}); len(complaints) != 0 {
 		t.Errorf("got complaints %v", complaints)

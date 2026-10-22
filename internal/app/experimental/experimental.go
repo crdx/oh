@@ -10,12 +10,14 @@ import (
 type Name string
 
 const (
-	CacheMissNotices     Name = "cache_miss_notices"
-	CommandStartsTurn    Name = "command_starts_turn"
-	EnterInterrupts      Name = "enter_interrupts"
-	RedrawTimingFeedback Name = "redraw_timing_feedback"
-	ReplyCommand         Name = "reply_command"
-	SharedHistory        Name = "shared_history"
+	BackgroundAfterSeconds Name = "background_after_seconds"
+	CacheMissNotices       Name = "cache_miss_notices"
+	CommandStartsTurn      Name = "command_starts_turn"
+	EnterInterrupts        Name = "enter_interrupts"
+	ForwardHostname        Name = "forward_hostname"
+	RedrawTimingFeedback   Name = "redraw_timing_feedback"
+	ReplyCommand           Name = "reply_command"
+	SharedHistory          Name = "shared_history"
 )
 
 type Kind int
@@ -42,12 +44,14 @@ func (self Kind) String() string {
 }
 
 var toggleKinds = map[Name]Kind{
-	CacheMissNotices:     BooleanKind,
-	CommandStartsTurn:    BooleanKind,
-	EnterInterrupts:      BooleanKind,
-	RedrawTimingFeedback: BooleanKind,
-	ReplyCommand:         BooleanKind,
-	SharedHistory:        BooleanKind,
+	BackgroundAfterSeconds: WholeNumberKind,
+	CacheMissNotices:       BooleanKind,
+	CommandStartsTurn:      BooleanKind,
+	EnterInterrupts:        BooleanKind,
+	ForwardHostname:        TextKind,
+	RedrawTimingFeedback:   BooleanKind,
+	ReplyCommand:           BooleanKind,
+	SharedHistory:          BooleanKind,
 }
 
 type Complaint struct {

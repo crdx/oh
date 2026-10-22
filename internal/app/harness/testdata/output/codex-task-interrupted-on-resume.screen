@@ -1,0 +1,32 @@
+
+ remember this running task
+
+
+I will check it later.
+
+
+ 🤖 The session closed while build was running. It stopped and does not restart automatically; task
+    restart starts it again.
+
+
+
+ what happened to build
+
+
+check build
+read output for build 1L
+list tasks 1L
+stop build
+restart build
+
+
+ 🤖 Task build run 2 done.
+
+    restarted command
+
+
+read output for build 3L
+discard build
+prune finished tasks
+
+It stopped on close, restarted with its saved arguments, then was discarded.

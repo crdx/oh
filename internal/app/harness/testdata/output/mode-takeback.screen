@@ -15,31 +15,31 @@ conversation remains in scrollback
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== 11 toggled once past a stopped job ===
+=== 11 toggled once past a stopped task ===
 
  ⏳ The workspace is now read-only.
- ⏳ Job web stopped because the workspace was made read-only.
+ ⏳ Task web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
                                                                                double-enter to send
-=== 12 toggled twice past a stopped job ===
+=== 12 toggled twice past a stopped task ===
 
  ⏳ The workspace is now read-only.
- ⏳ Job web stopped because the workspace was made read-only.
+ ⏳ Task web stopped because the workspace was made read-only.
                                                                                double-enter to send
-=== 13 toggled thrice past a stopped job ===
+=== 13 toggled thrice past a stopped task ===
 
  ⏳ The workspace is now read-only.
- ⏳ Job web stopped because the workspace was made read-only.
+ ⏳ Task web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
                                                                                double-enter to send
-=== 14 toggled four times past a stopped job ===
+=== 14 toggled four times past a stopped task ===
 
  ⏳ The workspace is now read-only.
- ⏳ Job web stopped because the workspace was made read-only.
+ ⏳ Task web stopped because the workspace was made read-only.
                                                                                double-enter to send
-=== 15 toggled past a job another capability stopped ===
+=== 15 toggled past a task another capability stopped ===
 
- ⏳ Job web stopped because the bash tool was refused.
+ ⏳ Task web stopped because the bash tool was refused.
                                                                                double-enter to send
 === 2 after ctrl+x l ===
 conversation remains in scrollback
@@ -76,7 +76,7 @@ conversation remains in scrollback
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 6 taken back beside a later line ===
 conversation remains in scrollback
-Job `build` exited: complete after 30s.
+Task `build` done.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

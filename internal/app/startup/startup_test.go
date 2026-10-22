@@ -23,7 +23,7 @@ func TestAStartupEventKeepsItsFactsForReplay(t *testing.T) {
 		ToolBytes:     3373,
 		LocalConfig: &LocalConfig{
 			Name:     "oh.toml",
-			Settings: []string{"ui.currency", "sandbox.write"},
+			Settings: []string{"ui.currency", "grants.write"},
 		},
 	}
 
@@ -31,14 +31,14 @@ func TestAStartupEventKeepsItsFactsForReplay(t *testing.T) {
 	facts := string(event.State)
 	for _, fact := range []string{
 		`"ready_at":"2026-10-02T09:00:00Z"`,
-		`"local_config":{"name":"oh.toml","settings":["ui.currency","sandbox.write"]}`,
+		`"local_config":{"name":"oh.toml","settings":["ui.currency","grants.write"]}`,
 	} {
 		if !strings.Contains(facts, fact) {
 			t.Errorf("startup facts %s did not contain %s", facts, fact)
 		}
 	}
 	got := style.Plain(RenderEvent(event, 80, false))
-	want := "Agent tame-impala 🦌 ready in 12ms on Friday, 2 October 2026 with 5 skills ⧸ 4 snippets ⧸ ~13Kt context ⧸ oh.toml: ui.currency, sandbox.write."
+	want := "Agent tame-impala 🦌 ready in 12ms on Friday, 2 October 2026 with 5 skills ⧸ 4 snippets ⧸ ~13Kt context ⧸ oh.toml: ui.currency, grants.write."
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

@@ -40,7 +40,7 @@ column heading 1 2 3 4 5 6 Done.
 ⋮ 5 more lines
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call.
+task may outlive its call.
 === an unclosed backtick drawn as it arrives, landed ===
 
  check it
@@ -53,7 +53,7 @@ shell can reach the host network or not,
 so it has to be settled first. It also
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call. Done.
+task may outlive its call. Done.
 === an unclosed backtick drawn in paced steps, arriving ===
 
  check it
@@ -62,7 +62,7 @@ job may outlive its call. Done.
 ⋮ 5 more lines
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call
+task may outlive its cal
 === an unclosed backtick drawn in paced steps, landed ===
 
  check it
@@ -75,7 +75,7 @@ shell can reach the host network or not,
 so it has to be settled first. It also
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call. Done.
+task may outlive its call. Done.
 === an unclosed backtick, arriving ===
 
  check it
@@ -97,7 +97,7 @@ shell can reach the host network or not,
 so it has to be settled first. It also
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call. Done.
+task may outlive its call. Done.
 === an unclosed star, arriving ===
 
  check it
@@ -119,7 +119,7 @@ shell can reach the host network or not,
 so it has to be settled first. It also
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call. Done.
+task may outlive its call. Done.
 === an unfinished autolink, arriving ===
 
  check it
@@ -165,4 +165,4 @@ shell can reach the host network or not,
 so it has to be settled first. It also
 decides which paths are readable, which
 ports can be forwarded, and whether a
-job may outlive its call. Done.
+task may outlive its call. Done.

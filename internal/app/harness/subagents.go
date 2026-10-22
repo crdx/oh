@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
@@ -25,6 +26,7 @@ import (
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/ask"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
@@ -161,6 +163,16 @@ func newChildFactory(options childOptions) subagents.Factory {
 			closeChild()
 			return subagents.Worker{}, err
 		}
+		tools, err = options.settings.ConfigureBuiltins(tools, config.BuiltinToolOptions{
+			IsGroupAllowed: state.options.mode.Allows,
+			Approve: func(context.Context, string, string, permission.Setting) error {
+				return ask.ErrUnavailable
+			},
+		})
+		if err != nil {
+			closeChild()
+			return subagents.Worker{}, err
+		}
 		connection, err := backend.Connect(child.Choice, child.Selection, options.endpoints)
 		if err != nil {
 			closeChild()
@@ -209,7 +221,7 @@ func buildChildState(
 	return buildAgentState(agentOptions{
 		workspace: workspace,
 		mode:      caps.NewMode(child.Caps),
-		paths:     childPaths(options.settings.Sandbox),
+		paths:     childPaths(options.settings.Grants),
 		roots: shell.Roots{
 			HomeDirectory:    filepath.Join(child.Scratch, subagents.HomeName),
 			Home:             home,
@@ -254,7 +266,7 @@ func childPrompt(
 	home string,
 	brief childBrief,
 ) string {
-	paths := childPaths(options.settings.Sandbox)
+	paths := childPaths(options.settings.Grants)
 	return prompt.Subagent(prompt.SubagentConfig{
 		SessionName:        options.sessionName,
 		Name:               child.Name,

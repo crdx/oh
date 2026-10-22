@@ -24,10 +24,10 @@ read: screen.go [call_1]
 grep: spinner [call_2]
 ```
 
-## Job ended · +4s
+## Task run ended · +4s
 
 ```
-Job `docs` exited: complete after 12s with no output.
+Task `docs` done.
 ```
 
 ## Tool calls · +5s

@@ -16,10 +16,10 @@
 .git is now read-only.
 ```
 
-## Job stopped · +0s
+## Task stopped · +0s
 
 ```
-Job `docs` stopped because g was withdrawn while it had write access.
+Task `docs` stopped because g was withdrawn while it had write access.
 ```
 
 ## User · +0s

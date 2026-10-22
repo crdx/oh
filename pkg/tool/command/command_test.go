@@ -14,8 +14,10 @@ import (
 
 	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
+	"crdx.org/oh/pkg/tool/middleware/async"
 
 	"golang.org/x/sys/unix"
 )
@@ -157,60 +159,91 @@ func TestCommandConcurrencyDefaultsToOneAndMustBePositive(t *testing.T) {
 }
 
 func TestCommandConcurrencyCapsSimultaneousProcesses(t *testing.T) {
-	state := t.TempDir()
-	for _, name := range []string{"running", "maximum"} {
-		if err := os.WriteFile(filepath.Join(state, name), []byte("0\n"), 0o600); err != nil {
-			t.Fatal(err)
-		}
-	}
-	script := writeScript(t, `
-state=$1
-exec 9>"$state/lock"
-flock 9
-running=$(<"$state/running")
-maximum=$(<"$state/maximum")
-running=$((running + 1))
-printf '%d\n' "$running" > "$state/running"
-if ((running > maximum)); then printf '%d\n' "$running" > "$state/maximum"; fi
-flock -u 9
-sleep 0.05
-flock 9
-running=$(<"$state/running")
-printf '%d\n' "$((running - 1))" > "$state/running"
-`)
-	declaration := command.Declaration{
-		Name: "deploy", Description: "deploy concurrently", Command: []string{script, state}, Concurrency: 2,
-	}
-	subject, err := command.New(declaration, command.Options{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	for _, concurrency := range []int{0, 1, 2} {
+		for _, isBackground := range []bool{false, true} {
+			name := strconv.Itoa(concurrency) + "-foreground"
+			if isBackground {
+				name = strconv.Itoa(concurrency) + "-background"
+			}
+			t.Run(name, func(t *testing.T) {
+				state := t.TempDir()
+				for _, name := range []string{"running", "maximum"} {
+					if err := os.WriteFile(filepath.Join(state, name), []byte("0\n"), 0o600); err != nil {
+						t.Fatal(err)
+					}
+				}
+				script := writeScript(t, `
+			state=$1
+			exec 9>"$state/lock"
+			flock 9
+			running=$(<"$state/running")
+			maximum=$(<"$state/maximum")
+			running=$((running + 1))
+			printf '%d\n' "$running" > "$state/running"
+			if ((running > maximum)); then printf '%d\n' "$running" > "$state/maximum"; fi
+			flock -u 9
+			sleep 0.05
+			flock 9
+			running=$(<"$state/running")
+			printf '%d\n' "$((running - 1))" > "$state/running"
+			`)
+				declaration := command.Declaration{
+					Name: "deploy", Description: "deploy concurrently", Command: []string{script, state}, Concurrency: concurrency,
+				}
+				subject, err := command.New(declaration, command.Options{})
+				if err != nil {
+					t.Fatal(err)
+				}
 
-	var group sync.WaitGroup
-	errors := make(chan error, 6)
-	for range 6 {
-		parsed, err := subject.Parse(`{}`)
-		if err != nil {
-			t.Fatal(err)
+				manager := tasks.New(t.Context())
+				defer manager.Close()
+				arguments := `{}`
+				if isBackground {
+					subject = async.Tool(subject, manager, async.Options{})
+					arguments = `{"background":true}`
+				}
+
+				var group sync.WaitGroup
+				errors := make(chan error, 6)
+				for range 6 {
+					parsed, err := subject.Parse(arguments)
+					if err != nil {
+						t.Fatal(err)
+					}
+					group.Go(func() {
+						_, err := parsed.Exec(t.Context())
+						errors <- err
+					})
+				}
+				group.Wait()
+				close(errors)
+				for err := range errors {
+					if err != nil {
+						t.Fatal(err)
+					}
+				}
+				for _, snapshot := range manager.List() {
+					over, release, err := manager.Hold(snapshot.ID)
+					if err != nil {
+						t.Fatal(err)
+					}
+					<-over
+					release()
+					finished, err := manager.Status(snapshot.ID)
+					if err != nil || finished.State != tasks.Done {
+						t.Errorf("background call failed: %+v, %v", finished, err)
+					}
+				}
+				maximum, err := os.ReadFile(filepath.Join(state, "maximum")) //nolint:gosec // a path below the test directory
+				if err != nil {
+					t.Fatal(err)
+				}
+				expectedMaximum := max(concurrency, 1)
+				if strings.TrimSpace(string(maximum)) != strconv.Itoa(expectedMaximum) {
+					t.Errorf("maximum concurrent processes is %s, want %d", strings.TrimSpace(string(maximum)), expectedMaximum)
+				}
+			})
 		}
-		group.Go(func() {
-			_, err := parsed.Exec(t.Context())
-			errors <- err
-		})
-	}
-	group.Wait()
-	close(errors)
-	for err := range errors {
-		if err != nil {
-			t.Fatal(err)
-		}
-	}
-	maximum, err := os.ReadFile(filepath.Join(state, "maximum")) //nolint:gosec // a path below the test directory
-	if err != nil {
-		t.Fatal(err)
-	}
-	if strings.TrimSpace(string(maximum)) != "2" {
-		t.Errorf("maximum concurrent processes is %s, want 2", strings.TrimSpace(string(maximum)))
 	}
 }
 
@@ -862,6 +895,35 @@ func TestACallKilledByASignalNamesIt(t *testing.T) {
 	}
 }
 
+func TestACommandDoesNotStartIfItsGroupIsWithdrawnDuringApproval(t *testing.T) {
+	marker := filepath.Join(t.TempDir(), "executed")
+	declaration := command.Declaration{
+		Name:        "report",
+		Description: "write a marker",
+		Command:     []string{writeScript(t, `touch "$1"`), marker},
+		Group:       "a",
+		MustAsk:     true,
+	}
+	isAllowed := true
+	subject, err := command.New(declaration, command.Options{
+		IsGroupAllowed: func(string) bool { return isAllowed },
+		Approve: func(context.Context, string, string, tool.Arguments, time.Duration) error {
+			isAllowed = false
+			return nil
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = call(t, subject, `{}`)
+	if err == nil || !strings.Contains(err.Error(), "access unavailable") {
+		t.Errorf("expected withdrawn group refusal, got %v", err)
+	}
+	if _, err := os.Stat(marker); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("the command ran after withdrawal: %v", err)
+	}
+}
+
 func TestARunningCustomCommandPublishesOutputBeforeItEnds(t *testing.T) {
 	declaration := command.Declaration{
 		Name:        "progress",
@@ -918,6 +980,43 @@ func TestAForegroundCustomCommandBoundsOutputBeforePresentation(t *testing.T) {
 	}
 	if len(output) > (256<<10)+100 || !strings.Contains(output, "earlier output bytes") {
 		t.Errorf("foreground command retained %d bytes without a bounded-output notice", len(output))
+	}
+}
+
+func TestOnlyASupervisedCallGetsTheManagedLimit(t *testing.T) {
+	declaration := command.Declaration{
+		Name:         "build",
+		Description:  "build remotely",
+		Command:      []string{writeScript(t, "sleep 0.4\necho finished")},
+		TimeLimit:    100 * time.Millisecond,
+		ManagedLimit: 10 * time.Second,
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output, err := call(t, subject, `{}`); err == nil || strings.Contains(output, "finished") {
+		t.Errorf("a plain call outlived its limit: %q, %v", output, err)
+	}
+	parsed, err := subject.Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	snapshot, err := manager.Start(t.Context(), "build", "build", true, false, parsed.Exec, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	over, release, err := manager.Hold(snapshot.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer release()
+	<-over
+	conclusions := manager.Drain()
+	if len(conclusions) != 1 || conclusions[0].Failure != nil || !strings.Contains(conclusions[0].Result.Output, "finished") {
+		t.Errorf("a supervised call was cut short: %+v", conclusions)
 	}
 }
 

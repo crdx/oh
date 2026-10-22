@@ -27,7 +27,7 @@ func TestEachLostFacilityIsToldOnce(t *testing.T) {
 		"Unix sockets no longer work",
 		"IPv6 unavailable",
 		"The session is non-interactive",
-		"A background job does not wake the conversation",
+		"Background tasks are unavailable",
 	} {
 		if !strings.Contains(notice, want) {
 			t.Errorf("notice %q does not contain %q", notice, want)
@@ -47,7 +47,7 @@ func TestEachRegainedFacilityIsTold(t *testing.T) {
 		"Unix sockets now work under /tmp",
 		"IPv6 available",
 		"The session is interactive",
-		"A background job wakes the conversation",
+		"A background task wakes the conversation",
 	} {
 		if !strings.Contains(notice, want) {
 			t.Errorf("notice %q does not contain %q", notice, want)

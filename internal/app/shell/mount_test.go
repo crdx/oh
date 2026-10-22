@@ -306,10 +306,10 @@ func TestAReadPathAlreadyCoveredByAnotherListIsWarnedAbout(t *testing.T) {
 
 	reported := warnings.String()
 	for _, want := range []string{
-		"configured path " + pathutil.Shorten(written) + " is redundant in [sandbox.read] due to sandbox.write",
-		"configured path " + pathutil.Shorten(executed) + " is redundant in [sandbox.read] due to sandbox.exec",
-		"configured path " + pathutil.Shorten(both) + " is redundant in [sandbox.read] due to sandbox.write",
-		"configured path " + pathutil.Shorten(both) + " is redundant in [sandbox.read] due to sandbox.exec",
+		"configured path " + pathutil.Shorten(written) + " is redundant in grants.read due to grants.write",
+		"configured path " + pathutil.Shorten(executed) + " is redundant in grants.read due to grants.exec",
+		"configured path " + pathutil.Shorten(both) + " is redundant in grants.read due to grants.write",
+		"configured path " + pathutil.Shorten(both) + " is redundant in grants.read due to grants.exec",
 	} {
 		if !strings.Contains(reported, want) {
 			t.Errorf("warnings do not report %q: %q", want, reported)

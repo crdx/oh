@@ -109,7 +109,7 @@ const (
 
 const guessingLine = "Checking the flag `--yolo first, since it changes what the sandbox allows and every later " +
 	"step depends on whether the shell can reach the host network or not, so it has to be settled first. " +
-	"It also decides which paths are readable, which ports can be forwarded, and whether a job may outlive its call."
+	"It also decides which paths are readable, which ports can be forwarded, and whether a task may outlive its call."
 
 type guessingThought struct {
 	before string

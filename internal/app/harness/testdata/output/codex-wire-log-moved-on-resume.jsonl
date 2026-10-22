@@ -1,4 +1,4 @@
-{"kind":"head","version":23,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
+{"kind":"head","version":24,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"remember what is available"}}

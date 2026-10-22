@@ -12,7 +12,6 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 )
@@ -31,8 +30,8 @@ type Handler struct {
 	OnBeat            func()
 	Changes           <-chan error
 	OnChange          func(error) bool
-	Conclusions       <-chan jobs.Conclusion
-	OnJobEnded        func(jobs.Conclusion)
+	TaskChanges       <-chan struct{}
+	OnTasksChanged    func()
 	SubagentEvents    <-chan agent.Event
 	SubagentActivity  <-chan struct{}
 	OnSubagentEvent   func(agent.Event)
@@ -70,7 +69,7 @@ func Run(keyboard *Keyboard, getNextRefresh func(time.Time) time.Time, handler H
 func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan time.Time, schedule func(), beats <-chan time.Time, handler Handler) {
 	handler = handler.withDefaults()
 	changes := handler.Changes
-	conclusions := handler.Conclusions
+	taskChanges := handler.TaskChanges
 	subagentEvents := handler.SubagentEvents
 	subagentActivity := handler.SubagentActivity
 	forwardChanges := handler.ForwardChanges
@@ -116,12 +115,8 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 			}
 		case <-refreshes:
 		case <-frames.due():
-		case conclusion, isOpen := <-conclusions:
-			if !isOpen {
-				conclusions = nil
-				continue
-			}
-			handler.OnJobEnded(conclusion)
+		case <-taskChanges:
+			handler.OnTasksChanged()
 		case <-subagentActivity:
 		case event, isOpen := <-subagentEvents:
 			if !isOpen {
@@ -154,11 +149,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		case refresh := <-currencyRefreshes:
 			handler.OnCurrencyRefresh(refresh)
 		case failure, isOpen := <-changes:
-			if !isOpen {
-				changes = nil
-				continue
-			}
-			if !handler.OnChange(failure) {
+			if !takeChange(handler, &changes, failure, isOpen) {
 				continue
 			}
 		}
@@ -166,6 +157,14 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		handler.OnDraw()
 		frames.drawn(time.Now())
 	}
+}
+
+func takeChange(handler Handler, changes *<-chan error, failure error, isOpen bool) bool {
+	if !isOpen {
+		*changes = nil
+		return false
+	}
+	return handler.OnChange(failure)
 }
 
 func takeKey(handler Handler, keypress key.Key, isOpen bool) bool {

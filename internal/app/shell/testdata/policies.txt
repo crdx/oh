@@ -108,10 +108,10 @@ read refused: true
 write refused: true
 metadata unchanged: true
 
-=== git withdrawal job scope ===
-metadata job stopped: true
+=== git withdrawal task scope ===
+metadata task stopped: true
 configured writer stopped: true
-cache-only job kept: true
+cache-only task kept: true
 
 === absolute denied home secret ===
 directory walks: 0

@@ -17,9 +17,10 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/toolbox/task"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -76,14 +77,14 @@ func callRowTools(isFrozen bool) func(string) (tool.Tool, bool) {
 	if isFrozen {
 		shellTool = withOptionalIntent(shellTool)
 	}
-	jobTool := job.New(nil, nil, nil, nil)
+	taskTool := task.New(tasks.New(context.Background()))
 
 	return func(name string) (tool.Tool, bool) {
 		switch name {
 		case "bash":
 			return shellTool, true
-		case "job":
-			return jobTool, true
+		case "task":
+			return taskTool, true
 		}
 
 		return nil, false
@@ -129,7 +130,7 @@ func callStopped(text string) *callRowOutcome {
 	return &callRowOutcome{status: agent.CancelledStatus, text: text, took: 4 * time.Second}
 }
 
-func jobAnswered(text string) *callRowOutcome {
+func taskAnswered(text string) *callRowOutcome {
 	return &callRowOutcome{
 		status: agent.SuccessStatus,
 		text:   text,
@@ -138,14 +139,6 @@ func jobAnswered(text string) *callRowOutcome {
 			Lines: int64(strings.Count(text, "\n") + 1),
 			Bytes: int64(len(text)),
 		},
-	}
-}
-
-func startDocs(intent string) callRowCall {
-	return callRowCall{
-		name:      "job",
-		arguments: fmt.Sprintf(`{"action":"start","name":"docs","command":"just docs","intent":%q}`, intent),
-		outcome:   jobAnswered("started docs"),
 	}
 }
 
@@ -177,41 +170,21 @@ func callRowCases() []callRowCase {
 			{"bash", `{"command":"go vet ./...","intent":"Vetting every package"}`, shellFailed("exit(1): vet: a.go:3: unreachable code")},
 			{"bash", `{"command":"sleep 5","intent":"Pausing for the build cache"}`, callStopped("the command stopped because the user pressed escape")},
 		}},
-		{title: "job start", calls: []callRowCall{{"job", `{"action":"start","name":"docs","command":"python3 -m http.server 8080","intent":"Serving the documentation locally"}`, jobAnswered("started docs")}}},
-		{title: "job start with a forwarded port", calls: []callRowCall{{"job", `{"action":"start","name":"docs","port":8080,"command":"just docs","intent":"Serving the docs on the forwarded port"}`, jobAnswered("started docs; forwarded http://127.82.233.168:8080")}}},
-		{title: "job start with a multi-line command", calls: []callRowCall{{"job", `{"action":"start","name":"watch","command":"while true; do\n  just build\n  sleep 5\ndone","intent":"Rebuilding every five seconds"}`, jobAnswered("started watch")}}},
-		{title: "job restart", calls: []callRowCall{{"job", `{"action":"start","name":"docs","intent":"Restarting the documentation server"}`, jobAnswered("restarted docs")}}},
-		{title: "job restart with a port", calls: []callRowCall{{"job", `{"action":"start","name":"docs","port":8080,"intent":"Restarting the docs on its port"}`, jobAnswered("restarted docs")}}},
-		{title: "job start refused", calls: []callRowCall{{"job", `{"action":"start","name":"docs","command":"just docs","intent":"Serving the documentation locally"}`, callRefused("a job of that name is already running")}}},
-		{title: "job start without an intent", calls: []callRowCall{{"job", `{"action":"start","name":"docs","command":"just docs"}`, callRefused("intent is required to start a job")}}},
-		{title: "job start with an invalid name", calls: []callRowCall{{"job", `{"action":"start","name":"way-too-long-a-name","command":"true","intent":"Trying a name that is too long"}`, callRefused("job name must match [a-z0-9-]{1,10}")}}},
-		{title: "job calls naming nobody's job", calls: []callRowCall{
-			{"job", `{"action":"status","name":"docs"}`, jobAnswered("docs is running")},
-			{"job", `{"action":"output","name":"docs"}`, jobAnswered("Serving HTTP on 0.0.0.0 port 8080")},
+		{title: "task calls", calls: []callRowCall{
+			{"task", `{"action":"status","name":"docs"}`, taskAnswered("docs: running")},
+			{"task", `{"action":"output","name":"docs"}`, taskAnswered("docs: running\nServing HTTP on 0.0.0.0 port 8080")},
+			{"task", `{"action":"restart","name":"docs"}`, taskAnswered("docs: queued, run 2")},
+			{"task", `{"action":"stop","name":"docs"}`, taskAnswered("docs: stopped, run 2")},
+			{"task", `{"action":"discard","name":"docs"}`, taskAnswered("docs: stopped, run 2, and discarded")},
 		}},
-		{title: "job calls reminded of their job", calls: []callRowCall{
-			startDocs("Serving the documentation locally"),
-			{"job", `{"action":"status","name":"docs"}`, jobAnswered("docs is running")},
-			{"job", `{"action":"output","name":"docs"}`, jobAnswered("Serving HTTP on 0.0.0.0 port 8080\n127.0.0.1 - GET / 200")},
-			{"job", `{"action":"stop","name":"docs"}`, jobAnswered("stopped docs")},
-			{"job", `{"action":"discard","name":"docs"}`, jobAnswered("discarded docs")},
+		{title: "task calls naming no task", calls: []callRowCall{
+			{"task", `{"action":"list"}`, taskAnswered("docs: running\nbuild: done")},
+			{"task", `{"action":"prune"}`, taskAnswered("pruned build.")},
 		}},
-		{title: "job reminded of its newest start", calls: []callRowCall{
-			startDocs("Serving the documentation locally"),
-			{"job", `{"action":"status","name":"docs"}`, jobAnswered("docs is running")},
-			startDocs("Serving the docs on a new port"),
-			{"job", `{"action":"status","name":"docs"}`, jobAnswered("docs is running")},
-		}},
-		{title: "job calls naming no job", calls: []callRowCall{
-			startDocs("Serving the documentation locally"),
-			{"job", `{"action":"list"}`, jobAnswered("docs running\nbuild finished")},
-			{"job", `{"action":"prune"}`, jobAnswered("pruned build")},
-		}},
-		{title: "job call with an unknown action", calls: []callRowCall{{"job", `{"action":"explode","name":"docs"}`, callRefused("action must be start, status, output, stop, discard, prune, or list")}}},
-		{title: "shell and job calls mixed in one round", calls: []callRowCall{
-			startDocs("Serving the documentation locally"),
+		{title: "task call with an unknown action", calls: []callRowCall{{"task", `{"action":"explode","name":"docs"}`, callRefused("action must be one of: status, output, stop, list, prune, restart, discard")}}},
+		{title: "shell and task calls mixed in one round", calls: []callRowCall{
 			{"bash", `{"command":"curl -s localhost:8080 | head -1","intent":"Checking the docs answer requests"}`, shellSucceeded("<!DOCTYPE html>", 1)},
-			{"job", `{"action":"stop","name":"docs"}`, jobAnswered("stopped docs")},
+			{"task", `{"action":"stop","name":"docs"}`, taskAnswered("docs: stopped")},
 		}},
 	}
 }
@@ -282,7 +255,6 @@ func runningCallRows() []callRowCase {
 		{title: "shell running", calls: []callRowCall{{"bash", `{"command":"just test","intent":"Running the whole test suite"}`, nil}}},
 		{title: "shell running on the host network", calls: []callRowCall{{"bash", `{"command":"curl https://example.com/status","intent":"Checking what the status endpoint reports","network":"host"}`, nil}}},
 		{title: "shell running a long command", calls: []callRowCall{{"bash", `{"command":"go test -run 'TestGolden' -count=1 ./internal/app/harness/ ./internal/app/painter/ ./internal/app/call/","intent":"Regenerating the harness golden files"}`, nil}}},
-		{title: "job starting", calls: []callRowCall{{"job", `{"action":"start","name":"golden","command":"cd repo/oh && just golden 2>&1 | tail -30","intent":"Regenerating every golden in scratch"}`, nil}}},
 	}
 }
 

@@ -385,28 +385,28 @@
 === 40 choosing a command goes on to the arguments it completes ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l
 === 41 completed arguments keep the order their command gives ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new s\e[K\e[4B\r\e[K\e[4A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new so\e[K\e[3B\r\e[K\e[3A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new son\e[K\r\e[8C\e[?25h\e[?2026l
 === 42 tab chooses an argument that follows another ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/j\e[K\e[1B\r\e[38;2;192;128;80m› /job {status|stop} <name> | prune\e[0m\e[38;2;150;152;150m  act on a job\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/jo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job \e[K\e[1B\r\e[38;2;192;128;80m› prune\e[0m\e[K\e[1B\r  status\e[K\e[1B\r  stop\e[K\e[3A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job s\e[K\e[1B\r\e[38;2;192;128;80m› status\e[0m\e[K\e[1B\r  stop\e[K\e[1B\r\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job st\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job sto\e[K\e[1B\r\e[38;2;192;128;80m› stop\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job stop\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job stop \e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› build\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/t\e[K\e[1B\r\e[38;2;192;128;80m› /task {status|stop} <name> | prune\e[0m\e[38;2;150;152;150m  act on a task\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ta\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tas\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task \e[K\e[1B\r\e[38;2;192;128;80m› prune\e[0m\e[K\e[1B\r  status\e[K\e[1B\r  stop\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task s\e[K\e[1B\r\e[38;2;192;128;80m› status\e[0m\e[K\e[1B\r  stop\e[K\e[1B\r\e[K\e[3A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task st\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task sto\e[K\e[1B\r\e[38;2;192;128;80m› stop\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task stop\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task stop \e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› build\e[0m\e[K\r
   docs\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  build\e[K\e[1B\r\e[38;2;192;128;80m› docs\e[0m\e[K\e[2A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job stop docs \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[15C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  build\e[K\e[1B\r\e[38;2;192;128;80m› docs\e[0m\e[K\e[2A\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task stop docs \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[16C\e[?25h\e[?2026l
 === 43 a command taking an attached argument closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -430,40 +430,40 @@
 === 45 a completed argument matching nothing closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new z\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new zz\e[K\r\e[7C\e[?25h\e[?2026l
 === 46 a completed argument typed whole closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new an\e[K\e[3B\r\e[K\e[1B\r\e[K\e[4A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new ant\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anth\e[K\e[3B\r  anthropic/claude-opus-5@high\e[K\e[3A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthr\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthro\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthrop\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropi\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/c\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/cl\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/cla\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/clau\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claud\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-o\e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-opus-5@high\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-op\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opu\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@h\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@hi\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@hig\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@high\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[33C\e[?25h\e[?2026l
 === 47 tab after a chosen completed argument is swallowed ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-sonnet-5@medium \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[38C\e[?25h\e[?2026l
 === 48 choosing an action that takes no name closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/j\e[K\e[1B\r\e[38;2;192;128;80m› /job {status|stop} <name> | prune\e[0m\e[38;2;150;152;150m  act on a job\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/jo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job \e[K\e[1B\r\e[38;2;192;128;80m› prune\e[0m\e[K\e[1B\r  status\e[K\e[1B\r  stop\e[K\e[3A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job p\e[K\e[2B\r\e[K\e[1B\r\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job pr\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job prune \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[11C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/t\e[K\e[1B\r\e[38;2;192;128;80m› /task {status|stop} <name> | prune\e[0m\e[38;2;150;152;150m  act on a task\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ta\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tas\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task \e[K\e[1B\r\e[38;2;192;128;80m› prune\e[0m\e[K\e[1B\r  status\e[K\e[1B\r  stop\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task p\e[K\e[2B\r\e[K\e[1B\r\e[K\e[3A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task pr\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/task prune \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[12C\e[?25h\e[?2026l
 === 49 a long completed list windows around the selection ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/f\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m  fork the session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/for\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork \e[K\e[1B\r\e[38;2;192;128;80m› model-01@high\e[0m\e[K\e[1B\r  model-02@high\e[K\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\r
   model-05@high\e[K\r
   model-06@high\e[K\r
@@ -473,9 +473,9 @@
 === 50 a long completed list stops at its last row ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/f\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m  fork the session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/for\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork \e[K\e[1B\r\e[38;2;192;128;80m› model-01@high\e[0m\e[K\e[1B\r  model-02@high\e[K\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\r
   model-05@high\e[K\r
   model-06@high\e[K\r
@@ -485,17 +485,17 @@
 === 51 escape closes a completed argument's dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[5C\e[?25h\e[?2026l
 === 52 typing a provider keeps its models listed ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
-  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
-  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                     fork the session\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                      start a new session\e[0m\e[K\r
+  /task {status|stop} <name> | prune\e[38;2;150;152;150m  act on a task\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new o\e[K\e[4B\r\e[K\e[4A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new op\e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-opus-5@high\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new ope\e[K\e[1B\r\e[38;2;192;128;80m› opencode-go/minimax-m3\e[0m\e[K\e[1A\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new open\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new openc\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new openco\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new opencod\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new opencode\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new opencode-\e[K\r\e[14C\e[?25h\e[?2026l
 === 53 a session command lists its options ===

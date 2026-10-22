@@ -4,33 +4,33 @@ import (
 	"context"
 	"errors"
 
-	internal "crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
-type Policy = internal.Policy
+type Policy = sandbox.Policy
 
-type Runner = internal.Runner
+type Runner = sandbox.Runner
 
-type Command = internal.Command
+type Command = sandbox.Command
 
-type Output = internal.Output
+type Output = sandbox.Output
 
-type Result = internal.Result
+type Result = sandbox.Result
 
-const TmpDir = internal.TmpDir
+const TmpDir = sandbox.TmpDir
 
 var errUnconfined = errors.New("sandbox.Direct refuses an unconfined policy")
 
 func Init() {
-	internal.Init()
+	sandbox.Init()
 }
 
 func Supported(ctx context.Context) error {
-	return internal.Supported(ctx)
+	return sandbox.Supported(ctx)
 }
 
 func Direct() Runner {
-	return directRunner{inner: internal.Direct()}
+	return directRunner{inner: sandbox.Direct()}
 }
 
 type directRunner struct {

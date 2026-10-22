@@ -97,7 +97,7 @@ func TestAContinuationIndentAlignsWrappedRows(t *testing.T) {
 
 func TestAListingElidesEachItemToOneRow(t *testing.T) {
 	var self State
-	text := "Background jobs:\n" +
+	text := "Background tasks:\n" +
 		"  docs: running for 30s  " + style.Shell("$") + " " + style.Subject("python3") + " -m http.server 8080 --bind localhost\n" +
 		"  build: failed after 2s with exit(1)  " + style.Shell("$") + " " + style.Subject("just") + " build"
 	self.Show(Command, Message{Text: text, Status: agent.InfoStatus, IsListing: true}, time.Now())

@@ -8,12 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"time"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/input"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
@@ -22,10 +20,11 @@ import (
 	"crdx.org/oh/internal/app/segment/modeToggle"
 	"crdx.org/oh/internal/app/sessions"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
+	"crdx.org/oh/pkg/tasks"
 )
 
 const goldenForkSourceName = "able-dolphin"
@@ -91,6 +90,7 @@ type forkGoldenSource struct {
 	events           func(paths forkGoldenPaths) []agent.Event
 	isOutsideSandbox bool
 	refusesPorts     bool
+	isHeadless       bool
 }
 
 type forkGoldenDrawing struct {
@@ -98,20 +98,12 @@ type forkGoldenDrawing struct {
 	told   string
 }
 
-var forkGoldenStartedAt = time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
-
-func forkGoldenJobs(states map[string]jobs.State, names ...string) agent.Event {
-	listing := make([]jobs.Snapshot, 0, len(names))
-	for _, name := range names {
-		listing = append(listing, jobs.Snapshot{
-			Name:      name,
-			Command:   "just " + name,
-			State:     states[name],
-			StartedAt: forkGoldenStartedAt,
-		})
-	}
-
-	return jobrecord.ListingEvent(listing)
+func forkGoldenTasks() agent.Event {
+	return taskrecord.ListingEvent([]tasks.Snapshot{
+		{ID: "task-1", ToolName: "bash", Run: 2, State: tasks.Running, IsRespawning: true, Output: "previous run"},
+		{ID: "task-2", ToolName: "bash", Run: 1, State: tasks.Queued},
+		{ID: "task-3", ToolName: "bash", Run: 1, State: tasks.Done, Output: "build complete"},
+	})
 }
 
 func forkGoldenGrant(t *testing.T, path string, access pathgrant.Access) agent.Event {
@@ -170,7 +162,10 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 			Revoke: func(uint16) error { return nil },
 		}
 	}
-	self.jobs = jobState{manager: jobs.New(nil)}
+	if !source.isHeadless {
+		self.tasks = tasks.New(t.Context())
+		t.Cleanup(self.tasks.Close)
+	}
 	self.forwards = portgrant.NewForwards(forwarder, "127.9.9.9")
 
 	forkSource := storedGoldenForkSource(t, workspaceDir, store.Meta{}, source.events(paths)...)
@@ -178,6 +173,20 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 	self.carryOver(forkSource)
 	self.start(forkSource.GetInitialUserMessage(forkSource.DroppedChatName))
 	self.waitForCurrentTurn()
+	if sourceTasks, wasRecorded := taskrecord.LastRecorded(forkSource.GetEvents()); wasRecorded {
+		carried, isRecorded := taskrecord.LastRecorded(self.recordedEvents)
+		if !isRecorded || len(carried) != len(sourceTasks) {
+			t.Fatalf("fork lost task snapshots: %+v", carried)
+		}
+		for index, snapshot := range carried {
+			if snapshot.State == tasks.Running || snapshot.State == tasks.Queued || snapshot.State == tasks.Stopping || snapshot.IsRespawning {
+				t.Errorf("fork kept a task live: %+v", snapshot)
+			}
+			if snapshot.Output != sourceTasks[index].Output {
+				t.Errorf("fork changed task output: %+v", snapshot)
+			}
+		}
+	}
 
 	drawn := screenOutput.String()
 	var replayOutput bytes.Buffer
@@ -214,11 +223,6 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 }
 
 func TestGoldenAForkCarriesItsSourceOver(t *testing.T) {
-	running := map[string]jobs.State{
-		"docs":  jobs.StateRunning,
-		"watch": jobs.StateRunning,
-		"build": jobs.StateComplete,
-	}
 	sources := map[string]forkGoldenSource{
 		"a source holding nothing to carry": {
 			events: func(forkGoldenPaths) []agent.Event { return nil },
@@ -253,27 +257,39 @@ func TestGoldenAForkCarriesItsSourceOver(t *testing.T) {
 				return []agent.Event{forkGoldenForward(t, portgrant.Route{Port: 8080})}
 			},
 		},
-		"one running job carried over": {
+		"running tasks carried over": {
 			events: func(forkGoldenPaths) []agent.Event {
-				return []agent.Event{forkGoldenJobs(running, "docs")}
+				return []agent.Event{forkGoldenTasks()}
 			},
 		},
-		"several running jobs carried over": {
+		"tasks stopped when the source session closed": {
 			events: func(forkGoldenPaths) []agent.Event {
-				return []agent.Event{forkGoldenJobs(running, "docs", "build", "watch")}
+				stopped := tasks.Snapshot{ID: "task-1", ToolName: "bash", Run: 1, State: tasks.Stopped, Failure: "the task supervisor is closed"}
+				return []agent.Event{
+					taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: stopped, IsFinal: true, IsSilent: true, IsSessionEnded: true}),
+					taskrecord.ListingEvent([]tasks.Snapshot{stopped}),
+				}
 			},
 		},
-		"only finished jobs carried over": {
+		"tasks carried into a headless fork": {
+			isHeadless: true,
 			events: func(forkGoldenPaths) []agent.Event {
-				return []agent.Event{forkGoldenJobs(running, "build")}
+				return []agent.Event{forkGoldenTasks()}
+			},
+		},
+		"only finished tasks carried over": {
+			events: func(forkGoldenPaths) []agent.Event {
+				return []agent.Event{taskrecord.ListingEvent([]tasks.Snapshot{
+					{ID: "task-3", ToolName: "bash", Run: 1, State: tasks.Done, Output: "build complete"},
+				})}
 			},
 		},
 		"everything carried over at once": {
 			events: func(paths forkGoldenPaths) []agent.Event {
 				return []agent.Event{
 					forkGoldenGrant(t, paths.reference, pathgrant.ReadAccess),
-					forkGoldenForward(t, portgrant.Route{Port: 3000}, portgrant.Route{Port: 8080, JobName: "docs"}),
-					forkGoldenJobs(running, "docs", "build"),
+					forkGoldenForward(t, portgrant.Route{Port: 3000}, portgrant.Route{Port: 8080, TaskName: "task-1"}),
+					forkGoldenTasks(),
 				}
 			},
 		},
@@ -282,8 +298,8 @@ func TestGoldenAForkCarriesItsSourceOver(t *testing.T) {
 			events: func(paths forkGoldenPaths) []agent.Event {
 				return []agent.Event{
 					forkGoldenGrant(t, paths.reference, pathgrant.ReadAccess),
-					forkGoldenForward(t, portgrant.Route{Port: 8080, JobName: "docs"}),
-					forkGoldenJobs(running, "docs"),
+					forkGoldenForward(t, portgrant.Route{Port: 8080, TaskName: "task-1"}),
+					forkGoldenTasks(),
 				}
 			},
 		},

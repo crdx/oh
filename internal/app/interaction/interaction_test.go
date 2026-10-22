@@ -12,7 +12,6 @@ import (
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/turn"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -299,23 +298,6 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 			}
 		})
 	})
-	t.Run("job ended", func(t *testing.T) {
-		keys := make(chan key.Key)
-		conclusions := make(chan jobs.Conclusion, 1)
-		conclusions <- jobs.Conclusion{Output: "done"}
-		var got string
-		wasDrawn := false
-		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
-			GetTurnEvents: neverEnds,
-			Conclusions:   conclusions,
-			OnJobEnded:    func(conclusion jobs.Conclusion) { got = conclusion.Output },
-			OnKey:         func(key.Key) bool { return false },
-			OnDraw:        func() { wasDrawn = true; close(keys) },
-		})
-		if got != "done" || !wasDrawn {
-			t.Errorf("output=%q drawn=%t", got, wasDrawn)
-		}
-	})
 	t.Run("host to sandbox change", func(t *testing.T) {
 		keys := make(chan key.Key)
 		changes := make(chan agent.Event, 1)
@@ -351,13 +333,11 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 	t.Run("closed sources are forgotten", func(t *testing.T) {
 		keys := make(chan key.Key, 1)
 		changes := make(chan error)
-		conclusions := make(chan jobs.Conclusion)
 		subagentEvents := make(chan agent.Event)
 		forwardChanges := make(chan agent.Event)
 		questionChanges := make(chan struct{})
 		triggerChanges := make(chan struct{})
 		close(changes)
-		close(conclusions)
 		close(subagentEvents)
 		close(forwardChanges)
 		close(questionChanges)
@@ -366,13 +346,12 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 		wasDrawn := false
 		run(keys, make(chan os.Signal), make(chan time.Time), func() {
 			schedules++
-			if schedules == 7 {
+			if schedules == 6 {
 				keys <- key.Key{Code: key.Escape}
 			}
 		}, nil, Handler{
 			GetTurnEvents:   neverEnds,
 			Changes:         changes,
-			Conclusions:     conclusions,
 			SubagentEvents:  subagentEvents,
 			ForwardChanges:  forwardChanges,
 			QuestionChanges: questionChanges,
@@ -380,7 +359,7 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 			OnKey:           func(key.Key) bool { return false },
 			OnDraw:          func() { wasDrawn = true },
 		})
-		if schedules != 7 || wasDrawn {
+		if schedules != 6 || wasDrawn {
 			t.Errorf("scheduled %d times, drawn=%t; want each closed source read once and nothing drawn", schedules, wasDrawn)
 		}
 	})

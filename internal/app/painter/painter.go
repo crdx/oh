@@ -22,7 +22,6 @@ import (
 	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/output"
@@ -32,6 +31,7 @@ import (
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
@@ -156,7 +156,7 @@ func (self *Picasso) DrawDelta(delta agent.Delta) {
 func (self *Picasso) DrawEvent(event agent.Event) {
 	self.drawnEvents++
 	IntroduceSubagent(self.introductions, event)
-	if isChildEvent(event) {
+	if isChildEvent(event) || isRecordOnlyTaskFact(event) {
 		return
 	}
 
@@ -240,10 +240,10 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 	case agent.CacheRebuildEvent:
 		self.screen.Line(style.Change(agent.CacheRebuildNotice(event, self.tariff.cacheRebuildCost(event))))
 
-	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended, subagentrecord.ReportsDelivered:
+	case portgrant.ForwardChange, hostcommand.Ran, taskrecord.RunEnded, subagentrecord.ReportsDelivered:
 		self.drawNotices(event, self.drawSubmittedPanel)
 
-	case caps.ModeChange, caps.JobStop, subagentrecord.AccessWithdrawnStop, jobrecord.EndedWithSession,
+	case caps.ModeChange, caps.TaskStop, subagentrecord.AccessWithdrawnStop, taskrecord.EndedWithSession,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
 		self.drawNotices(event, self.drawSubmitted)
 
@@ -483,6 +483,10 @@ func (self *Picasso) IsProseArriving() bool {
 	return self.answer.Len() > 0 || self.reasoning.Len() > 0
 }
 
+func (self *Picasso) CountUndrawnEvent() {
+	self.drawnEvents++
+}
+
 func (self *Picasso) LiveEventCount() int {
 	if self.toolBlock == nil {
 		return 0
@@ -520,7 +524,7 @@ func (self *Picasso) Redraw(liveEvents []agent.Event) {
 
 func isDrawnBesideAnOpenBlock(event agent.Event) bool {
 	switch event.Kind { //nolint:exhaustive // Only these notices arrive while a call is in flight.
-	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended, subagentrecord.ReportsDelivered:
+	case portgrant.ForwardChange, hostcommand.Ran, taskrecord.RunEnded, subagentrecord.ReportsDelivered:
 		return true
 	default:
 		return false
@@ -598,6 +602,10 @@ func (self *Picasso) settleBeforeEvent(kind agent.Kind) {
 	self.answer.Reset()
 }
 
+func isRecordOnlyTaskFact(event agent.Event) bool {
+	return event.Kind == taskrecord.Finished || event.Kind == taskrecord.Listing
+}
+
 func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
 	return event.Kind == agent.CacheRebuildEvent &&
 		(!self.cacheMissNotices.IsEnabled(experimental.CacheMissNotices) ||
@@ -617,14 +625,14 @@ func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage))
 
 func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
-	case caps.ModeChange, caps.JobStop, subagentrecord.AccessWithdrawnStop, portgrant.ForwardChange,
-		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
+	case caps.ModeChange, caps.TaskStop, subagentrecord.AccessWithdrawnStop, portgrant.ForwardChange,
+		taskrecord.RunEnded, taskrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
 		pathgrant.Change, turn.HarnessPoke,
 		hostcommand.Ran, subagentrecord.ReportsDelivered:
 		return true
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,
 		agent.CacheRebuildEvent, agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,
-		agent.ToolCallResultEvent, agent.StateChangeEvent, agent.InterruptionEvent,
+		agent.ToolCallResultEvent, agent.StateChangeEvent, taskrecord.Listing, taskrecord.Finished, agent.InterruptionEvent,
 		agent.RetryingEvent, agent.FailureEvent:
 		return false
 	}

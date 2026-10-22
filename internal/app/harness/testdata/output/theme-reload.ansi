@@ -6,7 +6,7 @@
 \e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgit status --short\e[0m\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgo build ./...\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit(1)\e[0m\r
-\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
 \e[38;2;201;166;212mload\e[0m \e[38;2;150;152;150mskills/\e[0m\e[38;2;201;166;212mtidy\e[0m\e[38;2;150;152;150m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;207;173;0mWhy it stutters\e[0m\e[0m\r
@@ -43,7 +43,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;129;162;190mthe notes\e[0m\e]8;;\
 \e[3m\e[38;2;110;113;117mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;61;109;154m$\e[0m \e[38;2;166;93;46mgit status --short\e[0m\r
 \e[38;2;61;109;154m$\e[0m \e[38;2;166;93;46mgo build ./...\e[0m \e[38;2;184;60;60m✗\e[0m \e[38;2;184;60;60mexit(1)\e[0m\r
-\e[38;2;143;106;0mstart\e[0m \e[38;2;166;93;46mdocs\e[0m\r
+\e[38;2;143;106;0mrestart\e[0m \e[38;2;166;93;46mdocs\e[0m\r
 \e[38;2;138;79;163mload\e[0m \e[38;2;110;113;117mskills/\e[0m\e[38;2;138;79;163mtidy\e[0m\e[38;2;110;113;117m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;143;106;0mWhy it stutters\e[0m\e[0m\r
@@ -80,7 +80,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;61;109;154mthe notes\e[0m\e]8;;\e
 \e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgit status --short\e[0m\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgo build ./...\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit(1)\e[0m\r
-\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
 \e[38;2;201;166;212mload\e[0m \e[38;2;150;152;150mskills/\e[0m\e[38;2;201;166;212mtidy\e[0m\e[38;2;150;152;150m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;207;173;0mWhy it stutters\e[0m\e[0m\r
@@ -117,7 +117,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;129;162;190mthe notes\e[0m\e]8;;\
 \e[3m\e[38;2;207;207;207mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;188;220;255m$\e[0m \e[38;2;255;196;154mgit status --short\e[0m\r
 \e[38;2;188;220;255m$\e[0m \e[38;2;255;196;154mgo build ./...\e[0m \e[38;2;255;184;184m✗\e[0m \e[38;2;255;184;184mexit(1)\e[0m\r
-\e[38;2;255;226;122mstart\e[0m \e[38;2;255;196;154mdocs\e[0m\r
+\e[38;2;255;226;122mrestart\e[0m \e[38;2;255;196;154mdocs\e[0m\r
 \e[38;2;242;208;255mload\e[0m \e[38;2;207;207;207mskills/\e[0m\e[38;2;242;208;255mtidy\e[0m\e[38;2;207;207;207m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;255;226;122mWhy it stutters\e[0m\e[0m\r
@@ -154,7 +154,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;188;220;255mthe notes\e[0m\e]8;;\
 \e[3m\e[38;2;56;59;62mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;28;61;99m$\e[0m \e[38;2;106;50;16mgit status --short\e[0m\r
 \e[38;2;28;61;99m$\e[0m \e[38;2;106;50;16mgo build ./...\e[0m \e[38;2;118;22;22m✗\e[0m \e[38;2;118;22;22mexit(1)\e[0m\r
-\e[38;2;86;63;0mstart\e[0m \e[38;2;106;50;16mdocs\e[0m\r
+\e[38;2;86;63;0mrestart\e[0m \e[38;2;106;50;16mdocs\e[0m\r
 \e[38;2;86;38;112mload\e[0m \e[38;2;56;59;62mskills/\e[0m\e[38;2;86;38;112mtidy\e[0m\e[38;2;56;59;62m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;86;63;0mWhy it stutters\e[0m\e[0m\r
@@ -191,7 +191,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;28;61;99mthe notes\e[0m\e]8;;\e\\
 \e[3m\e[38;2;56;59;62mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;28;61;99m$\e[0m \e[38;2;4;5;6mgit status --short\e[0m\r
 \e[38;2;28;61;99m$\e[0m \e[38;2;4;5;6mgo build ./...\e[0m \e[38;2;118;22;22m✗\e[0m \e[38;2;118;22;22mexit(1)\e[0m\r
-\e[38;2;86;63;0mstart\e[0m \e[38;2;4;5;6mdocs\e[0m\r
+\e[38;2;86;63;0mrestart\e[0m \e[38;2;4;5;6mdocs\e[0m\r
 \e[38;2;86;38;112mload\e[0m \e[38;2;56;59;62mskills/\e[0m\e[38;2;86;38;112mtidy\e[0m\e[38;2;56;59;62m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;86;63;0mWhy it stutters\e[0m\e[0m\r
@@ -228,7 +228,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;28;61;99mthe notes\e[0m\e]8;;\e\\
 \e[3m\e[38;2;110;113;117mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;61;109;154m$\e[0m \e[38;2;4;5;6mgit status --short\e[0m\r
 \e[38;2;61;109;154m$\e[0m \e[38;2;4;5;6mgo build ./...\e[0m \e[38;2;184;60;60m✗\e[0m \e[38;2;184;60;60mexit(1)\e[0m\r
-\e[38;2;143;106;0mstart\e[0m \e[38;2;4;5;6mdocs\e[0m\r
+\e[38;2;143;106;0mrestart\e[0m \e[38;2;4;5;6mdocs\e[0m\r
 \e[38;2;138;79;163mload\e[0m \e[38;2;110;113;117mskills/\e[0m\e[38;2;138;79;163mtidy\e[0m\e[38;2;110;113;117m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;143;106;0mWhy it stutters\e[0m\e[0m\r
@@ -265,7 +265,7 @@ See \e]8;;https://example.com/paint\e\\\e[38;2;61;109;154mthe notes\e[0m\e]8;;\e
 \e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgit status --short\e[0m\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgo build ./...\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit(1)\e[0m\r
-\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
 \e[38;2;201;166;212mload\e[0m \e[38;2;150;152;150mskills/\e[0m\e[38;2;201;166;212mtidy\e[0m\e[38;2;150;152;150m/SKILL.md\e[0m\r
 \r
 \e[1m\e[38;2;207;173;0mWhy it stutters\e[0m\e[0m\r
@@ -412,9 +412,9 @@ model answer\r
 \e[48;2;52;53;65m show themed actions                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[38;2;10;11;12mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;10;11;12mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
 \e[38;2;13;14;15mscuttle\e[0m \e[38;2;192;128;80mdocs\e[0m\r
-cat \e[38;2;192;128;80mdocs\e[0m\r
+read output for \e[38;2;192;128;80mdocs\e[0m\r
 \e[38;2;207;173;0mforward\e[0m \e[38;2;192;128;80m8080\e[0m\r
 \e[38;2;207;173;0mclose-gangway\e[0m \e[38;2;192;128;80m8080\e[0m\r
 \r

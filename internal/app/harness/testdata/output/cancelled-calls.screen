@@ -1,12 +1,12 @@
 === narrow ===
 
- read both of those files, then wait
- for check
+ read both of those files, then check
+ on the check task
 
 
 read one.txt 1L
 read two.txt – the call stopped because…
-job wait check Ha… – the job request st…
+check check – the task request stopped …
 
 Turn stopped.
 
@@ -65,19 +65,25 @@ e
 
 n
 
-w
+c
 
-a
+h
 
-i
+e
 
-t
+c
 
-f
+k
 
 o
 
-r
+n
+
+t
+
+h
+
+e
 
 c
 
@@ -86,6 +92,14 @@ h
 e
 
 c
+
+k
+
+t
+
+a
+
+s
 
 k
 
@@ -142,12 +156,12 @@ e
 d
 === printed ===
 
- read both of those files, then wait for check
+ read both of those files, then check on the check task
 
 
 read one.txt 1L
 read two.txt – the call stopped because the user pressed escape
-job wait check Handling this job for the test – the job request stopped because the user pressed es…
+check check – the task request stopped because the user pressed escape
 
 Turn stopped.
 
@@ -158,13 +172,14 @@ Turn stopped.
  read both
  of those
  files,
- then wait
- for check
+ then check
+ on the
+ check task
 
 
 read one… 1L
 read – the …
-job – the …
+che… – the …
 
 Turn
 stopped.
@@ -175,12 +190,12 @@ stopped.
  needed
 === wide ===
 
- read both of those files, then wait for check
+ read both of those files, then check on the check task
 
 
 read one.txt 1L
 read two.txt – the call stopped because the user pressed escape
-job wait check Handling this job for the test – the job request stopped because the user pressed es…
+check check – the task request stopped because the user pressed escape
 
 Turn stopped.
 

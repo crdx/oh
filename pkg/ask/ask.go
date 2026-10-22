@@ -149,8 +149,8 @@ func (self *Broker) ask(
 	self.mutex.Unlock()
 	self.changed()
 
-	askedAt := time.Now()
-	defer func() { waiting.Record(ctx, time.Since(askedAt)) }()
+	finishWaiting := waiting.Begin(ctx)
+	defer finishWaiting()
 	defer request.finishRequest()
 
 	select {

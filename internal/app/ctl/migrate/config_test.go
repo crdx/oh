@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/BurntSushi/toml"
 
@@ -589,7 +590,7 @@ left = [{ segment = "jobs" }]
 	for _, expected := range []string{
 		currentVersionLine(),
 		`streaming = "paced" # how an answer is laid out`,
-		`left = [{ segment = "jobs" }]`,
+		`left = [{ segment = "tasks" }]`,
 	} {
 		if !strings.Contains(written, expected) {
 			t.Errorf("migration omitted %q from:\n%s", expected, written)
@@ -688,7 +689,7 @@ stream = "asap"
 	if err != nil {
 		t.Fatal(err)
 	}
-	if written := string(body); !strings.Contains(written, "[snippets.stream]") {
+	if written := string(body); !strings.Contains(written, "[snippet.stream]") {
 		t.Errorf("migration disturbed another table in:\n%s", written)
 	}
 }
@@ -774,9 +775,9 @@ round_robin = ["codex/gpt@high"]
 	resolved := loaded.Ui.Theme.Tool.Resolved()
 	for kind, want := range map[string]struct{ name, paint string }{
 		"skill":             {name: "consult-chart", paint: "#e6a8ff bold"},
-		"job":               {name: "tasks", paint: "status_warning"},
+		"job":               {name: "tasks", paint: ""},
 		"job_start":         {name: "launch", paint: "status_info"},
-		"job_wait_any":      {name: "hold", paint: "status_warning"},
+		"job_wait_any":      {name: "hold", paint: ""},
 		"bash_host_network": {name: "$", paint: "status_danger"},
 		"forward":           {name: "share", paint: "status_warning"},
 		"forward_add":       {name: "open-gangway", paint: "status_warning"},
@@ -827,7 +828,7 @@ job_start = { name = "kept" }
 		currentVersionLine(),
 		`{ segment = 'forwards' }`,
 		`{ segment = 'grants' }`,
-		"[tools.expose]\ncommand = \"expose-thing\"",
+		"[tool.expose]\ncommand = \"expose-thing\"",
 		"[other]\nexpose_add = { name = \"kept\" }\njob_start = { name = \"kept\" }",
 	} {
 		if !strings.Contains(written, expected) {
@@ -1050,7 +1051,7 @@ currency = "gbp"
 
 	want := currentVersionLine() + `
 
-[defaults]
+[default]
 effort = "medium"
 fast = true
 
@@ -1071,7 +1072,7 @@ currency = "gbp"
 func TestTheThirteenthConfigMigrationMovesARotationFile(t *testing.T) {
 	written := migratedConfig(t, "version = 13\n\n[model]\nround_robin = \"config.models\"\neffort = \"low\"\n")
 
-	want := currentVersionLine() + "\n\n[defaults]\neffort = \"low\"\n\n[agent]\nround_robin = \"config.models\"\n"
+	want := currentVersionLine() + "\n\n[default]\neffort = \"low\"\n\n[agent]\nround_robin = \"config.models\"\n"
 	if written != want {
 		t.Errorf("got:\n%s\nwant:\n%s", written, want)
 	}
@@ -1156,7 +1157,7 @@ hostname = ""
 	want := currentVersionLine() + `
 
 # who may do what
-[defaults]
+[default]
 caps = "rxw"
 effort = "medium" # most of the time
 fast = true
@@ -1191,13 +1192,13 @@ fast = true
 
 	want := currentVersionLine() + `
 ui.currency = "gbp"
-defaults.caps = "rx"
-defaults.effort = "low"
-defaults.fast = true
-defaults.tool_output = """
+default.caps = "rx"
+default.effort = "low"
+default.fast = true
+default.tool_output = """
 16K"""
 
-[snippets]
+[snippet]
 review = """
 [model]
 effort = "not a setting"
@@ -1212,7 +1213,9 @@ func TestTheThirteenthConfigMigrationLeavesSettingsThatSaySomethingAlone(t *test
 	original := "version = 13\n\n[ui]\ncurrency = \"gbp\"\n\n[ports]\nhostname = \"{session}.agent\"\n\n[editor]\ncommand = [\"subl\", \"--wait\"]\n"
 	written := migratedConfig(t, original)
 
-	if want := strings.Replace(original, "version = 13", currentVersionLine(), 1); written != want {
+	want := strings.Replace(original, "version = 13", currentVersionLine(), 1)
+	want = strings.Replace(want, "[ports]\nhostname", "[experimental]\nforward_hostname", 1)
+	if written != want {
 		t.Errorf("got:\n%s\nwant:\n%s", written, want)
 	}
 }
@@ -1245,5 +1248,488 @@ func TestAMigratedConfigLoadsItsDefaultsWithNothingUnknown(t *testing.T) {
 	}
 	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
 		t.Errorf("the migrated config has unknown settings: %v", unknown)
+	}
+}
+
+func TestTheFifteenthConfigFormatRenamesCustomToolsWithoutTouchingComments(t *testing.T) {
+	original := `version = 14
+# [tools.comment]
+[tools.offload]
+description = "the tools table remains in this description"
+command = ["true"]
+enabled = true
+
+[tools.commit]
+description = "commit"
+command = ["true"]
+`
+	path := configFile(t, original)
+	from, isPresent, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !isPresent || from != config.DefaultsFormat {
+		t.Errorf("got present %t from format %d", isPresent, from)
+	}
+
+	migrated, err := os.ReadFile(path) //nolint:gosec // the test's own file
+	if err != nil {
+		t.Fatal(err)
+	}
+	written := string(migrated)
+	for _, preserved := range []string{
+		currentVersionLine(),
+		"# [tools.comment]",
+		"[tool.offload]",
+		"[tool.commit]",
+		`description = "the tools table remains in this description"`,
+	} {
+		if !strings.Contains(written, preserved) {
+			t.Errorf("migration did not preserve %q in:\n%s", preserved, written)
+		}
+	}
+	if _, err := config.Load(path); err != nil {
+		t.Errorf("migrated config could not load: %v", err)
+	}
+}
+
+func TestTheToolTableMigrationRenamesParameterArrays(t *testing.T) {
+	original := `version = 14
+[tools.weather]
+description = "weather"
+command = ["./forecast"]
+
+[[tools.weather.parameters]]
+name = "city"
+kind = "string"
+description = "the city"
+`
+	path := configFile(t, original)
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+	migrated, err := os.ReadFile(path) //nolint:gosec // the test's own file
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(migrated), "[[tool.weather.parameters]]") {
+		t.Errorf("the parameter array was not renamed:\n%s", migrated)
+	}
+	if _, err := config.Load(path); err != nil {
+		t.Errorf("migrated config could not load: %v", err)
+	}
+}
+
+func TestTheSingularTableMigrationRenamesTheJobsSegment(t *testing.T) {
+	for name, original := range map[string]string{
+		"from fifteen":  "version = 15\n[bar.top]\nleft = [{ segment = \"jobs\" }, { segment = 'jobs' }]\n",
+		"from fourteen": "version = 14\n[tools.weather]\ndescription = \"weather\"\ncommand = [\"./forecast\"]\n\n[bar.top]\nleft = [{ segment = \"jobs\" }]\n",
+	} {
+		t.Run(name, func(t *testing.T) {
+			path := configFile(t, original)
+			if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+				t.Fatal(err)
+			}
+			migrated, err := os.ReadFile(path) //nolint:gosec // the test's own file
+			if err != nil {
+				t.Fatal(err)
+			}
+			if strings.Contains(string(migrated), "jobs") || !strings.Contains(string(migrated), `segment = "tasks"`) {
+				t.Errorf("the jobs segment was not renamed:\n%s", migrated)
+			}
+			if _, err := config.Load(path); err != nil {
+				t.Errorf("migrated config could not load: %v", err)
+			}
+		})
+	}
+}
+
+func TestTheToolTableMigrationRefusesConflictingTables(t *testing.T) {
+	path := configFile(t, "version = 14\n[tools.foo]\ndescription = \"foo\"\n[tool.bar]\ndescription = \"bar\"\n")
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err == nil || !strings.Contains(err.Error(), "both tool and tools") {
+		t.Errorf("got migration failure %v", err)
+	}
+}
+
+func TestMigratingACustomToolThatNowNamesABuiltinRefusesWithoutWriting(t *testing.T) {
+	original := "version = 14\n[tools.wait]\ndescription = \"my own wait\"\ncommand = [\"true\"]\n"
+	path := configFile(t, original)
+	_, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+	if err == nil || !strings.Contains(err.Error(), `custom tool "wait" now names a built-in`) {
+		t.Errorf("got migration result %v", err)
+	}
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own file
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(body) != original {
+		t.Errorf("migration changed the refusing config: %q", body)
+	}
+}
+
+func TestToolTableMigrationPreservesQuotedInlineAndMultilineForms(t *testing.T) {
+	for _, test := range []struct {
+		name, original, retained string
+	}{
+		{
+			name: "quoted root and key",
+			original: `version = 14
+["tools".weather]
+description = "weather"
+command = ["true"]
+"enabled" = true
+`,
+			retained: `["tool".weather]`,
+		},
+		{
+			name: "inline root table",
+			original: `version = 14
+tools = { weather = { description = "weather", command = ["true"], enabled = true } }
+`,
+			retained: `tool = { weather = { description = "weather", command = ["true"], granted = true } }`,
+		},
+		{
+			name: "inline tool in root table",
+			original: `version = 14
+[tools]
+weather = { description = "weather", command = ["true"], enabled = true }
+`,
+			retained: `weather = { description = "weather", command = ["true"], granted = true }`,
+		},
+		{
+			name: "multiline body containing old headers and keys",
+			original: `version = 14
+[tools.weather]
+description = """
+weather
+[tools.example]
+enabled = true
+"""
+command = ["true"]
+enabled = true
+`,
+			retained: "[tools.example]\nenabled = true\n\"\"\"",
+		},
+		{
+			name: "dotted root key",
+			original: `version = 14
+tools.weather.description = "weather"
+tools.weather.command = ["true"]
+tools.weather.enabled = true
+`,
+			retained: "tool.weather.granted = true",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			path := configFile(t, test.original)
+			if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+				t.Fatal(err)
+			}
+			data, err := os.ReadFile(path) //nolint:gosec // the test's own file
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !strings.Contains(string(data), test.retained) {
+				t.Errorf("migrated config did not preserve %q:\n%s", test.retained, data)
+			}
+			if _, err := config.Load(path); err != nil {
+				t.Errorf("migrated config cannot load: %v", err)
+			}
+		})
+	}
+}
+
+func TestTheSixteenthConfigFormatSingularisesTablesAndMovesSettings(t *testing.T) {
+	path := configFile(t, `version = 15
+
+[permissions]
+# network = "allow"
+lookup = "ask"
+
+[defaults]
+caps = "rxs"
+
+[experimental]
+shared_history = true
+
+[snippets]
+gold = { prompt = "golden?", description = "check goldens" }
+review = """
+[sandbox]
+read = []
+"""
+
+[debug]
+wire = true
+
+# the hostname forwards announce
+[ports]
+hostname = "{session}.agent" # per session
+
+[provider.ollama]
+host = "http://127.0.0.1:11434"
+
+[skills]
+include = ["~/agents"]
+
+[sandbox]
+read = [
+    "~/reference",
+]
+home = ["~/.gitconfig"]
+`)
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := currentVersionLine() + `
+
+[tool.lookup]
+# network = "allow"
+permission = "ask"
+
+[default]
+caps = "rxs"
+
+[experimental]
+shared_history = true
+# the hostname forwards announce
+forward_hostname = "{session}.agent" # per session
+
+[snippet]
+gold = { prompt = "golden?", description = "check goldens" }
+review = """
+[sandbox]
+read = []
+"""
+
+[debug]
+wire = true
+
+[provider.ollama]
+host = "http://127.0.0.1:11434"
+
+[skill]
+include = ["~/agents"]
+
+[grants]
+read = [
+    "~/reference",
+]
+home = ["~/.gitconfig"]
+`
+	if written := string(body); written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := loaded.GetHostname("tame-impala", "127.0.0.1"); got != "tame-impala.agent" {
+		t.Errorf("got hostname %q", got)
+	}
+	if got := loaded.Defaults.Caps; got != "rxs" {
+		t.Errorf("got caps %q", got)
+	}
+	if got := loaded.Snippets["gold"].Prompt; got != "golden?" {
+		t.Errorf("got snippet %q", got)
+	}
+	if got := loaded.Skills.Include; len(got) != 1 {
+		t.Errorf("got skills %q", got)
+	}
+	permissions, err := loaded.BuildPermissions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Lookup.IsAllowed() {
+		t.Error("the lookup permission was lost")
+	}
+	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
+		t.Errorf("the migrated config has unknown settings: %v", unknown)
+	}
+}
+
+func TestTheSixteenthConfigFormatSpreadsPermissionsAcrossTheirTools(t *testing.T) {
+	path := configFile(t, `version = 15
+
+[permissions] # what a granted capability buys
+network = { rule = "ask", timeout = "2m" }
+# fetching asks first
+fetch = "ask"
+lookup = "allow"
+
+[tool.weather]
+description = "weather"
+command = ["true"]
+`)
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := currentVersionLine() + `
+
+# what a granted capability buys
+
+[tool.bash]
+host_network = { rule = "ask", timeout = "2m" }
+
+[tool.fetch]
+# fetching asks first
+permission = "ask"
+
+[tool.lookup]
+permission = "allow"
+
+[tool.weather]
+description = "weather"
+command = ["true"]
+`
+	if written := string(body); written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	permissions, err := loaded.BuildPermissions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Network.Timeout != 2*time.Minute || permissions.Fetch.IsAllowed() || !permissions.Lookup.IsAllowed() {
+		t.Errorf("got permissions %+v", permissions)
+	}
+	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
+		t.Errorf("the migrated config has unknown settings: %v", unknown)
+	}
+}
+
+func TestTheSixteenthConfigFormatSingularisesDottedAndQuotedTables(t *testing.T) {
+	written := migratedConfig(t, `version = 15
+defaults.caps = "rx"
+"sandbox".read = ["/etc"]
+'permissions' . lookup = "ask"
+ports.hostname = "{session}.agent"
+
+[ "snippets" . review ]
+prompt = "review it"
+`)
+
+	want := currentVersionLine() + `
+default.caps = "rx"
+"grants".read = ["/etc"]
+tool.lookup.permission = "ask"
+experimental.forward_hostname = "{session}.agent"
+
+[ "snippet" . review ]
+prompt = "review it"
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheSixteenthConfigFormatKeepsTheFormOfEachLine(t *testing.T) {
+	for _, test := range []struct {
+		name, original, want string
+	}{
+		{
+			name:     "final line without a newline",
+			original: "version = 15\n\n[experimental]\nshared_history = true\n\n[ports]\nhostname = \"{session}\"",
+			want:     "\n\n[experimental]\nshared_history = true\nforward_hostname = \"{session}\"\n",
+		},
+		{
+			name:     "a comment beside the header",
+			original: "version = 15\n[experimental]\nshared_history = true\n[ports] # forwarding names\nhostname = \"{session}\"\n",
+			want:     "\n[experimental]\nshared_history = true\n# forwarding names\nforward_hostname = \"{session}\"\n",
+		},
+		{
+			name:     "a header renamed in place",
+			original: "version = 15\n[ports] # forwarding names\nhostname = \"{session}\"\n",
+			want:     "\n[experimental] # forwarding names\nforward_hostname = \"{session}\"\n",
+		},
+		{
+			name:     "windows line endings",
+			original: "version = 15\r\n[experimental]\r\nshared_history = true\r\n[ports]\r\nhostname = \"{session}\"",
+			want:     "\r\n[experimental]\r\nshared_history = true\r\nforward_hostname = \"{session}\"\r\n",
+		},
+		{
+			name:     "a stray key beside the hostname",
+			original: "version = 15\n[experimental]\nwait_tool = true\n[ports]\nhostname = \"{session}\"\nshared_history = true\n",
+			want:     "\n[experimental]\nwait_tool = true\nforward_hostname = \"{session}\"\n[ports]\nshared_history = true\n",
+		},
+		{
+			name:     "a stray key alone",
+			original: "version = 15\n[ports]\nshared_history = true\n",
+			want:     "\n[ports]\nshared_history = true\n",
+		},
+		{
+			name:     "a literal string ending in a backslash",
+			original: "version = 15\n[snippets]\npath = '''C:\\'''\n[sandbox]\nread = []\n",
+			want:     "\n[snippet]\npath = '''C:\\'''\n[grants]\nread = []\n",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if written, want := migratedConfig(t, test.original), currentVersionLine()+test.want; written != want {
+				t.Errorf("got:\n%q\nwant:\n%q", written, want)
+			}
+		})
+	}
+}
+
+func TestTheSixteenthConfigFormatRefusesWhatItCannotSingularise(t *testing.T) {
+	for _, test := range []struct {
+		name, original, refusal string
+	}{
+		{
+			name:     "both names of a table",
+			original: "version = 15\n[snippets]\na = \"a\"\n[snippet]\nb = \"b\"\n",
+			refusal:  "both snippets and snippet are defined",
+		},
+		{
+			name:     "both hostnames",
+			original: "version = 15\n[ports]\nhostname = \"{session}\"\n[experimental]\nforward_hostname = \"{session}.agent\"\n",
+			refusal:  "both ports.hostname and experimental.forward_hostname are defined",
+		},
+		{
+			name:     "experimental written as dotted keys",
+			original: "version = 15\nexperimental.shared_history = true\n[ports]\nhostname = \"{session}\"\n",
+			refusal:  "by hand, move ports.hostname to experimental.forward_hostname",
+		},
+		{
+			name:     "a dotted hostname beside an experimental table",
+			original: "version = 15\nports.hostname = \"{session}.agent\"\n\n[experimental]\nshared_history = true\n",
+			refusal:  "by hand, move ports.hostname to experimental.forward_hostname",
+		},
+		{
+			name:     "an inline tool table",
+			original: "version = 15\ntool = { weather = { description = \"weather\", command = [\"true\"] } }\n[permissions]\nlookup = \"ask\"\n",
+			refusal:  "by hand, move permissions.lookup to tool.lookup.permission",
+		},
+		{
+			name:     "only what applies",
+			original: "version = 15\nports = { hostname = \"{session}\" }\n[experimental]\nshared_history = true\n",
+			refusal:  "the config could not be changed safely; by hand, move ports.hostname to experimental.forward_hostname",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			path := configFile(t, test.original)
+			_, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+			if err == nil || !strings.Contains(err.Error(), test.refusal) {
+				t.Fatalf("got %v, want a refusal containing %q", err, test.refusal)
+			}
+			if body, _ := os.ReadFile(path); string(body) != test.original { //nolint:gosec // the test's own path
+				t.Errorf("a refused migration rewrote the config:\n%s", body)
+			}
+		})
 	}
 }

@@ -1,11 +1,16 @@
 package config
 
 import (
+	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
+
+	"crdx.org/oh/internal/app/permission"
+	"crdx.org/oh/pkg/tool"
 
 	"crdx.org/oh/pkg/tool/command"
 )
@@ -40,7 +45,7 @@ func configWithACustomTool(t *testing.T, body string) (Config, string) {
 
 func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		version = 3
 		concurrency = 4
 		description = "report the weather for a city"
@@ -74,7 +79,7 @@ func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 
 func TestACustomToolConcurrencyMustBePositive(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather"
 		command = ["./forecast"]
 		concurrency = -1
@@ -87,7 +92,7 @@ func TestACustomToolConcurrencyMustBePositive(t *testing.T) {
 
 func TestACustomCommandIsResolvedAgainstTheConfigThatSuppliedIt(t *testing.T) {
 	config, directory := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather for a city"
 		command = ["./forecast", "--quietly"]
 	`)
@@ -105,7 +110,7 @@ func TestACustomCommandIsResolvedAgainstTheConfigThatSuppliedIt(t *testing.T) {
 
 func TestACustomCommandResolvesEveryPathItWritesAgainstTheConfig(t *testing.T) {
 	config, directory := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather for a city"
 		command = ["deno", "run", "--allow-sys", "./forecast", "--store", "./state.json"]
 	`)
@@ -128,7 +133,7 @@ func TestACustomCommandResolvesEveryPathItWritesAgainstTheConfig(t *testing.T) {
 
 func TestACustomCommandLeavesAlonePlainWordsAndAbsolutePaths(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather for a city"
 		command = ["deno", "run", "--allow-read=/var/lib/weather", "/opt/forecast", "--fact", "uptime"]
 	`)
@@ -146,7 +151,7 @@ func TestACustomCommandLeavesAlonePlainWordsAndAbsolutePaths(t *testing.T) {
 
 func TestACustomToolOnThePathIsLeftForThePathToFind(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather for a city"
 		command = ["true"]
 	`)
@@ -163,22 +168,22 @@ func TestACustomToolOnThePathIsLeftForThePathToFind(t *testing.T) {
 
 func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[defaults]
+		[default]
 		caps = "rxa"
 
-		[tools.weather]
+		[tool.weather]
 		version = 2
 		description = "report the weather for a city"
 		command = ["true"]
 		group = "a"
 
-		[tools.forecast]
+		[tool.forecast]
 		description = "forecast the weather"
 		command = ["true"]
 		group = "a"
 	`)
 
-	groups, err := config.CustomToolGroups()
+	groups, err := config.ToolGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -201,17 +206,17 @@ func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 
 func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather"
 		command = ["true"]
 		group = "c"
-		enabled = true
+		granted = true
 
-		[tools.forecast]
+		[tool.forecast]
 		description = "forecast the weather"
 		command = ["true"]
 		group = "d"
-		enabled = true
+		granted = true
 	`)
 
 	if got := config.DefaultToolGroupFlags(nil); got != "cd" {
@@ -228,13 +233,13 @@ func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
 func TestAnUngroupedCustomToolCannotBeExplicitlyDisabled(t *testing.T) {
 	directory := t.TempDir()
 	path := filepath.Join(directory, "config.toml")
-	body := "[tools.rpc]\ndescription = \"run a host tool\"\ncommand = [\"true\"]\nenabled = false\n"
+	body := "[tool.rpc]\ndescription = \"run a host tool\"\ncommand = [\"true\"]\ngranted = false\n"
 	if err := writeConfigFile(path, body); err != nil {
 		t.Fatal(err)
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "tools.rpc: enabled = false has no effect without a group") {
+	if err == nil || !strings.Contains(err.Error(), "tool.rpc: granted = false has no effect without a group") {
 		t.Errorf("got %v", err)
 	}
 	if err == nil || !strings.Contains(err.Error(), "config.toml") {
@@ -244,7 +249,7 @@ func TestAnUngroupedCustomToolCannotBeExplicitlyDisabled(t *testing.T) {
 
 func TestAnUngroupedCustomToolWithoutEnabledStillLoads(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather"
 		command = ["true"]
 	`)
@@ -255,11 +260,11 @@ func TestAnUngroupedCustomToolWithoutEnabledStillLoads(t *testing.T) {
 
 func TestAGroupedCustomToolExplicitlyDisabledByDefaultStillLoads(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather"
 		command = ["true"]
 		group = "z"
-		enabled = false
+		granted = false
 	`)
 	if got := config.DefaultToolGroupFlags(nil); got != "" {
 		t.Errorf("got default groups %q", got)
@@ -268,7 +273,7 @@ func TestAGroupedCustomToolExplicitlyDisabledByDefaultStillLoads(t *testing.T) {
 
 func TestASessionCanPreserveAnUngroupedCustomTool(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather"
 		command = ["true"]
 		group = "a"
@@ -294,7 +299,7 @@ func TestACustomToolGroupIsOneLowercaseLetter(t *testing.T) {
 		t.Run(group, func(t *testing.T) {
 			directory := t.TempDir()
 			path := filepath.Join(directory, "config.toml")
-			body := "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"" + group + "\"\n"
+			body := "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"" + group + "\"\n"
 			if err := writeConfigFile(path, body); err != nil {
 				t.Fatal(err)
 			}
@@ -321,7 +326,7 @@ func TestACustomToolAsksUnlessItSaysOtherwise(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			body := `
-				[tools.weather]
+				[tool.weather]
 				description = "report the weather for a city"
 				command = ["true"]
 			`
@@ -346,13 +351,13 @@ func TestACustomToolAsksUnlessItSaysOtherwise(t *testing.T) {
 
 func TestACustomToolNamesItsConfigWhenItCannotBeBuilt(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather for a city"
 		command = ["/nowhere/at/all"]
 	`)
 
 	_, err := config.BuildCustomTools(command.Options{})
-	if err == nil || !strings.Contains(err.Error(), "tools.weather: could not find /nowhere/at/all") {
+	if err == nil || !strings.Contains(err.Error(), "tool.weather: could not find /nowhere/at/all") {
 		t.Errorf("got %v", err)
 	}
 	if err == nil || !strings.Contains(err.Error(), "config.toml") {
@@ -362,14 +367,14 @@ func TestACustomToolNamesItsConfigWhenItCannotBeBuilt(t *testing.T) {
 
 func TestAnUnreadablePermissionIsRefusedByName(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[tools.weather]
+		[tool.weather]
 		description = "report the weather for a city"
 		command = ["true"]
 		permission = "whenever"
 	`)
 
 	_, err := config.BuildCustomTools(command.Options{})
-	if err == nil || !strings.Contains(err.Error(), "tools.weather: permission:") {
+	if err == nil || !strings.Contains(err.Error(), "tool.weather: permission:") {
 		t.Errorf("got %v", err)
 	}
 }
@@ -416,7 +421,7 @@ func TestAnInvalidCustomToolPermissionTableIsRefused(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			directory := t.TempDir()
 			path := filepath.Join(directory, "config.toml")
-			body := "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = " + test.written + "\n"
+			body := "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = " + test.written + "\n"
 			if err := writeConfigFile(path, body); err != nil {
 				t.Fatal(err)
 			}
@@ -435,12 +440,12 @@ func TestAnInvalidCustomToolPermissionTableIsRefused(t *testing.T) {
 func TestAWorkspaceMayNotAddACustomTool(t *testing.T) {
 	directory := t.TempDir()
 	path := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(path, "[tools.weather]\ndescription = \"x\"\n"); err != nil {
+	if err := writeConfigFile(path, "[tool.weather]\ndescription = \"x\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
 	overridePath := filepath.Join(directory, "oh.toml")
-	if err := os.WriteFile(overridePath, []byte("[tools.weather]\ndescription = \"y\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(overridePath, []byte("[tool.weather]\ndescription = \"y\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -453,7 +458,7 @@ func TestAWorkspaceMayNotAddACustomTool(t *testing.T) {
 func TestAWorkspaceMayNotOpenAToolTableAtAll(t *testing.T) {
 	directory := t.TempDir()
 	overridePath := filepath.Join(directory, "oh.toml")
-	if err := os.WriteFile(overridePath, []byte("[tools.weather]\n"), 0o600); err != nil {
+	if err := os.WriteFile(overridePath, []byte("[tool.weather]\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -464,7 +469,294 @@ func TestAWorkspaceMayNotOpenAToolTableAtAll(t *testing.T) {
 }
 
 func TestACustomToolReachesTheNextSession(t *testing.T) {
-	if got := ReachOf("tools.weather"); got != ReachNextSession {
+	if got := ReachOf("tool.weather"); got != ReachNextSession {
 		t.Errorf("got reach %v", got)
+	}
+}
+
+func TestABuiltinToolTakesOnlyConfiguredOverrides(t *testing.T) {
+	settings, _ := configWithACustomTool(t, `
+		[tool.read]
+		description = "read a local document"
+		concurrency = 1
+		permission = "ask"
+	`)
+	var wasAsked bool
+	built := tool.Implement(tool.Definition{
+		Name: "read", Description: "read a file", Schema: tool.Schema{tool.String("path", "file")},
+	}, func(arguments struct{ Path string }) tool.CallRendering {
+		return tool.CallRendering{Subject: arguments.Path}
+	}).IsEmbarrassinglyParallel().Plain(func(_ context.Context, arguments struct{ Path string }) (string, error) {
+		return arguments.Path, nil
+	})
+	configured, err := settings.ConfigureBuiltins([]tool.Tool{built}, BuiltinToolOptions{
+		Approve: func(_ context.Context, name string, arguments string, _ permission.Setting) error {
+			wasAsked = name == "read" && strings.Contains(arguments, "notes.md")
+			return nil
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(configured) != 1 || configured[0].Description() != "read a local document" || configured[0].Concurrent() {
+		t.Fatalf("builtin overlay was not applied: %v", configured)
+	}
+	call, err := configured[0].Parse(`{"path":"notes.md"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := call.Exec(t.Context())
+	if err != nil || result.Output != "notes.md" || !wasAsked {
+		t.Errorf("result %q, approval %t, failure %v", result.Output, wasAsked, err)
+	}
+	if names := settings.CustomToolNames(); len(names) != 0 {
+		t.Errorf("read was declared as a custom tool: %v", names)
+	}
+}
+
+func TestBuiltinsRefuseCustomImplementationAndUnknownNetworkSettings(t *testing.T) {
+	for _, test := range []struct{ name, body, reason string }{
+		{"command", "[tool.read]\ncommand = [\"true\"]\n", "command cannot replace a built-in tool"},
+		{"parameters", "[tool.read]\nparameters = []\n", "parameters cannot replace a built-in tool"},
+		{"version", "[tool.read]\nversion = 2\n", "version cannot replace a built-in tool"},
+		{"network", "[tool.read]\nhost_network = \"ask\"\n", "tool.read.host_network is only valid for bash"},
+		{"typo", "[tool.read]\nhost_netwrk = \"ask\"\n", "unknown tool setting tool.read.host_netwrk"},
+		{"bash typo", "[tool.bash]\nhost_netwrk = \"ask\"\n", "unknown tool setting tool.bash.host_netwrk"},
+		{"nested host permission", "[tool.bash.network.host]\npermission = \"ask\"\n", "unknown tool setting tool.bash.network"},
+		{"unreadable host permission", "[tool.bash]\nhost_network = \"whenever\"\n", "tool.bash: host_network: must be"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			if err := writeConfigFile(path, test.body); err != nil {
+				t.Fatal(err)
+			}
+			_, err := Load(path)
+			if err == nil || !strings.Contains(err.Error(), test.reason) {
+				t.Errorf("got %v, want %q", err, test.reason)
+			}
+		})
+	}
+}
+
+func TestHostNetworkingUsesItsOwnToolPermission(t *testing.T) {
+	settings, _ := configWithACustomTool(t, `
+		[tool.bash]
+		permission = "ask"
+		host_network = "allow"
+	`)
+	permissions, err := combinedPermissions(settings)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Network.IsAllowed() {
+		t.Error("general bash approval was bypassed for host networking")
+	}
+
+	settings, _ = configWithACustomTool(t, `
+		[tool.bash]
+		permission = "allow"
+		host_network = "ask"
+	`)
+	permissions, err = combinedPermissions(settings)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Network.IsAllowed() {
+		t.Error("host networking approval was bypassed by bash permission")
+	}
+}
+
+func TestHostNetworkingUsesTheShorterApprovalLimit(t *testing.T) {
+	settings, _ := configWithACustomTool(t, `
+		[tool.bash]
+		permission = { rule = "ask", timeout = "1m" }
+		host_network = { rule = "ask", timeout = "10m" }
+	`)
+	permissions, err := combinedPermissions(settings)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Network.Timeout != time.Minute {
+		t.Errorf("got host-network approval limit %s", permissions.Network.Timeout)
+	}
+}
+
+func combinedPermissions(settings Config) (permission.Set, error) {
+	permissions, err := settings.BuildPermissions()
+	if err != nil {
+		return permissions, err
+	}
+	approval, err := settings.GetBashApproval()
+	return approval.Combine(permissions), err
+}
+
+func TestAReloadKeepsTheBashApprovalTheSessionStartedWith(t *testing.T) {
+	started, _ := configWithACustomTool(t, `
+		[tool.bash]
+		permission = "ask"
+		host_network = "allow"
+	`)
+	approval, err := started.GetBashApproval()
+	if err != nil {
+		t.Fatal(err)
+	}
+	reloaded, _ := configWithACustomTool(t, `
+		[tool.bash]
+		permission = "allow"
+		host_network = "allow"
+	`)
+	permissions, err := reloaded.BuildPermissions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if approval.Combine(permissions).Network.IsAllowed() {
+		t.Error("a reloaded bash permission bypassed the approval the session started with")
+	}
+	if reach := ReachOf("tool.bash.permission"); reach != ReachNextSession {
+		t.Errorf("tool.bash.permission reaches %d, want new sessions", reach)
+	}
+}
+
+func TestADisabledBuiltInIsNotOffered(t *testing.T) {
+	settings, _ := configWithACustomTool(t, "[tool.read]\nenabled = false\n")
+	built := tool.Implement(tool.Definition{Name: "read", Description: "read a file"}, func(struct{}) tool.CallRendering { return tool.CallRendering{} }).Plain(func(context.Context, struct{}) (string, error) { return "", nil })
+	configured, err := settings.ConfigureBuiltins([]tool.Tool{built}, BuiltinToolOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(configured) != 0 {
+		t.Errorf("disabled read was offered: %v", configured)
+	}
+}
+
+func TestPermissionsDefaultWhenNoToolSetsThem(t *testing.T) {
+	settings, _ := configWithACustomTool(t, "")
+	permissions, err := settings.BuildPermissions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Network.IsAllowed() || !permissions.Lookup.IsAllowed() || permissions.Fetch.IsAllowed() {
+		t.Errorf("got default permissions %+v", permissions)
+	}
+}
+
+func TestToolPermissionsReachTheLiveConfig(t *testing.T) {
+	settings, _ := configWithACustomTool(t, `
+		[tool.lookup]
+		permission = "ask"
+		[tool.fetch]
+		permission = "allow"
+		[tool.bash]
+		host_network = "allow"
+	`)
+	live, err := settings.BuildLive(testSegments())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !live.Permissions.Network.IsAllowed() || live.Permissions.Lookup.IsAllowed() || !live.Permissions.Fetch.IsAllowed() {
+		t.Errorf("got live permissions %+v", live.Permissions)
+	}
+	for _, setting := range []string{"tool.lookup.permission", "tool.fetch.permission.rule", "tool.bash.host_network"} {
+		if reach := ReachOf(setting); reach != ReachLive {
+			t.Errorf("%s reaches %d, want it live", setting, reach)
+		}
+	}
+}
+
+func TestDisablingAToolLeavesItsConfiguredGroupFlagParseable(t *testing.T) {
+	settings, _ := configWithACustomTool(t, `
+		[default]
+		caps = "rxz"
+
+		[tool.weather]
+		description = "report the weather"
+		command = ["true"]
+		group = "z"
+		enabled = false
+	`)
+	if _, _, err := settings.ParseCaps("rxz"); err != nil {
+		t.Fatal(err)
+	}
+	if len(settings.CustomToolNames()) != 0 || len(settings.ToolGroupNames()) != 0 {
+		t.Errorf("disabled tool was selected: %v", settings.ToolGroupNames())
+	}
+}
+
+func TestBackgroundEligibilityIsExplicitForCustomToolsAndRestrictedForBuiltins(t *testing.T) {
+	settings, _ := configWithACustomTool(t, `
+		[tool.offload]
+		description = "build elsewhere"
+		command = ["true"]
+		background = true
+
+		[tool.commit]
+		description = "commit a patch"
+		command = ["true"]
+	`)
+	for name, want := range map[string]bool{
+		"bash": true, "grep": true, "lookup": true,
+		"offload": true, "commit": false,
+		"read": false, "find": false, "write": false, "edit": false,
+	} {
+		if got := settings.IsToolBackgroundable(name); got != want {
+			t.Errorf("tool %s backgroundable=%t, want %t", name, got, want)
+		}
+	}
+
+	for _, name := range []string{"read", "find", "write", "edit"} {
+		path := filepath.Join(t.TempDir(), "config.toml")
+		if err := writeConfigFile(path, fmt.Sprintf("[tool.%s]\nbackground = true\n", name)); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "cannot run in the background") {
+			t.Errorf("tool %s was backgroundable: %v", name, err)
+		}
+	}
+}
+
+func TestBackgroundableCustomToolsKeepTheirForegroundLimit(t *testing.T) {
+	for _, test := range []struct {
+		name    string
+		setting string
+		want    time.Duration
+	}{
+		{"background default", "background = true", 30 * time.Second},
+		{"explicit shorter", "background = true\ntimeout = \"2m\"", 2 * time.Minute},
+		{"foreground only", "", 30 * time.Second},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			settings, _ := configWithACustomTool(t, "[tool.weather]\ndescription = \"weather\"\ncommand = [\"./forecast\"]\n"+test.setting+"\n")
+			tools, err := settings.BuildCustomTools(command.Options{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			call, err := tools[0].Parse(`{}`)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := call.TimeLimit(); got != test.want {
+				t.Errorf("tool limit %s, want %s", got, test.want)
+			}
+		})
+	}
+}
+
+func TestBackgroundToolsReserveTheirLaunchOptions(t *testing.T) {
+	for _, name := range []string{"background", "respawn", "task_name", "forward_port"} {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			body := fmt.Sprintf(`[tool.weather]
+description = "report the weather"
+command = ["/usr/bin/true"]
+background = true
+parameters = [{ name = %q, kind = "string", description = "a conflicting parameter" }]
+`, name)
+			if err := writeConfigFile(path, body); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "parameter "+name+" is reserved") {
+				t.Errorf("launch option collision returned %v", err)
+			}
+		})
 	}
 }

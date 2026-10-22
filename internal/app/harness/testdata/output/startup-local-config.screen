@@ -154,12 +154,12 @@ Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
 ippets ⧸ ~1.6Kt context ⧸ oh.toml: agent
 .round_robin, bar.bottom.left, bar.top.c
-enter, defaults.caps, defaults.tool_outp
-ut, editor.command, ports.hostname, prov
-ider.ollama.host, sandbox.read, sandbox.
-write, skills.exclude, skills.include, s
-nippets.review, ui.currency, ui.grouping
-, ui.reasoning, ui.streaming.
+enter, default.caps, default.tool_output
+, editor.command, experimental.forward_h
+ostname, provider.ollama.host, grants.re
+ad, grants.write, skill.exclude, skill.i
+nclude, snippet.review, ui.currency, ui.
+grouping, ui.reasoning, ui.streaming.
 === many local settings / ordinary / one column ===
 A
 g
@@ -334,7 +334,6 @@ a
 u
 l
 t
-s
 .
 c
 a
@@ -349,7 +348,6 @@ a
 u
 l
 t
-s
 .
 t
 o
@@ -380,12 +378,27 @@ n
 d
 ,
 
+e
+x
 p
+e
+r
+i
+m
+e
+n
+t
+a
+l
+.
+f
 o
 r
-t
-s
-.
+w
+a
+r
+d
+_
 h
 o
 s
@@ -418,13 +431,12 @@ s
 t
 ,
 
-s
+g
+r
 a
 n
-d
-b
-o
-x
+t
+s
 .
 r
 e
@@ -432,13 +444,12 @@ a
 d
 ,
 
-s
+g
+r
 a
 n
-d
-b
-o
-x
+t
+s
 .
 w
 r
@@ -452,7 +463,6 @@ k
 i
 l
 l
-s
 .
 e
 x
@@ -468,7 +478,6 @@ k
 i
 l
 l
-s
 .
 i
 n
@@ -486,7 +495,6 @@ p
 p
 e
 t
-s
 .
 r
 e
@@ -564,52 +572,54 @@ context ⧸ oh
 , bar.bottom
 .left, bar.t
 op.center, d
-efaults.caps
-, defaults.t
-ool_output,
-editor.comma
-nd, ports.ho
-stname, prov
-ider.ollama.
-host, sandbo
-x.read, sand
-box.write, s
-kills.exclud
-e, skills.in
-clude, snipp
-ets.review,
-ui.currency,
- ui.grouping
-, ui.reasoni
-ng, ui.strea
-ming.
+efault.caps,
+ default.too
+l_output, ed
+itor.command
+, experiment
+al.forward_h
+ostname, pro
+vider.ollama
+.host, grant
+s.read, gran
+ts.write, sk
+ill.exclude,
+ skill.inclu
+de, snippet.
+review, ui.c
+urrency, ui.
+grouping, ui
+.reasoning,
+ui.streaming
+.
 === many local settings / ordinary / wide ===
 Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
-ext ⧸ oh.toml: agent.round_robin, bar.bottom.left, bar.top.center, defaults.caps, defaults.tool_outp
-ut, editor.command, ports.hostname, provider.ollama.host, sandbox.read, sandbox.write, skills.exclud
-e, skills.include, snippets.review, ui.currency, ui.grouping, ui.reasoning, ui.streaming.
+ext ⧸ oh.toml: agent.round_robin, bar.bottom.left, bar.top.center, default.caps, default.tool_output
+, editor.command, experimental.forward_hostname, provider.ollama.host, grants.read, grants.write, sk
+ill.exclude, skill.include, snippet.review, ui.currency, ui.grouping, ui.reasoning, ui.streaming.
 === many local settings / sized / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
 ippets ⧸ ~1.6Kt context ⧸ oh.toml: agent
 .round_robin, bar.bottom.left, bar.top.c
-enter, defaults.caps, defaults.tool_outp
-ut, editor.command, ports.hostname, prov
-ider.ollama.host, sandbox.read, sandbox.
-write, skills.exclude, skills.include, s
-nippets.review, ui.currency, ui.grouping
-, ui.reasoning, ui.streaming.
+enter, default.caps, default.tool_output
+, editor.command, experimental.forward_h
+ostname, provider.ollama.host, grants.re
+ad, grants.write, skill.exclude, skill.i
+nclude, snippet.review, ui.currency, ui.
+grouping, ui.reasoning, ui.streaming.
 === many local settings / sized / wide ===
  🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: agent.round_robin, bar.bottom.left,
-       bar.top.center, defaults.caps, defaults.tool_output, editor.command, ports.hostname,
-       provider.ollama.host, sandbox.read, sandbox.write, skills.exclude, skills.include,
-       snippets.review, ui.currency, ui.grouping, ui.reasoning, ui.streaming
+       bar.top.center, default.caps, default.tool_output, editor.command,
+       experimental.forward_hostname, provider.ollama.host, grants.read, grants.write,
+       skill.exclude, skill.include, snippet.review, ui.currency, ui.grouping, ui.reasoning,
+       ui.streaming
 === mixed global and local settings / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
-ippets ⧸ ~1.6Kt context ⧸ oh.toml: sandb
-ox.write, snippets.review, ui.currency.
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: grant
+s.write, snippet.review, ui.currency.
 === mixed global and local settings / ordinary / one column ===
 A
 g
@@ -725,13 +735,12 @@ m
 l
 :
 
-s
+g
+r
 a
 n
-d
-b
-o
-x
+t
+s
 .
 w
 r
@@ -747,7 +756,6 @@ p
 p
 e
 t
-s
 .
 r
 e
@@ -779,22 +787,22 @@ with 4 skill
 s ⧸ 2 snippe
 ts ⧸ ~1.6Kt
 context ⧸ oh
-.toml: sandb
-ox.write, sn
-ippets.revie
-w, ui.curren
-cy.
+.toml: grant
+s.write, sni
+ppet.review,
+ ui.currency
+.
 === mixed global and local settings / ordinary / wide ===
 Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
-ext ⧸ oh.toml: sandbox.write, snippets.review, ui.currency.
+ext ⧸ oh.toml: grants.write, snippet.review, ui.currency.
 === mixed global and local settings / sized / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
-ippets ⧸ ~1.6Kt context ⧸ oh.toml: sandb
-ox.write, snippets.review, ui.currency.
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: grant
+s.write, snippet.review, ui.currency.
 === mixed global and local settings / sized / wide ===
  🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: sandbox.write, snippets.review, ui.currency
+       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: grants.write, snippet.review, ui.currency
 === no local config / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
@@ -927,7 +935,7 @@ ippets ⧸ ~1.6Kt context.
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
 ippets ⧸ ~1.6Kt context ⧸ oh.toml: defau
-lts.caps.
+lt.caps.
 === one local setting / ordinary / one column ===
 A
 g
@@ -1050,7 +1058,6 @@ a
 u
 l
 t
-s
 .
 c
 a
@@ -1068,15 +1075,15 @@ s ⧸ 2 snippe
 ts ⧸ ~1.6Kt
 context ⧸ oh
 .toml: defau
-lts.caps.
+lt.caps.
 === one local setting / ordinary / wide ===
 Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
-ext ⧸ oh.toml: defaults.caps.
+ext ⧸ oh.toml: default.caps.
 === one local setting / sized / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
 ippets ⧸ ~1.6Kt context ⧸ oh.toml: defau
-lts.caps.
+lt.caps.
 === one local setting / sized / wide ===
  🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: defaults.caps
+       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: default.caps

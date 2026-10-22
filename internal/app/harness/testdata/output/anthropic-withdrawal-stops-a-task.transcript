@@ -1,0 +1,39 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## Mode · rxsngl · toggled w · +0s
+
+```
+The workspace is now read-only.
+```
+
+## Task stopped · +0s
+
+```
+Task `web` stopped because the workspace was made read-only.
+```
+
+## User · +0s
+
+is the preview still up
+
+## Assistant · +0s
+
+No. It was stopped when the workspace was made read-only.
+
+## User · +0s
+
+start it again
+
+## Assistant · +0s
+
+The workspace is read-only, so it cannot run yet.

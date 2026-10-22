@@ -63,7 +63,6 @@ import (
 	"crdx.org/oh/internal/app/input"
 	"crdx.org/oh/internal/app/interaction"
 	"crdx.org/oh/internal/app/interrupt"
-	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/location"
@@ -89,7 +88,6 @@ import (
 	"crdx.org/oh/internal/app/segment/forwardedPorts"
 	"crdx.org/oh/internal/app/segment/gitBranch"
 	"crdx.org/oh/internal/app/segment/gitStatus"
-	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/segment/localTime"
 	"crdx.org/oh/internal/app/segment/modeToggle"
 	"crdx.org/oh/internal/app/segment/pathGrants"
@@ -98,6 +96,7 @@ import (
 	"crdx.org/oh/internal/app/segment/sessionName"
 	"crdx.org/oh/internal/app/segment/sessionSpend"
 	"crdx.org/oh/internal/app/segment/subUsage"
+	"crdx.org/oh/internal/app/segment/taskNames"
 	"crdx.org/oh/internal/app/segment/turnCount"
 	"crdx.org/oh/internal/app/segment/turnTimer"
 	"crdx.org/oh/internal/app/segment/workspaceDir"
@@ -112,6 +111,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/trigger"
@@ -122,7 +122,6 @@ import (
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/auth"
 	"crdx.org/oh/internal/file"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/internal/sandbox"
@@ -142,18 +141,20 @@ import (
 	"crdx.org/oh/pkg/provider/ollama"
 	"crdx.org/oh/pkg/provider/opencodego"
 	"crdx.org/oh/pkg/session"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
+	"crdx.org/oh/pkg/tool/middleware/async"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/fetch"
 	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/grep"
-	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
+	"crdx.org/oh/pkg/toolbox/task"
 	"crdx.org/oh/pkg/toolbox/title"
 	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 )
@@ -1742,7 +1743,7 @@ func drawNoticeBesideTwoCalls(t *testing.T, lines int, isRedrawn bool) frameEdge
 	var screenOutput bytes.Buffer
 	self := frameEdgeConversation(t, &screenOutput, lines)
 	requestTwoCalls(self)
-	self.jobEnded(endedJobConclusion())
+	self.taskEnded(endedTaskConclusion())
 	self.show(self.inputLine)
 	if isRedrawn {
 		self.redraw()
@@ -2443,14 +2444,15 @@ func TestTwoReturnsWithAPendingNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	}
 }
 
-func TestTwoReturnsWithARestoredJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
+func TestTwoReturnsWithARestoredTaskNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.nudge = "carry on"
 	self.settleAccess()
-	self.jobs = jobState{manager: jobs.New(nil)}
-	self.restoreJobs([]agent.Event{
-		jobrecord.ListingEvent([]jobs.Snapshot{{Name: "docs", Command: "python3", State: jobs.StateRunning}}),
+	self.tasks = tasks.New(t.Context())
+	t.Cleanup(self.tasks.Close)
+	self.restoreTasks([]agent.Event{
+		taskrecord.ListingEvent([]tasks.Snapshot{{ID: "docs", ToolName: "bash", Run: 1, State: tasks.Running}}),
 	})
 
 	history := edit.NewHistory("", historyLimit)
@@ -2468,14 +2470,14 @@ func TestTwoReturnsWithARestoredJobNoticeSubmitItRatherThanTheNudge(t *testing.T
 	}
 	self.finish()
 
-	notice, _ := jobrecord.EndedWithSessionNotice(jobrecord.EndedWithSessionEvent([]string{"docs"}))
+	notice, _ := taskrecord.EndedWithSessionNotice(taskrecord.EndedWithSessionEvent([]string{"docs"}))
 	messages := submittedTexts(self.recordedEvents)
 	if !slices.Equal(messages, []string{notice}) {
 		t.Errorf("got messages %q, want %q", messages, []string{notice})
 	}
 }
 
-func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
+func TestAForkCarriesItsSourcesGrantsForwardsAndTasks(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.settleAccess()
@@ -2486,7 +2488,8 @@ func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
 		Forward: func(port uint16) error { opened = append(opened, port); return nil },
 		Revoke:  func(uint16) error { return nil },
 	}, "127.9.9.9")
-	self.jobs = jobState{manager: jobs.New(nil)}
+	self.tasks = tasks.New(t.Context())
+	t.Cleanup(self.tasks.Close)
 
 	grantedPath, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
@@ -2497,14 +2500,14 @@ func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sourceRoutes := []portgrant.Route{{Port: 8080, JobName: "docs"}}
+	sourceRoutes := []portgrant.Route{{Port: 8080, TaskName: "docs"}}
 	forwardChange, err := portgrant.ForwardChangeEvent("127.1.2.3", 8080, sourceRoutes)
 	if err != nil {
 		t.Fatal(err)
 	}
-	listing := jobrecord.ListingEvent([]jobs.Snapshot{
-		{Name: "docs", Command: "python3 -m http.server 8080", State: jobs.StateRunning},
-		{Name: "build", Command: "just build", State: jobs.StateComplete},
+	listing := taskrecord.ListingEvent([]tasks.Snapshot{
+		{ID: "docs", ToolName: "bash", Run: 1, State: tasks.Running},
+		{ID: "build", ToolName: "bash", Run: 1, State: tasks.Done},
 	})
 
 	sessionsDir := t.TempDir()
@@ -2546,22 +2549,20 @@ func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
 	if recorded, _ := portgrant.LastRecordedForwards(self.recordedEvents); !slices.Equal(recorded, sourceRoutes) {
 		t.Errorf("recorded forwards %#v, want %#v", recorded, sourceRoutes)
 	}
-	for _, name := range []string{"docs", "build"} {
-		if _, isKnown := self.jobs.manager.RememberedCommand(name); !isKnown {
-			t.Errorf("job %s was not carried over", name)
-		}
+	if carried := self.tasks.List(); len(carried) != 2 {
+		t.Errorf("carried tasks %#v, want both", carried)
 	}
-	if recorded, _ := jobrecord.LastRecorded(self.recordedEvents); len(recorded) != 2 {
-		t.Errorf("recorded jobs %#v, want both", recorded)
+	if recorded, _ := taskrecord.LastRecorded(self.recordedEvents); len(recorded) != 2 {
+		t.Errorf("recorded tasks %#v, want both", recorded)
 	}
 
-	jobNotice, _ := jobrecord.EndedWithSessionNotice(
-		jobrecord.EndedWithSourceSessionEvent(source.Name(), []string{"docs"}),
-	)
+	sourceNotice := taskrecord.EndedWithSessionEvent([]string{"docs"})
+	sourceNotice.Name = source.Name()
+	taskNotice, _ := taskrecord.EndedWithSessionNotice(sourceNotice)
 	messages := submittedTexts(self.recordedEvents)
 	for _, want := range []string{
 		"Granted temporary read and write access to " + grantedPath + ".",
-		jobNotice,
+		taskNotice,
 		"carry on",
 	} {
 		if !slices.Contains(messages, want) {
@@ -2575,15 +2576,12 @@ func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
 	}
 }
 
-func TestTwoReturnsWithAnEndedJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
+func TestTwoReturnsWithAnEndedTaskNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.nudge = "carry on"
 	self.settleAccess()
-	self.jobs = jobState{manager: jobs.New(nil)}
-	self.jobEnded(jobs.Conclusion{
-		Snapshot: jobs.Snapshot{Name: "build", Command: "just build", State: jobs.StateFailed},
-	})
+	self.taskEnded(endedTaskConclusion())
 
 	history := edit.NewHistory("", historyLimit)
 	inputLine := edit.NewInput(history)
@@ -2603,7 +2601,7 @@ func TestTwoReturnsWithAnEndedJobNoticeSubmitItRatherThanTheNudge(t *testing.T) 
 	if messages := submittedTexts(self.recordedEvents); len(messages) != 1 ||
 		!strings.Contains(messages[0], "build") ||
 		strings.Contains(messages[0], "carry on") {
-		t.Errorf("got messages %q, want the ended job notice alone", messages)
+		t.Errorf("got messages %q, want the ended task notice alone", messages)
 	}
 }
 
@@ -4074,7 +4072,7 @@ func TestOnlyQueuedAccessChangesAreShownInTheFooter(t *testing.T) {
 		isShown bool
 	}{
 		"mode change":         {event: caps.ModeToggleEvent(caps.Write, caps.Read), isShown: true},
-		"job stopped":         {event: caps.JobStopEvent("web", caps.Write), isShown: true},
+		"task stopped":        {event: caps.TaskStopEvent("web", caps.Write), isShown: true},
 		"path grant changed":  {event: pathChange, isShown: true},
 		"port access changed": {event: portChange, isShown: true},
 		"host command ran":    {event: hostCommandRun()},
@@ -5975,6 +5973,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"completion":               {".txt"},
 		"completion-sources":       {".txt"},
 		"config-directory":         {".txt"},
+		"tool-network-setting":     {".txt"},
 		"config-reload":            {".ansi", ".screen"},
 		"corrupt-session":          {".txt"},
 		"picker-listing":           {".screen"},
@@ -6004,7 +6003,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context":                  {".prompt"},
 		"context-deny":             {".prompt"},
 		"context-drops":            {".prompt"},
-		"context-jobs":             {".prompt"},
+		"context-tasks":            {".prompt"},
 		"context-network":          {".prompt"},
 		"context-network-print":    {".prompt"},
 		"context-print":            {".prompt"},
@@ -6730,7 +6729,7 @@ func pendingEnvironmentChangeStream(t *testing.T) string {
 	return screenOutput.String()
 }
 
-const laterHarnessLine = "Job `build` exited: complete after 30s."
+const laterHarnessLine = "Task `build` done."
 
 func pendingModeMessagesStream(t *testing.T, toggleCount int) string {
 	t.Helper()
@@ -6865,13 +6864,13 @@ func TestGoldenTakingBackAModeChangeDrawsWhatItDrewBefore(t *testing.T) {
 		"one of several taken back":       func() string { return modeTakebackFromRunStream(t, 4) },
 	})
 	compareWithGolden(t, "mode-takeback", ".screen", shownPasses(t, map[string]func() string{
-		"11 toggled once past a stopped job":   func() string { return modeTakebackPastAStoppedJob(t, 1) },
-		"12 toggled twice past a stopped job":  func() string { return modeTakebackPastAStoppedJob(t, 2) },
-		"13 toggled thrice past a stopped job": func() string { return modeTakebackPastAStoppedJob(t, 3) },
-		"14 toggled four times past a stopped job": func() string {
-			return modeTakebackPastAStoppedJob(t, 4)
+		"11 toggled once past a stopped task":   func() string { return modeTakebackPastAStoppedTask(t, 1) },
+		"12 toggled twice past a stopped task":  func() string { return modeTakebackPastAStoppedTask(t, 2) },
+		"13 toggled thrice past a stopped task": func() string { return modeTakebackPastAStoppedTask(t, 3) },
+		"14 toggled four times past a stopped task": func() string {
+			return modeTakebackPastAStoppedTask(t, 4)
 		},
-		"15 toggled past a job another capability stopped": func() string {
+		"15 toggled past a task another capability stopped": func() string {
 			return modeTakebackPastAJobAnotherCapabilityStopped(t)
 		},
 		"1 before either chord":  func() string { return modeTakebackStream(t, 'l', 0, "") },
@@ -6889,7 +6888,7 @@ func TestGoldenTakingBackAModeChangeDrawsWhatItDrewBefore(t *testing.T) {
 	}))
 }
 
-func modeTakebackPastAStoppedJob(t *testing.T, toggleCount int) string {
+func modeTakebackPastAStoppedTask(t *testing.T, toggleCount int) string {
 	t.Helper()
 
 	var screenOutput strings.Builder
@@ -6898,7 +6897,7 @@ func modeTakebackPastAStoppedJob(t *testing.T, toggleCount int) string {
 		mode:   caps.NewMode(caps.Read),
 	}
 	self.pendingNotices.add(caps.ModeToggleEvent(caps.Write, caps.Read))
-	self.pendingNotices.add(caps.JobStopEvent("web", caps.Write))
+	self.pendingNotices.add(caps.TaskStopEvent("web", caps.Write))
 	self.refreshPendingMessages()
 
 	for range toggleCount {
@@ -6919,7 +6918,7 @@ func modeTakebackPastAJobAnotherCapabilityStopped(t *testing.T) string {
 	}
 
 	self.toggleCap(caps.Write)
-	self.pendingNotices.add(caps.JobStopEvent("web", caps.Shell))
+	self.pendingNotices.add(caps.TaskStopEvent("web", caps.Shell))
 	self.toggleCap(caps.Write)
 	self.screen.End()
 
@@ -9052,7 +9051,7 @@ func TestConfiguredCapabilitiesIncludeCustomToolGroups(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
 	settings := config.Config{
 		Defaults: config.Defaults{Caps: "rxa"},
-		Tools: map[string]config.CustomTool{
+		Tools: map[string]config.ToolConfig{
 			"weather": {Group: "a"},
 		},
 	}
@@ -9069,8 +9068,8 @@ func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
 	settings := config.Config{
 		Defaults: config.Defaults{Caps: "rx"},
-		Tools: map[string]config.CustomTool{
-			"weather": {Group: "c", IsEnabledByDefault: true},
+		Tools: map[string]config.ToolConfig{
+			"weather": {Group: "c", IsGranted: true},
 		},
 	}
 
@@ -9090,8 +9089,8 @@ func TestExplicitCommandLineCapabilitiesOverrideTheConfig(t *testing.T) {
 	}
 	settings := config.Config{
 		Defaults: config.Defaults{Caps: "rwg"},
-		Tools: map[string]config.CustomTool{
-			"weather": {Group: "c", IsEnabledByDefault: true},
+		Tools: map[string]config.ToolConfig{
+			"weather": {Group: "c", IsGranted: true},
 		},
 	}
 
@@ -9146,7 +9145,7 @@ func TestGoldenForkMessageMatchesGolden(t *testing.T) {
 
 type promptGolden struct {
 	isYolo              bool
-	areJobsGiven        bool
+	hasBackgroundShell  bool
 	hasClipboardDrops   bool
 	hasDenyPattern      bool
 	isNetworkGranted    bool
@@ -9167,8 +9166,8 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 	for name, shape := range map[string]promptGolden{
 		"context":               {},
 		"context-deny":          {hasDenyPattern: true},
-		"context-yolo":          {isYolo: true, areJobsGiven: true},
-		"context-jobs":          {areJobsGiven: true},
+		"context-yolo":          {isYolo: true, hasBackgroundShell: true},
+		"context-tasks":         {hasBackgroundShell: true},
 		"context-drops":         {hasClipboardDrops: true},
 		"context-network":       {isNetworkGranted: true},
 		"context-network-print": {isNetworkGranted: true, isPrinting: true},
@@ -9310,10 +9309,11 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 			IPv6:        !shape.hasNoSockets,
 			Interactive: !shape.isPrinting,
 		},
-		JobsGranted:    shape.areJobsGiven,
-		NetworkGranted: currentCaps.Has(caps.Network),
-		Yolo:           shape.isYolo,
-		Notes:          shape.notes,
+		BackgroundShellGranted: shape.hasBackgroundShell,
+		TasksGranted:           shape.hasBackgroundShell,
+		NetworkGranted:         currentCaps.Has(caps.Network),
+		Yolo:                   shape.isYolo,
+		Notes:                  shape.notes,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -9672,7 +9672,7 @@ func streamThroughHoldingTheNotice(t *testing.T, rig *replayRig, entries []repla
 	for _, entry := range entries {
 		event := *entry.Event
 
-		if isHeld && event.Kind == jobrecord.Ended {
+		if isHeld && event.Kind == taskrecord.RunEnded {
 			held = entry.Event
 			continue
 		}
@@ -9999,7 +9999,7 @@ func TestGoldenATallRegionOnAShortTerminalIsWindowedAndSealedWhole(t *testing.T)
 	noticeBeside := func(openTurn func(*testing.T, *bytes.Buffer) (*App, *edit.Input)) (string, string) {
 		var screenOutput bytes.Buffer
 		self, inputLine := openTurn(t, &screenOutput)
-		self.jobEnded(endedJobConclusion())
+		self.taskEnded(endedTaskConclusion())
 		self.show(inputLine)
 		live := screenOutput.String()
 
@@ -10701,12 +10701,6 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 			true,
 		),
 		notify.New(screen.WriteEscape, func() bool { return false }),
-		job.New(
-			jobs.New(sandbox.Direct()),
-			files,
-			func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-			nil,
-		),
 	)
 	tools = append(
 		tools,
@@ -11288,10 +11282,10 @@ func TestGoldenTheStartupLineDrawsWhatItDrewBefore(t *testing.T) {
 
 	wordyConfig := &startup.LocalConfig{Name: "oh.toml", Settings: []string{
 		"agent.round_robin",
-		"defaults.caps",
+		"default.caps",
 		"editor.command",
-		"ports.hostname",
-		"skills.include",
+		"experimental.forward_hostname",
+		"skill.include",
 		"ui.currency",
 		"ui.streaming",
 	}}
@@ -11405,12 +11399,12 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 			LocalConfig: &startup.LocalConfig{Name: "oh.toml"},
 		},
 		"one local setting": {
-			LocalConfig: &startup.LocalConfig{Name: "oh.toml", Settings: []string{"defaults.caps"}},
+			LocalConfig: &startup.LocalConfig{Name: "oh.toml", Settings: []string{"default.caps"}},
 		},
 		"mixed global and local settings": {
 			LocalConfig: &startup.LocalConfig{
 				Name:     "oh.toml",
-				Settings: []string{"sandbox.write", "snippets.review", "ui.currency"},
+				Settings: []string{"grants.write", "snippet.review", "ui.currency"},
 			},
 		},
 		"many local settings": {
@@ -11420,16 +11414,16 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 					"agent.round_robin",
 					"bar.bottom.left",
 					"bar.top.center",
-					"defaults.caps",
-					"defaults.tool_output",
+					"default.caps",
+					"default.tool_output",
 					"editor.command",
-					"ports.hostname",
+					"experimental.forward_hostname",
 					"provider.ollama.host",
-					"sandbox.read",
-					"sandbox.write",
-					"skills.exclude",
-					"skills.include",
-					"snippets.review",
+					"grants.read",
+					"grants.write",
+					"skill.exclude",
+					"skill.include",
+					"snippet.review",
 					"ui.currency",
 					"ui.grouping",
 					"ui.reasoning",
@@ -12089,11 +12083,11 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		"several files": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"ui.theme.dim"}},
-				{Path: "oh.toml", Settings: []string{"defaults.tool_output", "snippets.fix"}},
+				{Path: "oh.toml", Settings: []string{"default.tool_output", "snippet.fix"}},
 			},
 			want: "Configuration reloaded automatically\n" +
 				"config.toml: ui.theme.dim\n" +
-				"oh.toml: defaults.tool_output, snippets.fix",
+				"oh.toml: default.tool_output, snippet.fix",
 		},
 		"file gone": {
 			changes: []config.SourceChange{
@@ -12107,33 +12101,33 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		},
 		"a grant this run will never read": {
 			changes: []config.SourceChange{
-				{Path: "config.toml", Settings: []string{"sandbox.read", "sandbox.write"}},
+				{Path: "config.toml", Settings: []string{"grants.read", "grants.write"}},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: sandbox.read, sandbox.write\n" +
-				"applies when oh next starts: sandbox.read, sandbox.write",
+				"config.toml: grants.read, grants.write\n" +
+				"applies when oh next starts: grants.read, grants.write",
 		},
 		"a grant withdrawn is no more immediate": {
 			changes: []config.SourceChange{
-				{Path: "config.toml", Settings: []string{"sandbox.read"}, IsRemoved: true},
+				{Path: "config.toml", Settings: []string{"grants.read"}, IsRemoved: true},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: gone, dropping sandbox.read\n" +
-				"applies when oh next starts: sandbox.read",
+				"config.toml: gone, dropping grants.read\n" +
+				"applies when oh next starts: grants.read",
 		},
 		"both waits beside a setting that landed": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{
 					"agent.round_robin",
-					"defaults.caps",
-					"sandbox.exec",
+					"default.caps",
+					"grants.exec",
 					"ui.streaming",
 				}},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: agent.round_robin, defaults.caps, sandbox.exec, ui.streaming\n" +
-				"applies when oh next starts: sandbox.exec\n" +
-				"applies to new sessions: agent.round_robin, defaults.caps",
+				"config.toml: agent.round_robin, default.caps, grants.exec, ui.streaming\n" +
+				"applies when oh next starts: grants.exec\n" +
+				"applies to new sessions: agent.round_robin, default.caps",
 		},
 		"an experiment read once at startup": {
 			changes: []config.SourceChange{
@@ -12145,13 +12139,13 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
-				{Path: "config.toml", Settings: []string{"skills.include"}},
-				{Path: "oh.toml", Settings: []string{"skills.include"}},
+				{Path: "config.toml", Settings: []string{"skill.include"}},
+				{Path: "oh.toml", Settings: []string{"skill.include"}},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: skills.include\n" +
-				"oh.toml: skills.include\n" +
-				"applies when oh next starts: skills.include",
+				"config.toml: skill.include\n" +
+				"oh.toml: skill.include\n" +
+				"applies when oh next starts: skill.include",
 		},
 	}
 
@@ -12295,7 +12289,7 @@ func toolThemeReloadStream(t *testing.T) string {
 	t.Helper()
 
 	return toolThemeReload(t, `
-		[ui.theme.tool.job]
+		[ui.theme.tool.task]
 		status = { name = "captain", paint = "#010203 bold" }
 
 		[ui.theme.tool.skill]
@@ -12303,10 +12297,10 @@ func toolThemeReloadStream(t *testing.T) string {
 	`, []agent.Event{
 		{Kind: agent.UserMessageEvent, Text: "show themed tools"},
 		{
-			Kind: agent.ToolCallRequestEvent, ID: "job", Name: "job",
-			FallbackRendering: agent.FallbackRendering{RenderingKind: "job_status", Subject: "docs"},
+			Kind: agent.ToolCallRequestEvent, ID: "task", Name: "task",
+			FallbackRendering: agent.FallbackRendering{RenderingKind: "task_status", Subject: "docs"},
 		},
-		{Kind: agent.ToolCallResultEvent, ID: "job", Name: "job", Status: agent.SuccessStatus},
+		{Kind: agent.ToolCallResultEvent, ID: "task", Name: "task", Status: agent.SuccessStatus},
 		{
 			Kind: agent.ToolCallRequestEvent, ID: "skill", Name: "read",
 			FallbackRendering: agent.FallbackRendering{
@@ -12327,17 +12321,17 @@ func toolActionThemeReloadStream(t *testing.T) string {
 	call := func(id string, kind string, subject string) []agent.Event {
 		return []agent.Event{
 			{
-				Kind: agent.ToolCallRequestEvent, ID: id, Name: "job",
+				Kind: agent.ToolCallRequestEvent, ID: id, Name: "task",
 				FallbackRendering: agent.FallbackRendering{RenderingKind: kind, Subject: subject},
 			},
-			{Kind: agent.ToolCallResultEvent, ID: id, Name: "job", Status: agent.SuccessStatus},
+			{Kind: agent.ToolCallResultEvent, ID: id, Name: "task", Status: agent.SuccessStatus},
 		}
 	}
 	calls := []agent.Event{{Kind: agent.UserMessageEvent, Text: "show themed actions"}}
 	for _, action := range []struct{ kind, subject string }{
-		{"job_start", "docs"},
-		{"job_stop", "docs"},
-		{"job_output", "docs"},
+		{"task_restart", "docs"},
+		{"task_stop", "docs"},
+		{"task_output", "docs"},
 		{"forward_add", "8080"},
 		{"forward_remove", "8080"},
 	} {
@@ -12345,7 +12339,7 @@ func toolActionThemeReloadStream(t *testing.T) string {
 	}
 
 	return toolThemeReload(t, `
-		[ui.theme.tool.job]
+		[ui.theme.tool.task]
 		default = { paint = "#0a0b0c" }
 		stop = { name = "scuttle", paint = "#0d0e0f" }
 
@@ -12602,10 +12596,10 @@ func paletteConversation() []agent.Event {
 		},
 		{Kind: agent.ToolCallResultEvent, ID: "build", Name: "bash", Status: agent.ErrorStatus, Text: "exit(1)"},
 		{
-			Kind: agent.ToolCallRequestEvent, ID: "docs", Name: "job",
-			FallbackRendering: agent.FallbackRendering{RenderingKind: "job_start", Subject: "docs"},
+			Kind: agent.ToolCallRequestEvent, ID: "docs", Name: "task",
+			FallbackRendering: agent.FallbackRendering{RenderingKind: "task_restart", Subject: "docs"},
 		},
-		{Kind: agent.ToolCallResultEvent, ID: "docs", Name: "job", Status: agent.SuccessStatus},
+		{Kind: agent.ToolCallResultEvent, ID: "docs", Name: "task", Status: agent.SuccessStatus},
 		{
 			Kind: agent.ToolCallRequestEvent, ID: "skill", Name: "read",
 			FallbackRendering: agent.FallbackRendering{
@@ -12819,7 +12813,7 @@ func TestReloadingConfigChangesTheEditorAndToolOutputLimit(t *testing.T) {
 		[editor]
 		command = ["first-editor", "--wait"]
 
-		[defaults]
+		[default]
 		tool_output = "2K"
 	`)
 
@@ -12830,7 +12824,7 @@ func TestReloadingConfigChangesTheEditorAndToolOutputLimit(t *testing.T) {
 		[editor]
 		command = "second-editor"
 
-		[defaults]
+		[default]
 		tool_output = "4K"
 	`)
 	settleLiveConfig(t, self)
@@ -12972,12 +12966,12 @@ func recalledHistory(history *edit.History) []string {
 
 func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "[snippets]\nold = \"Keep the old snippet.\"\n")
+	writeLiveConfig(t, path, "[snippet]\nold = \"Keep the old snippet.\"\n")
 
 	self := testConversation(t, &bytes.Buffer{})
 	prepareLiveConfig(t, self, path)
 
-	writeLiveConfig(t, path, "[snippets]\nbroken = \"{{\"\n")
+	writeLiveConfig(t, path, "[snippet]\nbroken = \"{{\"\n")
 	settleLiveConfig(t, self)
 	if _, found := self.commands.Find("//old"); !found {
 		t.Error("an invalid revision replaced the working snippets")
@@ -12986,7 +12980,7 @@ func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 		t.Error("the invalid snippet was registered")
 	}
 
-	writeLiveConfig(t, path, "[snippets]\nnew = \"Use the new snippet.\"\n")
+	writeLiveConfig(t, path, "[snippet]\nnew = \"Use the new snippet.\"\n")
 	settleLiveConfig(t, self)
 	if _, found := self.commands.Find("//old"); found {
 		t.Error("the old snippet survived a valid replacement")
@@ -13084,9 +13078,9 @@ func drawElidedPathLinks(t *testing.T, columns int) string {
 		elidedShellCall("cat screen.go target.txt", "Reading the screen and its target"),
 		elidedShellCall("cat screen.go", "Inspecting every line of the screen before anything draws"),
 		{
-			Name: "old_job",
+			Name: "retired",
 			FallbackRendering: agent.FallbackRendering{
-				RenderingKind: "job_start",
+				RenderingKind: "retired_start",
 				Subject:       "serve",
 				Intent:        "Serving the files",
 				Introduces:    "serve",
@@ -14300,6 +14294,7 @@ const (
 	configReloadReplay
 	configReloadSettingThatIsNotLive
 	configReloadGrantThatWaitsForTheNextRun
+	configReloadToolPermissionThatLandsLive
 	configReloadDebugThatWaitsForTheNextRun
 	configReloadSnippets
 	configReloadRoundRobinFile
@@ -14330,6 +14325,7 @@ func TestGoldenReloadingConfigDrawsEveryVisibleState(t *testing.T) {
 		"failure showing when the reload lands":             configReloadPreservedFailure,
 		"revision to a setting only a new session picks up": configReloadSettingThatIsNotLive,
 		"a grant that waits for the next run":               configReloadGrantThatWaitsForTheNextRun,
+		"a tool permission that lands live":                 configReloadToolPermissionThatLandsLive,
 		"debug settings wait for the next run":              configReloadDebugThatWaitsForTheNextRun,
 	}
 
@@ -14555,7 +14551,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			[ui]
 			currency = "GBP"
 
-			[snippets]
+			[snippet]
 			review = { prompt = "Review the changes.", description = "Review the working tree." }
 
 			[bar.top]
@@ -14587,7 +14583,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			[ui]
 			currency = "GBP"
 
-			[snippets]
+			[snippet]
 			review = { file = "review.md", description = "Review the working tree." }
 
 			[bar.top]
@@ -14612,7 +14608,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			[ui]
 			currency = "GBP"
 
-			[snippets]
+			[snippet]
 			check = { file = "review.md", description = "Check the working tree." }
 			review = { file = "review.md", description = "Review the working tree." }
 
@@ -14637,7 +14633,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			[ui]
 			currency = "GBP"
 
-			[snippets]
+			[snippet]
 			review = { file = "review.md", description = "Review the working tree." }
 
 			[bar.top]
@@ -14698,7 +14694,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			[ui]
 			currency = "GBP"
 
-			[sandbox]
+			[grants]
 			read = ["~/reference"]
 
 			[bar.top]
@@ -14711,6 +14707,11 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			center = []
 			right = []
 		`)
+		settleLiveConfig(t, self)
+		self.show(inputLine)
+		return screenOutput.String()
+	case configReloadToolPermissionThatLandsLive:
+		writeLiveConfig(t, path, initialConfig+"\n[tool.lookup]\npermission = \"ask\"\n\n[tool.read]\ndescription = \"read a file\"\n")
 		settleLiveConfig(t, self)
 		self.show(inputLine)
 		return screenOutput.String()
@@ -15786,8 +15787,8 @@ func clockAt(at time.Time) func() time.Time {
 	return func() time.Time { return at }
 }
 
-func jobsOf(listing ...jobs.Snapshot) func() []jobs.Snapshot {
-	return func() []jobs.Snapshot { return listing }
+func tasksOf(listing ...tasks.Snapshot) func() []tasks.Snapshot {
+	return func() []tasks.Snapshot { return listing }
 }
 
 func goldenSchedulePass(t *testing.T, isRunning bool, workPerPass time.Duration, span time.Duration) func() string {
@@ -15865,7 +15866,7 @@ func goldenClockSchedulePass(t *testing.T, format string, span time.Duration) fu
 	}
 }
 
-func goldenJobSchedulePass(t *testing.T, runsFor time.Duration, span time.Duration) func() string {
+func goldenTaskSchedulePass(t *testing.T, runsFor time.Duration, span time.Duration) func() string {
 	t.Helper()
 
 	return func() string {
@@ -15875,20 +15876,20 @@ func goldenJobSchedulePass(t *testing.T, runsFor time.Duration, span time.Durati
 			startedAt := time.Now()
 			endsAt := startedAt.Add(runsFor)
 
-			getJobs := func() []jobs.Snapshot {
+			getTasks := func() []tasks.Snapshot {
 				if time.Now().Before(endsAt) {
-					return []jobs.Snapshot{{Name: "check", State: jobs.StateRunning, StartedAt: startedAt}}
+					return []tasks.Snapshot{{ID: "check", State: tasks.Running, StartedAt: startedAt}}
 				}
 
-				return []jobs.Snapshot{{
-					Name:      "check",
-					State:     jobs.StateComplete,
+				return []tasks.Snapshot{{
+					ID:        "check",
+					State:     tasks.Done,
 					StartedAt: startedAt,
 					EndedAt:   endsAt,
 				}}
 			}
 
-			built, err := jobNames.New(getJobs, noPortRoutes, time.Now)(goldenSegmentOptions(""))
+			built, err := taskNames.New(getTasks, noPortRoutes, time.Now)(goldenSegmentOptions(""))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -16032,7 +16033,7 @@ func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 		"clock alone to the second":                          goldenClockSchedulePass(t, "15:04:05", 3*time.Second),
 		"confirmation feedback ticks down to its dismissal":  goldenFeedbackSchedulePass(t, configReloadConfirmationDuration+time.Second, configReloadConfirmationDuration, "Configuration reloaded automatically"),
 		"redraw feedback ticks at its own start and expires": goldenFeedbackSchedulePass(t, redrawFeedbackDuration+time.Second, redrawFeedbackDuration, "Redrawn in 42ms"),
-		"a finished job lingers on the bar and then goes":    goldenJobSchedulePass(t, 3*time.Second, 40*time.Second),
+		"a finished task lingers on the bar and then goes":   goldenTaskSchedulePass(t, 3*time.Second, 40*time.Second),
 		"default bar between turns outside a repository":     goldenDefaultBarSchedulePass(t, false, 16*time.Second),
 		"default bar during a turn outside a repository":     goldenDefaultBarSchedulePass(t, true, time.Second),
 		"git status alone outside a repository":              goldenGitStatusSchedulePass(t, workspaceMarker, 11*time.Second),
@@ -16131,8 +16132,8 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 		}
 	}))
 	forwardedPortsSegment := goldenShedSegment(t, forwardedPorts.New(goldenForwardedPorts(8000, 8080, 3000)))
-	jobsSegment := goldenShedSegment(t, jobNames.New(jobsOf(
-		jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
+	jobsSegment := goldenShedSegment(t, taskNames.New(tasksOf(
+		tasks.Snapshot{ID: "docs", State: tasks.Running},
 	), noPortRoutes, clockAt(at)))
 
 	passes := map[string]func() string{
@@ -16166,14 +16167,14 @@ func customToolDefaultMode(t *testing.T, isEnabled bool) *caps.Mode {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
 	settings := config.Config{
 		Defaults: config.Defaults{Caps: "rx"},
-		Tools: map[string]config.CustomTool{
-			"weather": {Group: "c", IsEnabledByDefault: isEnabled},
+		Tools: map[string]config.ToolConfig{
+			"weather": {Group: "c", IsGranted: isEnabled},
 		},
 	}
 	if err := applyDefaultCaps(&options, settings); err != nil {
 		t.Fatal(err)
 	}
-	toolGroups, err := settings.CustomToolGroups()
+	toolGroups, err := settings.ToolGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -16581,51 +16582,45 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"forwards / associated starting job": goldenSegmentPass(
+		"forwards / associated stopping task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateStarting)),
+			forwardedPorts.New(goldenAssociatedTaskPort(tasks.Stopping)),
 			"",
 			segment.Context{},
 		),
-		"forwards / associated running job": goldenSegmentPass(
+		"forwards / associated stopped task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateRunning)),
+			forwardedPorts.New(goldenAssociatedTaskPort(tasks.Stopped)),
 			"",
 			segment.Context{},
 		),
-		"forwards / associated stopping job": goldenSegmentPass(
+		"forwards / associated absent task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateStopping)),
+			forwardedPorts.New(goldenAssociatedPortWithoutTask()),
 			"",
 			segment.Context{},
 		),
-		"forwards / associated failed job": goldenSegmentPass(
+		"forwards / associated queued task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateFailed)),
+			forwardedPorts.New(goldenAssociatedTaskPort(tasks.Queued)),
 			"",
 			segment.Context{},
 		),
-		"forwards / associated complete job": goldenSegmentPass(
+		"forwards / associated running task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateComplete)),
+			forwardedPorts.New(goldenAssociatedTaskPort(tasks.Running)),
 			"",
 			segment.Context{},
 		),
-		"forwards / associated stopped job": goldenSegmentPass(
+		"forwards / associated failed task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateStopped)),
+			forwardedPorts.New(goldenAssociatedTaskPort(tasks.Failed)),
 			"",
 			segment.Context{},
 		),
-		"forwards / associated job ended with session": goldenSegmentPass(
+		"forwards / associated finished task": goldenSegmentPass(
 			t,
-			forwardedPorts.New(goldenAssociatedPort(jobs.StateEnded)),
-			"",
-			segment.Context{},
-		),
-		"forwards / associated absent job": goldenSegmentPass(
-			t,
-			forwardedPorts.New(goldenAssociatedPortWithoutJob()),
+			forwardedPorts.New(goldenAssociatedTaskPort(tasks.Done)),
 			"",
 			segment.Context{},
 		),
@@ -16907,88 +16902,99 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"jobs / none": goldenSegmentPass(
+		"tasks / none": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(), noPortRoutes, clockAt(at)),
+			taskNames.New(tasksOf(), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / running": goldenSegmentPass(
+		"tasks / running": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
-				jobs.Snapshot{Name: "watch", State: jobs.StateRunning},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running},
+				tasks.Snapshot{ID: "watch", State: tasks.Running},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / associated job named by port": goldenSegmentPass(
+		"tasks / associated task named by port": goldenSegmentPass(
 			t,
-			jobNames.New(
-				jobsOf(
-					jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
-					jobs.Snapshot{Name: "watch", State: jobs.StateRunning},
+			taskNames.New(
+				tasksOf(
+					tasks.Snapshot{ID: "docs", State: tasks.Running},
+					tasks.Snapshot{ID: "watch", State: tasks.Running},
 				),
 				func() []portgrant.Route {
-					return []portgrant.Route{{Port: 8000, JobName: "docs"}}
+					return []portgrant.Route{{Port: 8000, TaskName: "docs"}}
 				},
 				clockAt(at),
 			),
 			"",
 			segment.Context{},
 		),
-		"jobs / one being stopped among those running": goldenSegmentPass(
+		"tasks / one being stopped among those running": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
-				jobs.Snapshot{Name: "watch", State: jobs.StateRunning},
-				jobs.Snapshot{Name: "api", State: jobs.StateStopping},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running},
+				tasks.Snapshot{ID: "watch", State: tasks.Running},
+				tasks.Snapshot{ID: "api", State: tasks.Stopping},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / nothing is left of a closed session": goldenSegmentPass(
+		"tasks / nothing is left of a closed session": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "docs", State: jobs.StateEnded},
-				jobs.Snapshot{Name: "bridge", State: jobs.StateEnded},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Stopped},
+				tasks.Snapshot{ID: "bridge", State: tasks.Stopped},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / a ghost beside a live job": goldenSegmentPass(
+		"tasks / a ghost beside a live task": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
-				jobs.Snapshot{Name: "builder", State: jobs.StateComplete, EndedAt: at.Add(-5 * time.Second)},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running},
+				tasks.Snapshot{ID: "builder", State: tasks.Done, EndedAt: at.Add(-5 * time.Second)},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / a ghost whose linger is up": goldenSegmentPass(
+		"tasks / a ghost whose linger is up": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
-				jobs.Snapshot{Name: "builder", State: jobs.StateComplete, EndedAt: at.Add(-time.Minute)},
-				jobs.Snapshot{Name: "check", State: jobs.StateFailed, EndedAt: at.Add(-time.Hour)},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running},
+				tasks.Snapshot{ID: "builder", State: tasks.Done, EndedAt: at.Add(-time.Minute)},
+				tasks.Snapshot{ID: "check", State: tasks.Failed, EndedAt: at.Add(-time.Hour)},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / failures alone": goldenSegmentPass(
+		"tasks / failures alone": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "builder", State: jobs.StateFailed, EndedAt: at.Add(-time.Second)},
-				jobs.Snapshot{Name: "api", State: jobs.StateFailed, EndedAt: at.Add(-2 * time.Second)},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "builder", State: tasks.Failed, EndedAt: at.Add(-time.Second)},
+				tasks.Snapshot{ID: "api", State: tasks.Failed, EndedAt: at.Add(-2 * time.Second)},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
-		"jobs / failures beside those running": goldenSegmentPass(
+		"tasks / failures beside those running": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(
-				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
-				jobs.Snapshot{Name: "builder", State: jobs.StateFailed, EndedAt: at.Add(-time.Second)},
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running},
+				tasks.Snapshot{ID: "builder", State: tasks.Failed, EndedAt: at.Add(-time.Second)},
+			), noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
+		"tasks / queued, running and failed together": goldenSegmentPass(
+			t,
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running},
+				tasks.Snapshot{ID: "checks", State: tasks.Queued},
+				tasks.Snapshot{ID: "build", State: tasks.Running},
+				tasks.Snapshot{ID: "lint", State: tasks.Failed, EndedAt: at.Add(-time.Second)},
 			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
@@ -17686,7 +17692,7 @@ func TestGoldenPortForwardNoticesMatchGolden(t *testing.T) {
 			return screenOutput.String()
 		},
 		"recorded ports in a row": func() string { return recordedPortsInARow(t, replayLines) },
-		"forward taken over by a job": func() string {
+		"forward taken over by a task": func() string {
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
 			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
@@ -17695,8 +17701,8 @@ func TestGoldenPortForwardNoticesMatchGolden(t *testing.T) {
 				Forward: func(uint16) error { return nil },
 				Revoke:  func(uint16) error { return nil },
 			}, "127.9.9.9")
-			for _, jobName := range []string{"", "docs"} {
-				if _, err := forwards.ForModel().Forward(8080, jobName); err != nil {
+			for _, taskName := range []string{"", "docs"} {
+				if _, err := forwards.ForModel().Forward(8080, taskName); err != nil {
 					t.Fatal(err)
 				}
 				self.notify(<-forwards.Changes())
@@ -19054,11 +19060,12 @@ type sessionGoldenTurn struct {
 	ToggleAfterRetryNotice       string                  `toml:"toggle-after-retry-notice"`
 	ToggleDuringModeTurn         string                  `toml:"toggle-during-mode-turn"`
 	CancelAfterToolToggle        bool                    `toml:"cancel-after-tool-toggle"`
-	EndJobAfterToolRequest       string                  `toml:"end-job-after-tool-request"`
-	EndJobRespawn                jobs.Respawn            `toml:"end-job-respawn"`
-	EndJobAfterReasoningEvent    string                  `toml:"end-job-after-reasoning-event"`
-	EndJobAfterReasoningDelta    string                  `toml:"end-job-after-reasoning-delta"`
-	EndJobAfterMessageDelta      string                  `toml:"end-job-after-message-delta"`
+	EndTaskAfterToolRequest      string                  `toml:"end-task-after-tool-request"`
+	EndTaskAfterReasoningEvent   string                  `toml:"end-task-after-reasoning-event"`
+	EndTaskAfterReasoningDelta   string                  `toml:"end-task-after-reasoning-delta"`
+	EndTaskAfterMessageDelta     string                  `toml:"end-task-after-message-delta"`
+	SettleTasksAfterToolRequest  bool                    `toml:"settle-tasks-after-tool-request"`
+	SettleTasksAfterToolResult   bool                    `toml:"settle-tasks-after-tool-result"`
 	SettleSubagentsAfterResult   int                     `toml:"settle-subagents-after-tool-result"`
 	SettleSubagentsAfterTurn     bool                    `toml:"settle-subagents-after-turn"`
 	SubagentDebouncePasses       bool                    `toml:"subagent-debounce-passes"`
@@ -19070,8 +19077,6 @@ type sessionGoldenTurn struct {
 
 const forwardToolName = "forward"
 
-const jobToolName = "job"
-
 const grepToolName = "grep"
 
 const shellToolName = "bash"
@@ -19082,7 +19087,7 @@ const printedSessionIsImpossible = "this scenario drives the interface, which a 
 
 func (self sessionGoldenScenario) usesTheInterface() bool {
 	if slices.ContainsFunc(self.Tools, func(specification sessionGoldenTool) bool {
-		return specification.Name == forwardToolName
+		return specification.Name == forwardToolName || specification.Name == task.Name
 	}) {
 		return true
 	}
@@ -19091,9 +19096,9 @@ func (self sessionGoldenScenario) usesTheInterface() bool {
 		return true
 	}
 
-	return self.ToggleBeforeFirst != "" || self.EndJobBeforeFirst != "" ||
-		self.RunBeforeFirst != "" || self.JobHoldingWorkspace != "" || self.JobHoldingGit != "" ||
-		self.JobHoldingConfigured != "" || self.FirstTurn.usesTheInterface()
+	return self.ToggleBeforeFirst != "" || self.EndTaskBeforeFirst != "" ||
+		self.RunBeforeFirst != "" || self.TaskHoldingWorkspace != "" || self.TaskHoldingGit != "" ||
+		self.TaskHoldingConfigured != "" || self.FirstTurn.usesTheInterface()
 }
 
 func (self sessionGoldenTurn) usesTheInterface() bool {
@@ -19102,10 +19107,11 @@ func (self sessionGoldenTurn) usesTheInterface() bool {
 		self.ToggleAfterToolRequest != "" ||
 		self.ToggleAfterRetryNotice != "" ||
 		self.ToggleDuringModeTurn != "" ||
-		self.EndJobAfterToolRequest != "" ||
-		self.EndJobAfterReasoningEvent != "" ||
-		self.EndJobAfterReasoningDelta != "" ||
-		self.EndJobAfterMessageDelta != "" ||
+		self.EndTaskAfterToolRequest != "" ||
+		self.EndTaskAfterReasoningEvent != "" ||
+		self.EndTaskAfterReasoningDelta != "" ||
+		self.EndTaskAfterMessageDelta != "" ||
+		self.SettleTasksAfterToolRequest || self.SettleTasksAfterToolResult ||
 		self.DoubleReturnAfterToolRequest ||
 		self.CancelAfterQueueing ||
 		len(self.QueueAfterToolRequest) > 0 ||
@@ -19157,41 +19163,41 @@ type sessionGoldenEnvironment struct {
 }
 
 type sessionGoldenScenario struct {
-	Name                  string                    `toml:"-"`
-	Provider              string                    `toml:"provider"`
-	Model                 string                    `toml:"model"`
-	Wire                  agent.Wire                `toml:"wire"`
-	Effort                string                    `toml:"effort"`
-	IsFast                bool                      `toml:"fast"`
-	IdleAfter             string                    `toml:"idle-after"`
-	Asleep                string                    `toml:"asleep"`
-	Grouping              output.Grouping           `toml:"grouping"`
-	CacheMissNotices      bool                      `toml:"cache-miss-notices"`
-	Hostname              string                    `toml:"hostname"`
-	FirstTokenError       string                    `toml:"first-token-error"`
-	CredentialRefresh     string                    `toml:"credential-refresh"`
-	ToggleBeforeFirst     string                    `toml:"toggle-before-first"`
-	Conditions            string                    `toml:"conditions"`
-	ConditionsOnResume    string                    `toml:"conditions-on-resume"`
-	Environment           *sessionGoldenEnvironment `toml:"environment"`
-	EnvironmentOnResume   *sessionGoldenEnvironment `toml:"environment-on-resume"`
-	EndJobBeforeFirst     string                    `toml:"end-job-before-first"`
-	EndJobOutput          string                    `toml:"end-job-output"`
-	JobHoldingWorkspace   string                    `toml:"job-holding-workspace"`
-	JobHoldingGit         string                    `toml:"job-holding-git"`
-	JobHoldingConfigured  string                    `toml:"job-holding-configured"`
-	JobsRunningIntoResume []string                  `toml:"jobs-running-into-resume"`
-	RunBeforeFirst        string                    `toml:"run-before-first"`
-	Prices                *sessionGoldenPrices      `toml:"prices"`
-	Tools                 []sessionGoldenTool       `toml:"tool"`
-	Subagents             []sessionGoldenSubagent   `toml:"subagent"`
-	SubagentsKilled       bool                      `toml:"subagents-killed-with-session"`
-	ToolOutputBytes       int                       `toml:"tool-output-bytes"`
-	FirstTurn             sessionGoldenTurn         `toml:"first"`
-	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
-	CredentialsPath       string                    `toml:"-"`
-	CredentialRecovery    func()                    `toml:"-"`
-	ScratchDirectory      string                    `toml:"-"`
+	Name                   string                    `toml:"-"`
+	Provider               string                    `toml:"provider"`
+	Model                  string                    `toml:"model"`
+	Wire                   agent.Wire                `toml:"wire"`
+	Effort                 string                    `toml:"effort"`
+	IsFast                 bool                      `toml:"fast"`
+	IdleAfter              string                    `toml:"idle-after"`
+	Asleep                 string                    `toml:"asleep"`
+	Grouping               output.Grouping           `toml:"grouping"`
+	CacheMissNotices       bool                      `toml:"cache-miss-notices"`
+	Hostname               string                    `toml:"hostname"`
+	FirstTokenError        string                    `toml:"first-token-error"`
+	CredentialRefresh      string                    `toml:"credential-refresh"`
+	ToggleBeforeFirst      string                    `toml:"toggle-before-first"`
+	Conditions             string                    `toml:"conditions"`
+	ConditionsOnResume     string                    `toml:"conditions-on-resume"`
+	Environment            *sessionGoldenEnvironment `toml:"environment"`
+	EnvironmentOnResume    *sessionGoldenEnvironment `toml:"environment-on-resume"`
+	EndTaskBeforeFirst     string                    `toml:"end-task-before-first"`
+	EndTaskOutput          string                    `toml:"end-task-output"`
+	TaskHoldingWorkspace   string                    `toml:"task-holding-workspace"`
+	TaskHoldingGit         string                    `toml:"task-holding-git"`
+	TaskHoldingConfigured  string                    `toml:"task-holding-configured"`
+	TasksRunningIntoResume []string                  `toml:"tasks-running-into-resume"`
+	RunBeforeFirst         string                    `toml:"run-before-first"`
+	Prices                 *sessionGoldenPrices      `toml:"prices"`
+	Tools                  []sessionGoldenTool       `toml:"tool"`
+	Subagents              []sessionGoldenSubagent   `toml:"subagent"`
+	SubagentsKilled        bool                      `toml:"subagents-killed-with-session"`
+	ToolOutputBytes        int                       `toml:"tool-output-bytes"`
+	FirstTurn              sessionGoldenTurn         `toml:"first"`
+	ResumeTurn             sessionGoldenTurn         `toml:"resume"`
+	CredentialsPath        string                    `toml:"-"`
+	CredentialRecovery     func()                    `toml:"-"`
+	ScratchDirectory       string                    `toml:"-"`
 }
 
 func TestGoldenScenariosProduceCanonicalOutputs(t *testing.T) {
@@ -19595,22 +19601,18 @@ func portRoutes(ports ...uint16) []portgrant.Route {
 	return routes
 }
 
-func goldenAssociatedPort(state jobs.State) forwardedPorts.Routes {
+func goldenAssociatedTaskPort(state tasks.State) forwardedPorts.Routes {
 	return forwardedPorts.Routes{
-		GetRoutes: func() []portgrant.Route {
-			return []portgrant.Route{{Port: 8000, JobName: "docs"}}
-		},
-		GetJobs: func() []jobs.Snapshot {
-			return []jobs.Snapshot{{Name: "docs", State: state}}
-		},
-		Hostname: portgrant.AddressFor(goldenSessionName),
+		GetRoutes: func() []portgrant.Route { return []portgrant.Route{{Port: 8000, TaskName: "docs"}} },
+		GetTasks:  func() []tasks.Snapshot { return []tasks.Snapshot{{ID: "docs", State: state}} },
+		Hostname:  portgrant.AddressFor(goldenSessionName),
 	}
 }
 
-func goldenAssociatedPortWithoutJob() forwardedPorts.Routes {
+func goldenAssociatedPortWithoutTask() forwardedPorts.Routes {
 	return forwardedPorts.Routes{
 		GetRoutes: func() []portgrant.Route {
-			return []portgrant.Route{{Port: 8000, JobName: "docs"}}
+			return []portgrant.Route{{Port: 8000, TaskName: "docs"}}
 		},
 		Hostname: portgrant.AddressFor(goldenSessionName),
 	}
@@ -19625,11 +19627,43 @@ func goldenForwardedPorts(ports ...uint16) forwardedPorts.Routes {
 
 func newSessionGoldenPorts(sessionName string, hostnameTemplate string) *portgrant.Forwards {
 	address := portgrant.AddressFor(sessionName)
-	hostname := config.Ports{Hostname: hostnameTemplate}.GetHostname(sessionName, address)
+	hostname := config.Config{Experimental: map[string]any{string(experimental.ForwardHostname): hostnameTemplate}}.GetHostname(sessionName, address)
 	return portgrant.NewForwards(portgrant.Forwarder{
 		Forward: func(uint16) error { return nil },
 		Revoke:  func(uint16) error { return nil },
 	}, hostname)
+}
+
+func newSessionGoldenTaskManager(ctx context.Context) *tasks.Manager {
+	manager := tasks.New(ctx)
+	manager.TakeTimeFrom(func() time.Time { return time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC) })
+	return manager
+}
+
+func wrapSessionGoldenAsyncTools(tools []tool.Tool, manager *tasks.Manager, ports *portgrant.Forwards) []tool.Tool {
+	unavailable := ""
+	if !slices.ContainsFunc(tools, func(subject tool.Tool) bool { return subject.Name() == task.Name }) {
+		unavailable = "background tasks require the task tool, which is disabled"
+	}
+	for index, subject := range tools {
+		if subject.Name() != "bash" {
+			continue
+		}
+		tools[index] = async.Tool(subject, manager, async.Options{
+			IsRestartable:         true,
+			BackgroundUnavailable: unavailable,
+			TaskPolicy:            sessionGoldenBashTaskPolicy,
+			PublishPort: func(_ context.Context, port uint16, taskName string) (string, error) {
+				return forward.Publish(ports.ForModel(), port, taskName)
+			},
+		})
+		async.Bind(tools[index], tools[index].Schema())
+	}
+	return tools
+}
+
+func sessionGoldenBashTaskPolicy(context.Context, string) (any, error) {
+	return taskAccess{ToolName: "bash", Policy: sandbox.Policy{Write: []string{sessionGoldenWorkspace}}}, nil
 }
 
 //nolint:gocyclo // one fixture builds every real and deliberately altered tool shape
@@ -19653,13 +19687,16 @@ func newSessionGoldenTools(
 			t.Fatalf("unknown on-resume state %q", specification.OnResume)
 		}
 
-		if specification.Name == jobToolName && specification.ShouldRun {
-			tools = append(tools, newSessionGoldenRunningJobTool(t, ports))
-			continue
-		}
-
-		if specification.Name == jobToolName {
-			tools = append(tools, job.New(nil, nil, nil, nil))
+		if specification.Name == task.Name {
+			manager, isLoaded := sessionGoldenTaskManagers.Load(t)
+			if !isLoaded {
+				t.Fatal("a task tool scenario needs a task manager")
+			}
+			taskManager, isManager := manager.(*tasks.Manager)
+			if !isManager {
+				t.Fatal("the task manager has the wrong type")
+			}
+			tools = append(tools, task.New(taskManager))
 			continue
 		}
 
@@ -19762,7 +19799,10 @@ func newSessionGoldenTools(
 			})
 		}
 		attachment, attachmentMetrics := sessionGoldenImage(t, specification.Image, specification.ImageByteCount)
-		tools = append(tools, builder.Run(func(context.Context, struct{}) (tool.ToolCallResult, error) {
+		tools = append(tools, builder.Run(func(ctx context.Context, _ struct{}) (tool.ToolCallResult, error) {
+			if err := tool.Launched(ctx); err != nil {
+				return tool.ToolCallResult{}, err
+			}
 			if callCount >= len(specification.Outputs) {
 				return tool.ToolCallResult{}, fmt.Errorf("tool %s has no output for call %d", specification.Name, callCount+1)
 			}
@@ -19833,25 +19873,7 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 	return read.New(root, file.NewSnapshots())
 }
 
-func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) tool.Tool {
-	t.Helper()
-
-	rootHandle, err := os.OpenRoot(t.TempDir())
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = rootHandle.Close() })
-
-	manager := jobs.New(stoppableRunner{})
-	t.Cleanup(func() { _ = manager.Close() })
-
-	return job.New(
-		manager,
-		file.New(rootHandle, func(string) error { return nil }),
-		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-		ports.ForModel(),
-	)
-}
+var sessionGoldenTaskManagers sync.Map
 
 type unstartableSearchRunner struct{}
 
@@ -20530,6 +20552,10 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	toolDirectory := t.TempDir()
 	firstOutputLimit := scenario.outputLimit(t)
 	firstState := buildSessionGoldenAgentState(t, session.Dir(directory, log.Name()), log.EnsurePersisted, firstOutputLimit)
+	firstTaskManager := newSessionGoldenTaskManager(t.Context())
+	t.Cleanup(func() { firstTaskManager.Close() })
+	sessionGoldenTaskManagers.Store(t, firstTaskManager)
+	t.Cleanup(func() { sessionGoldenTaskManagers.Delete(t) })
 	var firstHarness *App
 	var firstChildManager *subagents.Manager
 	if children != nil {
@@ -20540,6 +20566,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	firstTools := sessionGoldenCapped(t, firstState, children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory,
 	), firstChildManager, func() caps.Set { return firstHarness.mode.Current() }))
+	firstTools = wrapSessionGoldenAsyncTools(firstTools, firstTaskManager, goldenPorts)
 	meta.ToolDefinitions = store.FreezeTools(firstTools)
 	meta.Tools = toolset.Names(firstTools)
 	if err := log.SetMeta(meta); err != nil {
@@ -20565,6 +20592,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		experimental: experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
 		nudge:        builtInConfig(t).Input.Nudge,
 		children:     childState{manager: firstChildManager},
+		tasks:        firstTaskManager,
 	}
 	firstHarness.children.directory = session.ChildrenDir(directory, log.Name())
 	if children != nil {
@@ -20576,34 +20604,30 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	firstHarness.conditions = conditions.NewRestored(firstConditions, firstConditions)
 	firstHarness.environment = environment.NewRestored(firstEnvironment, firstEnvironment)
 	settleSessionGoldenMode(firstHarness)
-	if scenario.JobHoldingWorkspace != "" {
-		startSessionGoldenJobHoldingPath(t, firstHarness, scenario.JobHoldingWorkspace, sessionGoldenWorkspace)
+	if scenario.TaskHoldingWorkspace != "" {
+		startSessionGoldenTaskHoldingPath(t, firstHarness, scenario.TaskHoldingWorkspace, sessionGoldenWorkspace)
 	}
-	if scenario.JobHoldingGit != "" {
-		startSessionGoldenJobHoldingPath(t, firstHarness, scenario.JobHoldingGit, filepath.Join(sessionGoldenWorkspace, ".git"))
+	if scenario.TaskHoldingGit != "" {
+		startSessionGoldenTaskHoldingPath(t, firstHarness, scenario.TaskHoldingGit, filepath.Join(sessionGoldenWorkspace, ".git"))
 	}
-	if scenario.JobHoldingConfigured != "" {
-		startSessionGoldenJobHoldingPath(t, firstHarness, scenario.JobHoldingConfigured, sessionGoldenConfiguredWrite)
+	if scenario.TaskHoldingConfigured != "" {
+		startSessionGoldenTaskHoldingPath(t, firstHarness, scenario.TaskHoldingConfigured, sessionGoldenConfiguredWrite)
 	}
-	if len(scenario.JobsRunningIntoResume) > 0 {
-		recordSessionGoldenRunningJobs(firstHarness, scenario.JobsRunningIntoResume)
+	if len(scenario.TasksRunningIntoResume) > 0 {
+		recordSessionGoldenRunningTasks(firstHarness, scenario.TasksRunningIntoResume)
 	}
 	if scenario.ToggleBeforeFirst != "" {
 		toggleSessionGoldenCaps(t, firstHarness, scenario.ToggleBeforeFirst)
 		firstHarness.settleAccess()
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
-	for _, name := range []string{scenario.JobHoldingWorkspace, scenario.JobHoldingGit, scenario.JobHoldingConfigured} {
-		if name != "" {
-			settleSessionGoldenJob(t, firstHarness, name)
-		}
+	if scenario.TaskHoldingWorkspace != "" || scenario.TaskHoldingGit != "" || scenario.TaskHoldingConfigured != "" {
+		settleSessionGoldenTasks(t, firstHarness)
 	}
-	if scenario.EndJobBeforeFirst != "" {
-		conclusion := endedSessionGoldenJob(scenario.EndJobBeforeFirst)
-		if scenario.EndJobOutput != "" {
-			conclusion.Output = scenario.EndJobOutput
-		}
-		firstHarness.jobEnded(conclusion)
+	if scenario.EndTaskBeforeFirst != "" {
+		conclusion := endedSessionGoldenTask(scenario.EndTaskBeforeFirst)
+		conclusion.Snapshot.Output = scenario.EndTaskOutput
+		firstHarness.holdNotice(taskrecord.EndedEvent(conclusion))
 		firstHarness.settleAccess()
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
@@ -20656,6 +20680,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	)
 	var resumedHarness *App
 	var resumedChildManager *subagents.Manager
+	resumedTaskManager := newSessionGoldenTaskManager(t.Context())
+	t.Cleanup(func() { resumedTaskManager.Close() })
+	sessionGoldenTaskManagers.Store(t, resumedTaskManager)
 	if children != nil {
 		resumedChildManager = children.manager(server.URL, session.ChildrenDir(directory, sessionName), func() []tool.Tool {
 			return newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, t.TempDir(), true)
@@ -20665,6 +20692,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	currentTools := sessionGoldenCapped(t, resumedState, children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory, true,
 	), resumedChildManager, func() caps.Set { return resumedHarness.mode.Current() }))
+	currentTools = wrapSessionGoldenAsyncTools(currentTools, resumedTaskManager, goldenPorts)
 	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions), nil)
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		storedSession.Events,
@@ -20709,6 +20737,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 			manager:   resumedChildManager,
 			directory: session.ChildrenDir(directory, sessionName),
 		},
+		tasks: resumedTaskManager,
 	}
 	if children != nil {
 		resumedHarness.now = children.now
@@ -20724,8 +20753,17 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		resumedHarness.pendingNotices.add(availabilityRestoration.Change)
 		restoredEvents = append(restoredEvents, availabilityRestoration.Change)
 	}
-	if len(scenario.JobsRunningIntoResume) > 0 {
-		restoredEvents = restoreSessionGoldenRunningJobs(t, resumedHarness, storedSession.Events, restoredEvents)
+	resumedHarness.restoreTasks(storedSession.Events)
+	if len(scenario.TasksRunningIntoResume) > 0 {
+		listing, wasRecorded := taskrecord.LastRecorded(resumedHarness.recordedEvents)
+		if !wasRecorded || len(listing) != len(scenario.TasksRunningIntoResume) || listing[0].State != tasks.Stopped {
+			t.Fatalf("the restored tasks were not recorded as stopped: %+v", listing)
+		}
+	}
+	for _, item := range resumedHarness.pendingNotices.items {
+		if item.state.Kind == taskrecord.EndedWithSession {
+			restoredEvents = append(restoredEvents, item.state)
+		}
 	}
 	resumedHarness.restoreChildren(storedSession.Events)
 	resumedHarness.currentTurn = Turn{Stream: testRunningTurnStream()}
@@ -21172,83 +21210,91 @@ const (
 	sessionGoldenConfiguredWrite = "/reference"
 )
 
-func startSessionGoldenJobHoldingPath(t *testing.T, testHarness *App, name string, path string) {
+func startSessionGoldenTaskHoldingPath(t *testing.T, testHarness *App, id string, path string) {
 	t.Helper()
 
-	manager := testHarness.jobs.manager
-	if manager == nil {
-		manager = jobs.New(stoppableRunner{})
-		t.Cleanup(func() { _ = manager.Close() })
-		testHarness.jobs = jobState{manager: manager}
-	}
 	testHarness.workspace = work.At(sessionGoldenWorkspace)
 
-	policy := sandbox.Policy{Write: []string{path}}
-	if _, err := manager.Start(t.Context(), name, ".", "just "+name, policy); err != nil {
-		t.Fatalf("the job did not start: %v", err)
+	policy := taskAccess{ToolName: "bash", Policy: sandbox.Policy{Write: []string{path}}}
+	if _, err := testHarness.tasks.Start(t.Context(), id, "bash", true, false, func(ctx context.Context) (tool.ToolCallResult, error) {
+		<-ctx.Done()
+		return tool.ToolCallResult{}, context.Cause(ctx)
+	}, policy); err != nil {
+		t.Fatalf("the task did not start: %v", err)
 	}
-}
-
-func recordSessionGoldenRunningJobs(testHarness *App, names []string) {
-	startedAt := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
-
-	listing := make([]jobs.Snapshot, 0, len(names))
-	for _, name := range names {
-		listing = append(listing, jobs.Snapshot{
-			Name:      name,
-			Command:   "just " + name,
-			State:     jobs.StateRunning,
-			StartedAt: startedAt,
-		})
-	}
-
-	event := jobrecord.ListingEvent(listing)
-	testHarness.recordedEvents = append(testHarness.recordedEvents, event)
-	testHarness.storeEvent(event)
-}
-
-func restoreSessionGoldenRunningJobs(
-	t *testing.T,
-	testHarness *App,
-	storedEvents []agent.Event,
-	restoredEvents []agent.Event,
-) []agent.Event {
-	t.Helper()
-
-	manager := jobs.New(stoppableRunner{})
-	t.Cleanup(func() { _ = manager.Close() })
-
-	testHarness.jobs = jobState{manager: manager}
-
-	heldBefore := len(testHarness.pendingNotices.items)
-	testHarness.restoreJobs(storedEvents)
-
-	held := testHarness.pendingNotices.items[heldBefore:]
-	if len(held) == 0 {
-		t.Fatal("the restored jobs said nothing about the session having closed")
-	}
-
-	for _, item := range held {
-		restoredEvents = append(restoredEvents, item.state)
-	}
-
-	return restoredEvents
-}
-
-func settleSessionGoldenJob(t *testing.T, testHarness *App, name string) {
-	t.Helper()
-
 	deadline := time.Now().Add(5 * time.Second)
-	for slices.ContainsFunc(testHarness.jobs.manager.List(), func(snapshot jobs.Snapshot) bool {
-		return snapshot.Name == name && snapshot.IsLive()
+	for !slices.ContainsFunc(testHarness.tasks.List(), func(snapshot tasks.Snapshot) bool {
+		return snapshot.ID == id && snapshot.State == tasks.Running
 	}) {
 		if time.Now().After(deadline) {
-			t.Fatalf("the stopped job %s never settled", name)
+			t.Fatalf("the task %s never started running", id)
 		}
 		time.Sleep(time.Millisecond)
 	}
+}
 
-	testHarness.jobs.manager.PruneFinished()
+func settleSessionGoldenTasks(t *testing.T, testHarness *App) {
+	t.Helper()
+
+	if testHarness.tasks == nil {
+		return
+	}
+
+	for {
+		var live tasks.Snapshot
+		isLive := false
+		for _, snapshot := range testHarness.tasks.List() {
+			if snapshot.State == tasks.Queued || snapshot.State == tasks.Running || snapshot.State == tasks.Stopping {
+				live = snapshot
+				isLive = true
+				break
+			}
+		}
+		if !isLive {
+			break
+		}
+		over, release, err := testHarness.tasks.Hold(live.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		<-over
+		release()
+	}
+
+	testHarness.tasksChanged()
+}
+
+func endedSessionGoldenTask(id string) tasks.Conclusion {
+	startedAt := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
+
+	return tasks.Conclusion{
+		Snapshot: tasks.Snapshot{
+			ID:        id,
+			ToolName:  "bash",
+			Run:       1,
+			State:     tasks.Failed,
+			StartedAt: startedAt,
+			EndedAt:   startedAt.Add(12 * time.Second),
+			Failure:   "exit status 1",
+		},
+		Result:  tool.ToolCallResult{},
+		IsFinal: true,
+	}
+}
+
+func recordSessionGoldenRunningTasks(testHarness *App, names []string) {
+	startedAt := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
+	listing := make([]tasks.Snapshot, 0, len(names))
+	for _, name := range names {
+		listing = append(listing, tasks.Snapshot{
+			ID: name, ToolName: "bash", State: tasks.Running, Run: 1,
+			StartedAt: startedAt, IsRespawning: true,
+			Invocation: &tasks.Invocation{Arguments: `{}`},
+		})
+	}
+	event := taskrecord.ListingEvent(listing)
+	testHarness.recordedEvents = append(testHarness.recordedEvents, event)
+	testHarness.storeEvent(event)
 }
 
 func toggleSessionGoldenCaps(t *testing.T, testHarness *App, flags string) {
@@ -21420,8 +21466,8 @@ func runSessionGoldenTurn(
 			if reasoningEvents == turn.CancelAfterReasoningEvent {
 				interruptWithStopKey()
 			}
-			if reasoningEvents == 1 && turn.EndJobAfterReasoningEvent != "" {
-				testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterReasoningEvent))
+			if reasoningEvents == 1 && turn.EndTaskAfterReasoningEvent != "" {
+				testHarness.taskEnded(endedSessionGoldenTask(turn.EndTaskAfterReasoningEvent))
 			}
 		}
 		if update.Event != nil && update.Event.Kind == agent.RetryingEvent {
@@ -21436,6 +21482,9 @@ func runSessionGoldenTurn(
 		if update.Event != nil && update.Event.Kind == agent.ToolCallRequestEvent {
 			toolRequests++
 			takeToolRequest(toolRequests)
+		}
+		if update.Event != nil && update.Event.Kind == agent.ToolCallResultEvent && turn.SettleTasksAfterToolResult {
+			settleSessionGoldenTasks(t, testHarness)
 		}
 		childTurns.observe(update)
 	}
@@ -21471,16 +21520,16 @@ func (self *sessionGoldenDeltas) take(
 	switch kind { //nolint:exhaustive // Only model prose event kinds can be deltas.
 	case agent.ModelReasoningEvent:
 		self.reasoning++
-		if self.reasoning == 1 && turn.EndJobAfterReasoningDelta != "" {
-			testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterReasoningDelta))
+		if self.reasoning == 1 && turn.EndTaskAfterReasoningDelta != "" {
+			testHarness.taskEnded(endedSessionGoldenTask(turn.EndTaskAfterReasoningDelta))
 		}
 		if self.reasoning == turn.CancelAfterReasoningDelta {
 			interruptWithStopKey()
 		}
 	case agent.ModelMessageEvent:
 		self.message++
-		if self.message == 1 && turn.EndJobAfterMessageDelta != "" {
-			testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterMessageDelta))
+		if self.message == 1 && turn.EndTaskAfterMessageDelta != "" {
+			testHarness.taskEnded(endedSessionGoldenTask(turn.EndTaskAfterMessageDelta))
 		}
 		if self.message == turn.CancelAfterMessageDelta {
 			interruptWithStopKey()
@@ -21524,11 +21573,12 @@ func takeFirstSessionGoldenToolRequest(
 		}
 	}
 
-	if turn.EndJobAfterToolRequest != "" {
-		testHarness.jobEnded(respawnedSessionGoldenJob(
-			endedSessionGoldenJob(turn.EndJobAfterToolRequest),
-			turn.EndJobRespawn,
-		))
+	if turn.EndTaskAfterToolRequest != "" {
+		testHarness.taskEnded(endedSessionGoldenTask(turn.EndTaskAfterToolRequest))
+	}
+
+	if turn.SettleTasksAfterToolRequest {
+		settleSessionGoldenTasks(t, testHarness)
 	}
 
 	if turn.DoubleReturnAfterToolRequest {
@@ -21546,35 +21596,6 @@ func sessionGoldenHostCommand(command string) agent.Event {
 		Command: command,
 		Output:  " M cmd/oh/draw.go\n?? notes.txt\n",
 	})
-}
-
-func endedSessionGoldenJob(name string) jobs.Conclusion {
-	startedAt := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
-
-	return jobs.Conclusion{
-		Snapshot: jobs.Snapshot{
-			Name:      name,
-			Command:   "just " + name,
-			State:     jobs.StateFailed,
-			StartedAt: startedAt,
-			EndedAt:   startedAt.Add(12 * time.Second),
-			ExitCode:  2,
-		},
-		Output: "go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1",
-	}
-}
-
-func respawnedSessionGoldenJob(conclusion jobs.Conclusion, respawn jobs.Respawn) jobs.Conclusion {
-	switch respawn {
-	case jobs.RespawnDone:
-		conclusion.Snapshot.Run = 1
-	case jobs.RespawnAbandoned:
-		conclusion.Snapshot.Run = jobs.QuickRunsTolerated + 1
-	case "", jobs.RespawnOnExit:
-	}
-	conclusion.Snapshot.Respawn = respawn
-
-	return conclusion
 }
 
 func takeFirstSessionGoldenMessageDelta(t *testing.T, testHarness *App, turn sessionGoldenTurn) {
@@ -23862,47 +23883,11 @@ func startsABlock(line string, previous string) bool {
 	}
 }
 
-type stoppableCommand struct {
-	outcome chan sandbox.Result
-}
-
-func (self stoppableCommand) Wait() (sandbox.Result, error) { return <-self.outcome, nil }
-func (self stoppableCommand) Stop()                         { self.outcome <- sandbox.Result{ExitCode: 137} }
-
-func (self stoppableCommand) Signal(signal syscall.Signal) error {
-	if signal == syscall.SIGTERM {
-		self.outcome <- sandbox.Result{ExitCode: 143}
-	}
-
-	return nil
-}
-
-type stoppableRunner struct{}
-
-func (stoppableRunner) Run(
-	context.Context,
-	string,
-	string,
-	sandbox.Policy,
-) (sandbox.Result, error) {
-	return sandbox.Result{}, nil
-}
-
-func (stoppableRunner) Start(
-	context.Context,
-	string,
-	string,
-	sandbox.Policy,
-	sandbox.Output,
-) (sandbox.Command, error) {
-	return stoppableCommand{outcome: make(chan sandbox.Result, 2)}, nil
-}
-
-func appWithOneWritableJob(t *testing.T) *App {
+func appWithOneWritableTask(t *testing.T) *App {
 	t.Helper()
 
-	manager := jobs.New(stoppableRunner{})
-	t.Cleanup(func() { _ = manager.Close() })
+	manager := tasks.New(t.Context())
+	t.Cleanup(manager.Close)
 
 	log, err := store.Create(t.TempDir(), store.Meta{})
 	if err != nil {
@@ -23915,34 +23900,40 @@ func appWithOneWritableJob(t *testing.T) *App {
 		screen:    output.New(&bytes.Buffer{}),
 		recorder:  record.New(log),
 		mode:      caps.NewMode(caps.Read | caps.Write),
-		jobs:      jobState{manager: manager},
+		tasks:     manager,
 		workspace: work.At("/workspace"),
 	}
 
-	policy := sandbox.Policy{Write: []string{"/workspace"}}
-	if _, err := manager.Start(t.Context(), "web", ".", "webd", policy); err != nil {
-		t.Fatalf("the job did not start: %v", err)
-	}
+	startWritableTask(t, manager, "web")
 
 	return self
 }
 
-func TestAnEndedJobTellsTheModelWhatItPrintedWithoutBeingAsked(t *testing.T) {
+func startWritableTask(t *testing.T, manager *tasks.Manager, id string) {
+	t.Helper()
+
+	policy := taskAccess{ToolName: "bash", Policy: sandbox.Policy{Write: []string{"/workspace"}}}
+	if _, err := manager.Start(t.Context(), id, "bash", true, false, func(ctx context.Context) (tool.ToolCallResult, error) {
+		<-ctx.Done()
+		return tool.ToolCallResult{}, ctx.Err()
+	}, policy); err != nil {
+		t.Fatalf("the task did not start: %v", err)
+	}
+}
+
+func TestAnEndedTaskTellsTheModelWhatItPrintedWithoutBeingAsked(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.mode = caps.NewMode(caps.Read)
 
-	self.jobEnded(jobs.Conclusion{
-		Snapshot: jobs.Snapshot{Name: "build", State: jobs.StateFailed, ExitCode: 2},
-		Output:   "undefined: getWidth\nexit status 1\n",
-	})
+	self.taskEnded(endedTaskConclusion())
 
 	notices := self.pendingNotices.notices()
 	if len(notices) != 1 {
-		t.Fatalf("got %d notices, want the one job that ended: %v", len(notices), notices)
+		t.Fatalf("got %d notices, want the one task that ended: %v", len(notices), notices)
 	}
 	if !strings.Contains(notices[0], "undefined: getWidth") {
-		t.Errorf("got %q, want what the job printed rather than an errand to fetch it", notices[0])
+		t.Errorf("got %q, want what the task printed rather than an errand to fetch it", notices[0])
 	}
 	self.settleAccess()
 
@@ -23954,12 +23945,12 @@ func TestAnEndedJobTellsTheModelWhatItPrintedWithoutBeingAsked(t *testing.T) {
 	}
 }
 
-func TestAnEndedJobWaitsForSomeoneToSpeakWhereNobodyIsListening(t *testing.T) {
+func TestAnEndedTaskWaitsForSomeoneToSpeakWhereNobodyIsListening(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	completeTurn(self)
 
-	self.jobEnded(endedJobConclusion())
+	self.taskEnded(endedTaskConclusion())
 
 	if self.currentTurn.Running() {
 		t.Error("a printed conversation woke itself, want it waiting until someone speaks")
@@ -23968,7 +23959,7 @@ func TestAnEndedJobWaitsForSomeoneToSpeakWhereNobodyIsListening(t *testing.T) {
 	self.settleAccess()
 
 	if note := noteTexts(self.takeSettledNotes()); note == "" {
-		t.Error("the ended job said nothing, want it kept for whenever the conversation next runs")
+		t.Error("the ended task said nothing, want it kept for whenever the conversation next runs")
 	}
 }
 
@@ -23977,7 +23968,7 @@ func TestAPendingNoticeIsMarkedSubmittedThoughTheHarnessDrewBesideIt(t *testing.
 	self := testConversation(t, &screenOutput)
 	completeTurn(self)
 
-	self.jobEnded(endedJobConclusion())
+	self.taskEnded(endedTaskConclusion())
 	self.screen.Line("the harness said something")
 	self.settleAccess()
 	self.screen.End()
@@ -24047,7 +24038,7 @@ func noticesDrawnBesideAnOpenBlock(self *App) map[string]func() {
 	forwards, _ := portgrant.ForwardChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 
 	return map[string]func(){
-		"an ended job": func() { self.jobEnded(endedJobConclusion()) },
+		"an ended task": func() { self.taskEnded(endedTaskConclusion()) },
 		"a host command": func() {
 			self.hostCommandRan(hostcommand.RanEvent(hostcommand.Result{Command: "git status", Output: " M a\n"}))
 		},
@@ -24076,16 +24067,16 @@ func TestEveryHarnessNoticeReachesTheScreenBesideARegionTallerThanTheTerminal(t 
 	}
 }
 
-func TestAnEndedJobWakesTheConversationWithATurnOfItsOwn(t *testing.T) {
+func TestAnEndedTaskWakesTheConversationWithATurnOfItsOwn(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	self.jobs.doesWake = true
+	self.tasksDoWake = true
 	completeTurn(self)
 
-	self.jobEnded(endedJobConclusion())
+	self.taskEnded(endedTaskConclusion())
 
 	if !self.currentTurn.Running() {
-		t.Fatal("the ended job left the conversation asleep, want a turn of its own")
+		t.Fatal("the ended task left the conversation asleep, want a turn of its own")
 	}
 
 	for report := range self.currentTurn.Events() {
@@ -24095,17 +24086,20 @@ func TestAnEndedJobWakesTheConversationWithATurnOfItsOwn(t *testing.T) {
 
 	messages := submittedTexts(self.recordedEvents)
 	if len(messages) == 0 || !strings.Contains(messages[len(messages)-1], "build") {
-		t.Errorf("got messages %q, want the ended job named in the turn it woke", messages)
+		t.Errorf("got messages %q, want the ended task named in the turn it woke", messages)
 	}
 	if note := noteTexts(self.takeSettledNotes()); note != "" {
 		t.Errorf("told the model %q afterwards, want the waking turn to have taken it", note)
 	}
 }
 
-func endedJobConclusion() jobs.Conclusion {
-	return jobs.Conclusion{
-		Snapshot: jobs.Snapshot{Name: "build", State: jobs.StateFailed, ExitCode: 2},
-		Output:   "undefined: getWidth\nexit status 1\n",
+func endedTaskConclusion() tasks.Conclusion {
+	return tasks.Conclusion{
+		Snapshot: tasks.Snapshot{
+			ID: "build", ToolName: "bash", Run: 1, State: tasks.Failed,
+			Output: "undefined: getWidth\nexit status 1\n", Failure: "exit status 2",
+		},
+		IsFinal: true,
 	}
 }
 
@@ -24411,10 +24405,11 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		return drawnAtWithDelays(build, make([]time.Duration, returns)...)
 	}
 
-	restoreOneJob := func(self *App) {
-		self.jobs = jobState{manager: jobs.New(nil)}
-		self.restoreJobs([]agent.Event{
-			jobrecord.ListingEvent([]jobs.Snapshot{{Name: "docs", Command: "python3 -m http.server", State: jobs.StateRunning}}),
+	restoreOneTask := func(self *App) {
+		self.tasks = tasks.New(t.Context())
+		t.Cleanup(self.tasks.Close)
+		self.restoreTasks([]agent.Event{
+			taskrecord.ListingEvent([]tasks.Snapshot{{ID: "docs", ToolName: "bash", Run: 1, State: tasks.Running}}),
 		})
 		self.refreshPendingMessages()
 	}
@@ -24434,168 +24429,132 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		self.restoreChildren(self.recordedEvents)
 		self.refreshPendingMessages()
 	}
-	endOneJob := func(self *App) {
-		self.jobs = jobState{manager: jobs.New(nil)}
-		self.jobEnded(jobs.Conclusion{
-			Snapshot: jobs.Snapshot{Name: "build", Command: "just build", State: jobs.StateFailed},
+	endOneTask := func(self *App) {
+		self.taskEnded(tasks.Conclusion{
+			Snapshot: tasks.Snapshot{ID: "build", ToolName: "bash", Run: 1, State: tasks.Failed},
+			IsFinal:  true,
 		})
 	}
 	withdrawWrites := func(self *App) { self.toggleCap(caps.Write) }
-	stopAJobAndGrantWritesBack := func(self *App) {
-		manager := jobs.New(stoppableRunner{})
-		t.Cleanup(func() { _ = manager.Close() })
-		self.jobs = jobState{manager: manager}
+	stopATaskAndGrantWritesBack := func(self *App) {
+		self.tasks = tasks.New(t.Context())
+		t.Cleanup(self.tasks.Close)
 		self.workspace = work.At("/workspace")
-		policy := sandbox.Policy{Write: []string{"/workspace"}}
-		if _, err := manager.Start(t.Context(), "web", ".", "webd", policy); err != nil {
-			t.Fatal(err)
-		}
+		startWritableTask(t, self.tasks, "web")
 		self.toggleCap(caps.Write)
 		self.toggleCap(caps.Write)
 	}
 
 	passes := map[string]func() string{
-		"1 a restored job standing":                        drawnAt(restoreOneJob, 0),
-		"2 a restored job flushed":                         drawnAt(restoreOneJob, 2),
-		"3 an ended job standing":                          drawnAt(endOneJob, 0),
-		"4 an ended job flushed":                           drawnAt(endOneJob, 2),
-		"5 a mode change flushed":                          drawnAt(withdrawWrites, 2),
-		"6 nothing standing carries on":                    drawnAt(func(*App) {}, 2),
-		"7 a restored job and one return":                  drawnAt(restoreOneJob, 1),
-		"7b a restored job flushed at the window boundary": drawnAtWithDelays(restoreOneJob, 0, doubleReturnWindow),
-		"7c a restored job after an expired return pair":   drawnAtWithDelays(restoreOneJob, 0, time.Second),
-		"7d a restored job flushed after an expired pair":  drawnAtWithDelays(restoreOneJob, 0, time.Second, 0),
-		"8 a stopped job standing":                         drawnAt(stopAJobAndGrantWritesBack, 0),
-		"9 a stopped job flushed":                          drawnAt(stopAJobAndGrantWritesBack, 2),
-		"subagent 1 restored and standing":                 drawnAt(restoreSubagents("tame-adder"), 0),
-		"subagent 2 restored after one return":             drawnAt(restoreSubagents("tame-adder"), 1),
-		"subagent 3 restored and flushed":                  drawnAt(restoreSubagents("tame-adder"), 2),
-		"subagents 4 restored together and standing":       drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 0),
-		"subagents 5 restored together and flushed":        drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 2),
-		"subagent 6 a restored message standing":           drawnAt(restoreAMessage, 0),
-		"subagent 7 a restored message flushed":            drawnAt(restoreAMessage, 2),
+		"1 a restored task standing":                        drawnAt(restoreOneTask, 0),
+		"2 a restored task flushed":                         drawnAt(restoreOneTask, 2),
+		"3 an ended task standing":                          drawnAt(endOneTask, 0),
+		"4 an ended task flushed":                           drawnAt(endOneTask, 2),
+		"5 a mode change flushed":                           drawnAt(withdrawWrites, 2),
+		"6 nothing standing carries on":                     drawnAt(func(*App) {}, 2),
+		"7 a restored task and one return":                  drawnAt(restoreOneTask, 1),
+		"7b a restored task flushed at the window boundary": drawnAtWithDelays(restoreOneTask, 0, doubleReturnWindow),
+		"7c a restored task after an expired return pair":   drawnAtWithDelays(restoreOneTask, 0, time.Second),
+		"7d a restored task flushed after an expired pair":  drawnAtWithDelays(restoreOneTask, 0, time.Second, 0),
+		"8 a stopped task standing":                         drawnAt(stopATaskAndGrantWritesBack, 0),
+		"9 a stopped task flushed":                          drawnAt(stopATaskAndGrantWritesBack, 2),
+		"subagent 1 restored and standing":                  drawnAt(restoreSubagents("tame-adder"), 0),
+		"subagent 2 restored after one return":              drawnAt(restoreSubagents("tame-adder"), 1),
+		"subagent 3 restored and flushed":                   drawnAt(restoreSubagents("tame-adder"), 2),
+		"subagents 4 restored together and standing":        drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 0),
+		"subagents 5 restored together and flushed":         drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 2),
+		"subagent 6 a restored message standing":            drawnAt(restoreAMessage, 0),
+		"subagent 7 a restored message flushed":             drawnAt(restoreAMessage, 2),
 	}
 
 	compareWithGolden(t, "pending-notices", ".ansi", passes)
 	compareWithGolden(t, "pending-notices", ".screen", shownPasses(t, passes))
 }
 
-func TestAnEndedJobsOutputIsCappedTheWayAToolCallIs(t *testing.T) {
+func TestAnEndedTasksOutputIsCappedTheWayAToolCallIs(t *testing.T) {
 	self := &App{
+		agent:           agent.New("", quietProvider{}, nil),
+		recorder:        record.New(testLog(t)),
 		screen:          output.New(&bytes.Buffer{}),
 		mode:            caps.NewMode(caps.Read),
 		toolOutputLimit: truncate.NewLimit(1024),
 	}
 
-	self.jobEnded(jobs.Conclusion{
-		Snapshot: jobs.Snapshot{Name: "build", State: jobs.StateComplete},
-		Output:   strings.Repeat("every line of a very talkative job\n", 200),
+	self.taskEnded(tasks.Conclusion{
+		Snapshot: tasks.Snapshot{ID: "build", ToolName: "bash", Run: 1, State: tasks.Done, Output: strings.Repeat("every line of a very talkative task\n", 200)},
+		IsFinal:  true,
 	})
 
 	notices := self.pendingNotices.notices()
 	if len(notices) != 1 {
-		t.Fatalf("got %d notices, want the one job that ended: %v", len(notices), notices)
+		t.Fatalf("got %d notices, want the one task that ended: %v", len(notices), notices)
 	}
 	if !strings.Contains(notices[0], "truncated at") {
-		t.Errorf("got %q, want a talkative job capped the way a tool call is", notices[0])
+		t.Errorf("got %q, want a talkative task capped the way a tool call is", notices[0])
 	}
 	if len(notices[0]) > 2048 {
 		t.Errorf("the notice is %d bytes, want it capped near the tool output limit", len(notices[0]))
 	}
 }
 
-func TestAWithdrawalIsAnnouncedBeforeTheJobsItStopped(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestAWithdrawalIsAnnouncedBeforeTheTasksItStopped(t *testing.T) {
+	self := appWithOneWritableTask(t)
 
 	self.toggleCap(caps.Write)
 
 	notices := self.pendingNotices.notices()
 	if len(notices) != 2 {
-		t.Fatalf("got %d notices, want the change and the job it stopped: %v", len(notices), notices)
+		t.Fatalf("got %d notices, want the change and the task it stopped: %v", len(notices), notices)
 	}
 	if !strings.Contains(notices[0], "The workspace is now read-only") {
 		t.Errorf("got %q first, want the change that caused the stop", notices[0])
 	}
-	if !strings.Contains(notices[1], "Job `web` stopped") {
-		t.Errorf("got %q second, want the job it stopped", notices[1])
+	if !strings.Contains(notices[1], "Task `web` stopped") {
+		t.Errorf("got %q second, want the task it stopped", notices[1])
 	}
 }
 
-func TestTheModelIsToldAboutTheJobsAWithdrawalStopped(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestTheModelIsToldAboutTheTasksAWithdrawalStopped(t *testing.T) {
+	self := appWithOneWritableTask(t)
 
 	self.toggleCap(caps.Write)
 	self.settleAccess()
 
 	note := noteTexts(self.prelude())
 	change := strings.Index(note, "The workspace is now read-only")
-	stop := strings.Index(note, "Job `web` stopped")
+	stop := strings.Index(note, "Task `web` stopped")
 	if change < 0 || stop < 0 {
-		t.Fatalf("got note %q, want the change and the job it stopped", note)
+		t.Fatalf("got note %q, want the change and the task it stopped", note)
 	}
 	if change > stop {
-		t.Errorf("got note %q, want the change announced before the job it stopped", note)
+		t.Errorf("got note %q, want the change announced before the task it stopped", note)
 	}
 }
 
-func TestTheModelIsToldAboutAStoppedJobEvenWhenTheCapabilityComesBack(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestTheModelIsToldAboutAStoppedTaskEvenWhenTheCapabilityComesBack(t *testing.T) {
+	self := appWithOneWritableTask(t)
 
 	self.toggleCap(caps.Write)
 	self.toggleCap(caps.Write)
 	self.settleAccess()
 
-	if note := noteTexts(self.prelude()); !strings.Contains(note, "Job `web` stopped") {
-		t.Errorf("got note %q, want the job the withdrawal stopped", note)
+	if note := noteTexts(self.prelude()); !strings.Contains(note, "Task `web` stopped") {
+		t.Errorf("got note %q, want the task the withdrawal stopped", note)
 	}
 	if note := noteTexts(self.prelude()); note != "" {
 		t.Errorf("got note %q, want the stop told once", note)
 	}
 }
 
-func TestTwoReturnsWithAStoppedJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestTwoReturnsWithAStoppedTaskNoticeSubmitItRatherThanTheNudge(t *testing.T) {
+	self := appWithOneWritableTask(t)
 	self.nudge = "carry on"
 
 	self.toggleCap(caps.Write)
 	self.toggleCap(caps.Write)
 
 	if !self.hasUntoldPendingNotices() {
-		t.Error("the stopped job would have gone out beside the continue message")
-	}
-}
-
-func TestTheModelIsToldTheDetailedFormOfAUserNotice(t *testing.T) {
-	var screenOutput bytes.Buffer
-	self := testConversation(t, &screenOutput)
-	self.settleAccess()
-	self.jobs = jobState{manager: jobs.New(nil)}
-
-	self.restoreJobs([]agent.Event{
-		jobrecord.ListingEvent([]jobs.Snapshot{{Name: "docs", Command: "python3", State: jobs.StateRunning}}),
-	})
-	self.jobEnded(endedJobConclusion())
-	self.toggleCap(caps.Write)
-
-	drawn := self.pendingNotices.notices()
-	if len(drawn) != 3 {
-		t.Fatalf("got %d notices drawn, want the restored job, the ended job and the change: %q", len(drawn), drawn)
-	}
-	modelNotices := noteTextsOf(self.pendingNotices.modelNotes())
-	if len(modelNotices) != 3 {
-		t.Fatalf("got %d model notices, want the restored job, the ended job and the change: %q", len(modelNotices), modelNotices)
-	}
-	if strings.Contains(drawn[0], "job(action") || !strings.Contains(modelNotices[0], "job(action") {
-		t.Errorf("got user notice %q and model notice %q, want only the model to receive the tool instruction", drawn[0], modelNotices[0])
-	}
-	if !slices.Equal(drawn[1:], modelNotices[1:]) {
-		t.Errorf("got remaining user notices %q and model notices %q, want them equal", drawn[1:], modelNotices[1:])
-	}
-
-	self.settleAccess()
-
-	if told := noteTexts(self.prelude()); told != strings.Join(modelNotices, noticeSeparator) {
-		t.Errorf("the model was told\n%q\nwant\n%q", told, modelNotices)
+		t.Error("the stopped task would have gone out beside the continue message")
 	}
 }
 
@@ -24622,32 +24581,32 @@ func TestAHostCommandIsPendingWithoutStartingATurn(t *testing.T) {
 	}
 }
 
-func TestAStoppedJobIsToldWhenThePathItHeldIsRevoked(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestAStoppedTaskIsToldWhenThePathItHeldIsRevoked(t *testing.T) {
+	self := appWithOneWritableTask(t)
 
-	self.stopJobsHoldingPath("/workspace")
+	self.stopTasksHoldingPath("/workspace")
 	self.settleAccess()
 
-	if note := noteTexts(self.prelude()); !strings.Contains(note, "Job `web` stopped") {
-		t.Errorf("got note %q, want the job the revoked path stopped", note)
+	if note := noteTexts(self.prelude()); !strings.Contains(note, "Task `web` stopped") {
+		t.Errorf("got note %q, want the task the revoked path stopped", note)
 	}
 }
 
 func TestGrantingACapabilityBackStopsNothing(t *testing.T) {
-	self := appWithOneWritableJob(t)
+	self := appWithOneWritableTask(t)
 
 	self.toggleCap(caps.Write)
 	self.toggleCap(caps.Write)
 
 	for _, notice := range self.pendingNotices.notices() {
 		if strings.Contains(notice, "read-write") && strings.Contains(notice, "stopped") {
-			t.Errorf("granting a capability stopped a job: %q", notice)
+			t.Errorf("granting a capability stopped a task: %q", notice)
 		}
 	}
 }
 
-func TestAModeChangeThatStoppedAJobIsNotTakenBack(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestAModeChangeThatStoppedATaskIsNotTakenBack(t *testing.T) {
+	self := appWithOneWritableTask(t)
 
 	self.toggleCap(caps.Write)
 	self.toggleCap(caps.Write)
@@ -24661,30 +24620,30 @@ func TestAModeChangeThatStoppedAJobIsNotTakenBack(t *testing.T) {
 	}
 }
 
-func TestAJobStoppedByAnotherCapabilityHoldsNothingBack(t *testing.T) {
+func TestATaskStoppedByAnotherCapabilityHoldsNothingBack(t *testing.T) {
 	self := &App{
 		screen: output.New(&bytes.Buffer{}),
 		mode:   caps.NewMode(caps.Read | caps.Write | caps.Shell),
 	}
 
 	self.toggleCap(caps.Write)
-	self.pendingNotices.add(caps.JobStopEvent("web", caps.Shell))
+	self.pendingNotices.add(caps.TaskStopEvent("web", caps.Shell))
 	self.toggleCap(caps.Write)
 
 	notices := self.pendingNotices.notices()
 	if len(notices) != 1 {
 		t.Fatalf(
-			"got %d notices, want only the job the shell withdrawal stopped: %v",
+			"got %d notices, want only the task the shell withdrawal stopped: %v",
 			len(notices), notices,
 		)
 	}
-	if !strings.Contains(notices[0], "Job `web` stopped") {
-		t.Errorf("got %q, want the stopped job left standing on its own", notices[0])
+	if !strings.Contains(notices[0], "Task `web` stopped") {
+		t.Errorf("got %q, want the stopped task left standing on its own", notices[0])
 	}
 }
 
-func TestTogglingOnPastAStoppedJobStillSubtracts(t *testing.T) {
-	self := appWithOneWritableJob(t)
+func TestTogglingOnPastAStoppedTaskStillSubtracts(t *testing.T) {
+	self := appWithOneWritableTask(t)
 
 	self.toggleCap(caps.Write)
 
@@ -24702,10 +24661,10 @@ func TestTogglingOnPastAStoppedJobStillSubtracts(t *testing.T) {
 
 	notices := self.pendingNotices.notices()
 	if !strings.Contains(notices[0], "The workspace is now read-only") {
-		t.Errorf("got %q first, want the change that stopped the job", notices[0])
+		t.Errorf("got %q first, want the change that stopped the task", notices[0])
 	}
-	if !strings.Contains(notices[1], "Job `web` stopped") {
-		t.Errorf("got %q second, want the job it stopped", notices[1])
+	if !strings.Contains(notices[1], "Task `web` stopped") {
+		t.Errorf("got %q second, want the task it stopped", notices[1])
 	}
 }
 
@@ -24717,67 +24676,6 @@ func TestAModeChangeThatStoppedNothingIsStillTakenBack(t *testing.T) {
 
 	if len(self.pendingNotices.items) != 0 {
 		t.Errorf("a mode change with no consequence was not taken back: %v", self.pendingNotices.items)
-	}
-}
-
-func TestRemovingTheLastJobIsRecordedSoAResumeDoesNotBringItBack(t *testing.T) {
-	directory := t.TempDir()
-	log, err := store.Create(directory, store.Meta{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = log.Close() }()
-
-	manager := jobs.New(nil)
-	manager.Restore([]jobs.Snapshot{{Name: "docs", Command: "python3", State: jobs.StateFailed}})
-
-	self := &App{
-		agent:    agent.New("", quietProvider{}, nil),
-		screen:   output.New(&bytes.Buffer{}),
-		recorder: record.New(log),
-		mode:     caps.NewMode(caps.Read | caps.Write),
-		jobs:     jobState{manager: manager},
-	}
-
-	self.recordJobListing()
-	manager.PruneFinished()
-	self.recordJobListing()
-
-	restored, wasRecorded := jobrecord.LastRecorded(self.recordedEvents)
-	if !wasRecorded {
-		t.Fatal("nothing was recorded at all")
-	}
-	if len(restored) != 0 {
-		t.Errorf("got %#v, want the emptied listing recorded so a resume restores nothing", restored)
-	}
-}
-
-func TestPruningRightAfterAResumeIsStillRecorded(t *testing.T) {
-	directory := t.TempDir()
-	log, err := store.Create(directory, store.Meta{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = log.Close() }()
-
-	manager := jobs.New(nil)
-	self := &App{
-		agent:    agent.New("", quietProvider{}, nil),
-		screen:   output.New(&bytes.Buffer{}),
-		recorder: record.New(log),
-		mode:     caps.NewMode(caps.Read | caps.Write),
-		jobs:     jobState{manager: manager},
-	}
-
-	self.restoreJobs([]agent.Event{
-		jobrecord.ListingEvent([]jobs.Snapshot{{Name: "docs", Command: "python3", State: jobs.StateFailed}}),
-	})
-	manager.PruneFinished()
-	self.recordJobListing()
-
-	restored, wasRecorded := jobrecord.LastRecorded(self.recordedEvents)
-	if !wasRecorded || len(restored) != 0 {
-		t.Errorf("got %#v (recorded %v), want the emptied listing recorded", restored, wasRecorded)
 	}
 }
 
@@ -25476,7 +25374,7 @@ func TestASimulationRunsWithNoSandboxAndNothingThatCouldUseOne(t *testing.T) {
 		t.Errorf("a simulation offered %v, want %v", options.Tools, want)
 	}
 
-	for _, refused := range []string{"bash", "job", "write", "edit", "forward"} {
+	for _, refused := range []string{"bash", "task", "write", "edit", "forward"} {
 		if slices.Contains(options.Tools, refused) {
 			t.Errorf("a simulation offered the %s tool with no sandbox around it", refused)
 		}
@@ -25539,7 +25437,7 @@ func TestADeclaredToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
 			{Say: "Rain, then."},
 		},
 	}))
-	writeRigConfig(t, rig, `[tools.weather]
+	writeRigConfig(t, rig, `[tool.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 permission = "allow"
@@ -25588,7 +25486,7 @@ func TestACustomToolVersionControlsCompatibilityWhenTheBinaryResumes(t *testing.
 		},
 	}))
 	writeConfig := func(version int, description string) {
-		writeRigConfig(t, rig, fmt.Sprintf(`[tools.weather]
+		writeRigConfig(t, rig, fmt.Sprintf(`[tool.weather]
 version = %d
 description = %q
 command = [%q]
@@ -25667,7 +25565,7 @@ func TestAHeadlessSessionOffersNoDeclaredTool(t *testing.T) {
 
 	address := endpoint.Addresses(server.URL)[sim.Messages]
 	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
-	writeDeclaredToolConfig(t, environment, `[tools.weather]
+	writeDeclaredToolConfig(t, environment, `[tool.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 permission = "allow"
@@ -25694,7 +25592,7 @@ parameters = [
 func TestADeclaredToolIsOfferedAloneWhenItIsNamed(t *testing.T) {
 	script := declaredToolScript(t)
 	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "Nothing to do."}}}))
-	writeRigConfig(t, rig, `[tools.weather]
+	writeRigConfig(t, rig, `[tool.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 parameters = [
@@ -25718,14 +25616,14 @@ parameters = [
 func TestAHeadlessSessionRefusesToNameAToolThatNeedsSomebodyThere(t *testing.T) {
 	binary := buildTestBinary(t)
 	//nolint:gosec // running the binary under test
-	process := exec.CommandContext(t.Context(), binary, "-p", "--yolo", "-t", "read", "-t", "job", "hello")
+	process := exec.CommandContext(t.Context(), binary, "-p", "--yolo", "-t", "read", "-t", "task", "hello")
 	process.Env = testBinaryEnvironment(t, t.TempDir())
 	process.Dir = reachableWorkspaceDir(t)
 	output, err := process.CombinedOutput()
 	if err == nil {
-		t.Fatalf("a headless session offered a job: %q", output)
+		t.Fatalf("a headless session offered task control: %q", output)
 	}
-	if !strings.Contains(string(output), "headless session offers only read, ls, find, grep, bash, write, edit, so it cannot offer job") {
+	if !strings.Contains(string(output), "headless session offers only read, ls, find, grep, bash, write, edit, so it cannot offer task") {
 		t.Errorf("got %q", output)
 	}
 }
@@ -25734,7 +25632,7 @@ func TestAWorkspaceCannotDeclareAToolOfItsOwn(t *testing.T) {
 	binary := buildTestBinary(t)
 	workspaceDir := reachableWorkspaceDir(t)
 	overridePath := filepath.Join(workspaceDir, "oh.toml")
-	declaration := "[tools.weather]\ndescription = \"x\"\ncommand = [\"echo\"]\n"
+	declaration := "[tool.weather]\ndescription = \"x\"\ncommand = [\"echo\"]\n"
 	if err := os.WriteFile(overridePath, []byte(declaration), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -26044,5 +25942,87 @@ func TestAResumedSessionWithoutAnEnvironmentSnapshotIsToldWhenItsWireMoved(t *te
 	}
 	if again.IsChanged || again.NeedsBaseline {
 		t.Errorf("a recorded change was offered again: %+v", again)
+	}
+}
+
+func TestABackgroundCustomToolFinishesAndWakesTheModel(t *testing.T) {
+	gate := filepath.Join(t.TempDir(), "finish")
+	script := filepath.Join(t.TempDir(), "weather")
+	//nolint:gosec // the test command must be executable
+	if err := os.WriteFile(script, []byte("#!/bin/bash\nset -euo pipefail\nwhile [ ! -e \"$1\" ]; do sleep 0.02; done\necho forecast complete\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
+		Model: "fake",
+		Turns: []sim.Turn{
+			{Calls: []sim.Call{{Name: "weather", Arguments: `{"background":true}`}}},
+			{Say: "Started."},
+			{Say: "Completed."},
+		},
+	}))
+	writeRigConfig(t, rig, fmt.Sprintf(`[tool.weather]
+description = "report the weather"
+command = [%q, %q]
+permission = "allow"
+background = true
+group = "a"
+`, script, gate))
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "get the weather in the background")
+	session.waitFor("Started.")
+	if err := os.WriteFile(gate, []byte("go"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	session.waitFor("Completed.")
+	session.requireShown("forecast complete")
+	session.quit()
+
+	requests := endpoint.Requests()
+	if len(requests) < 3 || !slices.Contains(requests[0].Tools, "task") || !slices.Contains(requests[0].Tools, "weather") {
+		t.Fatalf("background tool was not offered with task controls: %+v", requests)
+	}
+	var acknowledgement string
+	for _, entry := range requests[1].Input {
+		if entry.Type == sim.CallOutput {
+			acknowledgement = entry.Output
+		}
+	}
+	if !strings.Contains(acknowledgement, "task-1 scheduled") {
+		t.Errorf("background call returned %q", acknowledgement)
+	}
+	if !strings.Contains(fmt.Sprint(requests[2].Input), "forecast complete") {
+		t.Errorf("the model received no completion: %+v", requests[2].Input)
+	}
+}
+
+func TestDisablingTaskToolRemovesBackgroundExecutionFromBash(t *testing.T) {
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
+		Model: "fake", Turns: []sim.Turn{{Say: "Foreground calls only."}},
+	}))
+	writeRigConfig(t, rig, "[tool.task]\nenabled = false\n")
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "use bash only")
+	session.waitFor("Foreground calls only.")
+	session.quit()
+
+	stored := rig.storedSessions()
+	if len(stored) != 1 {
+		t.Fatalf("got %d stored sessions", len(stored))
+	}
+	if !slices.Equal(stored[0].Meta.Tools, []string{"bash"}) {
+		t.Errorf("disabled task tool was offered: %v", stored[0].Meta.Tools)
+	}
+	for _, definition := range stored[0].Meta.ToolDefinitions {
+		if definition.Name == "bash" && slices.ContainsFunc(definition.Parameters, func(parameter store.ToolParameter) bool {
+			return parameter.Name == "background"
+		}) {
+			t.Error("bash advertised background without task controls")
+		}
+	}
+	if strings.Contains(stored[0].Meta.SystemPrompt, "use the task tool") {
+		t.Error("the prompt promised task controls that were disabled")
+	}
+	requests := endpoint.Requests()
+	if len(requests) == 0 || slices.Contains(requests[0].Tools, "task") {
+		t.Errorf("the model was offered disabled task controls: %+v", requests)
 	}
 }
