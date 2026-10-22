@@ -1,0 +1,211 @@
+=== 01 this workspace alone ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent                 Title  Model                   Effort  Messages   Size  Length  Last Message
+› 🐜 able-ant           (unt…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 02 another workspace's running session is offered neither archiving nor deletion ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent (all)           Work…  Model                   Effort  Messages   Size  Length  Last Message
+  🐝 busy-bee           else…  —                            —         0    <1M     <1m        1h ago
+› 🦊 far-fox            else…  —                            —         0    <1M     <1m        2h ago
+  🐜 able-ant           io-o…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 03 archiving another workspace's session asks first ===
+Press a again to archive far-fox
+  Agent (all)           Work…  Model                   Effort  Messages   Size  Length  Last Message
+  🐝 busy-bee           else…  —                            —         0    <1M     <1m        1h ago
+› 🦊 far-fox            else…  —                            —         0    <1M     <1m        2h ago
+  🐜 able-ant           io-o…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 04 another workspace's session archived ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent (all)           Work…  Model                   Effort  Messages   Size  Length  Last Message
+  🐝 busy-bee           else…  —                            —         0    <1M     <1m        1h ago
+› 🐜 able-ant           io-o…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox.meta-cache
+sessions/far-fox.tgz
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 05 restoring another workspace's archive asks first ===
+Press a again to restore far-fox
+  Agent (all archived)  Work…  Model                   Effort  Messages   Size  Length  Last Message
+› 🦊 far-fox            else…  —                            —         0    <1M     <1m        2h ago
+  🦉 odd-owl            else…  —                            —         0    <1M     <1m        4h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox.meta-cache
+sessions/far-fox.tgz
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 06 another workspace's archive restored ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent (all archived)  Work…  Model                   Effort  Messages   Size  Length  Last Message
+› 🦉 odd-owl            else…  —                            —         0    <1M     <1m        4h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 07 deleting another workspace's archive asks first ===
+Press delete again to delete odd-owl
+  Agent (all archived)  Work…  Model                   Effort  Messages   Size  Length  Last Message
+› 🦉 odd-owl            else…  —                            —         0    <1M     <1m        4h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+sessions/odd-owl.meta-cache
+sessions/odd-owl.tgz
+farm/busy-bee
+farm/far-fox
+farm/odd-owl
+=== 08 another workspace's archive deleted with its scratch ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent (all archived)  Work…  Model                   Effort  Messages   Size  Length  Last Message
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+farm/busy-bee
+farm/far-fox
+=== 09 another workspace's session is read but not opened ===
+🦊 far-fox  (untitled)                                                                      1-3 of 3
+other workspace · esc/q return · ↑↓ scroll · ←→ browse
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+ tidy the fox den
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session belongs to <elsewhere>
+────────────────────────────────────────────────────────────────────────────────────────────────────
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+farm/busy-bee
+farm/far-fox
+=== 10 another workspace's session stays closed to a second enter ===
+🦊 far-fox  (untitled)                                                                      1-3 of 3
+other workspace · esc/q return · ↑↓ scroll · ←→ browse
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+ tidy the fox den
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session belongs to <elsewhere>
+────────────────────────────────────────────────────────────────────────────────────────────────────
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+farm/busy-bee
+farm/far-fox
+=== 11 deleting another workspace's session asks first ===
+Press delete again to delete far-fox
+  Agent (all)           Work…  Model                   Effort  Messages   Size  Length  Last Message
+  🐝 busy-bee           else…  —                            —         0    <1M     <1m        1h ago
+› 🦊 far-fox            else…  —                            —         0    <1M     <1m        2h ago
+  🐜 able-ant           io-o…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+sessions/far-fox
+farm/busy-bee
+farm/far-fox
+=== 12 another workspace's session deleted with its scratch ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent (all)           Work…  Model                   Effort  Messages   Size  Length  Last Message
+  🐝 busy-bee           else…  —                            —         0    <1M     <1m        1h ago
+› 🐜 able-ant           io-o…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+farm/busy-bee
+=== 13 this workspace's session left alone ===
+/ filter              tab scope · ← → view · enter preview · a archive/restore · del delete · q quit
+  Agent                 Title  Model                   Effort  Messages   Size  Length  Last Message
+› 🐜 able-ant           (unt…  —                            —         0    <1M     <1m        3h ago
+--- disk ---
+sessions/able-ant
+sessions/busy-bee
+farm/busy-bee

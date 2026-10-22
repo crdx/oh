@@ -191,7 +191,7 @@ func TestTabSwitchesBetweenThisWorkspaceAndAllWorkspaces(t *testing.T) {
 	}
 }
 
-func TestAnotherWorkspacesSessionCanOnlyBeRead(t *testing.T) {
+func TestAnotherWorkspacesSessionIsReadButNeverOpened(t *testing.T) {
 	self := &sessionList{
 		store: Store{
 			Sessions: []*Session{{
@@ -215,15 +215,55 @@ func TestAnotherWorkspacesSessionCanOnlyBeRead(t *testing.T) {
 	if _, err := self.chosen(0); err == nil {
 		t.Error("expected another workspace's session to refuse direct opening")
 	}
-	for _, keypress := range []key.Key{archiveKeypress(), deleteKeypress()} {
-		if _, isBound := self.Removal(0, keypress); isBound {
-			t.Errorf("expected %v not to mutate another workspace's session", keypress)
-		}
-	}
 	preview, isBound := self.Preview(0, key.Key{Code: key.Enter})
 	if !isBound || preview.UnavailableLabel != "other workspace" ||
 		preview.UnavailableMessage != "Session belongs to /home/alice/another" {
 		t.Errorf("unexpected preview: %+v, bound %t", preview, isBound)
+	}
+}
+
+func TestAnotherWorkspacesSessionIsArchivedRestoredAndDeleted(t *testing.T) {
+	var moved []string
+	record := func(storedSession *Session) (int64, error) {
+		moved = append(moved, storedSession.Name)
+		return 0, nil
+	}
+	self := &sessionList{
+		store: Store{
+			Sessions: []*Session{{Name: "wiry-turtle", IsOtherWorkspace: true}},
+			Archive:  record,
+			Restore:  record,
+			Delete: func(storedSession *Session) error {
+				moved = append(moved, storedSession.Name)
+				return nil
+			},
+		},
+		isAllWorkspacesView: true,
+	}
+
+	perform := func(keypress key.Key, wantPrompt string) {
+		t.Helper()
+		removal, isBound := self.Removal(0, keypress)
+		if !isBound || removal.Prompt != wantPrompt {
+			t.Fatalf("got %q and %t, want %q", removal.Prompt, isBound, wantPrompt)
+		}
+		if err := removal.Perform(); err != nil {
+			t.Fatal(err)
+		}
+		removal.Apply()
+	}
+
+	perform(archiveKeypress(), "Press a again to archive wiry-turtle")
+	self.Switch(1)
+	perform(archiveKeypress(), "Press a again to restore wiry-turtle")
+	self.Switch(-1)
+	perform(deleteKeypress(), "Press delete again to delete wiry-turtle")
+
+	if !slices.Equal(moved, []string{"wiry-turtle", "wiry-turtle", "wiry-turtle"}) {
+		t.Errorf("got the sessions moved as %v", moved)
+	}
+	if self.Len() != 0 || len(self.store.ArchivedSessions) != 0 {
+		t.Errorf("expected the session to be gone, got %d stored and %d archived", self.Len(), len(self.store.ArchivedSessions))
 	}
 }
 

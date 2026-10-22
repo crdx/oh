@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Changes
+
+- Archive, restore and delete sessions from any workspace
+
 ## [0.22.0] — 2026-10-22
 
 ### Changes

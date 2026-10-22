@@ -331,7 +331,7 @@
   🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
   🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
   🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
-\e[38;2;150;152;150m  🐢 wiry-turtle        another               work in another project            \e[38;2;192;128;80m⚡\e[0m\e[38;2;150;152;150m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+\e[38;2;150;152;150m  🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m⚡\e[0m\e[38;2;150;152;150m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -356,7 +356,7 @@
   🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
   🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
   🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
-\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐢 wiry-turtle        another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -398,8 +398,483 @@
 \e[K\r
 \e[K\r
 \e[K\e[J
+=== the confirmation asked before another workspace's session is archived ===
+\e[H\e[38;2;207;173;0mPress a again to archive sly-fox\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       project               add support for reasoning traces   \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== the confirmation asked before another workspace's session is deleted ===
+\e[H\e[38;2;207;173;0mPress delete again to delete sly-fox\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       project               add support for reasoning traces   \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's running session, which is never offered for archiving ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       project               add support for reasoning traces   \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's running session, which is never offered for deletion ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       project               add support for reasoning traces   \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== the confirmation asked before another workspace's archive is restored ===
+\e[H\e[38;2;207;173;0mPress a again to restore calm-lemur\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all archived)  Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26    <1M      1d       12d ago\e[K\r
+  🐢 wiry-turtle        project               add an archive view to the picker  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐒 calm-lemur         another               rename the harness to oh           Codex 5.3                    —        26    <1M      1d       12d ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== the confirmation asked before another workspace's archive is deleted ===
+\e[H\e[38;2;207;173;0mPress delete again to delete calm-lemur\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all archived)  Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26    <1M      1d       12d ago\e[K\r
+  🐢 wiry-turtle        project               add an archive view to the picker  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐒 calm-lemur         another               rename the harness to oh           Codex 5.3                    —        26    <1M      1d       12d ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's session archived, drawn at the size of its archive ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all archived)  Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4     6M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🐢 wiry-turtle        project               add an archive view to the picker  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26    <1M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's session archived, leaving this workspace's sessions alone ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stutter when a tool runs            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[38;2;192;128;80m\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🐩 thick-poodle       add support for reasoning traces                         \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and t…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                                               —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's session archived, leaving this workspace's archives alone ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐢 wiry-turtle        add an archive view to the picker                        Sonnet 5                  high        61     2M      3h        2d ago\e[0m\e[K\r
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26    <1M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's archive restored, drawn at the size of its directory ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[38;2;192;128;80m\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🐩 thick-poodle       project               add support for reasoning traces   \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[38;2;150;152;150m  🐒 calm-lemur         another               rename the harness to oh           Codex 5.3                    —        26     7M      1d       12d ago\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's archive restored, leaving this workspace's sessions alone ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stutter when a tool runs            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[38;2;192;128;80m\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🐩 thick-poodle       add support for reasoning traces                         \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and t…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                                               —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's archive restored, leaving this workspace's archives alone ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26    <1M      1d       12d ago\e[0m\e[K\r
+  🐢 wiry-turtle        add an archive view to the picker                        Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's session deleted from every workspace's sessions ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[38;2;192;128;80m\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🐩 thick-poodle       project               add support for reasoning traces   \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's session deleted, leaving this workspace's sessions alone ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stutter when a tool runs            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[38;2;192;128;80m\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🐩 thick-poodle       add support for reasoning traces                         \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and t…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                                               —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's archive deleted from every workspace's archives ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all archived)  Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26    <1M      1d       12d ago\e[0m\e[K\r
+  🐢 wiry-turtle        project               add an archive view to the picker  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== the confirmation taking the place of a filter for another workspace ===
+\e[H\e[38;2;207;173;0mPress a again to archive sly-fox\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== this workspace's session archived from every workspace, joining this workspace's archives ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces                         \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4     6M      1h       37m ago\e[0m\e[K\r
+  🐢 wiry-turtle        add an archive view to the picker                        Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26    <1M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== this workspace's session deleted from every workspace, leaving another workspace's session ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (all)           Workspace             Title                              Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m› 🐟 chewy-sardine      project               why does the spinner stutter whe…  \e[38;2;192;128;80m\e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m\e[3m\e[38;2;192;128;80m\e[38;2;150;152;150m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[38;2;192;128;80m\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
+  🦡 funny-badger       project               the cancelled turn leaves a tool…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       project               (untitled)                         —                            —         1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        project               rename the harness to oh           Codex 5.3                    —        26     4M      1d       12d ago\e[K\r
+\e[38;2;150;152;150m  🦊 sly-fox            another               work in another project            \e[38;2;192;128;80m⚡\e[0m\e[38;2;150;152;150m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== another workspace's archive deleted, leaving this workspace's archives alone ===
+\e[H/\e[38;2;150;152;150m filter\e[0m                                                                tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0ma\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[38;2;150;152;150m · \e[0mq\e[38;2;150;152;150m quit\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh                                 Codex 5.3                    —        26    <1M      1d       12d ago\e[0m\e[K\r
+  🐢 wiry-turtle        add an archive view to the picker                        Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
 === another workspace's conversation read but not opened ===
-\e[H\e[38;2;192;128;80m🐢 wiry-turtle  work in another project\e[0m                                                                         \e[38;2;150;152;150m5-9 of 9\e[0m\e[K\r
+\e[H\e[38;2;192;128;80m🦊 sly-fox  work in another project\e[0m                                                                             \e[38;2;150;152;150m5-9 of 9\e[0m\e[K\r
 \e[38;2;129;162;190mother\e[0m\e[38;2;150;152;150m workspace · esc/q return · ↑↓ scroll · ←→ browse\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[K\r
 \e[K\r

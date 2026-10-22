@@ -124,9 +124,6 @@ func (self *sessionList) KeyboardHelp(int) []menu.Shortcut {
 }
 
 func (self *sessionList) IsRemovable(index int) bool {
-	if self.at(index).IsOtherWorkspace {
-		return false
-	}
 	if self.isArchivedView {
 		return self.store.Restore != nil
 	}
@@ -136,7 +133,7 @@ func (self *sessionList) IsRemovable(index int) bool {
 
 func (self *sessionList) Removal(index int, keypress key.Key) (menu.Removal, bool) {
 	movedSession := self.at(index)
-	if movedSession.IsRunning || movedSession.IsOtherWorkspace {
+	if movedSession.IsRunning {
 		return menu.Removal{}, false
 	}
 

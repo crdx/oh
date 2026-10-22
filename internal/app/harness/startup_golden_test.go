@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"image/png"
@@ -22,6 +23,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/sim"
+	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 
 	"crdx.org/oh/internal/app/backend"
@@ -304,6 +306,199 @@ func TestGoldenThePickerListsStoredAndArchivedSessions(t *testing.T) {
 		"stored":   func() string { return stored },
 		"archived": func() string { return archived },
 	})
+}
+
+func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSession(t *testing.T) {
+	const (
+		pressTab        = "\t"
+		pressHome       = "\x1b[H"
+		pressDown       = "\x1b[B"
+		pressRight      = "\x1b[C"
+		pressLeft       = "\x1b[D"
+		pressDelete     = "\x1b[3~"
+		pressArchive    = "a"
+		interruptPicker = "\x03"
+		keyHint         = "archive/restore"
+		workspaceName   = "able-ant"
+		otherName       = "far-fox"
+		runningName     = "busy-bee"
+		archivedName    = "odd-owl"
+		otherWorkspace  = "elsewhere"
+	)
+
+	rig := newInteractiveRig(t)
+	sessionsDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions")
+	farmDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "farm")
+	elsewhere := filepath.Join(t.TempDir(), otherWorkspace)
+	for _, directory := range []string{
+		sessionsDirectory,
+		elsewhere,
+		filepath.Join(farmDirectory, otherName),
+		filepath.Join(farmDirectory, runningName),
+		filepath.Join(farmDirectory, archivedName),
+	} {
+		if err := os.MkdirAll(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	hoursAgo := func(hours int) string {
+		return time.Now().Add(-time.Duration(hours) * time.Hour).UTC().Format(time.RFC3339)
+	}
+	writeStoredSession(t, sessionsDirectory, elsewhere, runningName, hoursAgo(1))
+	writeStoredSession(t, sessionsDirectory, elsewhere, otherName, hoursAgo(2))
+	writeReadableJournal(t, sessionsDirectory, otherName, "tidy the fox den")
+	writeStoredSession(t, sessionsDirectory, rig.workspace, workspaceName, hoursAgo(3))
+	writeStoredSession(t, sessionsDirectory, elsewhere, archivedName, hoursAgo(4))
+	if err := session.Archive(sessionsDirectory, archivedName); err != nil {
+		t.Fatal(err)
+	}
+	runningLock, err := session.AcquireLock(sessionsDirectory, runningName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = runningLock.Release() })
+
+	archivePath := session.ArchivePath(sessionsDirectory, otherName)
+	storedPath := session.Dir(sessionsDirectory, otherName)
+	otherArchivePath := session.ArchivePath(sessionsDirectory, archivedName)
+	onDisk := func() string {
+		var listed []string
+		for _, directory := range []string{sessionsDirectory, farmDirectory} {
+			entries, err := os.ReadDir(directory)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, entry := range entries {
+				listed = append(listed, filepath.Base(directory)+"/"+entry.Name())
+			}
+		}
+		return strings.Join(listed, "\n")
+	}
+	isPresent := func(path string) bool {
+		_, err := os.Lstat(path)
+		return err == nil
+	}
+	waitOnDisk := func(isDone func() bool) {
+		t.Helper()
+		deadline := time.Now().Add(interactiveDeadline)
+		for !isDone() {
+			if time.Now().After(deadline) {
+				t.Fatalf("the picker never changed the disk, which holds:\n%s", onDisk())
+			}
+			time.Sleep(interactiveQuiet)
+		}
+	}
+
+	belongsTo := regexp.MustCompile(`(Session belongs to ).*`)
+	session := rig.start("-r")
+	confirm := func(keypress string, isDone func() bool) {
+		t.Helper()
+		redrawn := session.Count(keyHint) + 1
+		session.typeText(keypress)
+		waitOnDisk(isDone)
+		session.waitForCount(keyHint, redrawn)
+	}
+	passes := map[string]func() string{}
+	record := func(pass string) {
+		t.Helper()
+		screen := belongsTo.ReplaceAllString(strings.Join(session.screen(), "\n"), "${1}<elsewhere>")
+		disk := onDisk()
+		passes[pass] = func() string { return screen + "\n--- disk ---\n" + disk }
+	}
+
+	session.waitFor(workspaceName)
+	session.waitToSettle()
+	record("01 this workspace alone")
+
+	session.typeAndSettle(pressTab)
+	session.waitFor("Agent (all)")
+	session.typeAndSettle(pressHome)
+	session.typeText(pressArchive + pressArchive + pressDelete + pressDelete)
+	session.typeAndSettle(pressDown)
+	for _, prompt := range []string{"again to archive " + runningName, "again to delete " + runningName} {
+		if session.Count(prompt) != 0 {
+			t.Errorf("another workspace's running session was offered %q", prompt)
+		}
+	}
+	record("02 another workspace's running session is offered neither archiving nor deletion")
+
+	session.typeAndSettle(pressArchive)
+	session.waitFor("Press a again to archive " + otherName)
+	record("03 archiving another workspace's session asks first")
+
+	confirm(pressArchive, func() bool {
+		return isPresent(archivePath) && !isPresent(storedPath)
+	})
+	record("04 another workspace's session archived")
+
+	session.typeAndSettle(pressRight)
+	session.typeAndSettle(pressHome)
+	session.typeAndSettle(pressArchive)
+	session.waitFor("Press a again to restore " + otherName)
+	record("05 restoring another workspace's archive asks first")
+
+	confirm(pressArchive, func() bool {
+		return !isPresent(archivePath) && isPresent(storedPath)
+	})
+	record("06 another workspace's archive restored")
+
+	session.typeAndSettle(pressHome)
+	session.typeAndSettle(pressDelete)
+	session.waitFor("Press delete again to delete " + archivedName)
+	record("07 deleting another workspace's archive asks first")
+
+	confirm(pressDelete, func() bool {
+		return !isPresent(otherArchivePath) && !isPresent(filepath.Join(farmDirectory, archivedName))
+	})
+	record("08 another workspace's archive deleted with its scratch")
+
+	session.typeAndSettle(pressLeft)
+	session.typeAndSettle(pressHome)
+	session.typeAndSettle(pressDown)
+	session.typeAndSettle(pressEnter)
+	session.waitFor("Session belongs to")
+	record("09 another workspace's session is read but not opened")
+	session.typeText(pressEnter)
+	session.waitToSettle()
+	record("10 another workspace's session stays closed to a second enter")
+	session.typeAndSettle(pressEscape)
+
+	session.typeAndSettle(pressDelete)
+	session.waitFor("Press delete again to delete " + otherName)
+	record("11 deleting another workspace's session asks first")
+
+	confirm(pressDelete, func() bool {
+		return !isPresent(storedPath) && !isPresent(filepath.Join(farmDirectory, otherName))
+	})
+	record("12 another workspace's session deleted with its scratch")
+
+	session.typeAndSettle(pressTab)
+	record("13 this workspace's session left alone")
+
+	session.typeText(interruptPicker)
+	session.waitToExit()
+
+	compareWithGolden(t, "picker-other-workspace", ".screen", passes)
+}
+
+func writeReadableJournal(t *testing.T, directory string, name string, message string) {
+	t.Helper()
+
+	started := time.Now().UTC()
+	var journal []byte
+	for _, line := range []session.Line{
+		{Kind: session.Head, Time: started, Version: session.JournalFormat, ID: name, Name: name},
+		{Kind: session.Event, Time: started, Event: &agent.Event{Kind: agent.UserMessageEvent, Text: message}},
+	} {
+		encoded, err := json.Marshal(line)
+		if err != nil {
+			t.Fatal(err)
+		}
+		journal = append(append(journal, encoded...), '\n')
+	}
+	if err := os.WriteFile(filepath.Join(session.Dir(directory, name), "session.jsonl"), journal, 0o600); err != nil {
+		t.Fatal(err)
+	}
 }
 
 const (

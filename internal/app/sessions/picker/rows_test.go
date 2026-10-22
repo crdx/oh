@@ -129,7 +129,7 @@ func archivedSessions() []*Session {
 
 func otherWorkspaceSession() *Session {
 	storedSession := storedSessions()[1]
-	storedSession.Name = "wiry-turtle"
+	storedSession.Name = "sly-fox"
 	storedSession.WorkspaceDir = otherWorkspaceDir
 	storedSession.IsOtherWorkspace = true
 	storedSession.Title = "work in another project"
@@ -220,7 +220,9 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		hasNothingArchived  bool
 		hasOtherWorkspace   bool
 		hasOtherArchive     bool
+		isOtherRunning      bool
 		movedIndex          *int
+		removal             *removal
 	}{
 		{name: "a wide terminal, with room for the title", room: 150, height: 24, cursor: 1},
 		{name: "a picker following a configured theme", room: 120, height: 24, cursor: 1, theme: &configuredTheme},
@@ -238,6 +240,25 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		{name: "all workspaces, switched to with tab", room: 150, height: 24, cursor: 1, isAllWorkspacesView: true, hasOtherWorkspace: true},
 		{name: "another workspace selected without running italics", room: 150, height: 24, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true},
 		{name: "archived sessions from all workspaces", room: 150, height: 24, cursor: 1, isArchivedView: true, isAllWorkspacesView: true, hasOtherArchive: true},
+		{name: "the confirmation asked before another workspace's session is archived", room: 150, height: 24, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true, keypress: new(archiveKeypress())},
+		{name: "the confirmation asked before another workspace's session is deleted", room: 150, height: 24, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true, keypress: new(deleteKeypress())},
+		{name: "another workspace's running session, which is never offered for archiving", room: 150, height: 24, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true, isOtherRunning: true, keypress: new(archiveKeypress())},
+		{name: "another workspace's running session, which is never offered for deletion", room: 150, height: 24, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true, isOtherRunning: true, keypress: new(deleteKeypress())},
+		{name: "the confirmation asked before another workspace's archive is restored", room: 150, height: 24, cursor: 2, isArchivedView: true, isAllWorkspacesView: true, hasOtherArchive: true, keypress: new(archiveKeypress())},
+		{name: "the confirmation asked before another workspace's archive is deleted", room: 150, height: 24, cursor: 2, isArchivedView: true, isAllWorkspacesView: true, hasOtherArchive: true, keypress: new(deleteKeypress())},
+		{name: "another workspace's session archived, drawn at the size of its archive", room: 150, height: 24, cursor: 0, isArchivedView: true, isAllWorkspacesView: true, hasOtherWorkspace: true, removal: archivedFromEveryWorkspace(5)},
+		{name: "another workspace's session archived, leaving this workspace's sessions alone", room: 150, height: 24, cursor: 0, hasOtherWorkspace: true, removal: archivedFromEveryWorkspace(5)},
+		{name: "another workspace's session archived, leaving this workspace's archives alone", room: 150, height: 24, cursor: 0, isArchivedView: true, hasOtherWorkspace: true, removal: archivedFromEveryWorkspace(5)},
+		{name: "another workspace's archive restored, drawn at the size of its directory", room: 150, height: 24, cursor: 0, isAllWorkspacesView: true, hasOtherArchive: true, removal: restoredFromEveryWorkspace(2)},
+		{name: "another workspace's archive restored, leaving this workspace's sessions alone", room: 150, height: 24, cursor: 0, hasOtherArchive: true, removal: restoredFromEveryWorkspace(2)},
+		{name: "another workspace's archive restored, leaving this workspace's archives alone", room: 150, height: 24, cursor: 0, isArchivedView: true, hasOtherArchive: true, removal: restoredFromEveryWorkspace(2)},
+		{name: "another workspace's session deleted from every workspace's sessions", room: 150, height: 24, cursor: 0, isAllWorkspacesView: true, hasOtherWorkspace: true, removal: deletedFromEveryWorkspace(false, 5)},
+		{name: "another workspace's session deleted, leaving this workspace's sessions alone", room: 150, height: 24, cursor: 0, hasOtherWorkspace: true, removal: deletedFromEveryWorkspace(false, 5)},
+		{name: "another workspace's archive deleted from every workspace's archives", room: 150, height: 24, cursor: 0, isArchivedView: true, isAllWorkspacesView: true, hasOtherArchive: true, removal: deletedFromEveryWorkspace(true, 2)},
+		{name: "the confirmation taking the place of a filter for another workspace", room: 150, height: 24, cursor: 0, query: "another", isAllWorkspacesView: true, hasOtherWorkspace: true, keypress: new(archiveKeypress())},
+		{name: "this workspace's session archived from every workspace, joining this workspace's archives", room: 150, height: 24, cursor: 0, isArchivedView: true, hasOtherWorkspace: true, removal: archivedFromEveryWorkspace(1)},
+		{name: "this workspace's session deleted from every workspace, leaving another workspace's session", room: 150, height: 24, cursor: 0, isAllWorkspacesView: true, hasOtherWorkspace: true, removal: deletedFromEveryWorkspace(false, 1)},
+		{name: "another workspace's archive deleted, leaving this workspace's archives alone", room: 150, height: 24, cursor: 0, isArchivedView: true, hasOtherArchive: true, removal: deletedFromEveryWorkspace(true, 2)},
 		{name: "another workspace's conversation read but not opened", room: 120, height: 12, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true, keypress: new(openKeypress()), read: reading()},
 		{name: "the confirmation asked before an archived session is restored", room: 120, height: 24, cursor: 1, isArchivedView: true, keypress: new(archiveKeypress())},
 		{name: "the archived view with nothing archived", room: 120, height: 24, cursor: 0, isArchivedView: true, hasNothingArchived: true},
@@ -280,7 +301,9 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 
 		stored := storedSessions()
 		if frame.hasOtherWorkspace {
-			stored = append(stored, otherWorkspaceSession())
+			otherSession := otherWorkspaceSession()
+			otherSession.IsRunning = frame.isOtherRunning
+			stored = append(stored, otherSession)
 		}
 		sessions := &sessionList{
 			store: Store{
@@ -295,7 +318,12 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		}
 		if frame.movedIndex != nil {
 			sessions.isArchivedView = !frame.isArchivedView
-			move(t, sessions, *frame.movedIndex)
+			move(t, sessions, *frame.movedIndex, archiveKeypress())
+		}
+		if frame.removal != nil {
+			sessions.isArchivedView = frame.removal.isArchivedView
+			sessions.isAllWorkspacesView = true
+			move(t, sessions, frame.removal.index, frame.removal.keypress)
 		}
 		sessions.isArchivedView = frame.isArchivedView
 		sessions.isAllWorkspacesView = frame.isAllWorkspacesView
@@ -341,10 +369,28 @@ func restoring() func(*Session) (int64, error) {
 	return func(*Session) (int64, error) { return restoredBytes, nil }
 }
 
-func move(t *testing.T, sessions *sessionList, index int) {
+type removal struct {
+	isArchivedView bool
+	index          int
+	keypress       key.Key
+}
+
+func archivedFromEveryWorkspace(index int) *removal {
+	return &removal{index: index, keypress: archiveKeypress()}
+}
+
+func restoredFromEveryWorkspace(index int) *removal {
+	return &removal{isArchivedView: true, index: index, keypress: archiveKeypress()}
+}
+
+func deletedFromEveryWorkspace(isArchivedView bool, index int) *removal {
+	return &removal{isArchivedView: isArchivedView, index: index, keypress: deleteKeypress()}
+}
+
+func move(t *testing.T, sessions *sessionList, index int, keypress key.Key) {
 	t.Helper()
 
-	removal, isBound := sessions.Removal(index, archiveKeypress())
+	removal, isBound := sessions.Removal(index, keypress)
 	if !isBound {
 		t.Fatalf("expected row %d to be movable", index)
 	}
