@@ -12,6 +12,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/sandbox/keeper"
 	"crdx.org/oh/internal/sandbox/testnamespace"
 )
@@ -269,7 +270,7 @@ func spawnStub(
 		return syscall.Kill(-stub.Process.Pid, syscall.SIGKILL)
 	}
 
-	if err := stub.Start(); err != nil {
+	if err := priority.Start(stub); err != nil {
 		return nil, err
 	}
 

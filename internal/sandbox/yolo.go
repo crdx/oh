@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/sandbox/keeper"
 )
 
@@ -64,7 +65,7 @@ func startOnHost(
 		return syscall.Kill(-child.Process.Pid, syscall.SIGKILL)
 	}
 
-	err = child.Start()
+	err = priority.Start(child)
 	_ = writer.Close()
 	if err != nil {
 		_ = reader.Close()

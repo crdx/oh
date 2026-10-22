@@ -3,6 +3,7 @@ package sandbox_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -10,7 +11,10 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/sandbox"
+
+	"golang.org/x/sys/unix"
 )
 
 func TestMain(m *testing.M) {
@@ -162,5 +166,19 @@ func TestAGrantThroughAModelSymlinkRefusesTheCommand(t *testing.T) {
 
 	if _, statErr := os.Stat(filepath.Join(victim, "pwned")); statErr == nil {
 		t.Error("the redirected grant wrote outside the sandbox")
+	}
+}
+
+func TestAYoloCommandRunsAtLowerPriority(t *testing.T) {
+	own, err := unix.Getpriority(unix.PRIO_PROCESS, os.Getpid())
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := sandbox.Run(t.Context(), t.TempDir(), "nice", sandbox.Policy{Yolo: true, Env: []string{"PATH"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := fmt.Sprintf("%d\n", max(20-own, priority.Niceness)); result.Output != want {
+		t.Errorf("got %q, want %q", result.Output, want)
 	}
 }

@@ -16,6 +16,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
+	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tool"
@@ -409,7 +410,7 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, bool, bool, error
 	process.Stdout = writer
 	process.Stderr = writer
 
-	err = process.Start()
+	err = priority.Start(process)
 	_ = writer.Close()
 	if err != nil {
 		_ = reader.Close()

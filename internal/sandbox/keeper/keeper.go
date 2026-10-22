@@ -16,6 +16,7 @@ import (
 	"syscall"
 	"time"
 
+	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/sandbox/testnamespace"
 
 	"crdx.org/oh/internal/util"
@@ -581,7 +582,7 @@ func (self *service) spawn(instruction request, output *os.File) {
 	command.Env = instruction.Environment
 	command.SysProcAttr = CommandAttributes()
 
-	if err := command.Start(); err != nil {
+	if err := priority.Start(command); err != nil {
 		_ = self.send(reply{Kind: replyRefused, Token: instruction.Token, Failure: err.Error()})
 		return
 	}

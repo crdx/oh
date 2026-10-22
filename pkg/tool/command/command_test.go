@@ -6,14 +6,18 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/priority"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
+
+	"golang.org/x/sys/unix"
 )
 
 func writeScript(t *testing.T, body string) string {
@@ -855,5 +859,24 @@ func TestACallKilledByASignalNamesIt(t *testing.T) {
 	}
 	if output != "started\nnote: SIGKILL stopped the command." {
 		t.Errorf("got %q", output)
+	}
+}
+
+func TestACustomCommandRunsAtLowerPriority(t *testing.T) {
+	own, err := unix.Getpriority(unix.PRIO_PROCESS, os.Getpid())
+	if err != nil {
+		t.Fatal(err)
+	}
+	subject, err := command.New(command.Declaration{
+		Name:        "niceness",
+		Description: "report the niceness",
+		Command:     []string{writeScript(t, "nice")},
+	}, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	output, err := call(t, subject, `{}`)
+	if want := strconv.Itoa(max(20-own, priority.Niceness)); err != nil || output != want {
+		t.Errorf("got %q, %v, want %q", output, err, want)
 	}
 }
