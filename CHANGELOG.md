@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.22.0] — 2026-10-22
+
 ### Changes
 
 - Remove the built-in kitty-specific notify tool
