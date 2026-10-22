@@ -1,0 +1,78 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+wait-for-message = true
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-11","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The loader is in config.go."}''',
+    '''{"type":"response.output_text.done","text":"The loader is in config.go."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The loader is in config.go."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-11","type":"message","role":"assistant","content":[{"type":"output_text","text":"The loader is in config.go."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[first]
+prompt = "ask a subagent to find the config loader in /revoked, then ask when it loads"
+settle-subagents-after-tool-result = 1
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-12","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\",\"workspace\":\"/revoked\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Also say when it loads\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-14","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"A subagent is looking in /revoked."}''',
+    '''{"type":"response.output_text.done","text":"A subagent is looking in /revoked."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"A subagent is looking in /revoked."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-14","type":"message","role":"assistant","content":[{"type":"output_text","text":"A subagent is looking in /revoked."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-15","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It found the loader in config.go, but it could not take my second question."}''',
+    '''{"type":"response.output_text.done","text":"It found the loader in config.go, but it could not take my second question."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It found the loader in config.go, but it could not take my second question."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-15","type":"message","role":"assistant","content":[{"type":"output_text","text":"It found the loader in config.go, but it could not take my second question."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "ask it again when the config loads"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-16","type":"function_call","call_id":"toolu_3","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"When does the config load?\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-17","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It cannot take a follow-up until I can read /revoked again."}''',
+    '''{"type":"response.output_text.done","text":"It cannot take a follow-up until I can read /revoked again."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It cannot take a follow-up until I can read /revoked again."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-17","type":"message","role":"assistant","content":[{"type":"output_text","text":"It cannot take a follow-up until I can read /revoked again."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

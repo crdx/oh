@@ -1,0 +1,26 @@
+
+ ask a subagent to find the config loader in /revoked, then ask when it loads
+
+
+spawn subagent · anthropic/claude-opus-5@medium (Finding where the config loads)
+send tame-adder (Finding where the config loads)
+
+A subagent is looking in /revoked.
+
+
+ 🐍 Subagent tame-adder has finished:
+
+    The loader is in config.go.
+
+    Failed: tame-adder cannot take a follow-up: /revoked is not a directory you can read.
+
+
+It found the loader in config.go, but it could not take my second question.
+
+
+ ask it again when the config loads
+
+
+send tame-adder ✗ tame-adder cannot take a follow-up: /revoked is not a directory you can read
+
+It cannot take a follow-up until I can read /revoked again.

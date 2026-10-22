@@ -16,6 +16,7 @@
 - Let a custom tool override the built-in limit
 - Run bash, grep, lookup async, and allow custom tools to opt in
 - Run agent commands at lower CPU priority
+- Refuse a subagent follow-up after its workspace grant is revoked
 - Bound custom tool output during execution
 - Singularise config tables and move the forwarding hostname
 - Retire the deprecated permissions config key

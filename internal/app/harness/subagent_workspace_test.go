@@ -2,6 +2,7 @@ package harness
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -12,9 +13,11 @@ import (
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/work"
@@ -95,6 +98,87 @@ func TestAChildNeverWorksInsideTheParentsScratchSpace(t *testing.T) {
 		if got, err := fixture.resolve(directory); err == nil || !strings.Contains(err.Error(), "scratch space") {
 			t.Errorf("%q resolved to %q, %v; want it refused as the parent's scratch space (%s)", directory, got, err, description)
 		}
+	}
+}
+
+func TestAChildFollowUpNeedsItsParentToReadItsWorkspaceNow(t *testing.T) {
+	workspace := work.At(reachableWorkspaceDir(t))
+	if err := workspace.Open(); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = workspace.Close() })
+	files := file.New(workspace.GetRoot(), func(string) error { return file.ErrReadOnly })
+	access, err := shell.NewPathAccess(files, caps.NewMode(caps.Read), shell.Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	granted := reachableWorkspaceDir(t)
+	grant := func() {
+		t.Helper()
+		if changed, err := access.Grant(granted, shell.ReadAccess); err != nil || !changed {
+			t.Fatalf("granting changed=%t: %v", changed, err)
+		}
+	}
+	grant()
+
+	choice := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5"}
+	options := childOptions{
+		parentChoice: choice,
+		workspace:    workspace,
+		settings:     builtInConfig(t),
+		sessionName:  "frugal-ladybird",
+		parentFiles:  files,
+		parentCaps:   func() caps.Set { return caps.Read | caps.Subagents },
+	}
+	grantedChild, err := childWorkspace(options)(granted)
+	if err != nil {
+		t.Fatal(err)
+	}
+	followUp := func(isParentUnconfined bool) func(string) string {
+		managerOptions := options
+		managerOptions.isParentUnconfined = isParentUnconfined
+		managerOptions.sessionsDir = t.TempDir()
+		managerOptions.scratchParent = t.TempDir()
+		prepared, err := prepareChildManager(managerOptions, []model.Choice{choice}, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(prepared.manager.Close)
+		for name, directory := range map[string]string{"frugal-otter": grantedChild, "frugal-heron": workspace.GetDir()} {
+			prepared.manager.Restore([]agent.Event{
+				subagentrecord.StartedEvent(name, "session-of-"+name, "List it", subagentrecord.Origin{Choice: choice, Workspace: directory}),
+				subagentrecord.FinishedEvent(name, subagentrecord.Done, "Listed.", nil, &agent.Usage{}),
+			})
+		}
+		return func(name string) string {
+			_, err := prepared.manager.Send(t.Context(), name, "List it again")
+			return fmt.Sprint(err)
+		}
+	}
+	confined, unconfined := followUp(false), followUp(true)
+	gone := func(name string) string {
+		return "the conversation of " + name + " is gone, so it cannot take a follow-up"
+	}
+	refused := "frugal-otter cannot take a follow-up: " + grantedChild + " is not a directory you can read"
+
+	if got := confined("frugal-otter"); got != gone("frugal-otter") {
+		t.Errorf("a granted workspace was checked as %q, want it past the check to %q", got, gone("frugal-otter"))
+	}
+	if !access.Revoke(granted) {
+		t.Fatal("the grant could not be revoked")
+	}
+	for name, want := range map[string]string{"frugal-otter": refused, "frugal-heron": gone("frugal-heron")} {
+		if got := confined(name); got != want {
+			t.Errorf("after the revoke %s's follow-up came back %q, want %q", name, got, want)
+		}
+	}
+	if got := unconfined("frugal-otter"); got != gone("frugal-otter") {
+		t.Errorf("an unconfined parent's follow-up came back %q, want no workspace check", got)
+	}
+	grant()
+	if got := confined("frugal-otter"); got != gone("frugal-otter") {
+		t.Errorf("a workspace granted again was checked as %q, want it past the check", got)
 	}
 }
 

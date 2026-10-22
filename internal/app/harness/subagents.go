@@ -93,11 +93,12 @@ func prepareChildManager(options childOptions, choices []model.Choice, isPrintin
 			WorkspaceDir:   options.workspace.GetDir(),
 			ShouldSkipWire: !options.recordsWire,
 		},
-		Factory:      newChildFactory(options),
-		PickName:     rand.IntN,
-		EnsureParent: options.ensurePersisted,
-		Workspace:    childWorkspace(options),
-		ScratchNote:  childScratchNote(options),
+		Factory:             newChildFactory(options),
+		PickName:            rand.IntN,
+		EnsureParent:        options.ensurePersisted,
+		Workspace:           childWorkspace(options),
+		RevalidateWorkspace: revalidateChildWorkspace(options),
+		ScratchNote:         childScratchNote(options),
 		Caps: func() caps.Set {
 			return options.parentCaps() & (caps.Read | caps.Shell)
 		},
@@ -357,7 +358,7 @@ func childWorkspace(options childOptions) func(string) (string, error) {
 		if options.scratchParent != "" {
 			scratchRoot := filepath.Clean(options.scratchParent)
 			if _, isBelow := pathutil.RelativeTo(scratchRoot, resolvedPath); isBelow {
-				return "", fmt.Errorf("%s lies inside the parent's scratch space, which no subagent can read", directory)
+				return "", fmt.Errorf("%s lies inside the parent's scratch space, which the parent can change while a subagent works in it; give a directory outside it", directory)
 			}
 		}
 		return resolvedPath, nil
@@ -382,6 +383,16 @@ func resolveChildWorkspace(options childOptions, directory string) (string, erro
 		}
 	}
 	return resolvedPath, nil
+}
+
+func revalidateChildWorkspace(options childOptions) func(string) error {
+	if options.isParentUnconfined {
+		return nil
+	}
+	return func(directory string) error {
+		_, err := readableDirectory(options.parentFiles, directory)
+		return err
+	}
 }
 
 func hostDirectory(directory string) (string, error) {

@@ -39,6 +39,7 @@ var sessionGoldenModelNames = map[string]string{
 
 const (
 	sessionGoldenUnreadable     = "/unreadable"
+	sessionGoldenRevoked        = "/revoked"
 	sessionGoldenSubagentPath   = "/subagent/"
 	sessionGoldenSubagentSettle = 20 * time.Second
 	sessionGoldenSubagentPoll   = 5 * time.Millisecond
@@ -262,6 +263,12 @@ func (self *sessionGoldenChildren) manager(
 				return "", errors.New(sessionGoldenUnreadable + " is not a directory you can read")
 			}
 			return directory, nil
+		},
+		RevalidateWorkspace: func(directory string) error {
+			if directory == sessionGoldenRevoked {
+				return errors.New(sessionGoldenRevoked + " is not a directory you can read")
+			}
+			return nil
 		},
 		Caps:        func() caps.Set { return parentCaps() & (caps.Read | caps.Shell) },
 		ScratchNote: childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala"}),

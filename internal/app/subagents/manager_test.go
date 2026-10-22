@@ -106,6 +106,7 @@ type testFamily struct {
 	workspace   string
 	caps        *caps.Set
 	concurrency int
+	revalidate  func(string) error
 }
 
 func newTestFamily(t *testing.T) testFamily {
@@ -145,8 +146,9 @@ func (self testFamily) manager(t *testing.T, factory Factory) *Manager {
 			}
 			return directory, nil
 		},
-		Caps:        func() caps.Set { return *self.caps },
-		Concurrency: self.concurrency,
+		RevalidateWorkspace: self.revalidate,
+		Caps:                func() caps.Set { return *self.caps },
+		Concurrency:         self.concurrency,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -419,6 +421,80 @@ func TestSendResumesAFinishedChildInItsOwnSession(t *testing.T) {
 	}
 	if stored.TurnCompletions != 2 {
 		t.Errorf("the child journal holds %d turns, want 2", stored.TurnCompletions)
+	}
+}
+
+func TestAFollowUpIsRefusedUntilTheParentCanReadItsWorkspaceAgain(t *testing.T) {
+	family := newTestFamily(t)
+	var refusal error
+	var revalidated []string
+	family.revalidate = func(directory string) error {
+		revalidated = append(revalidated, directory)
+		return refusal
+	}
+	manager := family.manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
+		t.Fatal(err)
+	}
+	name := untilFinished(t, manager, 1)[0].Subagent
+	untilSettled(t, manager, name)
+	if len(revalidated) != 0 {
+		t.Errorf("a start revalidated %v", revalidated)
+	}
+
+	refusal = errors.New(family.workspace + " is not a directory you can read")
+	want := name + " cannot take a follow-up: " + family.workspace + " is not a directory you can read"
+	if sent, err := manager.Send(t.Context(), name, "second"); err == nil || err.Error() != want {
+		t.Fatalf("the follow-up said %q, %v; want %q", sent, err, want)
+	}
+	select {
+	case event := <-manager.Events():
+		t.Fatalf("a refused follow-up recorded %+v", event)
+	default:
+	}
+
+	refusal = nil
+	if _, err := manager.Send(t.Context(), name, "second"); err != nil {
+		t.Fatal(err)
+	}
+	events := untilFinished(t, manager, 1)
+	if answer := events[len(events)-1].Text; answer != "first then second" {
+		t.Errorf("the follow-up after the refusal answered %q", answer)
+	}
+	if want := []string{family.workspace, family.workspace}; !slices.Equal(revalidated, want) {
+		t.Errorf("the follow-ups revalidated %v, want %v", revalidated, want)
+	}
+}
+
+func TestAQueuedFollowUpIsRefusedOnceTheParentCannotReadItsWorkspace(t *testing.T) {
+	family := newTestFamily(t)
+	family.revalidate = func(directory string) error { return errors.New(directory + " is not a directory you can read") }
+	gate := make(chan struct{})
+	manager := family.manager(t, answering(func() agent.Provider { return &gatedProvider{gate: gate} }))
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
+		t.Fatal(err)
+	}
+	name := manager.ListSnapshots()[0].Name
+	if sent, err := manager.Send(t.Context(), name, "second"); err != nil || sent != "queued for "+name {
+		t.Fatalf("the queued follow-up said %q, %v", sent, err)
+	}
+	close(gate)
+
+	events := untilFinished(t, manager, 1)
+	finish := events[len(events)-1]
+	want := name + " cannot take a follow-up: " + family.workspace + " is not a directory you can read"
+	if finish.Failure == nil || finish.Failure.Text() != want {
+		t.Fatalf("the queued follow-up failed with %v, want %q", finish.Failure, want)
+	}
+	if finish.Text != "first" {
+		t.Errorf("the child reported %q, want the answer it gave before the refusal", finish.Text)
+	}
+	stored, err := store.Read(family.directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.TurnCompletions != 1 || len(stored.Items) != 1 {
+		t.Errorf("the refused run stored %d turns and %d items, want its one turn kept", stored.TurnCompletions, len(stored.Items))
 	}
 }
 

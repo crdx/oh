@@ -68,20 +68,21 @@ type ChildModel struct {
 }
 
 type Options struct {
-	Directory    string
-	Scratch      string
-	Parent       string
-	Models       []ChildModel
-	Meta         store.Meta
-	Factory      Factory
-	PickName     func(int) int
-	EnsureParent func() error
-	Workspace    func(path string) (string, error)
-	Caps         func() caps.Set
-	ScratchNote  func(name string) string
-	Concurrency  int
-	Now          func() time.Time
-	JournalPath  func(name string) string
+	Directory           string
+	Scratch             string
+	Parent              string
+	Models              []ChildModel
+	Meta                store.Meta
+	Factory             Factory
+	PickName            func(int) int
+	EnsureParent        func() error
+	Workspace           func(path string) (string, error)
+	RevalidateWorkspace func(path string) error
+	Caps                func() caps.Set
+	ScratchNote         func(name string) string
+	Concurrency         int
+	Now                 func() time.Time
+	JournalPath         func(name string) string
 }
 
 type Snapshot struct {
@@ -435,6 +436,9 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	}
 	self.mutex.Unlock()
 	if err != nil {
+		return "", err
+	}
+	if err := self.refuseFollowUp(current); err != nil {
 		return "", err
 	}
 	storedSession, err := store.Read(self.options.Directory, name)
@@ -954,6 +958,9 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 		if !isQueued {
 			break
 		}
+		if streamError = self.refuseFollowUp(current); streamError != nil {
+			break
+		}
 		message = queuedMessage
 	}
 	if ctx.Err() != nil {
@@ -1185,6 +1192,16 @@ func (self *Manager) refuseSend(name string, current *child) error {
 		return fmt.Errorf("%s is still running; wait for it before sending it anything", name)
 	case self.liveCount()+1 > self.rotation.Concurrency:
 		return fmt.Errorf("at most %d subagents may run at once", self.rotation.Concurrency)
+	}
+	return nil
+}
+
+func (self *Manager) refuseFollowUp(current *child) error {
+	if self.options.RevalidateWorkspace == nil {
+		return nil
+	}
+	if err := self.options.RevalidateWorkspace(current.Workspace); err != nil {
+		return fmt.Errorf("%s cannot take a follow-up: %w", current.Name, err)
 	}
 	return nil
 }
