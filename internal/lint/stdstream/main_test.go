@@ -86,7 +86,6 @@ func TestOnlyLibraryPackagesAreClaimed(t *testing.T) {
 		packageName string
 		expected    bool
 	}{
-		"pkg/toolbox/notify/notify.go":           {packageName: "notify"},
 		"pkg/agent/agent.go":                     {packageName: "agent"},
 		"pkg/wire/openai/responses/responses.go": {packageName: "responses"},
 		"main.go":                                {packageName: "main", expected: true},

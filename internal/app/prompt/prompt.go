@@ -32,7 +32,6 @@ const (
 	lookupToolName   = "lookup"
 	fetchToolName    = "fetch"
 	titleToolName    = "title"
-	notifyToolName   = "notify"
 	subagentToolName = "subagent"
 
 	clipboardDropsHeading = "# Clipboard Drops"
@@ -59,7 +58,6 @@ var (
 		"sandboxHeader":            sandboxHeader,
 		"tildeRules":               tildeRules,
 		"titleSection":             titleSection,
-		"notifySection":            notifySection,
 	}).Parse(hereduck.D(`
 		{{ sandboxHeader .Yolo .ShellOffered }}# Harness
 
@@ -117,7 +115,7 @@ var (
 		These states can change at any time. You will be told what changes.
 		If a state blocks the work and no workflow below covers it, ask the user to change it.
 
-		{{ titleSection . }}{{ notifySection . }}{{ userCommandSection . }}{{ waitingForUserSection . }}{{ readOnlyWorkspaceSection . }}
+		{{ titleSection . }}{{ userCommandSection . }}{{ waitingForUserSection . }}{{ readOnlyWorkspaceSection . }}
 	`)))
 )
 
@@ -135,7 +133,6 @@ type harnessContextTemplateData struct {
 	SharesSkills           bool
 	ShellOffered           bool
 	TitleOffered           bool
-	NotifyOffered          bool
 	LookupOffered          bool
 	FetchOffered           bool
 	SubagentOffered        bool
@@ -292,7 +289,6 @@ func harnessContext(config Config) string {
 		SharesSkills:           skill.HasGlobal(config.Skills),
 		ShellOffered:           toolset.Offers(config.OfferedTools, shellToolName),
 		TitleOffered:           toolset.Offers(config.OfferedTools, titleToolName),
-		NotifyOffered:          toolset.Offers(config.OfferedTools, notifyToolName),
 		LookupOffered:          toolset.Offers(config.OfferedTools, lookupToolName),
 		FetchOffered:           toolset.Offers(config.OfferedTools, fetchToolName),
 		SubagentOffered:        toolset.Offers(config.OfferedTools, subagentToolName),
@@ -362,19 +358,6 @@ func titleSection(data harnessContextTemplateData) string {
 		"- Keep it to 30 characters or fewer.",
 		"- Set a title before any long task.",
 		"- A provisional title is fine; you can change it later.",
-	}, "\n") + "\n\n"
-}
-
-func notifySection(data harnessContextTemplateData) string {
-	if !data.NotifyOffered {
-		return ""
-	}
-
-	return "# Notifications\n\n" + strings.Join([]string{
-		"- The notify tool sends a desktop notification when the terminal is not focused.",
-		"- Use it to get the user's attention or to report finished work.",
-		"- Call it *before* you write your response and end your turn.",
-		"- Do not use it in ordinary back-and-forth while the user is engaged.",
 	}, "\n") + "\n\n"
 }
 

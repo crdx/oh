@@ -215,7 +215,6 @@ var defaultTheme = Theme{
 		},
 		"lookup": {Default: ToolAppearance{Name: "lookup", Paint: "status_info"}},
 		"fetch":  {Default: ToolAppearance{Name: "fetch", Paint: "status_info"}},
-		"notify": {Default: ToolAppearance{Name: "notify"}},
 		"title":  {Default: ToolAppearance{Name: "title"}},
 	},
 }

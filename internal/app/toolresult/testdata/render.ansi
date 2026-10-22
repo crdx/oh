@@ -413,23 +413,6 @@ session titled "render-useful-results"
 \e[38;2;204;102;102mError\e[0m
 \e[38;2;204;102;102mthe title change stopped because the user pressed escape\e[0m
 
-=== notification ===
-\e[38;2;207;173;0mnotify\e[0m · \e[38;2;192;128;80mChecks passed\e[0m
-
-Everything is green
-
-\e[38;2;150;152;150msuccess\e[0m
-
-=== notification stopped ===
-\e[38;2;207;173;0mnotify\e[0m · \e[38;2;192;128;80mChecks passed\e[0m
-
-Everything is green
-
-\e[38;2;150;152;150msuccess\e[0m
-
-\e[38;2;204;102;102mError\e[0m
-\e[38;2;204;102;102mthe notification stopped because the user pressed escape\e[0m
-
 === port request stopped ===
 \e[38;2;207;173;0mforward\e[0m
 

@@ -92,7 +92,6 @@ write.default = { name = "write" }
 edit.default = { name = "edit" }
 lookup.default = { name = "lookup", paint = "status_info" }
 fetch.default = { name = "fetch", paint = "status_info" }
-notify.default = { name = "notify" }
 title.default = { name = "title" }
 
 [ui.theme.tool.bash]

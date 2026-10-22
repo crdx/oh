@@ -96,13 +96,6 @@ If a state blocks the work and no workflow below covers it, ask the user to chan
 - Set a title before any long task.
 - A provisional title is fine; you can change it later.
 
-# Notifications
-
-- The notify tool sends a desktop notification when the terminal is not focused.
-- Use it to get the user's attention or to report finished work.
-- Call it *before* you write your response and end your turn.
-- Do not use it in ordinary back-and-forth while the user is engaged.
-
 # Commands for the User
 
 - Give a command the user must run in a fenced bash block whose first line starts with `/!`, for them to paste into their input

@@ -33,7 +33,6 @@ import (
 	"crdx.org/oh/pkg/toolbox/fetch"
 	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/lookup"
-	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/subagent"
 	"crdx.org/oh/pkg/toolbox/task"
 	"crdx.org/oh/pkg/toolbox/title"
@@ -234,7 +233,6 @@ var completableToolNames = []string{
 	"edit",
 	"bash",
 	"task",
-	"notify",
 	title.Name,
 	"lookup",
 	"fetch",
@@ -1371,9 +1369,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	var toolsAfterShell []tool.Tool
 	if keeperProcess != nil {
 		toolsAfterShell = append(toolsAfterShell, forward.New(forwards.ForModel()))
-	}
-	if notify.IsAvailable() {
-		toolsAfterShell = append(toolsAfterShell, notify.New(screen.WriteEscape, isTerminalFocused))
 	}
 	toolsAfterShell = append(toolsAfterShell, title.New())
 	toolsAfterShell = append(

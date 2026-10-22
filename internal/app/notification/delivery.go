@@ -1,4 +1,4 @@
-package notify
+package notification
 
 import (
 	"context"
@@ -11,12 +11,10 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/stop"
-	"crdx.org/oh/pkg/tool"
 )
 
 const (
 	applicationName = "oh"
-	focusedResult   = "notification not sent because the terminal is focused"
 	iconChoices     = "success, info, warning, error, question, progress"
 )
 
@@ -77,17 +75,7 @@ func (self Notification) Withdraw(ctx context.Context, writeEscape EscapeWriter)
 	return nil
 }
 
-func IsAvailable() bool {
-	if isKitty() {
-		_, err := exec.LookPath("kitten")
-		return err == nil
-	}
-
-	_, err := exec.LookPath("notify-send")
-	return err == nil
-}
-
-func Command(
+func command(
 	ctx context.Context,
 	title string,
 	message string,
@@ -129,29 +117,6 @@ type Args struct {
 	Icon    string `json:"icon"`
 }
 
-func New(writeEscape EscapeWriter, isTerminalFocused func() bool) tool.Tool {
-	return tool.Implement(
-		tool.Definition{
-			Name:        "notify",
-			Description: "send a desktop notification when the terminal is not focused",
-			Schema: tool.Schema{
-				tool.String("title", "notification title, as plain text"),
-				tool.String("message", "notification text, as plain text: write < and & as themselves, never as HTML entities"),
-				tool.String("icon", "notification icon: (one of "+iconChoices+")"),
-			},
-		},
-		Describe,
-	).
-		Validate(validate).
-		Plain(func(ctx context.Context, args Args) (string, error) {
-			return run(ctx, writeEscape, isTerminalFocused, args)
-		})
-}
-
-func Describe(args Args) tool.CallRendering {
-	return tool.CallRendering{Subject: args.Title, Qualifier: "— " + args.Message, ReportsStatus: true}
-}
-
 func validate(args Args) error {
 	if strings.TrimSpace(args.Title) == "" {
 		return errors.New("title is required")
@@ -176,7 +141,7 @@ func Send(ctx context.Context, writeEscape EscapeWriter, args Args, expiry Expir
 		identifier = rand.Text()
 	}
 
-	command, printsEscapeCode := Command(ctx, args.Title, args.Message, desktopIconNames[args.Icon], expiry, identifier)
+	command, printsEscapeCode := command(ctx, args.Title, args.Message, desktopIconNames[args.Icon], expiry, identifier)
 
 	var output strings.Builder
 	command.Stdout = &output
@@ -231,21 +196,4 @@ func SendIfUnfocused(
 	}
 
 	return Send(ctx, writeEscape, args, expiry)
-}
-
-func run(
-	ctx context.Context,
-	writeEscape EscapeWriter,
-	isTerminalFocused func() bool,
-	args Args,
-) (string, error) {
-	notification, err := SendIfUnfocused(ctx, writeEscape, isTerminalFocused, args, ExpiresAsUsual)
-	if err != nil {
-		return "", err
-	}
-	if !notification.IsSent() {
-		return focusedResult, nil
-	}
-
-	return "notification sent", nil
 }

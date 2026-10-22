@@ -46,7 +46,6 @@ write
 edit
 bash
 task
-notify
 title
 lookup
 fetch

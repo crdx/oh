@@ -11,42 +11,41 @@ import (
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/pkg/ask"
-	"crdx.org/oh/pkg/toolbox/notify"
 )
 
 const detailWidth = 80
 
 func SendTurnError(
 	ctx context.Context,
-	writeEscape notify.EscapeWriter,
+	writeEscape EscapeWriter,
 	isTerminalFocused func() bool,
 	workspace *work.Space,
 	failure error,
 ) error {
-	_, err := notify.SendIfUnfocused(ctx, writeEscape, isTerminalFocused, notify.Args{
+	_, err := SendIfUnfocused(ctx, writeEscape, isTerminalFocused, Args{
 		Title:   title(workspace),
 		Message: failure.Error(),
 		Icon:    "error",
-	}, notify.ExpiresAsUsual)
+	}, ExpiresAsUsual)
 	return err
 }
 
 func SendQuestion(
 	ctx context.Context,
-	writeEscape notify.EscapeWriter,
+	writeEscape EscapeWriter,
 	isTerminalFocused func() bool,
 	workspace *work.Space,
 	question ask.Question,
-) (notify.Notification, error) {
-	return notify.SendIfUnfocused(ctx, writeEscape, isTerminalFocused, notify.Args{
+) (Notification, error) {
+	return SendIfUnfocused(ctx, writeEscape, isTerminalFocused, Args{
 		Title:   title(workspace),
 		Message: questionMessage(question),
 		Icon:    "question",
-	}, notify.NeverExpires)
+	}, NeverExpires)
 }
 
 type Questions struct {
-	writeEscape         notify.EscapeWriter
+	writeEscape         EscapeWriter
 	isTerminalFocused   func() bool
 	workspace           *work.Space
 	mutex               sync.Mutex
@@ -56,7 +55,7 @@ type Questions struct {
 }
 
 func NewQuestions(
-	writeEscape notify.EscapeWriter,
+	writeEscape EscapeWriter,
 	isTerminalFocused func() bool,
 	workspace *work.Space,
 ) *Questions {
@@ -69,7 +68,7 @@ func NewQuestions(
 }
 
 func (self *Questions) Announce(question ask.Question) func() {
-	sentNotification := make(chan notify.Notification, 1)
+	sentNotification := make(chan Notification, 1)
 	go func() {
 		notice, _ := SendQuestion(context.Background(), self.writeEscape, self.isTerminalFocused, self.workspace, question)
 		sentNotification <- notice

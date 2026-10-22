@@ -166,7 +166,6 @@ remove = { name = "close-gangway", paint = "status_danger" }
 | `bash`    | `host_network` | `$`               | `status_danger`  | accent |
 | `lookup`  | `default`      | `lookup`          | `status_info`    | accent |
 | `fetch`   | `default`      | `fetch`           | `status_info`    | accent |
-| `notify`  | `default`      | `notify`          | call default     | accent |
 | `title`   | `default`      | `title`           | call default     | accent |
 | `task`    | `default`      | `manage`          | `status_warning` | accent |
 | `task`    | `status`       | `check`           | `normal`         | accent |

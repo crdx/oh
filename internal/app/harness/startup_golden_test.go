@@ -489,32 +489,15 @@ func (self *startupRun) sessionTools(t *testing.T) string {
 
 	var tools strings.Builder
 	for _, stored := range self.rig.storedSessions() {
-		names := slices.DeleteFunc(slices.Clone(stored.Meta.Tools), isMachineDependentTool)
-		fmt.Fprintf(&tools, "session tools: %s\n", strings.Join(names, ", "))
+		fmt.Fprintf(&tools, "session tools: %s\n", strings.Join(stored.Meta.Tools, ", "))
 		if availability, isRecorded := toolset.LastRecordedAvailability(stored.Events); isRecorded {
 			for _, name := range slices.Sorted(maps.Keys(availability)) {
-				if isMachineDependentTool(name) {
-					continue
-				}
 				fmt.Fprintf(&tools, "  %s: %s\n", name, availability[name])
 			}
 		}
 	}
 
 	return tools.String()
-}
-
-const machineDependentTool = "notify"
-
-func isMachineDependentTool(name string) bool {
-	return name == machineDependentTool
-}
-
-func withoutMachineDependentTools(text string) string {
-	lines := strings.Split(text, "\n")
-	return strings.Join(slices.DeleteFunc(lines, func(line string) bool {
-		return strings.Contains(line, "The "+machineDependentTool+" tool")
-	}), "\n")
 }
 
 func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
@@ -540,7 +523,7 @@ func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
 			session.quit()
 			name := run.onlySessionName(t)
 			resumed := run.run(t, "-p", "-r", name, "another question")
-			return strings.ReplaceAll(withoutMachineDependentTools(resumed)+run.sessionTools(t), name, "<session>")
+			return strings.ReplaceAll(resumed+run.sessionTools(t), name, "<session>")
 		},
 		"a headless session resumed interactively": func() string {
 			run := newStartupRun(t, everythingElse, "Interactive answer.", "Headless answer.", "Interactive again.")
@@ -553,7 +536,7 @@ func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
 			session.waitFor("Interactive again.")
 			session.requireShown("tool is available again.")
 			session.quit()
-			return strings.ReplaceAll(withoutMachineDependentTools(headless)+run.sessionTools(t), name, "<session>")
+			return strings.ReplaceAll(headless+run.sessionTools(t), name, "<session>")
 		},
 	})
 }

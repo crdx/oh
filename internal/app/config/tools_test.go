@@ -77,6 +77,22 @@ func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 	}
 }
 
+func TestNotifyCanBeACustomTool(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[tool.notify]
+		description = "send a desktop notification"
+		command = ["./forecast"]
+	`)
+
+	tools, err := config.BuildCustomTools(command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tools) != 1 || tools[0].Name() != "notify" {
+		t.Fatalf("got tools %v, want notify", tools)
+	}
+}
+
 func TestACustomToolConcurrencyMustBePositive(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
 		[tool.weather]

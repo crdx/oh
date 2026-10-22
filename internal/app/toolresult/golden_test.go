@@ -21,7 +21,6 @@ import (
 	"crdx.org/oh/pkg/toolbox/grep"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/ls"
-	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/task"
 	"crdx.org/oh/pkg/toolbox/title"
@@ -290,16 +289,6 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 			name: "title change stopped",
 			exchange: resultExchange("title", title.Args{Title: "render-useful-results"}, agent.CancelledStatus,
 				"the title change stopped because the user pressed escape"),
-		},
-		{
-			name: "notification",
-			exchange: resultExchange("notify", notify.Args{Title: "Checks passed", Message: "Everything is green", Icon: "success"}, agent.SuccessStatus,
-				"notification sent"),
-		},
-		{
-			name: "notification stopped",
-			exchange: resultExchange("notify", notify.Args{Title: "Checks passed", Message: "Everything is green", Icon: "success"}, agent.CancelledStatus,
-				"the notification stopped because the user pressed escape"),
 		},
 		{
 			name: "port request stopped",

@@ -21,7 +21,6 @@ import (
 	"crdx.org/oh/pkg/toolbox/grep"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/ls"
-	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/title"
 	"crdx.org/oh/pkg/toolbox/write"
@@ -57,8 +56,6 @@ func render(exchange toolresult.Exchange, columns int) string {
 		resultView, err = renderFetch(exchange, columns)
 	case title.Name:
 		resultView, err = renderTitle(exchange)
-	case "notify":
-		resultView, err = renderNotification(exchange)
 	default:
 		resultView = renderFallback(exchange)
 	}
@@ -213,17 +210,6 @@ func renderTitle(exchange toolresult.Exchange) (string, error) {
 		return "", err
 	}
 	return withFailure(heading("title", safe(arguments.Title))+"\n\n"+successfulText(exchange), exchange), nil
-}
-
-func renderNotification(exchange toolresult.Exchange) (string, error) {
-	var arguments notify.Args
-	if err := decodeArguments(exchange, &arguments); err != nil {
-		return "", err
-	}
-
-	header := heading("notify", safe(arguments.Title))
-	body := safe(arguments.Message) + "\n\n" + style.Qualifier(safe(arguments.Icon))
-	return withFailure(header+"\n\n"+body, exchange), nil
 }
 
 func renderFallback(exchange toolresult.Exchange) string {

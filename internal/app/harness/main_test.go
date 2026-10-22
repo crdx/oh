@@ -152,7 +152,6 @@ import (
 	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/grep"
 	"crdx.org/oh/pkg/toolbox/lookup"
-	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/task"
 	"crdx.org/oh/pkg/toolbox/title"
@@ -10700,7 +10699,6 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 			sandbox.Direct(),
 			true,
 		),
-		notify.New(screen.WriteEscape, func() bool { return false }),
 	)
 	tools = append(
 		tools,
@@ -19081,8 +19079,6 @@ const grepToolName = "grep"
 
 const shellToolName = "bash"
 
-const notifyToolName = "notify"
-
 const printedSessionIsImpossible = "this scenario drives the interface, which a headless session has none of\n"
 
 func (self sessionGoldenScenario) usesTheInterface() bool {
@@ -19732,11 +19728,6 @@ func newSessionGoldenTools(
 
 		if specification.Name == title.Name {
 			tools = append(tools, title.New())
-			continue
-		}
-
-		if specification.Name == notifyToolName {
-			tools = append(tools, notify.New(func(string) bool { return true }, func() bool { return false }))
 			continue
 		}
 

@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Remove the built-in kitty-specific notify tool
 - Refuse a swapped symlink on an exact-file grant
 - Stop the read tool panicking on a huge line limit
 - Revoke a grant whose path was replaced by a symlink

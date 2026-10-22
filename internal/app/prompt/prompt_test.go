@@ -1143,29 +1143,17 @@ func TestABackgroundServiceIsReachableOnLoopbackInTheSandbox(t *testing.T) {
 	}
 }
 
-func TestTitlesAndNotificationsFollowTheirOwnTools(t *testing.T) {
+func TestTitlesFollowTheirTool(t *testing.T) {
 	for name, test := range map[string]struct {
 		offeredTools []string
-		wanted       []string
-		unwanted     []string
+		isWanted     bool
 	}{
-		"both offered": {
-			offeredTools: []string{"title", "notify"},
-			wanted:       []string{"# Titles", "title tool", "# Notifications", "notify tool"},
-		},
-		"title alone": {
+		"offered": {
 			offeredTools: []string{"title"},
-			wanted:       []string{"# Titles", "title tool"},
-			unwanted:     []string{"# Notifications", "notify tool"},
+			isWanted:     true,
 		},
-		"notify alone": {
-			offeredTools: []string{"notify"},
-			wanted:       []string{"# Notifications", "notify tool"},
-			unwanted:     []string{"# Titles", "title tool"},
-		},
-		"neither offered": {
+		"not offered": {
 			offeredTools: []string{"sysinfo"},
-			unwanted:     []string{"# Titles", "title tool", "# Notifications", "notify tool"},
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -1176,14 +1164,10 @@ func TestTitlesAndNotificationsFollowTheirOwnTools(t *testing.T) {
 				OfferedTools: test.offeredTools,
 			})
 
-			for _, want := range test.wanted {
-				if !strings.Contains(got, want) {
-					t.Errorf("harness context omits %q: %q", want, got)
-				}
-			}
-			for _, unwanted := range test.unwanted {
-				if strings.Contains(got, unwanted) {
-					t.Errorf("harness context names %q with no such tool offered: %q", unwanted, got)
+			for _, text := range []string{"# Titles", "title tool"} {
+				isPresent := strings.Contains(got, text)
+				if isPresent != test.isWanted {
+					t.Errorf("harness context presence of %q is %t, want %t: %q", text, isPresent, test.isWanted, got)
 				}
 			}
 		})

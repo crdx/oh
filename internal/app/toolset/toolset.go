@@ -13,7 +13,7 @@ var HeadlessTools = []string{"read", "ls", "find", "grep", "bash", "write", "edi
 var BuiltinNames = []string{
 	"read", "ls", "find", "grep", "write", "edit",
 	"bash", "task", "forward", "wait", "subagent",
-	"notify", "title", "lookup", "fetch",
+	"title", "lookup", "fetch",
 }
 
 func IsBuiltin(name string) bool { return slices.Contains(BuiltinNames, name) }
