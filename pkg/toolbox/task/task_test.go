@@ -80,14 +80,19 @@ func TestTheTaskInterfaceHasNoWaitActionOrDuration(t *testing.T) {
 	}
 }
 
-func TestOnlyALaterRunIsNumberedInTheStatus(t *testing.T) {
+func TestTaskStatusNamesLaterRunsAndTheRespawnLimit(t *testing.T) {
 	manager := tasks.New(t.Context())
 	defer manager.Close()
 	manager.Restore([]tasks.Snapshot{
 		{ID: "first", State: tasks.Done, Run: 1},
 		{ID: "second", State: tasks.Done, Run: 2},
+		{ID: "watch", State: tasks.Done, Run: 3, IsRespawnLimitReached: true},
 	})
-	for name, want := range map[string]string{"first": "first: done", "second": "second: done, run 2"} {
+	for name, want := range map[string]string{
+		"first":  "first: done",
+		"second": "second: done, run 2",
+		"watch":  "watch: done, run 3, " + tasks.RespawnLimitReason(),
+	} {
 		if status := perform(t, manager, `{"action":"status","name":"`+name+`"}`); status != want {
 			t.Errorf("status said %q, want %q", status, want)
 		}

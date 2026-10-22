@@ -57,13 +57,16 @@
   [38;2;192;128;80mslow[0m   [38;2;204;102;102mtimed out after 3s, …[0m
 === respawning tasks (120 columns) ===
 [38;2;129;162;190mBackground tasks:[0m
-  [38;2;192;128;80mwatch[0m  running for 0s, run 3, respawns on exit  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mwatch[0m
-  [38;2;192;128;80mserve[0m  [38;2;150;152;150mstopped after 3s, run 2[0m                  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mserve[0m
+  [38;2;192;128;80mwatch[0m  running for 0s, run 3, respawns on exit                                              [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mwatch[0m
+  [38;2;192;128;80mserve[0m  [38;2;150;152;150mstopped after 3s, run 2[0m                                                              [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mserve[0m
+  [38;2;192;128;80mcheck[0m  [38;2;150;152;150mdone after 3s, run 3, respawning stopped after 3 runs in a row each ended within 2s[0m  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m
 === respawning tasks (60 columns) ===
 [38;2;129;162;190mBackground tasks:[0m
-  [38;2;192;128;80mwatch[0m  running for 0s, run 3, respawns on exit  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mwa…[0m
-  [38;2;192;128;80mserve[0m  [38;2;150;152;150mstopped after 3s, run 2[0m                  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mse…[0m
+  [38;2;192;128;80mwatch[0m  running for 0s, run 3, respawns on exit           …
+  [38;2;192;128;80mserve[0m  [38;2;150;152;150mstopped after 3s, run 2[0m                           …
+  [38;2;192;128;80mcheck[0m  [38;2;150;152;150mdone after 3s, run 3, respawning stopped after 3 r…[0m
 === respawning tasks (30 columns) ===
 [38;2;129;162;190mBackground tasks:[0m
   [38;2;192;128;80mwatch[0m  running for 0s, run …
   [38;2;192;128;80mserve[0m  [38;2;150;152;150mstopped after 3s, ru…[0m
+  [38;2;192;128;80mcheck[0m  [38;2;150;152;150mdone after 3s, run 3…[0m

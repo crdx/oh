@@ -169,6 +169,9 @@ func describe(snapshot tasks.Snapshot) string {
 	if snapshot.IsRespawning {
 		status += ", respawns on exit"
 	}
+	if snapshot.IsRespawnLimitReached {
+		status += ", " + tasks.RespawnLimitReason()
+	}
 	if snapshot.Failure != "" {
 		status += " — " + snapshot.Failure
 	}

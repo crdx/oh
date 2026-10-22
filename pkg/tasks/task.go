@@ -50,17 +50,22 @@ type Invocation struct {
 }
 
 type Snapshot struct {
-	Invocation   *Invocation  `json:"invocation,omitempty"`
-	Previous     []RunOutcome `json:"previous,omitempty"`
-	ID           string       `json:"id"`
-	ToolName     string       `json:"tool_name"`
-	Run          int          `json:"run"`
-	IsRespawning bool         `json:"is_respawning"`
-	State        State        `json:"state"`
-	StartedAt    time.Time    `json:"started_at"`
-	EndedAt      time.Time    `json:"ended_at"`
-	Output       string       `json:"output"`
-	Failure      string       `json:"failure"`
+	Invocation            *Invocation  `json:"invocation,omitempty"`
+	Previous              []RunOutcome `json:"previous,omitempty"`
+	ID                    string       `json:"id"`
+	ToolName              string       `json:"tool_name"`
+	Run                   int          `json:"run"`
+	IsRespawning          bool         `json:"is_respawning"`
+	IsRespawnLimitReached bool         `json:"respawn_limit_reached,omitempty"`
+	State                 State        `json:"state"`
+	StartedAt             time.Time    `json:"started_at"`
+	EndedAt               time.Time    `json:"ended_at"`
+	Output                string       `json:"output"`
+	Failure               string       `json:"failure"`
+}
+
+func RespawnLimitReason() string {
+	return fmt.Sprintf("respawning stopped after %d runs in a row each ended within %s", QuickRunsTolerated, QuickRunLimit)
 }
 
 type Conclusion struct {
@@ -70,7 +75,6 @@ type Conclusion struct {
 	IsFinal        bool
 	IsSilent       bool
 	IsSessionEnded bool
-	IsRespawnSpent bool
 }
 
 type Execution func(context.Context) (tool.ToolCallResult, error)
@@ -635,13 +639,14 @@ func (self *Manager) finishRun(ctx context.Context, current *entry, result tool.
 	}
 	isRespawnWanted := current.isRespawning && !current.isStopped && !self.isClosed && isRunning
 	isRespawning := isRespawnWanted && current.quickRuns < QuickRunsTolerated
+	isRespawnLimitReached := isRespawnWanted && !isRespawning
 	if !isRespawning {
 		current.snapshot.IsRespawning = false
 	}
+	current.snapshot.IsRespawnLimitReached = isRespawnLimitReached
 	conclusion := Conclusion{
 		Snapshot: cloneSnapshot(current.snapshot), Result: result, Failure: err,
 		IsFinal: !isRespawning, IsSilent: current.isStopped, IsSessionEnded: errors.Is(context.Cause(ctx), ErrClosed),
-		IsRespawnSpent: isRespawnWanted && !isRespawning,
 	}
 	if current.isBackground {
 		self.conclusions = append(self.conclusions, conclusion)

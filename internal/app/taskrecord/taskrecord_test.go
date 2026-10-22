@@ -21,8 +21,8 @@ func TestACompletedRunIsRecordedAndDescribed(t *testing.T) {
 
 func TestASpentRespawnSaysWhyItStopped(t *testing.T) {
 	event := taskrecord.EndedEvent(tasks.Conclusion{
-		Snapshot: tasks.Snapshot{ID: "watch", Run: 3, State: tasks.Done},
-		IsFinal:  true, IsRespawnSpent: true,
+		Snapshot: tasks.Snapshot{ID: "watch", Run: 3, State: tasks.Done, IsRespawnLimitReached: true},
+		IsFinal:  true,
 	})
 	notice, ok := taskrecord.EndedNotice(event)
 	if !ok || !strings.Contains(notice, "respawning stopped after 3 runs in a row each ended within 2s") {
@@ -30,12 +30,14 @@ func TestASpentRespawnSaysWhyItStopped(t *testing.T) {
 	}
 }
 
-func TestTheFinalListingRestoresPreviousRunOutcomes(t *testing.T) {
+func TestTheFinalListingRestoresPreviousRunOutcomesAndRespawnLimit(t *testing.T) {
 	listing := taskrecord.ListingEvent([]tasks.Snapshot{{
-		ID: "task-7", State: tasks.Running, Previous: []tasks.RunOutcome{{Run: 1, State: tasks.Failed, Output: "first"}},
+		ID: "task-7", Run: 2, State: tasks.Done, IsRespawnLimitReached: true,
+		Previous: []tasks.RunOutcome{{Run: 1, State: tasks.Failed, Output: "first"}},
 	}})
 	restored, ok := taskrecord.LastRecorded([]agent.Event{listing})
-	if !ok || len(restored) != 1 || len(restored[0].Previous) != 1 || restored[0].Previous[0].Output != "first" {
+	if !ok || len(restored) != 1 || len(restored[0].Previous) != 1 ||
+		restored[0].Previous[0].Output != "first" || !restored[0].IsRespawnLimitReached {
 		t.Errorf("restored listing %+v, %t", restored, ok)
 	}
 }

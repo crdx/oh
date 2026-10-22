@@ -191,7 +191,8 @@ func TestARespawningTaskKeepsItsIdentityAndStopsAfterQuickRuns(t *testing.T) {
 		}
 		for index, conclusion := range conclusions {
 			isLast := index == runs-1
-			if conclusion.Snapshot.ID != "watch" || conclusion.Snapshot.Run != index+1 || conclusion.IsFinal != isLast || conclusion.IsRespawnSpent != isLast {
+			if conclusion.Snapshot.ID != "watch" || conclusion.Snapshot.Run != index+1 ||
+				conclusion.IsFinal != isLast || conclusion.Snapshot.IsRespawnLimitReached != isLast {
 				t.Errorf("run %d reported %+v", index+1, conclusion)
 			}
 		}

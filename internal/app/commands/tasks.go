@@ -246,6 +246,9 @@ func taskOutcome(snapshot tasks.Snapshot, isSilent bool) string {
 	if snapshot.IsRespawning {
 		parts = append(parts, "respawns on exit")
 	}
+	if snapshot.IsRespawnLimitReached {
+		parts = append(parts, tasks.RespawnLimitReason())
+	}
 	if snapshot.Failure != "" {
 		parts = append(parts, snapshot.Failure)
 	}

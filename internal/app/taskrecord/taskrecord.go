@@ -24,7 +24,6 @@ type Completion struct {
 	IsFinal        bool           `json:"is_final"`
 	IsSilent       bool           `json:"silent,omitempty"`
 	IsSessionEnded bool           `json:"ended_with_session,omitempty"`
-	IsRespawnSpent bool           `json:"respawn_spent,omitempty"`
 }
 
 func EndedEvent(conclusion tasks.Conclusion) agent.Event {
@@ -33,7 +32,6 @@ func EndedEvent(conclusion tasks.Conclusion) agent.Event {
 		IsFinal:        conclusion.IsFinal,
 		IsSilent:       conclusion.IsSilent,
 		IsSessionEnded: conclusion.IsSessionEnded,
-		IsRespawnSpent: conclusion.IsRespawnSpent,
 	}
 	payload, err := json.Marshal(fact)
 	if err != nil {
@@ -124,8 +122,8 @@ func EndedNotice(event agent.Event) (string, bool) {
 	if !fact.IsFinal {
 		status += "; respawning"
 	}
-	if fact.IsRespawnSpent {
-		status += fmt.Sprintf("; respawning stopped after %d runs in a row each ended within %s", tasks.QuickRunsTolerated, tasks.QuickRunLimit)
+	if snapshot.IsRespawnLimitReached {
+		status += "; " + tasks.RespawnLimitReason()
 	}
 	if snapshot.Failure != "" {
 		status += ": " + snapshot.Failure
@@ -147,9 +145,9 @@ func ListingEvent(snapshots []tasks.Snapshot) agent.Event {
 
 func LastRecorded(events []agent.Event) ([]tasks.Snapshot, bool) {
 	return access.LastRecorded(events, Listing, func(event agent.Event) ([]tasks.Snapshot, error) {
-		var snapshots []tasks.Snapshot
-		err := json.Unmarshal(event.State, &snapshots)
-		return snapshots, err
+		var decodedSnapshots []tasks.Snapshot
+		err := json.Unmarshal(event.State, &decodedSnapshots)
+		return decodedSnapshots, err
 	})
 }
 

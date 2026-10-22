@@ -659,6 +659,12 @@ func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 			snapshot.Run = 2
 			return snapshot
 		}
+		spentRespawningTask := func(name string) tasks.Snapshot {
+			snapshot := finishedTask(name, "just "+name)
+			snapshot.Run = tasks.QuickRunsTolerated
+			snapshot.IsRespawnLimitReached = true
+			return snapshot
+		}
 
 		var output strings.Builder
 		for _, test := range []struct {
@@ -686,6 +692,7 @@ func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 			{label: "respawning tasks", listing: []tasks.Snapshot{
 				respawningTask("watch"),
 				stoppedRespawningTask("serve"),
+				spentRespawningTask("check"),
 			}},
 		} {
 			managedTasks, _ := fixtureTasks()
@@ -750,6 +757,9 @@ func TestGoldenTaskOutputMatchesGolden(t *testing.T) {
 			State:  tasks.Stopped,
 			Run:    4,
 			Output: "built in 3s\n",
+		}},
+		{label: "after the respawn limit", snapshot: tasks.Snapshot{
+			ID: "watch", State: tasks.Done, Run: tasks.QuickRunsTolerated, IsRespawnLimitReached: true,
 		}},
 	} {
 		managedTasks, _ := fixtureTasks()

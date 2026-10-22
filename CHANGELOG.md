@@ -7,6 +7,7 @@
 - Remove the built-in kitty-specific notify tool
 - Remove built-in tool overrides and check timeouts
 - Keep call rendering when async options are invalid
+- Keep the respawn-limit reason in task status
 - Refuse a swapped symlink on an exact-file grant
 - Stop the read tool panicking on a huge line limit
 - Revoke a grant whose path was replaced by a symlink
