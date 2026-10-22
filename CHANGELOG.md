@@ -14,6 +14,7 @@
 - State the exit status or signal when a command fails
 - Stop announcing discarded tasks and show earlier runs
 - Wake the conversation for a task ending with a turn
+- Never reuse a task ID after a resume
 - Refuse a swapped symlink on an exact-file grant
 - Stop the read tool panicking on a huge line limit
 - Revoke a grant whose path was replaced by a symlink

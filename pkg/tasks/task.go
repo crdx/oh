@@ -401,12 +401,24 @@ func (self *Manager) Restore(snapshots []Snapshot) []string {
 		current := &entry{snapshot: cloneSnapshot(snapshot), over: over, startSignal: over, isBackground: true}
 		self.entries[snapshot.ID] = current
 		self.order = append(self.order, snapshot.ID)
-		var index int
-		if _, err := fmt.Sscanf(snapshot.ID, "task-%d", &index); err == nil && index > self.nextID {
-			self.nextID = index
-		}
+		self.reserveLocked(snapshot.ID)
 	}
 	return taskNames
+}
+
+func (self *Manager) Reserve(ids []string) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	for _, id := range ids {
+		self.reserveLocked(id)
+	}
+}
+
+func (self *Manager) reserveLocked(id string) {
+	var index int
+	if _, err := fmt.Sscanf(id, "task-%d", &index); err == nil && index > self.nextID {
+		self.nextID = index
+	}
 }
 
 func (self *Manager) startLocked(

@@ -2280,6 +2280,7 @@ func (self *App) rememberTasks(events []agent.Event) []string {
 	var taskNames []string
 	if self.tasks != nil {
 		taskNames = self.tasks.Restore(snapshots)
+		self.tasks.Reserve(taskrecord.RecordedIDs(events))
 		snapshots = self.tasks.List()
 	} else {
 		for index := range snapshots {

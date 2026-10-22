@@ -151,6 +151,22 @@ func LastRecorded(events []agent.Event) ([]tasks.Snapshot, bool) {
 	})
 }
 
+func RecordedIDs(events []agent.Event) []string {
+	var ids []string
+	for _, event := range events {
+		if event.Kind == Finished || event.Kind == RunEnded {
+			ids = append(ids, event.Name)
+		}
+		var snapshots []tasks.Snapshot
+		if event.Kind == Listing && json.Unmarshal(event.State, &snapshots) == nil {
+			for _, snapshot := range snapshots {
+				ids = append(ids, snapshot.ID)
+			}
+		}
+	}
+	return ids
+}
+
 func EndedWithSessionEvent(names []string) agent.Event {
 	payload, err := json.Marshal(names)
 	if err != nil {
