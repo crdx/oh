@@ -358,6 +358,24 @@
 ── shell with an unknown parameter · 16 columns
 ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls …[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknow…[0m
 
+── shell with an invalid background task name · 120 columns
+[3m[38;2;150;152;150mServing the workspace over HTTP[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mpython3[0m[38;2;150;152;150m [0m[38;2;129;162;190m-m[0m[38;2;150;152;150m http.server 8000 --bind 127.0.0.1[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mtask name must match [a-z0-9-]{1,10}[0m
+
+── shell with an invalid background task name · 80 columns
+[3m[38;2;150;152;150mServing the workspace over HTTP[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mpython3[0m[38;2;150;152;150m [0m[38;2;129;162;190m-m[0m[38;2;150;152;150m http.ser[0m[38;2;150;152;150m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mtask name must match […[0m
+
+── shell with an invalid background task name · 60 columns
+[3m[38;2;150;152;150mServing the workspace over HTTP[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mpython3[0m[38;2;150;152;150m [0m[38;2;129;162;190m-[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mtask name mu…[0m
+
+── shell with an invalid background task name · 44 columns
+[3m[38;2;150;152;150mServing the workspace over HTTP[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mp[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mtask…[0m
+
+── shell with an invalid background task name · 30 columns
+[3m[38;2;150;152;150mServing the workspace over …[0m[0m [38;2;204;102;102m✗[0m
+
+── shell with an invalid background task name · 16 columns
+[3m[38;2;150;152;150mServing the w…[0m[0m [38;2;204;102;102m✗[0m
+
 ── shell with arguments that are not JSON · 120 columns
 ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"command":[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould not parse the arguments[0m
 

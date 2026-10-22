@@ -85,12 +85,12 @@ func (self configuredTool) Render(arguments string) (tool.CallRendering, bool) {
 }
 
 func (self configuredTool) RenderUnder(schema tool.Schema, arguments string) (tool.CallRendering, bool) {
-	argumentsJSON, options, err := self.extract(schema, arguments)
-	if err != nil {
+	argumentsJSON, options, values, decodeErr := self.decode(schema, arguments)
+	if argumentsJSON == "" {
 		return self.Tool.Render(arguments)
 	}
 	rendering, isRendered := tool.RenderUnder(self.Tool, baseSchema(schema), argumentsJSON)
-	if isRendered && options.Name != "" {
+	if isRendered && decodeErr == nil && self.validateOptions(options, values) == nil && options.Name != "" {
 		rendering.Introduces = options.Name
 	}
 	return rendering, isRendered
@@ -140,70 +140,81 @@ type callOptions struct {
 }
 
 func (self configuredTool) extract(schema tool.Schema, arguments string) (string, callOptions, error) {
+	argumentsJSON, options, values, err := self.decode(schema, arguments)
+	if err != nil {
+		return "", callOptions{}, err
+	}
+	if err := self.validateOptions(options, values); err != nil {
+		return "", options, err
+	}
+	return argumentsJSON, options, nil
+}
+
+func (self configuredTool) decode(
+	schema tool.Schema,
+	arguments string,
+) (string, callOptions, map[string]json.RawMessage, error) {
 	if strings.TrimSpace(arguments) == "" {
 		arguments = "{}"
 	}
-	if _, err := schema.Decode(arguments); err != nil {
-		return "", callOptions{}, err
-	}
+	_, validationErr := schema.Decode(arguments)
 	var values map[string]json.RawMessage
 	if err := json.Unmarshal([]byte(arguments), &values); err != nil {
-		return "", callOptions{}, err
+		return "", callOptions{}, nil, err
 	}
 	var options callOptions
 	if raw, hasBackground := values["background"]; hasBackground {
-		if err := json.Unmarshal(raw, &options.IsBackground); err != nil {
-			return "", options, errors.New("background must be true or false")
-		}
-		if self.options.BackgroundUnavailable != "" && options.IsBackground {
-			return "", options, errors.New(self.options.BackgroundUnavailable)
-		}
+		_ = json.Unmarshal(raw, &options.IsBackground)
 		delete(values, "background")
 	}
 	if raw, hasRespawn := values["respawn"]; hasRespawn {
-		if err := json.Unmarshal(raw, &options.IsRespawning); err != nil {
-			return "", options, errors.New("respawn must be true or false")
-		}
+		_ = json.Unmarshal(raw, &options.IsRespawning)
 		delete(values, "respawn")
 	}
 	if raw, hasName := values["task_name"]; hasName {
-		if err := json.Unmarshal(raw, &options.Name); err != nil {
-			return "", options, errors.New("task_name must be text")
-		}
+		_ = json.Unmarshal(raw, &options.Name)
 		delete(values, "task_name")
 	}
 	if raw, hasPort := values["forward_port"]; hasPort {
-		if err := json.Unmarshal(raw, &options.ForwardPort); err != nil {
-			return "", options, errors.New("forward_port must be an integer")
-		}
+		_ = json.Unmarshal(raw, &options.ForwardPort)
 		delete(values, "forward_port")
+	}
+	argumentsJSON, err := json.Marshal(values)
+	if err != nil {
+		return "", options, nil, err
+	}
+	return string(argumentsJSON), options, values, validationErr
+}
+
+func (self configuredTool) validateOptions(options callOptions, values map[string]json.RawMessage) error {
+	if self.options.BackgroundUnavailable != "" && options.IsBackground {
+		return errors.New(self.options.BackgroundUnavailable)
 	}
 	if options.Name != "" {
 		if err := tasks.ValidateName(options.Name); err != nil {
-			return "", options, err
+			return err
 		}
 	}
 	if _, err := forwardPortNumber(options.ForwardPort); err != nil {
-		return "", options, err
+		return err
 	}
 	if options.ForwardPort != 0 && self.options.PublishPort == nil {
-		return "", options, errors.New("port forwarding is unavailable")
+		return errors.New("port forwarding is unavailable")
 	}
 	if !options.IsBackground && (options.Name != "" || options.ForwardPort != 0) {
-		return "", options, errors.New("task_name and forward_port require background=true")
+		return errors.New("task_name and forward_port require background=true")
 	}
 	if self.Name() == "bash" && options.ForwardPort != 0 {
 		var network string
 		_ = json.Unmarshal(values["network"], &network)
 		if network == "host" {
-			return "", options, errors.New("forward_port requires the sandbox loopback network")
+			return errors.New("forward_port requires the sandbox loopback network")
 		}
 	}
 	if options.IsRespawning && !options.IsBackground {
-		return "", options, errors.New("respawn requires background=true")
+		return errors.New("respawn requires background=true")
 	}
-	argumentsJSON, err := json.Marshal(values)
-	return string(argumentsJSON), options, err
+	return nil
 }
 
 type scheduledCall struct {

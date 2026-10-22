@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/middleware/async"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/task"
 )
@@ -43,9 +44,10 @@ type callRowCall struct {
 }
 
 type callRowCase struct {
-	title    string
-	calls    []callRowCall
-	isFrozen bool
+	title            string
+	calls            []callRowCall
+	isFrozen         bool
+	isBackgroundable bool
 }
 
 func shellRowTool() tool.Tool {
@@ -72,12 +74,21 @@ func withOptionalIntent(subject tool.Tool) tool.Tool {
 	})
 }
 
-func callRowTools(isFrozen bool) func(string) (tool.Tool, bool) {
+func callRowTools(isFrozen bool, isBackgroundable bool) func(string) (tool.Tool, bool) {
 	shellTool := shellRowTool()
 	if isFrozen {
 		shellTool = withOptionalIntent(shellTool)
 	}
-	taskTool := task.New(tasks.New(context.Background()))
+	manager := tasks.New(context.Background())
+	if isBackgroundable {
+		shellTool = async.Tool(shellTool, manager, async.Options{
+			IsRestartable: true,
+			PublishPort: func(context.Context, uint16, string) (string, error) {
+				return "forwarded", nil
+			},
+		})
+	}
+	taskTool := task.New(manager)
 
 	return func(name string) (tool.Tool, bool) {
 		switch name {
@@ -164,6 +175,15 @@ func callRowCases() []callRowCase {
 		{title: "shell without an intent in a new session", calls: []callRowCall{{"bash", `{"command":"ls -la"}`, callRefused("intent is required")}}},
 		{title: "shell without an intent in an old session", isFrozen: true, calls: []callRowCall{{"bash", `{"command":"ls -la"}`, shellSucceeded("total 8", 1)}}},
 		{title: "shell with an unknown parameter", calls: []callRowCall{{"bash", `{"command":"ls","intent":"Listing the files","colour":"blue"}`, callRefused("unknown parameter: colour")}}},
+		{
+			title:            "shell with an invalid background task name",
+			isBackgroundable: true,
+			calls: []callRowCall{{
+				"bash",
+				`{"command":"python3 -m http.server 8000 --bind 127.0.0.1","intent":"Serving the workspace over HTTP","background":true,"task_name":"http-server","forward_port":8000}`,
+				callRefused("task name must match [a-z0-9-]{1,10}"),
+			}},
+		},
 		{title: "shell with arguments that are not JSON", calls: []callRowCall{{"bash", `{"command":`, callRefused("could not parse the arguments")}}},
 		{title: "several shell calls in one round", calls: []callRowCall{
 			{"bash", `{"command":"git status --short","intent":"Checking the working tree state"}`, shellSucceeded("M a.go", 1)},
@@ -218,7 +238,7 @@ func callRowEvents(item callRowCase, getTool func(string) (tool.Tool, bool), isS
 }
 
 func drawCallRows(item callRowCase, columns int, isStored bool) string {
-	getTool := callRowTools(item.isFrozen)
+	getTool := callRowTools(item.isFrozen, item.isBackgroundable)
 	events := callRowEvents(item, getTool, isStored)
 
 	var screenOutput bytes.Buffer
@@ -241,7 +261,7 @@ func drawCallRows(item callRowCase, columns int, isStored bool) string {
 func drawRunningCallRow(made callRowCall, columns int) string {
 	label := call.LabelFor(
 		agent.Event{Kind: agent.ToolCallRequestEvent, ID: "call-1", Name: made.name, Arguments: made.arguments},
-		callRowTools(false),
+		callRowTools(false, false),
 		nil,
 	)
 	block := dynamic.NewBlock(func() {})

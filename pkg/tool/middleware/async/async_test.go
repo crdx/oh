@@ -395,6 +395,31 @@ func TestTaskLaunchOptionsRequireBackgroundAndSandboxNetworking(t *testing.T) {
 	}
 }
 
+func TestAnInvalidAsyncOptionDoesNotHideTheCallRendering(t *testing.T) {
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	subject := async.Tool(heldTool(nil, new(int)), manager, async.Options{
+		IsRestartable: true,
+		PublishPort:   func(context.Context, uint16, string) (string, error) { return "forwarded", nil },
+	})
+	for _, arguments := range []string{
+		`{"command":"serve docs","background":true,"task_name":"http-server","forward_port":8000}`,
+		`{"command":"serve docs","background":"yes"}`,
+		`{"command":"serve docs","background":true,"task_name":7}`,
+		`{"command":"serve docs","background":true,"forward_port":"8000"}`,
+		`{"command":"serve docs","background":true,"respawn":"yes"}`,
+		`{"command":"serve docs","task_name":"docs"}`,
+	} {
+		if _, err := subject.Parse(arguments); err == nil {
+			t.Errorf("accepted invalid async options: %s", arguments)
+		}
+		rendering, isRendered := subject.Render(arguments)
+		if !isRendered || rendering.Subject != "serve docs" || rendering.Introduces != "" {
+			t.Errorf("%s got rendered=%t and rendering %+v", arguments, isRendered, rendering)
+		}
+	}
+}
+
 func TestTheDescriptionNamesTheForegroundLimit(t *testing.T) {
 	for _, test := range []struct {
 		name  string

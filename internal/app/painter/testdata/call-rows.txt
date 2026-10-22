@@ -358,6 +358,24 @@ $ ls Listing… ✗ unknown param…
 ── shell with an unknown parameter · 16 columns
 $ ls … ✗ unknow…
 
+── shell with an invalid background task name · 120 columns
+Serving the workspace over HTTP $ python3 -m http.server 8000 --bind 127.0.0.1 ✗ task name must match [a-z0-9-]{1,10}
+
+── shell with an invalid background task name · 80 columns
+Serving the workspace over HTTP $ python3 -m http.ser… ✗ task name must match […
+
+── shell with an invalid background task name · 60 columns
+Serving the workspace over HTTP $ python3 -… ✗ task name mu…
+
+── shell with an invalid background task name · 44 columns
+Serving the workspace over HTTP $ p… ✗ task…
+
+── shell with an invalid background task name · 30 columns
+Serving the workspace over … ✗
+
+── shell with an invalid background task name · 16 columns
+Serving the w… ✗
+
 ── shell with arguments that are not JSON · 120 columns
 $ {"command": ✗ could not parse the arguments
 
