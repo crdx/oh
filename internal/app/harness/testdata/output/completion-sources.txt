@@ -5,10 +5,6 @@ weather
 $ oh --complete caps rxwngl
 [exit 0]
 
-=== a disabled built-in tool ===
-$ oh --complete tool re
-[exit 0]
-
 === built-in tools without a custom declaration ===
 $ oh --complete tool re
 read

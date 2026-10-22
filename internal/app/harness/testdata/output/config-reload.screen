@@ -30,8 +30,8 @@
 === a tool permission that lands live ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ config.toml: tool.lookup.permission, tool.read.description                                     │
- │ applies to new sessions: tool.read.description (dismissing in 10s)                             │
+ │ config.toml: tool.lookup.permission, tool.weather.command, tool.weather.description            │
+ │ applies to new sessions: tool.weather.command, tool.weather.description (dismissing in 10s)    │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

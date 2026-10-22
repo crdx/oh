@@ -15,7 +15,6 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
-	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
@@ -26,7 +25,6 @@ import (
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/ask"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
@@ -160,16 +158,6 @@ func newChildFactory(options childOptions) subagents.Factory {
 		}
 
 		tools, err := state.childTools(child, options.runner)
-		if err != nil {
-			closeChild()
-			return subagents.Worker{}, err
-		}
-		tools, err = options.settings.ConfigureBuiltins(tools, config.BuiltinToolOptions{
-			IsGroupAllowed: state.options.mode.Allows,
-			Approve: func(context.Context, string, string, permission.Setting) error {
-				return ask.ErrUnavailable
-			},
-		})
 		if err != nil {
 			closeChild()
 			return subagents.Worker{}, err

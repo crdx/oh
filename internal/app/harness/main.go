@@ -254,9 +254,6 @@ func completionSources() cli.Sources {
 	if err != nil {
 		return sources
 	}
-	sources.ToolNames = slices.DeleteFunc(sources.ToolNames, func(name string) bool {
-		return !settings.IsToolOffered(name)
-	})
 	for _, name := range settings.CustomToolNames() {
 		if !slices.Contains(sources.ToolNames, name) {
 			sources.ToolNames = append(sources.ToolNames, name)
@@ -653,12 +650,9 @@ func selectedGroupToolNames(configuredNames []string, offeredNames []string, gro
 }
 
 func taskStartsAvailable(settings config.Config, selectedTools []string) bool {
-	if !settings.IsToolOffered(task.Name) {
-		return false
-	}
 	names := append([]string{"bash", "grep", "lookup"}, settings.CustomToolNames()...)
 	return slices.ContainsFunc(names, func(name string) bool {
-		return toolset.Offers(selectedTools, name) && settings.IsToolOffered(name) && settings.IsToolBackgroundable(name)
+		return toolset.Offers(selectedTools, name) && settings.IsToolBackgroundable(name)
 	})
 }
 
@@ -1240,28 +1234,27 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		}
 	} else {
 		systemPrompt, contextFiles, err = prompt.Load(prompt.Config{
-			GlobalPath:     location.GetGlobalContextPath(),
-			Workspace:      workspace,
-			SessionName:    log.Name(),
-			SessionsDir:    sessionsDir,
-			SessionDir:     filepath.Join(sessionsDir, log.Name()),
-			ConfigFile:     location.GetConfigFile(),
-			TmpDir:         tmpDir,
-			HomeDir:        homeDir,
-			CurrentCaps:    args.Caps,
-			ExtraPaths:     settings.Grants,
-			DropsDirectory: dropKeeper.GetDirectory(),
-			Skills:         availableSkills,
-			OfferedTools:   args.Tools,
-			Conditions:     currentConditions,
-			TasksGranted:   canSuperviseTasks(args.IsPrinting, keyboard) && taskStartsAvailable(settings, args.Tools),
-			BackgroundShellGranted: canSuperviseTasks(args.IsPrinting, keyboard) && settings.IsToolOffered(task.Name) &&
-				settings.IsToolBackgroundable(bash.Name),
-			NetworkGranted: args.Caps.Has(caps.Network),
-			ToolGroups:     activeToolGroups,
-			GroupStatus:    mode.Groups(),
-			Yolo:           args.Yolo,
-			Notes:          agent.NoteFormatOf(client.Client),
+			GlobalPath:             location.GetGlobalContextPath(),
+			Workspace:              workspace,
+			SessionName:            log.Name(),
+			SessionsDir:            sessionsDir,
+			SessionDir:             filepath.Join(sessionsDir, log.Name()),
+			ConfigFile:             location.GetConfigFile(),
+			TmpDir:                 tmpDir,
+			HomeDir:                homeDir,
+			CurrentCaps:            args.Caps,
+			ExtraPaths:             settings.Grants,
+			DropsDirectory:         dropKeeper.GetDirectory(),
+			Skills:                 availableSkills,
+			OfferedTools:           args.Tools,
+			Conditions:             currentConditions,
+			TasksGranted:           canSuperviseTasks(args.IsPrinting, keyboard) && taskStartsAvailable(settings, args.Tools),
+			BackgroundShellGranted: canSuperviseTasks(args.IsPrinting, keyboard),
+			NetworkGranted:         args.Caps.Has(caps.Network),
+			ToolGroups:             activeToolGroups,
+			GroupStatus:            mode.Groups(),
+			Yolo:                   args.Yolo,
+			Notes:                  agent.NoteFormatOf(client.Client),
 		})
 		if err != nil {
 			return "", err
@@ -1342,11 +1335,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		return "", err
 	}
-	bashApproval, err := settings.GetBashApproval()
-	if err != nil {
-		return "", err
-	}
-	permissions := permission.New(bashApproval.Combine(permissionSet))
+	permissions := permission.New(permissionSet)
 	approveNetwork := func(ctx context.Context, command string, intent string) error {
 		return approveHostNetwork(ctx, askBroker, permissions.Network(), command, intent)
 	}
@@ -1409,20 +1398,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		beforeShell: toolsBeforeShell,
 		afterShell:  toolsAfterShell,
 		custom:      customTools,
-	})
-	if err != nil {
-		return "", err
-	}
-	toolboxTools, err = settings.ConfigureBuiltins(toolboxTools, config.BuiltinToolOptions{
-		IsGroupAllowed: mode.Allows,
-		GroupForTool:   frozenToolGroups.GroupOf,
-		Approve: func(ctx context.Context, name string, arguments string, setting permission.Setting) error {
-			return customToolApproval(name).askFor(ctx, askBroker, setting, ask.Confirmation{
-				Label:    "Run the " + name + " tool?",
-				Detail:   arguments,
-				Language: "json",
-			})
-		},
 	})
 	if err != nil {
 		return "", err
@@ -1742,7 +1717,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 	app.commands = commandRegistry
 	app.permissions = permissions
-	app.bashApproval = bashApproval
 	app.notifyUnknownSettings(liveConfig.UnknownSettings)
 	app.nudge = liveConfig.Nudge
 	app.speedDial.Configure(liveConfig.SpeedDial)

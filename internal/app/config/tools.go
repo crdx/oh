@@ -15,11 +15,17 @@ import (
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
+	"crdx.org/oh/pkg/tool/middleware/async"
 )
 
 const (
 	toolsSetting       = "tool"
 	hostNetworkSetting = "host_network"
+)
+
+var (
+	backgroundableBuiltins = []string{"bash", "grep", "lookup"}
+	gatedBuiltins          = []string{"lookup", "fetch"}
 )
 
 type ToolConfig struct {
@@ -149,16 +155,11 @@ func (self Config) CustomToolNames() []string {
 }
 
 func (self Config) IsToolBackgroundable(name string) bool {
-	setting := self.Tools[name]
-	if setting.IsBackgroundable != nil {
-		return *setting.IsBackgroundable
+	if toolset.IsBuiltin(name) {
+		return slices.Contains(backgroundableBuiltins, name)
 	}
-	return toolset.IsBuiltin(name) && slices.Contains([]string{"bash", "grep", "lookup"}, name)
-}
-
-func (self Config) IsToolOffered(name string) bool {
-	setting, isConfigured := self.Tools[name]
-	return !isConfigured || setting.offered()
+	setting := self.Tools[name]
+	return setting.IsBackgroundable != nil && *setting.IsBackgroundable
 }
 
 func (self Config) ToolGroupNames() []string {
@@ -292,4 +293,62 @@ func isCommandPath(at int, word string) bool {
 	}
 
 	return strings.HasPrefix(word, "./") || strings.HasPrefix(word, "../")
+}
+
+func (self Config) validateToolSettings() error {
+	for _, source := range self.sources {
+		for _, key := range source.meta.Undecoded() {
+			if len(key) > 0 && (key[0] == toolsSetting || key[0] == "tools") {
+				return fmt.Errorf("%s: unknown tool setting %s", source.path, key.String())
+			}
+		}
+	}
+
+	for _, name := range slices.Sorted(maps.Keys(self.Tools)) {
+		setting := self.Tools[name]
+		if path := self.getSourcePath(toolsSetting, name, hostNetworkSetting); path != "" && name != "bash" {
+			return fmt.Errorf("%s: %s.%s.%s is only valid for bash", path, toolsSetting, name, hostNetworkSetting)
+		}
+		if toolset.IsBuiltin(name) {
+			if err := self.validateBuiltinSettings(name, setting); err != nil {
+				return err
+			}
+			continue
+		}
+		if timeoutType := self.getSourceType(toolsSetting, name, "timeout"); timeoutType != "" && timeoutType != "String" {
+			return self.complain(name, errors.New(`timeout is not a duration such as "30s"`))
+		}
+		if setting.Timeout < 0 {
+			return self.complain(name, errors.New("timeout must not be negative"))
+		}
+		if setting.IsBackgroundable != nil && *setting.IsBackgroundable {
+			for _, parameter := range setting.Parameters {
+				if async.IsReserved(parameter.Name) {
+					return self.complain(name, fmt.Errorf("parameter %s is reserved for task execution", parameter.Name))
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func (self Config) validateBuiltinSettings(name string, setting ToolConfig) error {
+	for _, field := range []string{
+		"enabled", "granted", "background", "description", "command", "parameters", "subject",
+		"timeout", "concurrency", "permission", "group", "version",
+	} {
+		if field == "permission" && slices.Contains(gatedBuiltins, name) {
+			continue
+		}
+		if self.getSourcePath(toolsSetting, name, field) != "" {
+			return self.complain(name, fmt.Errorf("%s cannot be set on a built-in tool", field))
+		}
+	}
+	if _, err := setting.Permission.setting(); err != nil {
+		return self.complain(name, fmt.Errorf("permission: %w", err))
+	}
+	if _, err := setting.HostNetwork.setting(); err != nil {
+		return self.complain(name, fmt.Errorf("%s: %w", hostNetworkSetting, err))
+	}
+	return nil
 }

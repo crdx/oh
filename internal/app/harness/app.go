@@ -230,7 +230,6 @@ type App struct {
 	experimental         *experimental.Toggles
 	isReplyOffered       bool
 	permissions          *permission.Live
-	bashApproval         config.BashApproval
 	onFailure            func(failure error)
 	onQuestion           func(question ask.Question) func()
 	savePastedImage      func(mediaType string, data []byte) (string, error)
@@ -1668,7 +1667,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		self.toolOutputLimit.Replace(result.LiveConfig.ToolOutputBytes)
 		self.experimental.Replace(result.LiveConfig.Experimental)
 		if self.permissions != nil {
-			self.permissions.Replace(self.bashApproval.Combine(result.LiveConfig.Permissions))
+			self.permissions.Replace(result.LiveConfig.Permissions)
 		}
 		self.display.bar.ReplaceLayout(result.LiveConfig.SegmentLayout)
 		self.feedback.Clear(feedback.Config)

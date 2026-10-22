@@ -14709,7 +14709,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 		self.show(inputLine)
 		return screenOutput.String()
 	case configReloadToolPermissionThatLandsLive:
-		writeLiveConfig(t, path, initialConfig+"\n[tool.lookup]\npermission = \"ask\"\n\n[tool.read]\ndescription = \"read a file\"\n")
+		writeLiveConfig(t, path, initialConfig+"\n[tool.lookup]\npermission = \"ask\"\n\n[tool.weather]\ndescription = \"read a file\"\ncommand = [\"true\"]\n")
 		settleLiveConfig(t, self)
 		self.show(inputLine)
 		return screenOutput.String()
@@ -25983,37 +25983,5 @@ group = "a"
 	}
 	if !strings.Contains(fmt.Sprint(requests[2].Input), "forecast complete") {
 		t.Errorf("the model received no completion: %+v", requests[2].Input)
-	}
-}
-
-func TestDisablingTaskToolRemovesBackgroundExecutionFromBash(t *testing.T) {
-	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
-		Model: "fake", Turns: []sim.Turn{{Say: "Foreground calls only."}},
-	}))
-	writeRigConfig(t, rig, "[tool.task]\nenabled = false\n")
-	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "use bash only")
-	session.waitFor("Foreground calls only.")
-	session.quit()
-
-	stored := rig.storedSessions()
-	if len(stored) != 1 {
-		t.Fatalf("got %d stored sessions", len(stored))
-	}
-	if !slices.Equal(stored[0].Meta.Tools, []string{"bash"}) {
-		t.Errorf("disabled task tool was offered: %v", stored[0].Meta.Tools)
-	}
-	for _, definition := range stored[0].Meta.ToolDefinitions {
-		if definition.Name == "bash" && slices.ContainsFunc(definition.Parameters, func(parameter store.ToolParameter) bool {
-			return parameter.Name == "background"
-		}) {
-			t.Error("bash advertised background without task controls")
-		}
-	}
-	if strings.Contains(stored[0].Meta.SystemPrompt, "use the task tool") {
-		t.Error("the prompt promised task controls that were disabled")
-	}
-	requests := endpoint.Requests()
-	if len(requests) == 0 || slices.Contains(requests[0].Tools, "task") {
-		t.Errorf("the model was offered disabled task controls: %+v", requests)
 	}
 }

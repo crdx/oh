@@ -256,35 +256,6 @@ func (self Config) BuildPermissions() (permission.Set, error) {
 	return set, nil
 }
 
-type BashApproval struct {
-	setting      permission.Setting
-	isConfigured bool
-}
-
-func (self Config) GetBashApproval() (BashApproval, error) {
-	if self.getSourcePath(toolsSetting, "bash", "permission") == "" {
-		return BashApproval{}, nil
-	}
-	bashTool := self.Tools["bash"]
-	setting, err := bashTool.Permission.setting()
-	if err != nil {
-		return BashApproval{}, fmt.Errorf("tool.bash.permission: %w", err)
-	}
-	return BashApproval{setting: setting, isConfigured: true}, nil
-}
-
-func (self BashApproval) Combine(set permission.Set) permission.Set {
-	if !self.isConfigured || self.setting.IsAllowed() {
-		return set
-	}
-	if set.Network.IsAllowed() {
-		set.Network = self.setting
-	} else if self.setting.TimeoutOr(permission.DefaultApprovalTimeout) < set.Network.TimeoutOr(permission.DefaultApprovalTimeout) {
-		set.Network.Timeout = self.setting.Timeout
-	}
-	return set
-}
-
 type SkillPaths struct {
 	Include []string `toml:"include"`
 	Exclude []string `toml:"exclude"`
@@ -576,6 +547,15 @@ func (self Config) getSourcePath(keys ...string) string {
 	for _, source := range slices.Backward(self.sources) {
 		if source.meta.IsDefined(keys...) {
 			return source.path
+		}
+	}
+	return ""
+}
+
+func (self Config) getSourceType(keys ...string) string {
+	for _, source := range slices.Backward(self.sources) {
+		if source.meta.IsDefined(keys...) {
+			return source.meta.Type(keys...)
 		}
 	}
 	return ""

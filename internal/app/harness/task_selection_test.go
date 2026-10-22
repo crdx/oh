@@ -111,26 +111,26 @@ func TestAFrozenBackgroundSchemaRefusesBackgroundOnceItIsDisabled(t *testing.T) 
 	isBackgroundable := false
 	var runs []string
 	options := testBackgroundOptions(manager)
-	options.settings = config.Config{Tools: map[string]config.ToolConfig{"bash": {IsBackgroundable: &isBackgroundable}}}
+	options.settings = config.Config{Tools: map[string]config.ToolConfig{"offload": {IsBackgroundable: &isBackgroundable}}}
 	frozenSchema := tool.Schema{
 		tool.String("command", "command"),
 		tool.Boolean("background", "start in the background").Optional(),
 		tool.String("task_name", "name").Optional(),
 	}
 	options.resumedSession = &store.Session{Meta: store.Meta{ToolDefinitions: store.FreezeTools([]tool.Tool{
-		tool.Implement(tool.Definition{Name: "bash", Schema: frozenSchema}, func(struct{}) tool.CallRendering { return tool.CallRendering{} }).
+		tool.Implement(tool.Definition{Name: "offload", Schema: frozenSchema}, func(struct{}) tool.CallRendering { return tool.CallRendering{} }).
 			Plain(func(_ context.Context, _ struct{}) (string, error) { return "", nil }),
 	})}}
-	tools, err := backgroundTools([]tool.Tool{plainTestTool("bash", &runs), taskTestTool()}, options)
+	tools, err := backgroundTools([]tool.Tool{plainTestTool("offload", &runs), taskTestTool()}, options)
 	if err != nil {
 		t.Fatal(err)
 	}
 	parser, isParser := tools[0].(tool.SchemaParser)
 	if !isParser {
-		t.Fatal("the wrapped bash cannot parse a frozen schema")
+		t.Fatal("the wrapped offload cannot parse a frozen schema")
 	}
 	if _, err := parser.ParseUnder(frozenSchema, `{"command":"serve","background":true}`); err == nil ||
-		!strings.Contains(err.Error(), "background calls are disabled for the bash tool") {
+		!strings.Contains(err.Error(), "background calls are disabled for the offload tool") {
 		t.Errorf("a disabled background call parsed with %v", err)
 	}
 	call, err := parser.ParseUnder(frozenSchema, `{"command":"build","background":false}`)
@@ -236,16 +236,6 @@ func TestRevokingAPathStopsOnlyTheSearchesThatCouldReachIt(t *testing.T) {
 				t.Errorf("%q affected by %q: %t, want %t", test.searchPath, test.revokedPath, got, test.want)
 			}
 		})
-	}
-}
-
-func TestDisablingTaskControlsAlsoDisablesBackgroundCalls(t *testing.T) {
-	isOffered := false
-	settings := config.Config{Tools: map[string]config.ToolConfig{
-		"task": {IsOffered: &isOffered},
-	}}
-	if taskStartsAvailable(settings, []string{"bash"}) {
-		t.Error("the prompt offered task controls that the configuration disabled")
 	}
 }
 

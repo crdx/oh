@@ -1,16 +1,12 @@
 package config
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
-
-	"crdx.org/oh/internal/app/permission"
-	"crdx.org/oh/pkg/tool"
 
 	"crdx.org/oh/pkg/tool/command"
 )
@@ -490,51 +486,47 @@ func TestACustomToolReachesTheNextSession(t *testing.T) {
 	}
 }
 
-func TestABuiltinToolTakesOnlyConfiguredOverrides(t *testing.T) {
-	settings, _ := configWithACustomTool(t, `
-		[tool.read]
-		description = "read a local document"
-		concurrency = 1
-		permission = "ask"
-	`)
-	var wasAsked bool
-	built := tool.Implement(tool.Definition{
-		Name: "read", Description: "read a file", Schema: tool.Schema{tool.String("path", "file")},
-	}, func(arguments struct{ Path string }) tool.CallRendering {
-		return tool.CallRendering{Subject: arguments.Path}
-	}).IsEmbarrassinglyParallel().Plain(func(_ context.Context, arguments struct{ Path string }) (string, error) {
-		return arguments.Path, nil
-	})
-	configured, err := settings.ConfigureBuiltins([]tool.Tool{built}, BuiltinToolOptions{
-		Approve: func(_ context.Context, name string, arguments string, _ permission.Setting) error {
-			wasAsked = name == "read" && strings.Contains(arguments, "notes.md")
-			return nil
-		},
-	})
-	if err != nil {
+func TestABuiltinToolTakesNoOverrides(t *testing.T) {
+	for _, field := range []string{
+		"enabled = false", "granted = true", "background = false", "description = \"read a document\"",
+		"timeout = \"5m\"", "concurrency = 2", "permission = \"ask\"", "group = \"z\"",
+	} {
+		t.Run(field, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			if err := writeConfigFile(path, "[tool.read]\n"+field+"\n"); err != nil {
+				t.Fatal(err)
+			}
+			name, _, _ := strings.Cut(field, " ")
+			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "tool.read: "+name+" cannot be set on a built-in tool") {
+				t.Errorf("got %v", err)
+			}
+		})
+	}
+}
+
+func TestOnlyGatedBuiltinsTakeAPermission(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[tool.bash]\npermission = \"ask\"\n"); err != nil {
 		t.Fatal(err)
 	}
-	if len(configured) != 1 || configured[0].Description() != "read a local document" || configured[0].Concurrent() {
-		t.Fatalf("builtin overlay was not applied: %v", configured)
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "tool.bash: permission cannot be set on a built-in tool") {
+		t.Errorf("got %v", err)
 	}
-	call, err := configured[0].Parse(`{"path":"notes.md"}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	result, err := call.Exec(t.Context())
-	if err != nil || result.Output != "notes.md" || !wasAsked {
-		t.Errorf("result %q, approval %t, failure %v", result.Output, wasAsked, err)
-	}
-	if names := settings.CustomToolNames(); len(names) != 0 {
-		t.Errorf("read was declared as a custom tool: %v", names)
+	for _, name := range []string{"lookup", "fetch"} {
+		if err := writeConfigFile(path, "[tool."+name+"]\npermission = \"ask\"\n"); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := Load(path); err != nil {
+			t.Errorf("%s permission was refused: %v", name, err)
+		}
 	}
 }
 
 func TestBuiltinsRefuseCustomImplementationAndUnknownNetworkSettings(t *testing.T) {
 	for _, test := range []struct{ name, body, reason string }{
-		{"command", "[tool.read]\ncommand = [\"true\"]\n", "command cannot replace a built-in tool"},
-		{"parameters", "[tool.read]\nparameters = []\n", "parameters cannot replace a built-in tool"},
-		{"version", "[tool.read]\nversion = 2\n", "version cannot replace a built-in tool"},
+		{"command", "[tool.read]\ncommand = [\"true\"]\n", "command cannot be set on a built-in tool"},
+		{"parameters", "[tool.read]\nparameters = []\n", "parameters cannot be set on a built-in tool"},
+		{"version", "[tool.read]\nversion = 2\n", "version cannot be set on a built-in tool"},
 		{"network", "[tool.read]\nhost_network = \"ask\"\n", "tool.read.host_network is only valid for bash"},
 		{"typo", "[tool.read]\nhost_netwrk = \"ask\"\n", "unknown tool setting tool.read.host_netwrk"},
 		{"bash typo", "[tool.bash]\nhost_netwrk = \"ask\"\n", "unknown tool setting tool.bash.host_netwrk"},
@@ -551,97 +543,6 @@ func TestBuiltinsRefuseCustomImplementationAndUnknownNetworkSettings(t *testing.
 				t.Errorf("got %v, want %q", err, test.reason)
 			}
 		})
-	}
-}
-
-func TestHostNetworkingUsesItsOwnToolPermission(t *testing.T) {
-	settings, _ := configWithACustomTool(t, `
-		[tool.bash]
-		permission = "ask"
-		host_network = "allow"
-	`)
-	permissions, err := combinedPermissions(settings)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if permissions.Network.IsAllowed() {
-		t.Error("general bash approval was bypassed for host networking")
-	}
-
-	settings, _ = configWithACustomTool(t, `
-		[tool.bash]
-		permission = "allow"
-		host_network = "ask"
-	`)
-	permissions, err = combinedPermissions(settings)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if permissions.Network.IsAllowed() {
-		t.Error("host networking approval was bypassed by bash permission")
-	}
-}
-
-func TestHostNetworkingUsesTheShorterApprovalLimit(t *testing.T) {
-	settings, _ := configWithACustomTool(t, `
-		[tool.bash]
-		permission = { rule = "ask", timeout = "1m" }
-		host_network = { rule = "ask", timeout = "10m" }
-	`)
-	permissions, err := combinedPermissions(settings)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if permissions.Network.Timeout != time.Minute {
-		t.Errorf("got host-network approval limit %s", permissions.Network.Timeout)
-	}
-}
-
-func combinedPermissions(settings Config) (permission.Set, error) {
-	permissions, err := settings.BuildPermissions()
-	if err != nil {
-		return permissions, err
-	}
-	approval, err := settings.GetBashApproval()
-	return approval.Combine(permissions), err
-}
-
-func TestAReloadKeepsTheBashApprovalTheSessionStartedWith(t *testing.T) {
-	started, _ := configWithACustomTool(t, `
-		[tool.bash]
-		permission = "ask"
-		host_network = "allow"
-	`)
-	approval, err := started.GetBashApproval()
-	if err != nil {
-		t.Fatal(err)
-	}
-	reloaded, _ := configWithACustomTool(t, `
-		[tool.bash]
-		permission = "allow"
-		host_network = "allow"
-	`)
-	permissions, err := reloaded.BuildPermissions()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if approval.Combine(permissions).Network.IsAllowed() {
-		t.Error("a reloaded bash permission bypassed the approval the session started with")
-	}
-	if reach := ReachOf("tool.bash.permission"); reach != ReachNextSession {
-		t.Errorf("tool.bash.permission reaches %d, want new sessions", reach)
-	}
-}
-
-func TestADisabledBuiltInIsNotOffered(t *testing.T) {
-	settings, _ := configWithACustomTool(t, "[tool.read]\nenabled = false\n")
-	built := tool.Implement(tool.Definition{Name: "read", Description: "read a file"}, func(struct{}) tool.CallRendering { return tool.CallRendering{} }).Plain(func(context.Context, struct{}) (string, error) { return "", nil })
-	configured, err := settings.ConfigureBuiltins([]tool.Tool{built}, BuiltinToolOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(configured) != 0 {
-		t.Errorf("disabled read was offered: %v", configured)
 	}
 }
 
@@ -698,7 +599,7 @@ func TestDisablingAToolLeavesItsConfiguredGroupFlagParseable(t *testing.T) {
 	}
 }
 
-func TestBackgroundEligibilityIsExplicitForCustomToolsAndRestrictedForBuiltins(t *testing.T) {
+func TestBackgroundEligibilityIsExplicitForCustomToolsAndFixedForBuiltins(t *testing.T) {
 	settings, _ := configWithACustomTool(t, `
 		[tool.offload]
 		description = "build elsewhere"
@@ -716,16 +617,6 @@ func TestBackgroundEligibilityIsExplicitForCustomToolsAndRestrictedForBuiltins(t
 	} {
 		if got := settings.IsToolBackgroundable(name); got != want {
 			t.Errorf("tool %s backgroundable=%t, want %t", name, got, want)
-		}
-	}
-
-	for _, name := range []string{"read", "find", "write", "edit"} {
-		path := filepath.Join(t.TempDir(), "config.toml")
-		if err := writeConfigFile(path, fmt.Sprintf("[tool.%s]\nbackground = true\n", name)); err != nil {
-			t.Fatal(err)
-		}
-		if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "cannot run in the background") {
-			t.Errorf("tool %s was backgroundable: %v", name, err)
 		}
 	}
 }
@@ -772,6 +663,29 @@ parameters = [{ name = %q, kind = "string", description = "a conflicting paramet
 			}
 			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "parameter "+name+" is reserved") {
 				t.Errorf("launch option collision returned %v", err)
+			}
+		})
+	}
+}
+
+func TestAToolTimeoutMustBeADurationText(t *testing.T) {
+	tests := map[string]struct {
+		written string
+		want    string
+	}{
+		"custom integer":  {written: "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ntimeout = 60\n", want: `tool.weather: timeout is not a duration such as "30s"`},
+		"custom negative": {written: "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ntimeout = \"-5s\"\n", want: "tool.weather: timeout must not be negative"},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			if err := writeConfigFile(path, test.written); err != nil {
+				t.Fatal(err)
+			}
+
+			_, err := Load(path)
+			if err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Errorf("got %v, want %q", err, test.want)
 			}
 		})
 	}

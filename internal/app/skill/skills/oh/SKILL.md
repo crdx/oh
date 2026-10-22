@@ -44,7 +44,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[provider.ollama]` — `host` for a local or LAN endpoint
 - `[snippet]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`, `[ui.theme.<palette>]`
-- `[tool]` — built-in tool overrides and custom tools; each custom `[tool.<name>]` names a `command` to run. `[tool.lookup]` and `[tool.fetch]` `permission` and `[tool.bash]` `host_network` say what a granted capability buys: `ask` or `allow`, or `{ rule = "ask", timeout = "2m" }` to change how long its question waits
+- `[tool]` — custom tools, each `[tool.<name>]` naming a `command` to run. `[tool.lookup]` and `[tool.fetch]` `permission` and `[tool.bash]` `host_network` say what a granted capability buys: `ask` or `allow`, or `{ rule = "ask", timeout = "2m" }` to change how long its question waits
 - `[grants]`, `[skill]` — paths each workspace then overrides
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
@@ -256,18 +256,15 @@ Grant the narrowest set that does the job. Leave `default.caps` to the user: pro
 
 ## Tool Configuration
 
-`[tool.<name>]` overrides a built-in tool when the name exists, or declares a custom tool when the name is new. Built-in overrides keep the built-in implementation, original argument schema, capability checks, and sandbox. A custom tool runs the command in `command`. The model calls both kinds alike.
+`[tool.<name>]` declares a custom tool, which runs the command in `command`. A built-in tool cannot be overridden: its table takes only the gated-action settings below, and any other field fails startup.
 
 Put `[tool]` in the global config. A workspace `oh.toml` that sets it stops startup. Unknown fields under `[tool]` fail startup instead of becoming warnings. A session freezes the tool definition and group it was offered with. Permission rules are checked again when oh restarts, including on resume. Changes to `[tool]` while this process runs wait until its next start, except lookup and fetch `permission` and bash `host_network`, which reload live.
 
-Built-ins accept `description`, `timeout`, `concurrency`, `permission`, `group`, `granted`, `enabled`, and `background` where eligible. A built-in rejects `command`, `parameters`, `subject`, and `version`. `enabled = false` withholds a tool from new sessions and makes it unavailable on resume; it never grants access. `granted = true` grants a configured group at the start of a new session, as adding its letter to `default.caps` does. A built-in group adds a requirement; it never replaces its existing capability check. A built-in timeout is available only for cancellable tools: `bash`, `grep`, `lookup`, `fetch`, `wait`, and `notify`. It can shorten execution but cannot extend a smaller bound inside the tool. Concurrency above one requires a tool already safe to run in parallel.
-
-`permission = "ask"` adds an approval for a built-in that did not ask before. For `lookup` and `fetch`, `permission` is the rule for the gated action itself: lookup allows and fetch asks unless configured otherwise. `[tool.bash] host_network` decides what a `network = "host"` call needs, asking unless configured otherwise, and takes the same values as `permission`. Host networking still requires `n`; `[tool.bash] permission = "allow"` never grants it, and when both rules ask, a host-network call asks once with the shorter timeout. `host_network` on another tool fails startup.
+For `lookup` and `fetch`, `permission` is the rule for the gated action itself: lookup allows and fetch asks unless configured otherwise. `[tool.bash] host_network` decides what a `network = "host"` call needs, asking unless configured otherwise, and takes the same values as `permission`. Host networking still requires `n`. `host_network` on another tool fails startup.
 
 ```toml
-[tool.read]
-description = "read a text or image file"
-concurrency = 2
+[tool.fetch]
+permission = "allow"
 
 [tool.bash]
 host_network = { rule = "ask", timeout = "2m" }
@@ -277,7 +274,7 @@ host_network = { rule = "ask", timeout = "2m" }
 
 `[tool.<name>]` with a new name adds a custom tool. The model calls it like a built-in tool. It runs the command in `command`.
 
-The table name is the tool name. Use lowercase letters, digits, and underscores. Start with a letter. A built-in name selects its overrides instead; it cannot declare a custom command.
+The table name is the tool name. Use lowercase letters, digits, and underscores. Start with a letter. A built-in name cannot declare a custom tool.
 
 The command runs on the host, in the workspace directory. The sandbox does not confine it. A configured `group` gates it through a mode flag, then `permission` decides whether each allowed call needs approval.
 

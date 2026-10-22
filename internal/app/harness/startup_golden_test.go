@@ -238,10 +238,6 @@ func TestGoldenExecutableCompletionReadsTheConfiguredTools(t *testing.T) {
 			run := newStartupRun(t, "")
 			return run.run(t, "--complete", "tool", "re") + run.run(t, "--complete", "tool", "we")
 		},
-		"a disabled built-in tool": func() string {
-			run := newStartupRun(t, "[tool.read]\nenabled = false\n")
-			return run.run(t, "--complete", "tool", "re")
-		},
 		"a declared tool and its capability group": func() string {
 			run := newStartupRun(t, "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"a\"\n")
 			return run.run(t, "--complete", "tool", "we") + run.run(t, "--complete", "caps", "rxwngl")
