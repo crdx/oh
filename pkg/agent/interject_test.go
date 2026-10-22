@@ -432,3 +432,34 @@ func TestAnIncompleteReminderIsRefused(t *testing.T) {
 		t.Error("expected a nil queue to refuse a reminder")
 	}
 }
+
+func TestANoteAfterTheTurnHasFinishedIsRefused(t *testing.T) {
+	interjections := &agent.Interjections{}
+	provider := &interjectionProvider{rounds: 0, interjections: interjections}
+	assistant := agent.New("", provider, []tool.Tool{noop()})
+
+	for _, err := range assistant.Stream(t.Context(), "go", interjections) {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if interjections.Note(agent.Note{Kind: agent.TaskNote, Text: "the task build has finished"}) {
+		t.Error("a finished turn accepted a note that nobody will read")
+	}
+}
+
+func TestANoteAfterAStoppedTurnIsRefused(t *testing.T) {
+	interjections := &agent.Interjections{}
+	provider := &interjectionProvider{rounds: 2, interjections: interjections}
+	assistant := agent.New("", provider, []tool.Tool{noop()})
+	ctx, cancel := context.WithCancel(t.Context())
+	cancel()
+
+	for range assistant.Stream(ctx, "go", interjections) {
+	}
+
+	if interjections.Note(agent.Note{Kind: agent.TaskNote, Text: "the task build has finished"}) {
+		t.Error("a stopped turn accepted a note that nobody will read")
+	}
+}

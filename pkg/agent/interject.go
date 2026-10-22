@@ -8,10 +8,11 @@ import (
 const InterjectionSeparator = "\n\n"
 
 type Interjections struct {
-	mutex    sync.Mutex
-	messages []string
-	notes    []Note
-	reminder Reminder
+	mutex      sync.Mutex
+	messages   []string
+	notes      []Note
+	reminder   Reminder
+	isFinished bool
 }
 
 type Reminder struct {
@@ -40,9 +41,42 @@ func (self *Interjections) Note(note Note) bool {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
+	if self.isFinished {
+		return false
+	}
 	self.notes = append(self.notes, note)
 
 	return true
+}
+
+func (self *Interjections) TakeNotesOrFinish() ([]Note, bool) {
+	if self == nil {
+		return nil, false
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if len(self.notes) == 0 {
+		self.isFinished = true
+		return nil, false
+	}
+
+	notes := self.notes
+	self.notes = nil
+
+	return notes, true
+}
+
+func (self *Interjections) Finish() {
+	if self == nil {
+		return
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	self.isFinished = true
 }
 
 func (self *Interjections) TakeNotes() ([]Note, bool) {

@@ -97,10 +97,9 @@ func (self *App) hostCommandEnded(outcome hostcommand.Outcome) {
 }
 
 func (self *App) hostCommandRan(event agent.Event) {
-	if self.holdNotice(event) &&
-		!hostcommand.IsStoppedByUser(event) &&
-		self.experimental.IsEnabled(experimental.CommandStartsTurn) {
-		self.startTurn()
+	doesWake := !hostcommand.IsStoppedByUser(event) && self.experimental.IsEnabled(experimental.CommandStartsTurn)
+	if self.holdNotice(event, doesWake) && doesWake {
+		self.wake()
 	}
 }
 

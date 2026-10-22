@@ -19091,6 +19091,7 @@ type sessionGoldenTurn struct {
 	EndTaskAfterReasoningEvent   string                  `toml:"end-task-after-reasoning-event"`
 	EndTaskAfterReasoningDelta   string                  `toml:"end-task-after-reasoning-delta"`
 	EndTaskAfterMessageDelta     string                  `toml:"end-task-after-message-delta"`
+	EndTaskAfterFinalReply       string                  `toml:"end-task-after-final-reply"`
 	SettleTasksAfterToolRequest  bool                    `toml:"settle-tasks-after-tool-request"`
 	SettleTasksAfterToolResult   bool                    `toml:"settle-tasks-after-tool-result"`
 	SettleSubagentsAfterResult   int                     `toml:"settle-subagents-after-tool-result"`
@@ -19136,6 +19137,7 @@ func (self sessionGoldenTurn) usesTheInterface() bool {
 		self.EndTaskAfterReasoningEvent != "" ||
 		self.EndTaskAfterReasoningDelta != "" ||
 		self.EndTaskAfterMessageDelta != "" ||
+		self.EndTaskAfterFinalReply != "" ||
 		self.SettleTasksAfterToolRequest || self.SettleTasksAfterToolResult ||
 		self.DoubleReturnAfterToolRequest ||
 		self.CancelAfterQueueing ||
@@ -20647,7 +20649,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if scenario.EndTaskBeforeFirst != "" {
 		conclusion := endedSessionGoldenTask(scenario.EndTaskBeforeFirst)
 		conclusion.Snapshot.Output = scenario.EndTaskOutput
-		firstHarness.holdNotice(taskrecord.EndedEvent(conclusion))
+		firstHarness.holdNotice(taskrecord.EndedEvent(conclusion), false)
 		firstHarness.settleAccess()
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
@@ -21507,6 +21509,10 @@ func runSessionGoldenTurn(
 			settleSessionGoldenTasks(t, testHarness)
 		}
 		childTurns.observe(update)
+	}
+	if turn.EndTaskAfterFinalReply != "" {
+		testHarness.tasksDoWake = true
+		testHarness.taskEnded(endedSessionGoldenTask(turn.EndTaskAfterFinalReply))
 	}
 	if turn.IsCancelled && !testHarness.currentTurn.Cancelled() {
 		if turn.CancelWithSignal {

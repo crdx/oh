@@ -79,7 +79,8 @@ const (
 type SessionLogger = record.Session
 
 type pendingMessage struct {
-	state agent.Event
+	state    agent.Event
+	doesWake bool
 }
 
 type pendingNotices struct {
@@ -715,7 +716,7 @@ func (self *App) finishAccessChange() {
 	self.refreshPendingMessages()
 }
 
-func (self *App) holdNotice(event agent.Event) bool {
+func (self *App) holdNotice(event agent.Event, doesWake bool) bool {
 	notices, areSaid := painter.HarnessNotices(event)
 	if !areSaid {
 		return false
@@ -726,10 +727,18 @@ func (self *App) holdNotice(event agent.Event) bool {
 		return false
 	}
 
-	self.pendingNotices.add(event)
-	self.refreshPendingMessages()
+	self.pendingNotices.items = append(self.pendingNotices.items, pendingMessage{state: event, doesWake: doesWake})
+	if !self.currentTurn.Running() {
+		self.refreshPendingMessages()
+	}
 
 	return true
+}
+
+func (self *App) wake() {
+	if !self.currentTurn.Running() {
+		self.startTurn()
+	}
 }
 
 func (self *App) queuePathGrantChange(event agent.Event) {
@@ -1409,7 +1418,7 @@ func (self *App) forwardChanges() <-chan agent.Event {
 }
 
 func (self *App) holdForwardChange(event agent.Event) {
-	self.holdNotice(event)
+	self.holdNotice(event, false)
 }
 
 func (self *App) drainForwardChanges() {
@@ -1420,7 +1429,7 @@ func (self *App) drainForwardChanges() {
 	for {
 		select {
 		case event := <-self.forwards.Changes():
-			self.holdNotice(event)
+			self.holdNotice(event, false)
 		default:
 			return
 		}
@@ -1482,8 +1491,8 @@ func (self *App) taskEnded(conclusion tasks.Conclusion) {
 	if conclusion.IsSilent {
 		return
 	}
-	if self.holdNotice(taskrecord.EndedEvent(conclusion)) && self.tasksDoWake {
-		self.startTurn()
+	if self.holdNotice(taskrecord.EndedEvent(conclusion), self.tasksDoWake) && self.tasksDoWake {
+		self.wake()
 	}
 }
 
@@ -2537,6 +2546,11 @@ func (self *App) finish() {
 		self.startTurn()
 	case turn.None:
 		self.deliverChildCompletions()
+	}
+	if slices.ContainsFunc(self.pendingNotices.items, func(item pendingMessage) bool { return item.doesWake }) {
+		self.wake()
+	} else if !self.currentTurn.Running() && len(self.pendingNotices.items) > 0 {
+		self.refreshPendingMessages()
 	}
 }
 

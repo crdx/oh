@@ -155,7 +155,7 @@ func (self *App) nextChildDelivery(time.Time) time.Time {
 
 func (self *App) deliverChildCompletions() {
 	if self.queueReadyChildCompletions() {
-		self.startTurn()
+		self.wake()
 	}
 	self.reportProgress()
 }
@@ -167,7 +167,7 @@ func (self *App) queueReadyChildCompletions() bool {
 	due := self.children.reportsDue
 	self.children.reportsDue = nil
 	self.children.deliveryAt = time.Time{}
-	return self.holdNotice(self.childDelivery(due))
+	return self.holdNotice(self.childDelivery(due), true)
 }
 
 func (self *App) childDelivery(due []agent.Event) agent.Event {

@@ -379,3 +379,28 @@ func TestATaskDiscardedBeforeAResumeIsNotAnnouncedAfterIt(t *testing.T) {
 		t.Errorf("got %q, want the discarded task left unannounced", notes)
 	}
 }
+
+func TestATaskEndingAsATurnFinishesStillWakesTheConversation(t *testing.T) {
+	for _, doesWake := range []bool{true, false} {
+		t.Run(fmt.Sprintf("wakes=%t", doesWake), func(t *testing.T) {
+			var screenOutput bytes.Buffer
+			self := testConversation(t, &screenOutput)
+			self.tasksDoWake = doesWake
+			self.settleAccess()
+			self.start("build it")
+			for report := range self.currentTurn.Events() {
+				self.takeTurn(report)
+			}
+
+			self.taskEnded(tasks.Conclusion{
+				Snapshot: tasks.Snapshot{ID: "build", ToolName: "bash", Run: 1, State: tasks.Done, Output: "built\n"},
+				IsFinal:  true,
+			})
+			self.finish()
+
+			if self.currentTurn.Running() != doesWake {
+				t.Errorf("got a running turn %t, want %t", self.currentTurn.Running(), doesWake)
+			}
+		})
+	}
+}

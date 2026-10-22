@@ -397,6 +397,7 @@ func (self *Agent) readAbandonedCache(prose *proseStream, askedAt time.Time, yie
 
 func (self *Agent) Stream(ctx context.Context, message string, interjections *Interjections) iter.Seq2[Update, error] {
 	return func(yield func(Update, error) bool) {
+		defer interjections.Finish()
 		yieldEvent := func(event Event, err error) bool {
 			update := Update{}
 			if err == nil {
@@ -452,7 +453,7 @@ func (self *Agent) Stream(ctx context.Context, message string, interjections *In
 				if notice, wasRebuilt := self.readCache(reply.Usage, askedAt); wasRebuilt {
 					yieldEvent(notice, nil)
 				}
-				if self.interjectNotes(ctx, interjections) {
+				if self.interjectFinalNotes(ctx, interjections) {
 					continue
 				}
 				if !prose.hasAnswered {
@@ -495,12 +496,12 @@ func (self *Agent) Stream(ctx context.Context, message string, interjections *In
 	}
 }
 
-func (self *Agent) interjectNotes(ctx context.Context, interjections *Interjections) bool {
+func (self *Agent) interjectFinalNotes(ctx context.Context, interjections *Interjections) bool {
 	if ctx.Err() != nil {
 		return false
 	}
 
-	notes, isNoted := interjections.TakeNotes()
+	notes, isNoted := interjections.TakeNotesOrFinish()
 	if isNoted {
 		self.AddNotes(notes)
 	}
