@@ -335,28 +335,41 @@ func childWorkspace(options childOptions) func(string) (string, error) {
 		if !filepath.IsAbs(directory) {
 			directory = filepath.Join(parentWorkspace, directory)
 		}
-		if options.isParentUnconfined {
-			return hostDirectory(directory)
-		}
-		hostPath, err := readableDirectory(options.parentFiles, directory)
+		resolvedPath, err := resolveChildWorkspace(options, directory)
 		if err != nil {
 			return "", err
-		}
-		resolvedPath, err := filepath.EvalSymlinks(hostPath)
-		if err != nil {
-			return "", fmt.Errorf("%s cannot be resolved: %w", directory, err)
 		}
 		if work.IsShadowed(resolvedPath) {
 			return "", fmt.Errorf("%s leads into the host's /tmp, which no subagent can read", directory)
 		}
-		if resolvedPath == hostPath {
-			return hostPath, nil
-		}
-		if _, err := readableDirectory(options.parentFiles, resolvedPath); err != nil {
-			return "", err
+		if options.scratchParent != "" {
+			scratchRoot := filepath.Clean(options.scratchParent)
+			if _, isBelow := pathutil.RelativeTo(scratchRoot, resolvedPath); isBelow {
+				return "", fmt.Errorf("%s lies inside the parent's scratch space, which no subagent can read", directory)
+			}
 		}
 		return resolvedPath, nil
 	}
+}
+
+func resolveChildWorkspace(options childOptions, directory string) (string, error) {
+	if options.isParentUnconfined {
+		return hostDirectory(directory)
+	}
+	hostPath, err := readableDirectory(options.parentFiles, directory)
+	if err != nil {
+		return "", err
+	}
+	resolvedPath, err := filepath.EvalSymlinks(hostPath)
+	if err != nil {
+		return "", fmt.Errorf("%s cannot be resolved: %w", directory, err)
+	}
+	if resolvedPath != hostPath {
+		if _, err := readableDirectory(options.parentFiles, resolvedPath); err != nil {
+			return "", err
+		}
+	}
+	return resolvedPath, nil
 }
 
 func hostDirectory(directory string) (string, error) {

@@ -1083,6 +1083,7 @@ func (self *Manager) refuseTakenAliases(tasks []subagent.Task) error {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 	storedNames, _ := session.AllNames(self.options.Directory)
+	seen := make(map[string]int, len(tasks))
 	for index, task := range tasks {
 		if task.Alias == "" {
 			continue
@@ -1090,6 +1091,10 @@ func (self *Manager) refuseTakenAliases(tasks []subagent.Task) error {
 		if self.children[self.resolve(task.Alias)] != nil || slices.Contains(storedNames, task.Alias) {
 			return fmt.Errorf("subagents[%d].name %q is already taken in this session; choose another or leave it out", index, task.Alias)
 		}
+		if previous, isDuplicate := seen[task.Alias]; isDuplicate {
+			return fmt.Errorf("subagents[%d].name %q is already taken by subagents[%d] in this call; choose another or leave it out", index, task.Alias, previous)
+		}
+		seen[task.Alias] = index
 	}
 	return nil
 }

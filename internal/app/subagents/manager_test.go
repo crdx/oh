@@ -1432,3 +1432,14 @@ func TestAChildAnswersToTheAliasItsTaskGaveIt(t *testing.T) {
 		t.Errorf("stopping by alias said %q, %v", stopped, err)
 	}
 }
+
+func TestTwoTasksInOneCallCannotClaimTheSameAlias(t *testing.T) {
+	manager := newTestFamily(t).manager(t, waiting())
+	_, err := manager.Start(t.Context(), "", []subagent.Task{
+		{Model: "anthropic/claude-opus-5", Prompt: "one", Alias: "twin"},
+		{Model: "anthropic/claude-opus-5", Prompt: "two", Alias: "twin"},
+	})
+	if err == nil || !strings.Contains(err.Error(), "already taken") {
+		t.Fatalf("two tasks claimed one alias in one call: %v", err)
+	}
+}

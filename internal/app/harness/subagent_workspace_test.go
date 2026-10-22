@@ -68,7 +68,7 @@ func newChildWorkspaceFixture(t *testing.T, isParentUnconfined bool) childWorksp
 	t.Cleanup(func() { _ = workspace.Close() })
 	files := file.New(workspace.GetRoot(), func(string) error { return file.ErrReadOnly })
 	shell.MountScratch(files, fixture.scratch, file.NewLazy(fixture.scratch, allowWrite), false)
-	fixture.resolve = childWorkspace(childOptions{workspace: workspace, parentFiles: files, isParentUnconfined: isParentUnconfined})
+	fixture.resolve = childWorkspace(childOptions{workspace: workspace, parentFiles: files, scratchParent: fixture.scratch, isParentUnconfined: isParentUnconfined})
 	return fixture
 }
 
@@ -78,11 +78,22 @@ func TestAChildWorksWhereverItsParentCanRead(t *testing.T) {
 		"":                fixture.workspace,
 		"docs":            filepath.Join(fixture.workspace, "docs"),
 		fixture.workspace: fixture.workspace,
-		"/tmp/job":        filepath.Join(fixture.scratch, "job"),
 	} {
 		got, err := fixture.resolve(directory)
 		if err != nil || got != want {
 			t.Errorf("%q resolved to %q, %v; want %q", directory, got, err, want)
+		}
+	}
+}
+
+func TestAChildNeverWorksInsideTheParentsScratchSpace(t *testing.T) {
+	fixture := newChildWorkspaceFixture(t, false)
+	for directory, description := range map[string]string{
+		"/tmp":     "the whole scratch",
+		"/tmp/job": "a directory inside it",
+	} {
+		if got, err := fixture.resolve(directory); err == nil || !strings.Contains(err.Error(), "scratch space") {
+			t.Errorf("%q resolved to %q, %v; want it refused as the parent's scratch space (%s)", directory, got, err, description)
 		}
 	}
 }
