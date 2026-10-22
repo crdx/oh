@@ -355,7 +355,7 @@ func TestAnUnknownTaskIsRefused(t *testing.T) {
 func TestTheTaskCommandRefusesAnIncompleteInvocation(t *testing.T) {
 	managedTasks, _ := fixtureTasks()
 
-	for _, input := range []string{"/task", "/task status", "/task docs", "/task frobnicate docs"} {
+	for _, input := range []string{"/task", "/task status", "/task docs", "/task frobnicate docs", "/task prune docs"} {
 		if _, err := invokeTaskCommand(t, managedTasks, input); !slash.IsUsageError(err) {
 			t.Errorf("%s gave %v, want the usage to be shown", input, err)
 		}

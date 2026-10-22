@@ -153,10 +153,14 @@ func describeOutput(snapshot tasks.Snapshot) string {
 			lines = append(lines, previous.Output)
 		}
 	}
-	if snapshot.Output != "" {
+	switch {
+	case snapshot.Output != "":
 		lines = append(lines, snapshot.Output)
-	} else if len(snapshot.Previous) == 0 {
+	case len(snapshot.Previous) != 0:
+	case snapshot.State == tasks.Queued || snapshot.State == tasks.Running || snapshot.State == tasks.Stopping:
 		lines[0] += "; no output yet"
+	default:
+		lines[0] += "; no output"
 	}
 	return strings.Join(lines, "\n")
 }

@@ -103,6 +103,16 @@ func TestTaskStatusNamesLaterRunsAndTheRespawnLimit(t *testing.T) {
 	}
 }
 
+func TestAFinishedTaskWithoutOutputExpectsNoMore(t *testing.T) {
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	manager.Restore([]tasks.Snapshot{{ID: "quiet", State: tasks.Done, Run: 1}})
+
+	if output := perform(t, manager, `{"action":"output","name":"quiet"}`); output != "quiet: done; no output" {
+		t.Errorf("got %q, want the finished task to report no output", output)
+	}
+}
+
 func TestStoppingATaskNamesWhoStoppedIt(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())

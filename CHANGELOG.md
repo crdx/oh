@@ -12,6 +12,7 @@
 - Improve messaging about stopped tasks
 - Keep both ends of output too long to return
 - State the exit status or signal when a command fails
+- Stop announcing discarded tasks and show earlier runs
 - Refuse a swapped symlink on an exact-file grant
 - Stop the read tool panicking on a huge line limit
 - Revoke a grant whose path was replaced by a symlink

@@ -761,6 +761,13 @@ func TestGoldenTaskOutputMatchesGolden(t *testing.T) {
 		{label: "after the respawn limit", snapshot: tasks.Snapshot{
 			ID: "watch", State: tasks.Done, Run: tasks.QuickRunsTolerated, IsRespawnLimitReached: true,
 		}},
+		{label: "with earlier runs", snapshot: tasks.Snapshot{
+			ID: "watch", State: tasks.Running, Run: 3, IsRespawning: true,
+			Previous: []tasks.RunOutcome{
+				{Run: 1, State: tasks.Failed, Failure: "the command exited with status 1", Output: "crash: port in use\n"},
+				{Run: 2, State: tasks.Done},
+			},
+		}},
 	} {
 		managedTasks, _ := fixtureTasks()
 		managedTasks.Output = func(string) (tasks.Snapshot, error) { return test.snapshot, nil }

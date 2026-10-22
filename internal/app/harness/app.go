@@ -1457,6 +1457,21 @@ func (self *App) tasksChanged() {
 		self.taskEnded(conclusion)
 	}
 	self.recordTaskListing()
+	self.forgetRemovedTaskNotices()
+}
+
+func (self *App) forgetRemovedTaskNotices() {
+	pendingCount := len(self.pendingNotices.items)
+	self.pendingNotices.items = slices.DeleteFunc(self.pendingNotices.items, func(item pendingMessage) bool {
+		if item.state.Kind != taskrecord.RunEnded {
+			return false
+		}
+		_, err := self.tasks.Status(item.state.Name)
+		return err != nil
+	})
+	if len(self.pendingNotices.items) != pendingCount {
+		self.refreshPendingMessages()
+	}
 }
 
 func (self *App) taskEnded(conclusion tasks.Conclusion) {
@@ -2241,7 +2256,10 @@ func (self *App) restoreTasks(events []agent.Event) {
 		self.pendingNotices.add(taskrecord.EndedWithSessionEvent(taskNames))
 	}
 	for _, notice := range taskrecord.PendingNotices(events) {
-		self.pendingNotices.add(notice)
+		isListed := slices.ContainsFunc(snapshots, func(snapshot tasks.Snapshot) bool { return snapshot.ID == notice.Name })
+		if notice.Kind != taskrecord.RunEnded || isListed {
+			self.pendingNotices.add(notice)
+		}
 	}
 }
 

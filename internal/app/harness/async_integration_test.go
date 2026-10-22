@@ -336,3 +336,46 @@ func TestTaskShutdownPersistsStateAndPendingFactsWithoutWaking(t *testing.T) {
 		})
 	}
 }
+
+func TestADiscardedTaskTakesBackItsPendingNotice(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.tasks = tasks.New(t.Context())
+	defer self.tasks.Close()
+	built := tasks.Snapshot{ID: "build", ToolName: "bash", Run: 1, State: tasks.Done, Output: "built ok\n"}
+	tested := tasks.Snapshot{ID: "test", ToolName: "bash", Run: 1, State: tasks.Done, Output: "tests passed\n"}
+	self.restoreTasks([]agent.Event{
+		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: built, IsFinal: true}),
+		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: tested, IsFinal: true}),
+		taskrecord.ListingEvent([]tasks.Snapshot{built, tested}),
+	})
+
+	if _, err := self.tasks.Discard(t.Context(), "build"); err != nil {
+		t.Fatal(err)
+	}
+	self.tasksChanged()
+	self.settleAccess()
+
+	notes := noteTexts(self.takeSettledNotes())
+	if strings.Contains(notes, "build") || !strings.Contains(notes, "tests passed") {
+		t.Errorf("got %q, want only the kept task announced", notes)
+	}
+}
+
+func TestATaskDiscardedBeforeAResumeIsNotAnnouncedAfterIt(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.tasks = tasks.New(t.Context())
+	defer self.tasks.Close()
+	built := tasks.Snapshot{ID: "build", ToolName: "bash", Run: 1, State: tasks.Done, Output: "built ok\n"}
+	self.restoreTasks([]agent.Event{
+		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: built, IsFinal: true}),
+		taskrecord.ListingEvent([]tasks.Snapshot{built}),
+		taskrecord.ListingEvent(nil),
+	})
+	self.settleAccess()
+
+	if notes := noteTexts(self.takeSettledNotes()); strings.Contains(notes, "build") {
+		t.Errorf("got %q, want the discarded task left unannounced", notes)
+	}
+}

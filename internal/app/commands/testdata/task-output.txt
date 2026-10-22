@@ -8,3 +8,10 @@ build: failed with no output, note: SIGKILL stopped the command.
 === from a respawned run ===
 watch: stopped, run 4
 built in 3s
+=== after the respawn limit ===
+watch: done with no output, run 3, respawning stopped after 3 runs in a row each ended within 2s
+=== with earlier runs ===
+watch: running with no output, run 3, respawns on exit
+run 1: failed, the command exited with status 1
+crash: port in use
+run 2: done

@@ -70,6 +70,9 @@ func taskCommand(managedTasks Tasks) slash.Command {
 			action, name, isNamed := strings.Cut(arguments.Text, " ")
 			name = strings.TrimSpace(name)
 			if action == pruneTaskAction {
+				if name != "" {
+					return slash.Usage()
+				}
 				return pruneEveryFinishedTask(context, managedTasks)
 			}
 			if !isNamed || name == "" {
@@ -257,10 +260,21 @@ func taskOutcome(snapshot tasks.Snapshot, isSilent bool) string {
 }
 
 func withTaskOutput(snapshot tasks.Snapshot) string {
+	lines := []string{}
+	for _, previous := range snapshot.Previous {
+		line := fmt.Sprintf("run %d: %s", previous.Run, previous.State)
+		if previous.Failure != "" {
+			line += ", " + previous.Failure
+		}
+		lines = append(lines, line)
+		if text := strings.TrimRight(previous.Output, "\n"); strings.TrimSpace(text) != "" {
+			lines = append(lines, text)
+		}
+	}
 	text := strings.TrimRight(snapshot.Output, "\n")
 	if strings.TrimSpace(text) == "" {
-		return snapshot.ID + ": " + taskOutcome(snapshot, true)
+		return strings.Join(append([]string{snapshot.ID + ": " + taskOutcome(snapshot, true)}, lines...), "\n")
 	}
 
-	return describeTask(snapshot) + "\n" + text
+	return strings.Join(append(append([]string{describeTask(snapshot)}, lines...), text), "\n")
 }
