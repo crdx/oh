@@ -125,6 +125,20 @@ func (self *PathAccess) ShareSkills(directories []string) {
 	}
 }
 
+func (self *PathAccess) MountHomeMappings(homeDirectory string) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	for _, source := range self.configuredPaths.Home {
+		relative, isBelow := HomeRelativePath(source)
+		if !isBelow {
+			continue
+		}
+		if mount, isMounted := self.configuredMounts[filepath.Clean(source)]; isMounted {
+			self.install(filepath.Join(homeDirectory, relative), mount)
+		}
+	}
+}
+
 func (self *PathAccess) GetPaths() Paths {
 	paths, _ := self.getPaths()
 	return paths

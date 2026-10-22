@@ -79,7 +79,8 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			"but not your configured write paths or anything granted during this session, " +
 			"writing only to its own scratch, which is subagents/<name> inside your scratch but which it calls /tmp, " +
 			"so a /tmp path it reports may mean your /tmp/subagents/<name>/...; " +
-			"it cannot read the rest of your scratch, so put what it needs in its prompt, " +
+			"it reads the rest of your scratch only where one of those configured paths covers it, " +
+			"so otherwise put what it needs in its prompt, " +
 			"or, for a follow-up, write files into your /tmp/subagents/<name> and refer to them by the /tmp paths it sees; " +
 			"never trust an answer blindly: however confident, it is an unverified claim that may be wrong, " +
 			"miss part of its task, or describe checks it never ran, " +

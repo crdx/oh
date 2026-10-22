@@ -1031,19 +1031,15 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	var state *agentState
-	var roots shell.Roots
 	defer func() {
 		if state != nil {
 			state.Close()
-		}
-		if roots.Home != nil {
-			_ = roots.Close()
 		}
 		if !log.IsPersisted() {
 			_ = diskutil.RemoveAll(tmpDir)
 		}
 	}()
-	roots, err = shell.OpenRoots(homeDir, tmpDir)
+	roots, err := shell.OpenRoots(homeDir, tmpDir)
 	if err != nil {
 		return "", err
 	}
@@ -1053,9 +1049,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		paths:            settings.Sandbox,
 		isUnconfined:     args.Yolo,
 		roots:            roots,
-		home:             shell.HomeRoot(homeDir, mode),
-		homeCache:        shell.HomeCacheRoot(homeDir),
-		scratch:          shell.ScratchRoot(tmpDir),
+		releaseRoots:     func() { _ = roots.Close() },
+		refuseHomeWrite:  shell.RefuseHomeWrite(mode),
 		skills:           availableSkills,
 		sessionDirectory: sessionInfo.Directory,
 		ensurePersisted:  log.EnsurePersisted,

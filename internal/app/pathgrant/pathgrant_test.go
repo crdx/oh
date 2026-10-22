@@ -95,7 +95,7 @@ func TestAnUnconfinedGrantCanNameHostTmp(t *testing.T) {
 	}
 	t.Cleanup(access.Close)
 	scratch := outsideTmpTestDirectory(t)
-	roots := shell.MountHostTemporaryDirectory(files, scratch)
+	roots := shell.MountScratch(files, scratch, file.NewLazy(scratch, func(string) error { return nil }), true)
 	t.Cleanup(func() {
 		for _, root := range roots {
 			_ = root.Close()

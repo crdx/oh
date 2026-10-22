@@ -145,6 +145,18 @@ func TestUnconfinedConfiguredPathsCanReachHostTmp(t *testing.T) {
 	}
 }
 
+func mountTestScratch(t *testing.T, files *file.Root, scratch string, isUnconfined bool) []*file.Root {
+	t.Helper()
+
+	roots := MountScratch(files, scratch, file.NewLazy(scratch, func(string) error { return nil }), isUnconfined)
+	t.Cleanup(func() {
+		for _, root := range roots {
+			_ = root.Close()
+		}
+	})
+	return roots
+}
+
 func TestHostTmpPathsResolveOnlyToSessionScratchWithoutGrants(t *testing.T) {
 	workspace := outsideTmpTestDirectory(t)
 	openedRoot, err := os.OpenRoot(workspace)
@@ -154,8 +166,7 @@ func TestHostTmpPathsResolveOnlyToSessionScratchWithoutGrants(t *testing.T) {
 	defer func() { _ = openedRoot.Close() }()
 	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
 	scratch := outsideTmpTestDirectory(t)
-	scratchRoot := MountTemporaryDirectory(files, scratch)
-	defer func() { _ = scratchRoot.Close() }()
+	mountTestScratch(t, files, scratch, false)
 	hostTemporary := hostTmpTestDirectory(t)
 	hostFile := filepath.Join(hostTemporary, "note")
 	if err := os.WriteFile(hostFile, []byte("host"), 0o600); err != nil {
@@ -187,8 +198,7 @@ func TestAnUnlistedAliasCannotBorrowTheScratchMount(t *testing.T) {
 	defer func() { _ = openedRoot.Close() }()
 	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
 	scratch := outsideTmpTestDirectory(t)
-	scratchRoot := MountTemporaryDirectory(files, scratch)
-	defer func() { _ = scratchRoot.Close() }()
+	mountTestScratch(t, files, scratch, false)
 	hostTemporary := hostTmpTestDirectory(t)
 	scratchFile := filepath.Join(scratch, filepath.Base(hostTemporary), "note")
 	if err := os.MkdirAll(filepath.Dir(scratchFile), 0o700); err != nil {
@@ -1002,41 +1012,65 @@ func TestInheritedPathDirectoriesAreReadableByFileToolsAndExecutableByShells(t *
 }
 
 func TestHomeMappingsAreReadableByFileToolsBeforeAShellRuns(t *testing.T) {
-	source := userHomeFile(t, filepath.Join(".config", "git", "ignore"), "*.tmp\n")
-	workspace := t.TempDir()
-	workspaceRoot, err := os.OpenRoot(workspace)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = workspaceRoot.Close() }()
+	for name, isLinked := range map[string]bool{"a file": false, "a link to a file": true} {
+		t.Run(name, func(t *testing.T) {
+			relative := filepath.Join(".config", "git", "ignore")
+			var source string
+			if isLinked {
+				linkedHome, targetDirectory := outsideTmpTestDirectory(t), outsideTmpTestDirectory(t)
+				target := filepath.Join(targetDirectory, "ignore")
+				if err := os.WriteFile(target, []byte("*.tmp\n"), 0o600); err != nil {
+					t.Fatal(err)
+				}
+				t.Setenv("HOME", linkedHome)
+				source = filepath.Join(linkedHome, relative)
+				if err := os.MkdirAll(filepath.Dir(source), 0o700); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.Symlink(target, source); err != nil {
+					t.Fatal(err)
+				}
+			} else {
+				source = userHomeFile(t, relative, "*.tmp\n")
+			}
+			workspace := t.TempDir()
+			workspaceRoot, err := os.OpenRoot(workspace)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer func() { _ = workspaceRoot.Close() }()
 
-	privateHome := t.TempDir()
-	tmp := t.TempDir()
-	paths := Paths{Home: []string{source}}
-	mode := caps.NewMode(caps.Read)
-	if err := PrepareHomeMappings(workspace, testPlaces(t, privateHome, tmp), paths, mode.Current()); err != nil {
-		t.Fatal(err)
-	}
+			privateHome := t.TempDir()
+			tmp := t.TempDir()
+			paths := Paths{Home: []string{source}}
+			mode := caps.NewMode(caps.Read)
+			if err := PrepareHomeMappings(workspace, testPlaces(t, privateHome, tmp), paths, mode.Current()); err != nil {
+				t.Fatal(err)
+			}
 
-	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	homeRoot := MountHomeDirectory(files, privateHome, mode)
-	defer func() { _ = homeRoot.Close() }()
-	access, err := NewPathAccess(files, mode, paths)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer access.Close()
+			files := file.New(workspaceRoot, caps.RefuseWrite(mode))
+			homeRoot := file.NewLazy(privateHome, RefuseHomeWrite(mode))
+			files.Mount(privateHome, homeRoot)
+			defer func() { _ = homeRoot.Close() }()
+			access, err := NewPathAccess(files, mode, paths)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer access.Close()
+			access.MountHomeMappings(privateHome)
 
-	mapped := filepath.Join(privateHome, ".config", "git", "ignore")
-	mountedRoot, name, err := files.Resolve(mapped)
-	if err != nil {
-		t.Fatalf("home mapping did not resolve through file tools: %v", err)
-	}
-	if data, err := mountedRoot.ReadFile(name); err != nil || string(data) != "*.tmp\n" {
-		t.Errorf("home mapping read got %q and %v", data, err)
-	}
-	if err := mountedRoot.RefuseWrite(name); !errors.Is(err, file.ErrReadOnly) {
-		t.Errorf("home mapping write got %v, want read-only", err)
+			mapped := filepath.Join(privateHome, ".config", "git", "ignore")
+			mountedRoot, name, err := files.Resolve(mapped)
+			if err != nil {
+				t.Fatalf("home mapping did not resolve through file tools: %v", err)
+			}
+			if data, err := mountedRoot.ReadFile(name); err != nil || string(data) != "*.tmp\n" {
+				t.Errorf("home mapping read got %q and %v", data, err)
+			}
+			if err := mountedRoot.RefuseWrite(name); !errors.Is(err, file.ErrReadOnly) {
+				t.Errorf("home mapping write got %v, want read-only", err)
+			}
+		})
 	}
 }
 
@@ -1658,8 +1692,7 @@ func TestTemporaryMountIsWritableBeneathAConfiguredReadPath(t *testing.T) {
 	}
 	defer access.Close()
 
-	tmpRoot := MountTemporaryDirectory(files, scratch)
-	defer func() { _ = tmpRoot.Close() }()
+	mountTestScratch(t, files, scratch, false)
 
 	resolvedRoot, name, err := files.Resolve("/tmp/probe.txt")
 	if err != nil {

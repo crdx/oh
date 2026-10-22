@@ -29,10 +29,9 @@ type agentOptions struct {
 	paths            shell.Paths
 	isUnconfined     bool
 	roots            shell.Roots
-	home             *file.Root
-	homeCache        *file.Root
-	scratch          *file.Root
-	parent           shell.Parent
+	releaseRoots     func()
+	refuseHomeWrite  func(name string) error
+	parent           *shell.Parent
 	skills           []skill.Skill
 	sessionDirectory string
 	ensurePersisted  func() error
@@ -51,6 +50,10 @@ type agentState struct {
 	access  *shell.PathAccess
 	drops   *drops.Keeper
 	closers []func()
+}
+
+func allowWrite(string) error {
+	return nil
 }
 
 func discoverSkills(workspaceDirectory string, globalDirectories []string, exclusions []string, warnings io.Writer) ([]skill.Skill, error) {
@@ -81,8 +84,10 @@ func guardUsage(
 
 func buildAgentState(options agentOptions) (*agentState, error) {
 	state := &agentState{options: options, files: file.New(options.workspace.GetRoot(), caps.RefuseWrite(options.mode))}
-	state.files.Mount(options.roots.HomeDirectory, options.home)
-	state.closeRoots(options.home)
+	if options.releaseRoots != nil {
+		state.closers = append(state.closers, options.releaseRoots)
+	}
+	state.files.Mount(options.roots.HomeDirectory, file.New(options.roots.Home, options.refuseHomeWrite))
 
 	access, err := shell.NewPathAccessForMode(state.files, options.mode, options.paths, options.isUnconfined)
 	if err != nil {
@@ -99,11 +104,16 @@ func buildAgentState(options agentOptions) (*agentState, error) {
 		state.Close()
 		return nil, err
 	}
-	if options.homeCache != nil {
-		state.files.Mount(shell.HomeCacheDirectory(options.roots.HomeDirectory), options.homeCache)
-		state.closeRoots(options.homeCache)
+	access.MountHomeMappings(options.roots.HomeDirectory)
+	homeCache, err := shell.OpenHomeCache(options.roots)
+	if err != nil {
+		state.Close()
+		return nil, err
 	}
-	state.closeRoots(shell.MountScratch(state.files, options.roots.ScratchDirectory, options.scratch, options.isUnconfined)...)
+	state.closers = append(state.closers, func() { _ = homeCache.Close() })
+	state.files.Mount(shell.HomeCacheDirectory(options.roots.HomeDirectory), file.New(homeCache, allowWrite))
+	scratch := file.New(options.roots.Scratch, allowWrite)
+	state.closeRoots(shell.MountScratch(state.files, options.roots.ScratchDirectory, scratch, options.isUnconfined)...)
 	state.closeRoots(skill.MountGlobalSkills(state.files, options.skills)...)
 	access.ShareSkills(skill.GlobalDirectories(options.skills))
 

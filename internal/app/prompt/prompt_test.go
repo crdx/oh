@@ -490,7 +490,7 @@ func TestTheHarnessDoesNotOfferTheHostNetworkWhenItIsNotGranted(t *testing.T) {
 
 	for _, want := range []string{
 		"The bash tool takes network=loopback (the default) or network=host",
-		"The host network is withheld, so a network=host call is refused",
+		"The host network is unavailable, so a network=host call is refused",
 		"The user can grant network access with ctrl+x n, which allows network=host calls",
 		"Suggest both to the user: granting the host network, or running the command themselves as a /! line",
 		"If only one simple command needs the host network, just suggest the /! line for the user to run",
@@ -535,7 +535,7 @@ func TestTheHarnessDisclosesTheShellHome(t *testing.T) {
 	})
 
 	for _, want := range []string{
-		"Path tools can access only the workspace, private home, /tmp, and read-only system and executable search paths",
+		"Path tools can access only the workspace, private home, /tmp, and read-only system and PATH directories",
 		"HOME is /state/home",
 		"Your tilde (~) is not the user's",
 	} {
@@ -864,7 +864,7 @@ func TestTheShellAndPathToolsReportSystemReadAccess(t *testing.T) {
 	})
 
 	for _, want := range []string{
-		"Path tools can access only the workspace, private home, /tmp, and read-only system and executable search paths.",
+		"Path tools can access only the workspace, private home, /tmp, and read-only system and PATH directories.",
 		"The shell has the same read access, plus the private process, terminal, resolver, and language-package cache files that commands need.",
 		"The shell has the same write access, plus runtime devices.",
 	} {
@@ -1263,7 +1263,7 @@ func TestAWorkspaceWithNoRepositoryIsCopiedAndMadeOneBeforeTheWork(t *testing.T)
 }
 
 func TestConfiguredPathsSayTheyAreShownWithSymlinksResolved(t *testing.T) {
-	want := "Configured paths show with symlinks resolved; a symlink to one has the same access."
+	want := "The configured paths above show with symlinks resolved; a symlink to one has the same access."
 	for name, testCase := range map[string]struct {
 		paths    shell.Paths
 		expected bool

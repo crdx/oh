@@ -320,12 +320,7 @@ func yoloTmpGolden(t *testing.T) string {
 	if err := os.WriteFile(scratchFile, []byte("scratch"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	roots := MountHostTemporaryDirectory(files, scratch)
-	t.Cleanup(func() {
-		for _, root := range roots {
-			_ = root.Close()
-		}
-	})
+	mountTestScratch(t, files, scratch, true)
 	hostRoot, hostName, hostError := files.Resolve(hostFile)
 	scratchRoot, scratchName, scratchError := files.Resolve(scratchFile)
 	hostContent := []byte(nil)
@@ -350,8 +345,7 @@ func virtualTmpMountGolden(t *testing.T) string {
 	}
 	t.Cleanup(func() { _ = openedRoot.Close() })
 	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
-	scratchRoot := MountTemporaryDirectory(files, outsideTmpTestDirectory(t))
-	t.Cleanup(func() { _ = scratchRoot.Close() })
+	scratchRoot := mountTestScratch(t, files, outsideTmpTestDirectory(t), false)[0]
 	hostTemporary := hostTmpTestDirectory(t)
 	unlisted := filepath.Join(outsideTmpTestDirectory(t), "unlisted")
 	if err := os.Symlink(hostTemporary, unlisted); err != nil {

@@ -20,10 +20,10 @@ import (
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagents"
-	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
@@ -156,9 +156,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 			_ = workspace.Close()
 		}
 
-		tools, err := state.tools(state.shell(nil, options.runner), agentFeatures{
-			afterShell: []tool.Tool{messageparent.New(child.MessageParent)},
-		})
+		tools, err := state.childTools(child, options.runner)
 		if err != nil {
 			closeChild()
 			return subagents.Worker{}, err
@@ -170,7 +168,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 		}
 		systemPrompt := child.SystemPrompt
 		if systemPrompt == "" {
-			systemPrompt = childPrompt(options, workspace, child, state.options.roots.HomeDirectory, tools, childBrief{
+			systemPrompt = childPrompt(options, workspace, child, state.options.roots.HomeDirectory, childBrief{
 				skills:         skills,
 				dropsDirectory: state.drops.GetDirectory(),
 				notes:          agent.NoteFormatOf(connection.Client),
@@ -208,8 +206,7 @@ func buildChildState(
 	if err != nil {
 		return nil, err
 	}
-	closeHome := func() { _ = home.Close() }
-	state, err := buildAgentState(agentOptions{
+	return buildAgentState(agentOptions{
 		workspace: workspace,
 		mode:      caps.NewMode(child.Caps),
 		paths:     childPaths(options.settings.Sandbox),
@@ -219,20 +216,20 @@ func buildChildState(
 			ScratchDirectory: child.Scratch,
 			Scratch:          child.ScratchRoot,
 		},
-		home:             file.New(home, func(string) error { return nil }),
-		scratch:          file.New(child.ScratchRoot, func(string) error { return nil }),
-		parent:           shell.Parent{Scratch: options.scratchParent, Writable: options.parentWritable},
+		releaseRoots:     func() { _ = home.Close() },
+		refuseHomeWrite:  allowWrite,
+		parent:           &shell.Parent{Scratch: options.scratchParent, Writable: options.parentWritable},
 		skills:           skills,
 		sessionDirectory: child.Directory,
 		ensurePersisted:  child.EnsurePersisted,
 		outputLimit:      options.toolOutputLimit,
 	})
-	if err != nil {
-		closeHome()
-		return nil, err
-	}
-	state.closers = append([]func(){closeHome}, state.closers...)
-	return state, nil
+}
+
+func (self *agentState) childTools(child subagents.Child, runner sandbox.Runner) ([]tool.Tool, error) {
+	return self.tools(self.shell(nil, runner), agentFeatures{
+		afterShell: []tool.Tool{messageparent.New(child.MessageParent)},
+	})
 }
 
 func childAgent(prompt string, provider agent.Provider, tools []tool.Tool, child subagents.Child) (*agent.Agent, []agent.Event, error) {
@@ -255,9 +252,9 @@ func childPrompt(
 	workspace *work.Space,
 	child subagents.Child,
 	home string,
-	tools []tool.Tool,
 	brief childBrief,
 ) string {
+	paths := childPaths(options.settings.Sandbox)
 	return prompt.Subagent(prompt.SubagentConfig{
 		SessionName:        options.sessionName,
 		Name:               child.Name,
@@ -265,12 +262,14 @@ func childPrompt(
 		HomeDir:            home,
 		ScratchDir:         child.Scratch,
 		ParentScratchDir:   parentScratchPath(options, child.Name),
+		ParentScratchHost:  options.scratchParent,
+		SiblingScratchHost: filepath.Join(options.scratchParent, subagents.ScratchName),
 		IsParentUnconfined: options.isParentUnconfined,
+		IsScratchReadable:  isReadableThrough(paths, options.scratchParent),
 		HasShell:           child.Caps.Has(caps.Shell),
 		UserHome:           options.userHome,
-		Paths:              childPaths(options.settings.Sandbox),
+		Paths:              paths,
 		Skills:             brief.skills,
-		ToolNames:          toolset.Names(tools),
 		DropsDirectory:     brief.dropsDirectory,
 		SharedPrompt:       child.SharedPrompt,
 		Notes:              brief.notes,
@@ -291,6 +290,21 @@ func outsideHostTmp(paths []string) []string {
 	return slices.DeleteFunc(slices.Clone(paths), func(path string) bool {
 		return shell.RefuseHostTmpPath(path) != nil
 	})
+}
+
+func isReadableThrough(paths shell.Paths, directory string) bool {
+	if directory == "" {
+		return false
+	}
+	candidates := []string{filepath.Clean(directory), pathutil.Canonicalise(directory)}
+	for _, root := range slices.Concat(paths.Read, paths.Exec, paths.Path, paths.Home) {
+		for _, candidate := range candidates {
+			if _, isBelow := pathutil.RelativeTo(root, candidate); isBelow {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func parentScratchPath(options childOptions, name string) string {

@@ -396,6 +396,7 @@ func scopeRules(data harnessContextTemplateData) string {
 	if isShellConfined {
 		lines = append(lines, "- The shell has the same read access, plus the private process, terminal, resolver, and language-package cache files that commands need.")
 		lines = append(lines, "- The shell has the same write access, plus runtime devices.")
+		lines = append(lines, shellRootRule)
 		lines = append(lines, shellExecutionRules(data.SharesSkills)...)
 	} else if data.ShellOffered && data.Yolo {
 		lines = append(lines, "- With --yolo the shell is unconfined; path tools stay limited to the paths above.")
@@ -409,11 +410,11 @@ func pathToolRule(isDropsShared bool, extraPaths shell.Paths) string {
 		len(extraPaths.Path) + len(extraPaths.Home)
 	switch {
 	case isDropsShared:
-		return "- Path tools can access the workspace, private home, /tmp, read-only system and executable search paths, and the paths listed here."
+		return "- Path tools can access the workspace, private home, /tmp, read-only system and PATH directories, and the paths listed here."
 	case configuredPathCount > 0:
-		return "- Path tools can access the workspace, private home, /tmp, read-only system and executable search paths, and the configured paths listed here."
+		return "- Path tools can access the workspace, private home, /tmp, read-only system and PATH directories, and the configured paths listed here."
 	default:
-		return "- Path tools can access only the workspace, private home, /tmp, and read-only system and executable search paths."
+		return "- Path tools can access only the workspace, private home, /tmp, and read-only system and PATH directories."
 	}
 }
 
@@ -444,7 +445,7 @@ func configuredPathRules(extraPaths shell.Paths, scratchDirectory string, home s
 		lines = append(lines, "- Configured PATH directory "+path+" is read-only to path tools"+shellExecution(isShellConfined)+".")
 	}
 	if len(extraPaths.Read)+len(extraPaths.Write)+len(extraPaths.Exec)+len(extraPaths.Path) > 0 {
-		lines = append(lines, "- Configured paths show with symlinks resolved; a symlink to one has the same access.")
+		lines = append(lines, "- The configured paths above show with symlinks resolved; a symlink to one has the same access.")
 	}
 	for _, path := range extraPaths.Home {
 		relative, isHomePath := pathutil.RelativeTo(home, path)
@@ -523,8 +524,11 @@ func mergeContexts(sections ...string) string {
 }
 
 const (
-	loopbackRule           = "- A bash call on network=loopback, the default, has only the sandbox's private loopback network"
-	scratchPersistenceRule = "- /tmp is your persistent, always-writable scratch space"
+	loopbackRule            = "- A bash call on network=loopback, the default, has only the sandbox's private loopback network"
+	hostNetworkChoiceRule   = "- The bash tool takes network=loopback (the default) or network=host"
+	hostNetworkWithheldRule = "- The host network is unavailable, so a network=host call is refused"
+	shellRootRule           = "- The shell runs as root in its sandbox, so test -r, test -w, and file modes do not show access; only an attempt shows it"
+	scratchPersistenceRule  = "- /tmp is your persistent, always-writable scratch space"
 )
 
 func tildeRules() string {
@@ -614,11 +618,7 @@ func stateRules(data harnessContextTemplateData) string {
 
 	if data.ShellOffered {
 		lines = append(lines, bashAccessRule(data.ShellGranted, data.Yolo))
-		leftBehind := "- A process that a bash call leaves running dies when the call ends"
-		if data.Yolo {
-			leftBehind = "- A process that a bash call leaves running in its process group dies when the call ends"
-		}
-		lines = append(lines, leftBehind+jobSurvival(data.JobsGranted))
+		lines = append(lines, leftBehindRule(data.Yolo)+jobSurvival(data.JobsGranted))
 	}
 
 	if data.SubagentOffered {
@@ -654,6 +654,14 @@ func customToolAccessRule(toolName string, flag string, isGranted bool, isIntera
 		rule += ", and ctrl+x " + flag + " toggles it"
 	}
 	return rule
+}
+
+func leftBehindRule(isYolo bool) string {
+	if isYolo {
+		return "- A process that a bash call leaves running in its process group dies when the call ends"
+	}
+
+	return "- A process that a bash call leaves running dies when the call ends"
 }
 
 func jobSurvival(areJobsGranted bool) string {
@@ -758,13 +766,10 @@ func grantHint(isGranted bool, isInteractive bool, capability caps.Set, grantedN
 }
 
 func hostNetworkRules(isNetworkGranted bool, isInteractive bool) []string {
-	lines := []string{
-		"- The bash tool takes network=loopback (the default) or network=host",
-	}
+	lines := []string{hostNetworkChoiceRule}
 
 	if !isNetworkGranted {
-		lines = append(lines,
-			"- The host network is withheld, so a network=host call is refused before it runs")
+		lines = append(lines, hostNetworkWithheldRule)
 		if isInteractive {
 			return append(
 				lines,

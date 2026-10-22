@@ -466,12 +466,8 @@ type Parent struct {
 	Writable func() []string
 }
 
-func (self Parent) isLinked() bool {
-	return self.Scratch != ""
-}
-
-func (self Parent) withheld(err error) error {
-	if !self.isLinked() {
+func (self *Parent) withheld(err error) error {
+	if self == nil {
 		return err
 	}
 	if errors.Is(err, ErrWithheld) {
@@ -483,7 +479,10 @@ func (self Parent) withheld(err error) error {
 	return err
 }
 
-func (self Parent) confine(policy sandbox.Policy) sandbox.Policy {
+func (self *Parent) confine(policy sandbox.Policy) sandbox.Policy {
+	if self == nil {
+		return policy
+	}
 	policy.ScratchParent = self.Scratch
 	if self.Writable != nil {
 		policy.ParentWritable = self.Writable()
@@ -494,7 +493,7 @@ func (self Parent) confine(policy sandbox.Policy) sandbox.Policy {
 func New(
 	workspaceDir string,
 	roots Roots,
-	parent Parent,
+	parent *Parent,
 	pathAccess *PathAccess,
 	mode *caps.Mode,
 	files *file.Root,

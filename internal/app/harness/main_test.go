@@ -19305,8 +19305,7 @@ func buildSessionGoldenAgentState(
 		workspace:        openSessionGoldenWorkspace(t),
 		mode:             caps.NewMode(caps.Read),
 		roots:            openTestRoots(t, home, scratch),
-		home:             shell.ScratchRoot(home),
-		scratch:          shell.ScratchRoot(scratch),
+		refuseHomeWrite:  allowWrite,
 		sessionDirectory: sessionDirectory,
 		ensurePersisted:  ensurePersisted,
 		outputLimit:      outputLimit,
@@ -20064,7 +20063,7 @@ func newSessionGoldenShell(t *testing.T, grantedCaps caps.Set, isYolo bool) tool
 	t.Cleanup(pathAccess.Close)
 
 	return shell.New(
-		workspace, openTestRoots(t, t.TempDir(), t.TempDir()), shell.Parent{}, pathAccess, mode, files, isYolo,
+		workspace, openTestRoots(t, t.TempDir(), t.TempDir()), nil, pathAccess, mode, files, isYolo,
 		func(context.Context, string, string) error { return nil }, sandbox.Direct(),
 	)
 }
@@ -20113,7 +20112,7 @@ func newSessionGoldenRefusingShell(t *testing.T) tool.Tool {
 	t.Cleanup(pathAccess.Close)
 
 	return shell.New(
-		workspace, openTestRoots(t, t.TempDir(), t.TempDir()), shell.Parent{}, pathAccess, mode, files, false,
+		workspace, openTestRoots(t, t.TempDir(), t.TempDir()), nil, pathAccess, mode, files, false,
 		func(ctx context.Context, command string, intent string) error {
 			return approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, command, intent)
 		},

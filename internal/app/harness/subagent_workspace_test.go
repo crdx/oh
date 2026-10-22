@@ -67,7 +67,7 @@ func newChildWorkspaceFixture(t *testing.T, isParentUnconfined bool) childWorksp
 	}
 	t.Cleanup(func() { _ = workspace.Close() })
 	files := file.New(workspace.GetRoot(), func(string) error { return file.ErrReadOnly })
-	shell.MountTemporaryDirectory(files, fixture.scratch)
+	shell.MountScratch(files, fixture.scratch, file.NewLazy(fixture.scratch, allowWrite), false)
 	fixture.resolve = childWorkspace(childOptions{workspace: workspace, parentFiles: files, isParentUnconfined: isParentUnconfined})
 	return fixture
 }
@@ -144,13 +144,6 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = workspace.Close() })
-	var tools []tool.Tool
-	for _, name := range []string{"read", "ls", "find", "grep", "bash"} {
-		tools = append(tools, tool.Implement(
-			tool.Definition{Name: name, Description: name, Schema: tool.Schema{}},
-			func(struct{}) tool.CallRendering { return tool.CallRendering{} },
-		).Plain(func(context.Context, struct{}) (string, error) { return "", nil }))
-	}
 	globalSkills := filepath.Join(configDirectory, "skills")
 	for directory, description := range map[string]string{
 		filepath.Join(globalSkills, "probe"):                                "Probe a child. Use when probing.",
@@ -199,7 +192,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 			promptOptions.sessionName, promptOptions.isParentUnconfined = goldenSessionName, isParentUnconfined
 			drawn := childPrompt(
 				promptOptions, workspace, child,
-				"/state/farm/tame-impala/subagents/tame-adder/home", tools, brief,
+				"/state/farm/tame-impala/subagents/tame-adder/home", brief,
 			)
 			if strings.Contains(drawn, "Global rules.") || strings.Contains(drawn, "Workspace rules.") {
 				t.Errorf("a child was handed its parent's context files: %q", drawn)
@@ -208,16 +201,23 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 			return strings.ReplaceAll(drawn, workspaceDirectory, sessionGoldenWorkspace) + "\n"
 		}
 	}
+	farmReadable := childOptions{
+		userHome:      "/users/person",
+		scratchParent: "/state/farm/tame-impala",
+		settings:      config.Config{Sandbox: shell.Paths{Read: []string{"/state/farm"}}},
+	}
 	compareWithGolden(t, "subagent-prompt", ".txt", map[string]func() string{
-		"confined with a shell":                     prompt(false, caps.Read|caps.Shell, "", plainBrief),
-		"confined without a shell":                  prompt(false, caps.Read, "", plainBrief),
-		"confined under an unconfined parent":       prompt(true, caps.Read|caps.Shell, "", plainBrief),
-		"with shared instructions":                  prompt(false, caps.Read|caps.Shell, "Answer in one sentence.", plainBrief),
-		"with nothing configured and no known home": prompt(false, caps.Read|caps.Shell, "", plainBrief, childOptions{}),
-		"with skills and a shell":                   prompt(false, caps.Read|caps.Shell, "Use the skills.", skilledBrief),
-		"with skills and no shell":                  prompt(false, caps.Read, "Use the skills.", skilledBrief),
-		"with only workspace skills and a shell":    prompt(false, caps.Read|caps.Shell, "", workspaceSkilledBrief),
-		"on a provider with its own note format":    prompt(false, caps.Read|caps.Shell, "", codexBrief),
+		"confined with a shell":                                    prompt(false, caps.Read|caps.Shell, "", plainBrief),
+		"confined without a shell":                                 prompt(false, caps.Read, "", plainBrief),
+		"confined under an unconfined parent":                      prompt(true, caps.Read|caps.Shell, "", plainBrief),
+		"with shared instructions":                                 prompt(false, caps.Read|caps.Shell, "Answer in one sentence.", plainBrief),
+		"with nothing configured and no known home":                prompt(false, caps.Read|caps.Shell, "", plainBrief, childOptions{}),
+		"with skills and a shell":                                  prompt(false, caps.Read|caps.Shell, "Use the skills.", skilledBrief),
+		"with skills and no shell":                                 prompt(false, caps.Read, "Use the skills.", skilledBrief),
+		"with only workspace skills and a shell":                   prompt(false, caps.Read|caps.Shell, "", workspaceSkilledBrief),
+		"on a provider with its own note format":                   prompt(false, caps.Read|caps.Shell, "", codexBrief),
+		"with its parent's scratch readable":                       prompt(false, caps.Read|caps.Shell, "", plainBrief, farmReadable),
+		"with sibling scratch readable under an unconfined parent": prompt(true, caps.Read|caps.Shell, "", plainBrief, farmReadable),
 	})
 }
 

@@ -22,11 +22,11 @@
 
 - The workspace is the current directory, /workspace
 - The session name is tame-impala
-- Path tools can access the workspace, private home, /tmp, read-only system and executable search paths, and the configured paths listed here.
+- Path tools can access the workspace, private home, /tmp, read-only system and PATH directories, and the configured paths listed here.
 - Configured path /reference is read-only.
 - Configured path /output is read-write.
 - Configured executable path /commands is read-only to path tools.
-- Configured paths show with symlinks resolved; a symlink to one has the same access.
+- The configured paths above show with symlinks resolved; a symlink to one has the same access.
 - With --yolo the shell is unconfined; path tools stay limited to the paths above.
 - The user grants a path with /grant {r|rw} <path>... (r grants read; rw grants read and write) and revokes it with /revoke <path>. With shell access, the shell can execute files at or under every granted path.
 - If you need a path, ask the user to grant it; do not work around it or give up. Give the full command, such as /grant rw /some/path.

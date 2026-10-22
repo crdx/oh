@@ -66,8 +66,7 @@ func newTestAgentState(t *testing.T) *agentState {
 		workspace:        workspace,
 		mode:             caps.NewMode(caps.Read),
 		roots:            openTestRoots(t, home, scratch),
-		home:             shell.ScratchRoot(home),
-		scratch:          shell.ScratchRoot(scratch),
+		refuseHomeWrite:  allowWrite,
 		sessionDirectory: t.TempDir(),
 		ensurePersisted:  func() error { return nil },
 		outputLimit:      truncate.NewLimit(agentStateOutputLimit),
@@ -182,5 +181,116 @@ func TestAChildWritesItsPrivateHomeAndScratchButNotItsWorkspace(t *testing.T) {
 	state.Close()
 	if _, err := scratchRoot.Stat("."); err != nil {
 		t.Errorf("closing the child closed the scratch handle its manager owns: %v", err)
+	}
+}
+
+func TestAnAgentWritesTheHomeItOpenedAfterItsPathIsReplaced(t *testing.T) {
+	workspace := work.At(reachableWorkspaceDir(t))
+	if err := workspace.Open(); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = workspace.Close() })
+	parent := reachableWorkspaceDir(t)
+	home := filepath.Join(parent, "home")
+	roots, err := shell.OpenRoots(home, reachableWorkspaceDir(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	isReleased := false
+	mode := caps.NewMode(caps.Read | caps.Write)
+	state, err := buildAgentState(agentOptions{
+		workspace:        workspace,
+		mode:             mode,
+		roots:            roots,
+		releaseRoots:     func() { isReleased = true; _ = roots.Close() },
+		refuseHomeWrite:  shell.RefuseHomeWrite(mode),
+		sessionDirectory: t.TempDir(),
+		ensurePersisted:  func() error { return nil },
+		outputLimit:      truncate.NewLimit(agentStateOutputLimit),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	opened := filepath.Join(parent, "opened")
+	if err := os.Rename(home, opened); err != nil {
+		t.Fatal(err)
+	}
+	planted := reachableWorkspaceDir(t)
+	if err := os.Symlink(planted, home); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"notes.txt", filepath.Join(".cache", "notes.txt")} {
+		root, relative, err := state.files.Resolve(filepath.Join(home, name))
+		if err == nil {
+			err = root.WriteFile(relative, []byte("written"), 0o600)
+		}
+		if err != nil {
+			t.Fatalf("writing HOME/%s: %v", name, err)
+		}
+		if _, err := os.Stat(filepath.Join(opened, name)); err != nil {
+			t.Errorf("HOME/%s missed the home the agent opened: %v", name, err)
+		}
+		if _, err := os.Stat(filepath.Join(planted, name)); err == nil {
+			t.Errorf("HOME/%s followed the path to the planted directory", name)
+		}
+	}
+
+	state.Close()
+	if !isReleased {
+		t.Error("closing the agent left its roots open")
+	}
+}
+
+func TestAnAgentWritesItsHomeOnlyWithWriteButItsCacheAlways(t *testing.T) {
+	for name, currentCaps := range map[string]caps.Set{
+		"read-only workspace": caps.Read,
+		"writable workspace":  caps.Read | caps.Write,
+	} {
+		t.Run(name, func(t *testing.T) {
+			workspace := work.At(reachableWorkspaceDir(t))
+			if err := workspace.Open(); err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(func() { _ = workspace.Close() })
+			home := reachableWorkspaceDir(t)
+			if err := os.WriteFile(filepath.Join(home, "reference"), []byte("hello"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			mode := caps.NewMode(currentCaps)
+			state, err := buildAgentState(agentOptions{
+				workspace:        workspace,
+				mode:             mode,
+				roots:            openTestRoots(t, home, reachableWorkspaceDir(t)),
+				refuseHomeWrite:  shell.RefuseHomeWrite(mode),
+				sessionDirectory: t.TempDir(),
+				ensurePersisted:  func() error { return nil },
+				outputLimit:      truncate.NewLimit(agentStateOutputLimit),
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(state.Close)
+
+			root, relative, err := state.files.Resolve(filepath.Join(home, "reference"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if content, err := root.ReadFile(relative); err != nil || string(content) != "hello" {
+				t.Errorf("HOME read %q, %v; want hello", content, err)
+			}
+			for path, isWritable := range map[string]bool{
+				filepath.Join(home, "proof"):           currentCaps.Has(caps.Write),
+				filepath.Join(home, ".cache", "proof"): true,
+			} {
+				root, relative, err := state.files.Resolve(path)
+				if err == nil {
+					err = root.WriteFile(relative, []byte("written"), 0o600)
+				}
+				if isWritable != (err == nil) {
+					t.Errorf("writing %s gave %v, want writable %t", path, err, isWritable)
+				}
+			}
+		})
 	}
 }

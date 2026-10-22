@@ -141,7 +141,7 @@ func TestAWithheldShellIsStillOfferedAndTurnsCommandsAway(t *testing.T) {
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read)
 	pathAccess := newTestPathAccess(t, files, mode)
-	shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), Parent{}, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
+	shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), nil, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
 
 	if shell.Name() != "bash" {
 		t.Errorf("expected the shell to be offered as bash, got %q", shell.Name())
@@ -165,7 +165,7 @@ func TestASubagentsShellRefusesWithoutPointingAtKeysItCannotPress(t *testing.T) 
 	defer func() { _ = workspaceRoot.Close() }()
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
-	linked := Parent{Scratch: t.TempDir()}
+	linked := &Parent{}
 	for _, test := range []struct {
 		granted   caps.Set
 		arguments string
@@ -201,7 +201,7 @@ func TestHostNetworkingRequiresItsCapability(t *testing.T) {
 	shell := New(
 		t.TempDir(),
 		testPlaces(t, t.TempDir(), t.TempDir()),
-		Parent{},
+		nil,
 		pathAccess,
 		mode,
 		files,
@@ -1271,7 +1271,7 @@ func TestASymlinkedCacheIsReportedToWhoeverAskedForTheCommand(t *testing.T) {
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Write | caps.Shell)
 	pathAccess := newTestPathAccess(t, files, mode)
-	shell := New(workspace, testPlaces(t, home, t.TempDir()), Parent{}, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
+	shell := New(workspace, testPlaces(t, home, t.TempDir()), nil, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
 
 	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
@@ -1299,7 +1299,7 @@ func TestAWaivedSandboxStillWithholdsAnUngrantedShell(t *testing.T) {
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read)
-	shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), Parent{}, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
+	shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), nil, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
 
 	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
@@ -1323,7 +1323,7 @@ func TestAWaivedSandboxRunsACommandWhereTheSandboxCouldNot(t *testing.T) {
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read | caps.Shell)
-	shell := New(workspace, testPlaces(t, home, tmp), Parent{}, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
+	shell := New(workspace, testPlaces(t, home, tmp), nil, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
 
 	call, err := shell.Parse(`{"intent":"try it","command":"printf %s \"$HOME:$TMPDIR\""}`)
 	if err != nil {
@@ -1597,7 +1597,7 @@ func cacheEntries(t *testing.T, cache string) int {
 
 func TestASubagentShellDistrustsEveryPathItsParentCanWrite(t *testing.T) {
 	parentWritable := []string{"/parent/workspace", "/parent/home", "/parent/scratch", "/parent/granted"}
-	parent := Parent{Scratch: "/parent/scratch", Writable: func() []string { return parentWritable }}
+	parent := &Parent{Scratch: "/parent/scratch", Writable: func() []string { return parentWritable }}
 
 	first := parent.confine(sandbox.Policy{Write: []string{"/parent/scratch/subagents/tame-otter"}})
 	if first.ScratchParent != "/parent/scratch" || !slices.Equal(first.ParentWritable, parentWritable) {
@@ -1607,7 +1607,7 @@ func TestASubagentShellDistrustsEveryPathItsParentCanWrite(t *testing.T) {
 	if second := parent.confine(sandbox.Policy{}); !slices.Contains(second.ParentWritable, "/parent/granted-later") {
 		t.Errorf("a grant the parent gained later was trusted: %v", second.ParentWritable)
 	}
-	if session := (Parent{}).confine(sandbox.Policy{}); session.ScratchParent != "" || len(session.ParentWritable) != 0 {
+	if session := (*Parent)(nil).confine(sandbox.Policy{}); session.ScratchParent != "" || len(session.ParentWritable) != 0 {
 		t.Errorf("a session with no parent distrusted %+v", session)
 	}
 }
