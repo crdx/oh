@@ -24236,7 +24236,7 @@ func TestAHostCommandsOutputIsCappedTheWayAToolCallIs(t *testing.T) {
 	if !isSaid {
 		t.Fatal("expected the notice to be said")
 	}
-	if !strings.Contains(notice, "truncated at") {
+	if !strings.Contains(notice, "[truncated") {
 		t.Errorf("got %q, want a talkative command capped the way a tool call is", notice)
 	}
 }
@@ -24509,7 +24509,7 @@ func TestAnEndedTasksOutputIsCappedTheWayAToolCallIs(t *testing.T) {
 	if len(notices) != 1 {
 		t.Fatalf("got %d notices, want the one task that ended: %v", len(notices), notices)
 	}
-	if !strings.Contains(notices[0], "truncated at") {
+	if !strings.Contains(notices[0], "[truncated") {
 		t.Errorf("got %q, want a talkative task capped the way a tool call is", notices[0])
 	}
 	if len(notices[0]) > 2048 {

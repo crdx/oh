@@ -11,6 +11,8 @@ delta
 [truncated at line 4 of 5; continue with offset 5]
 
 === a line too long to return whole ===
-xxxxxxxxxxxxxx
+xx
 
-[truncated at 14B of 27B; full output in /state/sessions/tame-impala/drops/output.txt]
+[truncated: kept the first 2B and the last 5B of 27B; full output in /state/sessions/tame-impala/drops/output.txt]
+
+hort

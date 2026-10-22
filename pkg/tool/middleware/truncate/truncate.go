@@ -106,46 +106,67 @@ func Output(output string, limit *Limit, save Saver) string {
 	return cappedOutput
 }
 
+const (
+	cutSlack  = 256
+	headShare = 3
+)
+
 func outputWithSizes(output string, limit int, save Saver, lines tool.FileLines) (string, int, int) {
 	if len(output) <= limit {
 		return output, len(output), len(output)
 	}
 
-	end := limit
-
-	if newline := strings.LastIndexByte(output[:limit], '\n'); newline > 0 {
-		end = newline
-	} else {
-		for end > 0 && !utf8.RuneStart(output[end]) {
-			end--
+	if lines.First > 0 {
+		end := limit
+		if newline := strings.LastIndexByte(output[:limit], '\n'); newline > 0 {
+			end = newline
+		}
+		if output[end] == '\n' {
+			last := lines.First + strings.Count(output[:end], "\n")
+			return fmt.Sprintf(
+				"%s\n\n[truncated at line %d of %d; continue with offset %d]",
+				output[:end], last, lines.Total, last+1,
+			), end, len(output)
 		}
 	}
 
-	if lines.First > 0 && output[end] == '\n' {
-		last := lines.First + strings.Count(output[:end], "\n")
-		return fmt.Sprintf(
-			"%s\n\n[truncated at line %d of %d; continue with offset %d]",
-			output[:end], last, lines.Total, last+1,
-		), end, len(output)
+	path, saveErr := "", error(nil)
+	if save != nil {
+		path, saveErr = save(output)
+	}
+	note := func(headBytes int, tailBytes int) string {
+		sizes := fmt.Sprintf(
+			"truncated: kept the first %s and the last %s of %s",
+			util.FormatBytes(headBytes, 3), util.FormatBytes(tailBytes, 3), util.FormatBytes(len(output), 3),
+		)
+		switch {
+		case save == nil:
+			return "\n\n[" + sizes + "]\n\n"
+		case saveErr != nil:
+			return fmt.Sprintf("\n\n[%s; the rest could not be saved: %v]\n\n", sizes, saveErr)
+		default:
+			return "\n\n[" + sizes + "; full output in " + path + "]\n\n"
+		}
 	}
 
-	if save == nil {
-		return fmt.Sprintf(
-			"%s\n\n[truncated at %s of %s]",
-			output[:end], util.FormatBytes(end, 3), util.FormatBytes(len(output), 3),
-		), end, len(output)
+	room := max(limit-len(note(limit, limit))-min(cutSlack, limit/8), limit/2)
+	headEnd := room / headShare
+	if newline := strings.LastIndexByte(output[:headEnd], '\n'); newline > 0 {
+		headEnd = newline + 1
+	} else {
+		for headEnd > 0 && !utf8.RuneStart(output[headEnd]) {
+			headEnd--
+		}
+	}
+	tailStart := len(output) - (room - headEnd)
+	if newline := strings.IndexByte(output[tailStart:], '\n'); newline >= 0 && tailStart+newline+1 < len(output) {
+		tailStart += newline + 1
+	} else {
+		for tailStart < len(output) && !utf8.RuneStart(output[tailStart]) {
+			tailStart++
+		}
 	}
 
-	path, err := save(output)
-	if err != nil {
-		return fmt.Sprintf(
-			"%s\n\n[truncated at %s of %s; the rest could not be saved: %v]",
-			output[:end], util.FormatBytes(end, 3), util.FormatBytes(len(output), 3), err,
-		), end, len(output)
-	}
-
-	return fmt.Sprintf(
-		"%s\n\n[truncated at %s of %s; full output in %s]",
-		output[:end], util.FormatBytes(end, 3), util.FormatBytes(len(output), 3), path,
-	), end, len(output)
+	head, tail := strings.TrimRight(output[:headEnd], "\n"), output[tailStart:]
+	return head + note(len(head), len(tail)) + tail, len(head) + len(tail), len(output)
 }

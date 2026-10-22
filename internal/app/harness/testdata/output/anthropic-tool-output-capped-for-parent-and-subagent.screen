@@ -2,7 +2,7 @@
  dump the log here and in a subagent
 
 
-dump dump 17L ~500t
+dump dump 11L ~300t
 spawn subagent · anthropic/claude-opus-5@medium (Dumping the whole log)
 
 A subagent is dumping it too.

@@ -182,7 +182,7 @@ func TestTheLimitItIsGivenIsTheOneItCutsAt(t *testing.T) {
 
 	output := truncate.Output(whole, truncate.NewLimit(2*1024), temporarySaver(t))
 
-	if !strings.Contains(output, "truncated at 1.99K of 58.6K") {
+	if !strings.Contains(output, "[truncated: kept the first 539B and the last 1.07K of 58.6K;") {
 		t.Errorf("expected the cut at the limit it was given, got %q", output)
 	}
 }
@@ -209,7 +209,7 @@ func TestOutputTooBigIsCutAndSaved(t *testing.T) {
 		t.Fatalf("expected the whole of it saved once, got %v and %v", saved, err)
 	}
 
-	if !strings.Contains(output, "truncated at 12K of 58.6K") {
+	if !strings.Contains(output, "[truncated: kept the first 3.87K and the last 7.73K of 58.6K;") {
 		t.Errorf("expected compact byte sizes in the notice, got %q", output)
 	}
 	if !strings.Contains(output, saved[0]) {
@@ -231,7 +231,7 @@ func TestOutputTooBigNamesNoFileWhenNothingSavesIt(t *testing.T) {
 
 	output := truncate.Output(whole, truncate.NewLimit(limitBytes), nil)
 
-	if !strings.HasSuffix(output, "[truncated at 12K of 58.6K]") {
+	if !strings.Contains(output, "[truncated: kept the first 3.9K and the last 7.79K of 58.6K]") {
 		t.Errorf("expected the notice to name no file, got %q", output)
 	}
 }
@@ -243,7 +243,7 @@ func TestOutputTooBigSaysSoWhenItCouldNotBeSaved(t *testing.T) {
 
 	output := truncate.Output(strings.Repeat("a line of text\n", 4000), truncate.NewLimit(limitBytes), failingSave)
 
-	if !strings.HasSuffix(output, "the rest could not be saved: the drops directory disappeared]") {
+	if !strings.Contains(output, "the rest could not be saved: the drops directory disappeared]") {
 		t.Errorf("expected the notice to name the failure, got %q", output)
 	}
 }
@@ -309,7 +309,7 @@ func TestALineOfAFileTooLongToShowIsSaved(t *testing.T) {
 	if err != nil || len(saved) != 1 {
 		t.Fatalf("expected the whole of it saved once, got %v and %v", saved, err)
 	}
-	if !strings.HasSuffix(output, "full output in "+saved[0]+"]") {
+	if !strings.Contains(output, "full output in "+saved[0]+"]") {
 		t.Errorf("expected the notice to name the file it saved, got %q", output[len(output)-120:])
 	}
 }
@@ -353,7 +353,7 @@ func TestAWrappedToolIsCapped(t *testing.T) {
 	}
 
 	big := exec(t, subject, `{"size":4000}`)
-	if !strings.Contains(big, "truncated at") {
+	if !strings.Contains(big, "[truncated") {
 		t.Error("expected an oversized reply to be cut")
 	}
 }
@@ -361,7 +361,7 @@ func TestAWrappedToolIsCapped(t *testing.T) {
 func TestAnUnwrappedToolIsNotCapped(t *testing.T) {
 	output := exec(t, buildTool(newToolBuilder(t)), `{"size":4000}`)
 
-	if strings.Contains(output, "truncated at") {
+	if strings.Contains(output, "[truncated") {
 		t.Error("expected an unwrapped tool to hand back everything")
 	}
 }
@@ -377,7 +377,7 @@ func TestToolsWrapsEveryTool(t *testing.T) {
 	}
 
 	for _, subject := range wrappedTools {
-		if !strings.Contains(exec(t, subject, `{"size":4000}`), "truncated at") {
+		if !strings.Contains(exec(t, subject, `{"size":4000}`), "[truncated") {
 			t.Error("expected every tool to be capped")
 		}
 	}
@@ -397,10 +397,10 @@ func TestEachCallKeepsTheOutputLimitItStartedWith(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(result.Output, "truncated at") {
+	if !strings.Contains(result.Output, "[truncated") {
 		t.Error("the started call lost its original limit")
 	}
-	if output := exec(t, subject, `{"size":400}`); strings.Contains(output, "truncated at") {
+	if output := exec(t, subject, `{"size":400}`); strings.Contains(output, "[truncated") {
 		t.Error("a later call did not use the replacement limit")
 	}
 }
@@ -420,7 +420,7 @@ func TestToolsSharingALimitFollowItsSizeButSaveWhereEachIsTold(t *testing.T) {
 		t.Errorf("the parent saved %d outputs it never produced", len(saved))
 	}
 	limit.Replace(limitBytes)
-	if output := exec(t, child, `{"size":400}`); strings.Contains(output, "truncated at") {
+	if output := exec(t, child, `{"size":400}`); strings.Contains(output, "[truncated") {
 		t.Error("the child missed the shared limit's new size")
 	}
 }
@@ -486,5 +486,53 @@ func TestAFrozenSchemaReachesTheToolItWraps(t *testing.T) {
 	}
 	if _, isRendered := frozen.Render(`{}`); !isRendered {
 		t.Error("the frozen schema did not reach the wrapped tool's rendering")
+	}
+}
+
+func TestAnOutputTooBigKeepsBothEnds(t *testing.T) {
+	directory := t.TempDir()
+	buffer := &tool.OutputBuffer{}
+	for line := range 200000 {
+		if _, err := fmt.Fprintf(buffer, "%d\n", line+1); err != nil {
+			t.Fatal(err)
+		}
+	}
+	whole := "exit(1):\n" + buffer.Report() + "note: the command failed."
+
+	output := truncate.Output(whole, truncate.NewLimit(limitBytes), newSaver(t, directory))
+
+	if len(output) > limitBytes {
+		t.Errorf("got %d bytes, want at most %d", len(output), limitBytes)
+	}
+	if !strings.HasPrefix(output, "exit(1):\n[omitted 1026751 earlier output bytes]\n\n162552\n") {
+		t.Errorf("got %q, want the start of the output kept", output[:60])
+	}
+	if !strings.HasSuffix(output, "\n199999\n200000\nnote: the command failed.") {
+		t.Errorf("got %q, want the end of the output kept", output[len(output)-60:])
+	}
+	saved, err := filepath.Glob(filepath.Join(directory, "output-*.txt"))
+	if err != nil || len(saved) != 1 {
+		t.Fatalf("expected the output saved once, got %v and %v", saved, err)
+	}
+	if !strings.Contains(output, "\n\n[truncated: kept the first 3.86K and the last 7.74K of 256K; full output in "+saved[0]+"]\n\n") {
+		t.Errorf("got %q, want one note between the ends", output)
+	}
+}
+
+func TestOutputCutOnceIsNotCutAgain(t *testing.T) {
+	directory := t.TempDir()
+	limit := truncate.NewLimit(limitBytes)
+	save := newSaver(t, directory)
+	whole := strings.Repeat("a line of text\n", 4000)
+
+	once := truncate.Output(whole, limit, save)
+	twice := truncate.Output("docs: done\n"+once, limit, save)
+
+	if twice != "docs: done\n"+once {
+		t.Errorf("got %q, want the cut output left alone", twice[len(twice)-200:])
+	}
+	saved, err := filepath.Glob(filepath.Join(directory, "output-*.txt"))
+	if err != nil || len(saved) != 1 {
+		t.Errorf("got %v and %v, want the output saved once", saved, err)
 	}
 }

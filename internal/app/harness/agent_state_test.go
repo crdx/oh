@@ -120,7 +120,7 @@ func TestEveryAgentToolIsCappedSavedToItsDropsAndKeepsItsRoot(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if len(result.Output) > 2*agentStateOutputLimit || !strings.Contains(result.Output, "truncated at") {
+		if len(result.Output) > 2*agentStateOutputLimit || !strings.Contains(result.Output, "[truncated") {
 			t.Errorf("%s came back uncapped: %d bytes", subject.Name(), len(result.Output))
 		}
 		if subject.Name() != "read" && !strings.Contains(result.Output, "full output in "+drops.GetDirectory(state.options.sessionDirectory)) {
