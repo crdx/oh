@@ -51,7 +51,7 @@ func New(ports Ports) tool.Tool {
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
 				tool.Integer("port", "the TCP port inside the sandbox (for add and remove)").Optional(),
-				tool.String("task_name", "an optional associated task name or id (for add)").Optional(),
+				tool.String("task_name", "an optional associated task name or id matching "+tasks.IDPattern()+" (for add)").Optional(),
 			},
 		},
 		Describe,

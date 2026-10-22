@@ -33,7 +33,7 @@ func New(manager *tasks.Manager) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
 			Name:        Name,
-			Description: "manage background tool invocations and read their live output. Restart reuses the saved tool arguments. Discard stops the task and removes its record. Completions report their results and wake an idle conversation. End the turn rather than waiting or polling.",
+			Description: "manage background tool invocations and read their live output. Restart reuses the saved tool arguments. Discard stops the task and removes its record. A completion reports its result and wakes the conversation, so end your turn to wait for a task. Never wait with sleep or by polling its status.",
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
 				tool.String("name", "the task name or id, except for list and prune").Optional(),

@@ -42,7 +42,7 @@ func (self configuredTool) Description() string {
 	}
 	return description + fmt.Sprintf(" A call still running after %s continues in the background; ", activeSpan(self.manager.ForegroundLimit())) +
 		fmt.Sprintf("set background=true to start it there at once. A task stops after %s, ", activeSpan(max(tasks.RunLimit, self.options.RunLimit))) +
-		"or sooner where the tool has a shorter time limit."
+		"or sooner where the tool has a shorter time limit. To wait for a task, you can just end your turn."
 }
 
 func activeSpan(limit time.Duration) string {
@@ -61,9 +61,10 @@ func (self configuredTool) Schema() tool.Schema {
 		return self.Tool.Schema()
 	}
 	schema := slices.Clone(self.Tool.Schema())
-	schema = append(schema,
+	schema = append(
+		schema,
 		tool.Boolean("background", "start this call as a background task").Optional(),
-		tool.String("task_name", "an optional short role for the background task; duplicates are numbered").Optional(),
+		tool.String("task_name", "an optional name matching "+tasks.NamePattern()+", such as build or docs; never add a number yourself, since a repeated name is numbered automatically").Optional(),
 	)
 	if self.options.PublishPort != nil {
 		schema = append(schema, tool.Integer("forward_port", "a fixed server TCP port to make reachable to the user when starting a background task").Optional())

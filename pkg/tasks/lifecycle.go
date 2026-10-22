@@ -34,6 +34,14 @@ type StartOptions struct {
 	replaces   *entry
 }
 
+func NamePattern() string {
+	return pattern(NameLengthLimit)
+}
+
+func IDPattern() string {
+	return pattern(IDLengthLimit)
+}
+
 func ValidateName(name string) error {
 	return validate("task name", name, NameLengthLimit)
 }
@@ -44,14 +52,18 @@ func ValidateID(id string) error {
 
 func validate(noun string, text string, limit int) error {
 	if len(text) == 0 || len(text) > limit {
-		return fmt.Errorf("%s must match [a-z0-9-]{1,%d}", noun, limit)
+		return fmt.Errorf("%s must match %s", noun, pattern(limit))
 	}
 	for _, character := range text {
 		if (character < 'a' || character > 'z') && (character < '0' || character > '9') && character != '-' {
-			return fmt.Errorf("%s must match [a-z0-9-]{1,%d}", noun, limit)
+			return fmt.Errorf("%s must match %s", noun, pattern(limit))
 		}
 	}
 	return nil
+}
+
+func pattern(limit int) string {
+	return fmt.Sprintf("[a-z0-9-]{1,%d}", limit)
 }
 
 func (self *Manager) availableName(name string) (string, error) {

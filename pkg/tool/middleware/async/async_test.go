@@ -382,6 +382,10 @@ func TestTaskLaunchOptionsRequireBackgroundAndSandboxNetworking(t *testing.T) {
 	subject := async.Tool(heldTool(nil, new(int)), manager, async.Options{
 		PublishPort: func(context.Context, uint16, string) (string, error) { return "forwarded", nil },
 	})
+	nameParameter := subject.Schema().Find("task_name")
+	if nameParameter == nil || !strings.Contains(nameParameter.Description, tasks.NamePattern()) {
+		t.Errorf("task_name description hides its pattern: %+v", nameParameter)
+	}
 	for _, arguments := range []string{
 		`{"command":"true","task_name":"build"}`,
 		`{"command":"true","forward_port":8000}`,

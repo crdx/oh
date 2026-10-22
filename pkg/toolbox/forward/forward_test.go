@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -87,6 +88,10 @@ func TestForwardingSaysWhereTheUserCanOpenIt(t *testing.T) {
 
 func TestForwardingCanAssociateThePortWithATask(t *testing.T) {
 	ports := &recordedPorts{}
+	nameParameter := New(ports).Schema().Find("task_name")
+	if nameParameter == nil || !strings.Contains(nameParameter.Description, tasks.IDPattern()) {
+		t.Errorf("task_name description hides its pattern: %+v", nameParameter)
+	}
 
 	if _, err := run(ports, Args{Action: actionAdd, Port: 8080, TaskName: "docs"}); err != nil {
 		t.Fatal(err)

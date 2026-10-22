@@ -13,6 +13,9 @@ import (
 )
 
 func TestNamedTasksAreNumberedWithoutLosingTheirName(t *testing.T) {
+	if tasks.NamePattern() != "[a-z0-9-]{1,10}" || tasks.IDPattern() != "[a-z0-9-]{1,32}" {
+		t.Fatalf("unexpected task patterns %q and %q", tasks.NamePattern(), tasks.IDPattern())
+	}
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
