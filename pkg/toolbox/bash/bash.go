@@ -350,13 +350,13 @@ func exec(
 	reportText := measured(report(result, policy), &metrics)
 
 	if result.ExitCode != 0 {
-		return reportText, metrics, ErrCommandFailed
+		return reportText, metrics, tool.CommandFailed(sandbox.FailureReason(result))
 	}
 
 	return reportText, metrics, nil
 }
 
-var ErrCommandFailed = errors.New("the command failed")
+var ErrCommandFailed = tool.ErrCommandFailed
 
 func runLive(
 	ctx context.Context,

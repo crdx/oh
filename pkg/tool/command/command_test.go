@@ -351,7 +351,7 @@ func TestACommandThatFailsReportsItsExitCodeAndOutput(t *testing.T) {
 	}
 
 	output, err := call(t, subject, `{}`)
-	if !errors.Is(err, command.ErrCommandFailed) {
+	if !errors.Is(err, command.ErrCommandFailed) || err.Error() != "the command exited with status 3" {
 		t.Fatalf("got %v", err)
 	}
 	if output != "exit(3):\nnope" {
@@ -866,7 +866,7 @@ func TestACallThatIgnoresItsLimitSaysItWasKilledForIt(t *testing.T) {
 	}
 
 	output, err := call(t, subject, `{}`)
-	if !errors.Is(err, command.ErrCommandFailed) {
+	if !errors.Is(err, command.ErrCommandFailed) || !strings.HasPrefix(err.Error(), "the command reached its 100ms time limit") {
 		t.Fatalf("got %v", err)
 	}
 	want := "started\nnote: the command reached its 100ms time limit. The command did not stop after SIGTERM. SIGKILL stopped the command after 2s."
@@ -887,7 +887,7 @@ func TestACallKilledByASignalNamesIt(t *testing.T) {
 	}
 
 	output, err := call(t, subject, `{}`)
-	if !errors.Is(err, command.ErrCommandFailed) {
+	if !errors.Is(err, command.ErrCommandFailed) || err.Error() != "SIGKILL stopped the command" {
 		t.Fatalf("got %v", err)
 	}
 	if output != "started\nnote: SIGKILL stopped the command." {

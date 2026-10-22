@@ -106,3 +106,15 @@ func TestOnlyALaterRunIsNumberedInItsNotice(t *testing.T) {
 		}
 	}
 }
+
+func TestAFailedTaskNoticeSaysWhyItFailed(t *testing.T) {
+	conclusion := tasks.Conclusion{
+		Snapshot: tasks.Snapshot{ID: "task-41", Run: 1, State: tasks.Failed, Failure: "the command exited with status 1", Output: "exit(1):\nnope\n"},
+		IsFinal:  true,
+	}
+
+	notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion))
+	if want := "Task `task-41` failed: the command exited with status 1.\n\n```\nexit(1):\nnope\n```"; !isSaid || notice != want {
+		t.Errorf("got %q (%t), want %q", notice, isSaid, want)
+	}
+}

@@ -46,7 +46,7 @@ const (
 
 var namePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
 
-var ErrCommandFailed = errors.New("the command failed")
+var ErrCommandFailed = tool.ErrCommandFailed
 
 type Parameter struct {
 	Name        string
@@ -372,7 +372,7 @@ func run(
 		if hasEscalated {
 			note += escalationNote()
 		}
-		return stoppedStatus(text, note), ErrCommandFailed
+		return stoppedStatus(text, note), tool.CommandFailed(note)
 	}
 
 	var exit *exec.ExitError
@@ -380,9 +380,9 @@ func run(
 	case errors.As(err, &exit):
 		note, wasSignalled := ending(exit)
 		if wasSignalled {
-			return stoppedStatus(text, note), ErrCommandFailed
+			return stoppedStatus(text, note), tool.CommandFailed(note)
 		}
-		return status(text, note), ErrCommandFailed
+		return status(text, note), tool.CommandFailed(fmt.Sprintf("the command exited with status %d", exit.ExitCode()))
 	case err != nil:
 		return "", err
 	}

@@ -32,6 +32,15 @@ var processOverruns = []string{
 	"failed to create new OS thread",
 }
 
+func FailureReason(result Result) string {
+	if signal, isObserved := endingSignal(result); isObserved {
+		if name := unix.SignalName(signal); name != "" {
+			return name + " stopped the command"
+		}
+	}
+	return fmt.Sprintf("the command exited with status %d", result.ExitCode)
+}
+
 func KillNotice(result Result, policy Policy) string {
 	signal, isObserved := endingSignal(result)
 
