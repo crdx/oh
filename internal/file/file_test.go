@@ -32,6 +32,36 @@ func testRoot(t *testing.T, writable *bool) (*file.Root, string) {
 	}), directory
 }
 
+func TestVerifyPathPassesWhileTheDirectoryStaysPut(t *testing.T) {
+	isWritable := false
+	root, directory := testRoot(t, &isWritable)
+	if err := root.VerifyPath(); err != nil {
+		t.Errorf("an unchanged directory was refused: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, "note"), []byte("new"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := root.VerifyPath(); err != nil {
+		t.Errorf("content changes inside the directory were refused: %v", err)
+	}
+}
+
+func TestVerifyPathRefusesAReplacedDirectory(t *testing.T) {
+	isWritable := false
+	root, directory := testRoot(t, &isWritable)
+	moved := directory + "-moved"
+	if err := os.Rename(directory, moved); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(moved) })
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := root.VerifyPath(); !errors.Is(err, file.ErrMountChanged) {
+		t.Errorf("a replaced directory got %v, want a mount-changed refusal", err)
+	}
+}
+
 func TestWritingGoesThroughWhileTheTreeMayBeChanged(t *testing.T) {
 	isWritable := true
 	root, directory := testRoot(t, &isWritable)

@@ -142,6 +142,9 @@ func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRun
 	searchContext, stopSearch := context.WithCancel(ctx)
 	defer stopSearch()
 	output := newSearchOutput(stopSearch)
+	if err := root.VerifyPath(); err != nil {
+		return "", tool.ToolCallMetrics{}, fmt.Errorf("the workspace changed on disk: %w", err)
+	}
 	policy := sandbox.Policy{
 		Deny:    deniedPaths,
 		Read:    []string{root.Name()},

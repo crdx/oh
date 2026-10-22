@@ -251,6 +251,11 @@ func act(
 		if err != nil {
 			return "", err
 		}
+		if root != nil {
+			if err := root.VerifyPath(); err != nil {
+				return "", fmt.Errorf("the workspace changed on disk: %w", err)
+			}
+		}
 
 		start := manager.Start
 		if args.Respawn {

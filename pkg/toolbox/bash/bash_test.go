@@ -234,6 +234,37 @@ func TestACallMadeWhenIntentWasOptionalStillParses(t *testing.T) {
 	}
 }
 
+func TestAReplacedWorkspaceRefusesTheShell(t *testing.T) {
+	root, directory := testRoot(t)
+	moved := directory + "-moved"
+	if err := os.Rename(directory, moved); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(moved) })
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	runner := &recordingRunner{}
+	shell := bash.New(
+		root,
+		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+		func(context.Context, string, string) error { return nil },
+		runner,
+		true,
+	)
+	call, err := shell.Parse(`{"intent":"trying it","command":"true"}`)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if _, err := call.Exec(t.Context()); err == nil || !strings.Contains(err.Error(), "workspace changed") {
+		t.Fatalf("got %v, want a workspace-changed refusal", err)
+	}
+	if runner.runCount != 0 {
+		t.Errorf("the runner was called %d times, want none", runner.runCount)
+	}
+}
+
 func TestTheIntentReachesTheCallRow(t *testing.T) {
 	call, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
 		Parse(`{"command":"go test ./...","intent":"running every test"}`)

@@ -326,6 +326,9 @@ func exec(
 	policy sandbox.Policy,
 	args Args,
 ) (string, tool.ToolCallMetrics, error) {
+	if err := root.VerifyPath(); err != nil {
+		return "", tool.ToolCallMetrics{}, fmt.Errorf("the workspace changed on disk: %w", err)
+	}
 	result, err := runner.Run(ctx, root.Name(), args.Command, policy)
 	metrics := tool.ToolCallMetrics{
 		Kind:       tool.MetricResources,

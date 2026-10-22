@@ -341,6 +341,36 @@ func TestARestartFromTheRememberedCommandCanRespawn(t *testing.T) {
 	}
 }
 
+func TestAReplacedWorkspaceRefusesAJobStart(t *testing.T) {
+	directory := t.TempDir()
+	openedRoot, err := os.OpenRoot(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = openedRoot.Close() })
+	manager := jobs.New(heldRunner{})
+	t.Cleanup(func() { _ = manager.Close() })
+	built := job.New(
+		manager,
+		file.New(openedRoot, func(string) error { return nil }),
+		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+		nil,
+	)
+
+	moved := directory + "-moved"
+	if err := os.Rename(directory, moved); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(moved) })
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := callJob(t, built, `{"intent":"check the job here","action":"start","name":"build","command":"just build"}`); err == nil || !strings.Contains(err.Error(), "workspace changed") {
+		t.Fatalf("got %v, want a workspace-changed refusal", err)
+	}
+}
+
 func TestStartingAJobCanForwardAndAssociateItsPort(t *testing.T) {
 	manager := jobs.New(heldRunner{})
 	t.Cleanup(func() { _ = manager.Close() })

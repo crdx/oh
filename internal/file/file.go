@@ -236,6 +236,30 @@ func (self *Root) Prepare() error {
 	return err
 }
 
+func (self *Root) VerifyPath() error {
+	openedRoot, err := self.getRoot()
+	if err != nil {
+		return err
+	}
+	handle, err := openedRoot.Open(".")
+	if err != nil {
+		return err
+	}
+	defer func() { _ = handle.Close() }()
+	pinnedInfo, err := handle.Stat()
+	if err != nil {
+		return err
+	}
+	currentInfo, err := os.Stat(self.Name())
+	if err != nil {
+		return err
+	}
+	if !os.SameFile(pinnedInfo, currentInfo) {
+		return ErrMountChanged
+	}
+	return nil
+}
+
 func (self *Root) FS() fs.FS {
 	return rootFileSystem{root: self}
 }

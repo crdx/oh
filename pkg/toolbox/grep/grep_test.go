@@ -154,6 +154,23 @@ func TestASearchThatFindsNothingSaysSo(t *testing.T) {
 	}
 }
 
+func TestAReplacedWorkspaceRefusesTheSearch(t *testing.T) {
+	root := testRoot(t, map[string]string{"main.go": "hello\n"})
+	directory := root.Name()
+	moved := directory + "-moved"
+	if err := os.Rename(directory, moved); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(moved) })
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	if output, err := runGrep(t, root, `{"pattern":"hello"}`); err == nil || !strings.Contains(err.Error(), "workspace changed") {
+		t.Fatalf("got %q and %v, want a workspace-changed refusal", output, err)
+	}
+}
+
 func standInRipgrep(t *testing.T, script string) {
 	t.Helper()
 
