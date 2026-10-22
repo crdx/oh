@@ -21,7 +21,7 @@ Both are still up.
 ## Tasks ended with the session · +0s
 
 ```
-The session closed while docs, watch were running. They stopped and do not restart automatically; task restart starts one again.
+The session was closed and reopened after the last turn. Tasks `docs` and `watch` stopped when it closed. Restart each if still needed.
 ```
 
 ## User · +0s

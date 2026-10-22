@@ -243,7 +243,7 @@ func TestStopWhereStopsOnlyTasksWhosePolicyMatches(t *testing.T) {
 		}
 		<-started
 		<-started
-		names := manager.StopWhere(func(_ string, policy any) bool { return policy == "writable" })
+		names := manager.StopWhere(func(_ string, policy any) bool { return policy == "writable" }, "access was withdrawn")
 		if len(names) != 1 || names[0] != "a" {
 			t.Fatalf("stopped %v, want [a]", names)
 		}
@@ -402,7 +402,7 @@ func TestARespawnPreservesThePreviousRunOutcome(t *testing.T) {
 		if err != nil || len(snapshot.Previous) == 0 || snapshot.Previous[0].Output != "first output" {
 			t.Errorf("previous output missing: %+v, %v", snapshot, err)
 		}
-		if err := manager.Stop("one"); err != nil {
+		if err := manager.Stop("one", "the user stopped it"); err != nil {
 			t.Fatal(err)
 		}
 	})
@@ -525,7 +525,7 @@ func TestTaskPolicyIsBoundBeforeStartingAndSharedWithExecution(t *testing.T) {
 		stopped := manager.StopWhere(func(_ string, policy any) bool {
 			bound, isBound := policy.(executionPolicy)
 			return isBound && bound.name == "first policy"
-		})
+		}, "access was withdrawn")
 		if !slices.Equal(stopped, []string{"one"}) {
 			t.Errorf("revocation did not find the execution policy: %v", stopped)
 		}
@@ -567,7 +567,7 @@ func TestRevocationCannotMissATaskBeingAdmitted(t *testing.T) {
 		<-entered
 		stopped := make(chan []string, 1)
 		go func() {
-			stopped <- manager.StopWhere(func(_ string, policy any) bool { return policy == "granted-path" })
+			stopped <- manager.StopWhere(func(_ string, policy any) bool { return policy == "granted-path" }, "access was withdrawn")
 		}()
 		close(finishPolicy)
 		if err := <-admitted; err != nil {

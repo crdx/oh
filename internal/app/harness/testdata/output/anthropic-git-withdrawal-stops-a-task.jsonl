@@ -2,8 +2,8 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxwsnl"}}
 {"kind":"event","event":{"kind":"task_stop","name":"meta","state":"g"}}
-{"kind":"event","event":{"kind":"task_run_finished","name":"meta","state":{"snapshot":{"id":"meta","tool_name":"bash","run":1,"is_respawning":false,"state":"stopped","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"","failure":"task stopped"},"is_final":true,"silent":true}}}
-{"kind":"event","event":{"kind":"task_listing","state":[{"id":"meta","tool_name":"bash","run":1,"is_respawning":false,"state":"stopped","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"","failure":"task stopped"}]}}
+{"kind":"event","event":{"kind":"task_run_finished","name":"meta","state":{"snapshot":{"id":"meta","tool_name":"bash","run":1,"is_respawning":false,"state":"stopped","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"","failure":"g was withdrawn while it had write access"},"is_final":true,"silent":true}}}
+{"kind":"event","event":{"kind":"task_listing","state":[{"id":"meta","tool_name":"bash","run":1,"is_respawning":false,"state":"stopped","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"","failure":"g was withdrawn while it had write access"}]}}
 {"kind":"event","event":{"kind":"user_message","text":"is the preview still up"}}
 {"kind":"event","event":{"kind":"model_message","text":"No. The metadata task stopped when g was withdrawn."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\n.git is now read-only.\n\u003c/system-reminder\u003e\n\n\u003csystem-reminder\u003e\nTask `meta` stopped because g was withdrawn while it had write access.\n\u003c/system-reminder\u003e"}]}}

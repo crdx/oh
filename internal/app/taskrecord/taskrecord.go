@@ -164,22 +164,19 @@ func EndedWithSessionNotice(event agent.Event) (string, bool) {
 	if event.Kind != EndedWithSession || json.Unmarshal(event.State, &names) != nil || len(names) == 0 {
 		return "", false
 	}
-	subject, absence, stop := "Task", "It is not running here; task restart starts it again.",
-		"It stopped and does not restart automatically; task restart starts it again."
-	if len(names) > 1 {
-		subject, absence, stop = "Tasks", "They are not running here; task restart starts one again.",
-			"They stopped and do not restart automatically; task restart starts one again."
+	formattedNames := make([]string, 0, len(names))
+	for _, name := range names {
+		formattedNames = append(formattedNames, markdown.CodeSpan(name))
 	}
+	subject, pronoun, wasRunning := "Task "+formattedNames[0], "it", " was running"
+	if len(formattedNames) > 1 {
+		subject = "Tasks " + strings.Join(formattedNames[:len(formattedNames)-1], ", ") + " and " + formattedNames[len(formattedNames)-1]
+		pronoun, wasRunning = "each", " were running"
+	}
+	restart := "Restart " + pronoun + " if still needed."
 	if event.Name != "" {
-		return fmt.Sprintf("%s %s %s running in session %s when this session was forked from it. %s",
-			subject, strings.Join(names, ", "), pluralWas(len(names)), markdown.CodeSpan(event.Name), absence), true
+		return subject + wasRunning + " in session " + markdown.CodeSpan(event.Name) +
+			" when this session was forked from it. " + restart, true
 	}
-	return fmt.Sprintf("The session closed while %s %s running. %s", strings.Join(names, ", "), pluralWas(len(names)), stop), true
-}
-
-func pluralWas(count int) string {
-	if count == 1 {
-		return "was"
-	}
-	return "were"
+	return "The session was closed and reopened after the last turn. " + subject + " stopped when it closed. " + restart, true
 }

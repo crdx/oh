@@ -402,6 +402,12 @@ func withdrawal(withdrawnCaps Set) string {
 		return "the workspace was made read-only"
 	case withdrawnCaps.Has(Git):
 		return "g was withdrawn while it had write access"
+	case withdrawnCaps.Has(Network):
+		return "the host network was withdrawn"
+	case withdrawnCaps.Has(Lookup):
+		return "lookup was refused"
+	case withdrawnCaps.Has(Read):
+		return "read access was withdrawn"
 	default:
 		return ""
 	}

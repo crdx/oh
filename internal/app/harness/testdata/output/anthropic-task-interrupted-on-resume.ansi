@@ -5,8 +5,8 @@
 I will check it later.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 The session closed while build was running. It stopped and does not restart automatically; task \e[0m\r
-\e[48;2;48;58;67m    restart starts it again.                                                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m stopped when it closed.     \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r

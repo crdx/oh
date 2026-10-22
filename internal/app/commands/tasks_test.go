@@ -82,7 +82,7 @@ func fixtureTasks() (Tasks, *taskActions) {
 			snapshot.Output = "Serving HTTP on localhost port 8080 ...\n"
 			return snapshot, err
 		},
-		Stop: func(name string) error {
+		Stop: func(name string, _ string) error {
 			if _, err := find(name); err != nil {
 				return err
 			}
@@ -315,7 +315,7 @@ func TestDiscardingALiveTaskTellsTheModelItStopped(t *testing.T) {
 	if len(context.events) != 1 || context.events[0].Kind != caps.TaskStop {
 		t.Errorf("got events %#v, want the stop recorded", context.events)
 	}
-	if !strings.HasSuffix(context.success, ", and discarded.") {
+	if context.success != "Discarded docs: stopped." {
 		t.Errorf("got %q, want the discard confirmed", context.success)
 	}
 }

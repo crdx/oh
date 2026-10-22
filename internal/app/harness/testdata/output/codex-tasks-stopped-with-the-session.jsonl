@@ -11,7 +11,7 @@
 {"kind":"event","event":{"kind":"tasks_ended_with_session","state":["docs","watch"]}}
 {"kind":"event","event":{"kind":"user_message","text":"is the preview still up"}}
 {"kind":"event","event":{"kind":"model_message","text":"It went down with the session, and I have left it down."}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nThe session closed while docs, watch were running. They stopped and do not restart automatically; task restart starts one again.\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nThe session was closed and reopened after the last turn. Tasks `docs` and `watch` stopped when it closed. Restart each if still needed.\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"role":"user","content":"is the preview still up"}}
 {"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"It went down with the session, and I have left it down."}]}}
 {"kind":"turn_completion","turn":{}}

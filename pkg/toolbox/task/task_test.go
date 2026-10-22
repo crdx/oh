@@ -1,11 +1,15 @@
 package task_test
 
 import (
+	"context"
 	"slices"
 	"strings"
 	"testing"
+	"testing/synctest"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tasks"
+	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/task"
 )
 
@@ -97,4 +101,27 @@ func TestTaskStatusNamesLaterRunsAndTheRespawnLimit(t *testing.T) {
 			t.Errorf("status said %q, want %q", status, want)
 		}
 	}
+}
+
+func TestStoppingATaskNamesWhoStoppedIt(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		stopped := make(chan string, 1)
+		if _, err := manager.Start(t.Context(), "watch", "bash", true, true, func(ctx context.Context) (tool.ToolCallResult, error) {
+			<-ctx.Done()
+			stopped <- stop.Sentence(ctx)
+			return tool.ToolCallResult{}, ctx.Err()
+		}, nil); err != nil {
+			t.Fatal(err)
+		}
+		synctest.Wait()
+
+		if status := perform(t, manager, `{"action":"stop","name":"watch"}`); status != "watch: stopping" {
+			t.Errorf("got %q, want the stop without a promise to respawn", status)
+		}
+		if sentence := <-stopped; sentence != "the agent stopped it" {
+			t.Errorf("got %q, want the agent named as the reason", sentence)
+		}
+	})
 }

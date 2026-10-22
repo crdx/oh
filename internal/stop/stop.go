@@ -18,6 +18,10 @@ func Because(sentence string) error {
 	return stopError{sentence: sentence, cause: context.Canceled}
 }
 
+func BecauseOf(sentence string, cause error) error {
+	return stopError{sentence: sentence, cause: cause}
+}
+
 func Sentence(ctx context.Context) string {
 	if why, ok := errors.AsType[stopError](context.Cause(ctx)); ok {
 		return why.sentence

@@ -23,7 +23,7 @@ type Tasks struct {
 	List          func() []tasks.Snapshot
 	Status        func(name string) (tasks.Snapshot, error)
 	Output        func(name string) (tasks.Snapshot, error)
-	Stop          func(name string) error
+	Stop          func(name string, reason string) error
 	Restart       func(name string) (tasks.Snapshot, error)
 	Discard       func(name string) (tasks.Snapshot, error)
 	PruneFinished func() []string
@@ -131,7 +131,7 @@ func runTaskAction(context slash.Context, managedTasks Tasks, action string, nam
 
 			return nil
 		}
-		if err := managedTasks.Stop(name); err != nil {
+		if err := managedTasks.Stop(name, caps.TaskStopReason(caps.TaskStoppedByUserEvent(name))); err != nil {
 			return err
 		}
 		context.Emit(caps.TaskStoppedByUserEvent(name))
@@ -159,7 +159,7 @@ func runTaskAction(context slash.Context, managedTasks Tasks, action string, nam
 		if isLiveTask(snapshot) {
 			context.Emit(caps.TaskStoppedByUserEvent(name))
 		}
-		context.Success(describeTask(discardedTask) + ", and discarded.")
+		context.Success("Discarded " + describeTask(discardedTask) + ".")
 
 		return nil
 

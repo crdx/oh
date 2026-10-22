@@ -46,7 +46,7 @@ server ready
 
 ```
 task output: docs [ok, 2 lines, 23B, call-2]
-task discard: docs [ok, 1 line, 25B, call-3]
+task discard: docs [ok, 1 line, 20B, call-3]
 ```
 
 ## Assistant · +0s

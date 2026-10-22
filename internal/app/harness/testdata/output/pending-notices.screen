@@ -1,7 +1,7 @@
 === 1 a restored task standing ===
 
- ⏳ The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ ⏳ The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -9,8 +9,8 @@
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 2 a restored task flushed ===
 
- 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ 🤖 The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
 
 
 Model returned no reply.
@@ -58,8 +58,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7 a restored task and one return ===
 
- ⏳ The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ ⏳ The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -67,8 +67,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7b a restored task flushed at the window boundary ===
 
- 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ 🤖 The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
 
 
 Model returned no reply.
@@ -78,8 +78,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7c a restored task after an expired return pair ===
 
- ⏳ The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ ⏳ The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -87,8 +87,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7d a restored task flushed after an expired pair ===
 
- 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ 🤖 The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
 
 
 Model returned no reply.

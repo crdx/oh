@@ -94,7 +94,7 @@ func act(ctx context.Context, manager *tasks.Manager, args Args) (string, error)
 		}
 		return describeOutput(snapshot), nil
 	case ActionStop:
-		if err := manager.Stop(args.Name); err != nil {
+		if err := manager.Stop(args.Name, "the agent stopped it"); err != nil {
 			return "", err
 		}
 		snapshot, err := manager.Status(args.Name)
@@ -119,7 +119,7 @@ func act(ctx context.Context, manager *tasks.Manager, args Args) (string, error)
 		if err != nil {
 			return "", err
 		}
-		return describe(snapshot) + ", and discarded", nil
+		return "discarded " + describe(snapshot), nil
 	case ActionList:
 		snapshots := manager.List()
 		if len(snapshots) == 0 {

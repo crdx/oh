@@ -5,8 +5,8 @@
 I will check it later.
 
 
- 🤖 The session closed while build was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ 🤖 The session was closed and reopened after the last turn. Task build stopped when it closed.
+    Restart it if still needed.
 
 
 

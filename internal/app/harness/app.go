@@ -1533,7 +1533,7 @@ func (self *App) stopTasksHoldingPath(path string) {
 		access, isTask := policy.(taskAccess)
 		return isTask && (access.ToolName == "grep" && taskSearchAffected(access.SearchPath, path) ||
 			access.ToolName == "bash" && holds(access.Policy))
-	}) {
+	}, caps.TaskStopReason(caps.TaskStoppedForPathEvent("", path))) {
 		self.showStoppedWork(caps.TaskStoppedForPathEvent(id, path))
 	}
 }
@@ -1560,7 +1560,7 @@ func (self *App) stopTasksLosingAccess(withdrawnCaps caps.Set) {
 	for _, id := range self.tasks.StopWhere(func(_ string, policy any) bool {
 		access, isTask := policy.(taskAccess)
 		return isTask && taskAccessLost(access, withdrawnCaps, holds, doesStop)
-	}) {
+	}, caps.TaskStopReason(caps.TaskStopEvent("", withdrawnCaps))) {
 		self.showStoppedWork(caps.TaskStopEvent(id, withdrawnCaps))
 	}
 }
@@ -1584,7 +1584,7 @@ func (self *App) stopTasksInGroup(group string) {
 	for _, id := range self.tasks.StopWhere(func(_ string, policy any) bool {
 		access, isTask := policy.(taskAccess)
 		return isTask && access.Group == group
-	}) {
+	}, caps.TaskStopReason(caps.TaskStoppedForGroupEvent("", group))) {
 		self.showStoppedWork(caps.TaskStoppedForGroupEvent(id, group))
 	}
 }

@@ -21,7 +21,7 @@ I will check it later.
 ## Tasks ended with the session · +0s
 
 ```
-The session closed while build was running. It stopped and does not restart automatically; task restart starts it again.
+The session was closed and reopened after the last turn. Task `build` stopped when it closed. Restart it if still needed.
 ```
 
 ## User · +0s
@@ -32,7 +32,7 @@ what happened to build
 
 ```
 task status: build [ok, 1 line, 64B, call-1]
-task output: build [ok, 1 line, 79B, call-2]
+task output: build [ok, 1 line, 75B, call-2]
 task list: tasks [ok, 1 line, 64B, call-4]
 task stop: build [ok, 1 line, 64B, call-5]
 task restart: build [ok, 1 line, 20B, call-7]
@@ -52,7 +52,7 @@ restarted command
 
 ```
 task output: build [ok, 3 lines, 101B, call-8]
-task discard: build [ok, 1 line, 33B, call-9]
+task discard: build [ok, 1 line, 28B, call-9]
 task prune: finished tasks [ok, 1 line, 37B, call-6]
 ```
 

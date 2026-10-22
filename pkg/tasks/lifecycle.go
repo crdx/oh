@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"slices"
 	"time"
+
+	"crdx.org/oh/internal/stop"
 )
 
 const (
@@ -117,7 +119,8 @@ func (self *Manager) Restart(ctx context.Context, id string) (Snapshot, error) {
 		if current.snapshot.State == Running || current.snapshot.State == Queued {
 			current.isStopped = true
 			current.snapshot.State = Stopping
-			current.cancel(errors.New("task restarted"))
+			current.snapshot.IsRespawning = false
+			current.cancel(stop.Because("the task restarted"))
 			self.signalChange()
 		}
 		over := current.over
@@ -166,7 +169,8 @@ func (self *Manager) Discard(ctx context.Context, id string) (Snapshot, error) {
 	if current.snapshot.State == Running || current.snapshot.State == Queued {
 		current.isStopped = true
 		current.snapshot.State = Stopping
-		current.cancel(errors.New("task discarded"))
+		current.snapshot.IsRespawning = false
+		current.cancel(stop.Because("the task was discarded"))
 		self.signalChange()
 	}
 	over := current.over
@@ -381,6 +385,7 @@ func (self *Manager) stopLocked(current *entry, cause error) bool {
 	if current.snapshot.State == Running || current.snapshot.State == Queued {
 		current.isStopped = true
 		current.snapshot.State = Stopping
+		current.snapshot.IsRespawning = false
 		current.cancel(cause)
 		hasStopped = true
 	}

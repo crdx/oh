@@ -7,8 +7,8 @@ work work – compiling agent note: the command stopped because the user pressed
 Turn stopped because the user pressed escape.
 
 
- 🤖 The session closed while docs was running. It stopped and does not restart automatically; task
-    restart starts it again.
+ 🤖 The session was closed and reopened after the last turn. Task docs stopped when it closed.
+    Restart it if still needed.
 
 
 The session was reopened, so I will leave the docs server down.

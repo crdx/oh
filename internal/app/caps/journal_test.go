@@ -125,3 +125,15 @@ func TestATaskStoppedOnGitWithdrawalDoesNotClaimItWroteGit(t *testing.T) {
 		t.Errorf("got %q (shown %t), want %q", notice, isShown, want)
 	}
 }
+
+func TestEveryWithdrawalThatStopsATaskSaysWhy(t *testing.T) {
+	for withdrawnCaps, want := range map[Set]string{
+		Network: "Task `docs` stopped because the host network was withdrawn.",
+		Lookup:  "Task `docs` stopped because lookup was refused.",
+		Read:    "Task `docs` stopped because read access was withdrawn.",
+	} {
+		if notice, isShown := TaskStopNotice(TaskStopEvent("docs", withdrawnCaps)); !isShown || notice != want {
+			t.Errorf("got %q (shown %t), want %q", notice, isShown, want)
+		}
+	}
+}

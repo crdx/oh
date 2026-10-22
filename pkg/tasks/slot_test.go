@@ -88,7 +88,7 @@ func TestStoppingATaskWaitingForAToolSlotStopsIt(t *testing.T) {
 			t.Fatal(err)
 		}
 		synctest.Wait()
-		if err := manager.Stop(snapshot.ID); err != nil {
+		if err := manager.Stop(snapshot.ID, "the user stopped it"); err != nil {
 			t.Fatal(err)
 		}
 		synctest.Wait()

@@ -42,15 +42,31 @@ func TestTheFinalListingRestoresPreviousRunOutcomesAndRespawnLimit(t *testing.T)
 	}
 }
 
-func TestTheForkNoticeDistinguishesAClosedSession(t *testing.T) {
-	closed := taskrecord.EndedWithSessionEvent([]string{"task-7"})
-	forked := closed
-	forked.Name = "source-session"
-	closedText, closedOK := taskrecord.EndedWithSessionNotice(closed)
-	forkedText, forkedOK := taskrecord.EndedWithSessionNotice(forked)
-	if !closedOK || !strings.Contains(closedText, "session closed") ||
-		!forkedOK || !strings.Contains(forkedText, "source-session") || strings.Contains(forkedText, "session closed") {
-		t.Errorf("closed: %q (%t), fork: %q (%t)", closedText, closedOK, forkedText, forkedOK)
+func TestTheResumeNoticeNamesEachStoppedTask(t *testing.T) {
+	for _, test := range []struct {
+		event agent.Event
+		want  string
+	}{
+		{
+			event: taskrecord.EndedWithSessionEvent([]string{"docs"}),
+			want:  "The session was closed and reopened after the last turn. Task `docs` stopped when it closed. Restart it if still needed.",
+		},
+		{
+			event: taskrecord.EndedWithSessionEvent([]string{"docs", "build", "watch"}),
+			want:  "The session was closed and reopened after the last turn. Tasks `docs`, `build` and `watch` stopped when it closed. Restart each if still needed.",
+		},
+		{
+			event: agent.Event{Kind: taskrecord.EndedWithSession, Name: "able-dolphin", State: taskrecord.EndedWithSessionEvent([]string{"docs"}).State},
+			want:  "Task `docs` was running in session `able-dolphin` when this session was forked from it. Restart it if still needed.",
+		},
+		{
+			event: agent.Event{Kind: taskrecord.EndedWithSession, Name: "able-dolphin", State: taskrecord.EndedWithSessionEvent([]string{"docs", "watch"}).State},
+			want:  "Tasks `docs` and `watch` were running in session `able-dolphin` when this session was forked from it. Restart each if still needed.",
+		},
+	} {
+		if notice, isSaid := taskrecord.EndedWithSessionNotice(test.event); !isSaid || notice != test.want {
+			t.Errorf("got %q (%t), want %q", notice, isSaid, test.want)
+		}
 	}
 }
 

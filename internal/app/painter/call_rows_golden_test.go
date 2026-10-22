@@ -195,7 +195,7 @@ func callRowCases() []callRowCase {
 			{"task", `{"action":"output","name":"docs"}`, taskAnswered("docs: running\nServing HTTP on 0.0.0.0 port 8080")},
 			{"task", `{"action":"restart","name":"docs"}`, taskAnswered("docs: queued, run 2")},
 			{"task", `{"action":"stop","name":"docs"}`, taskAnswered("docs: stopped, run 2")},
-			{"task", `{"action":"discard","name":"docs"}`, taskAnswered("docs: stopped, run 2, and discarded")},
+			{"task", `{"action":"discard","name":"docs"}`, taskAnswered("discarded docs: stopped, run 2")},
 		}},
 		{title: "task calls naming no task", calls: []callRowCall{
 			{"task", `{"action":"list"}`, taskAnswered("docs: running\nbuild: done")},

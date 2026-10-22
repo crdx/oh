@@ -231,28 +231,34 @@ func TaskStopNotice(event agent.Event) (string, bool) {
 		return fmt.Sprintf("Task %s stopped from the keyboard.", markdown.CodeSpan(event.Name)), true
 	}
 
-	var stopReason taskStopReason
-	if err := json.Unmarshal(event.State, &stopReason); err == nil && stopReason.Path != "" {
-		return fmt.Sprintf(
-			"Task %s stopped because access to %s was revoked.", markdown.CodeSpan(event.Name), stopReason.Path,
-		), true
-	}
-	var groupReason struct {
-		Group string `json:"group"`
-	}
-	if err := json.Unmarshal(event.State, &groupReason); err == nil && groupReason.Group != "" {
-		return fmt.Sprintf("Task %s stopped because tool group %s was withdrawn.", markdown.CodeSpan(event.Name), groupReason.Group), true
-	}
-
-	withdrawnCaps, err := GrantedBy(event)
-	if err != nil {
-		return "", false
-	}
-
-	reason := withdrawal(withdrawnCaps)
+	reason := TaskStopReason(event)
 	if reason == "" {
 		return "", false
 	}
 
 	return fmt.Sprintf("Task %s stopped because %s.", markdown.CodeSpan(event.Name), reason), true
+}
+
+func TaskStopReason(event agent.Event) string {
+	if len(event.State) == 0 {
+		return "the user stopped it"
+	}
+
+	var stopReason taskStopReason
+	if err := json.Unmarshal(event.State, &stopReason); err == nil && stopReason.Path != "" {
+		return "access to " + stopReason.Path + " was revoked"
+	}
+	var groupReason struct {
+		Group string `json:"group"`
+	}
+	if err := json.Unmarshal(event.State, &groupReason); err == nil && groupReason.Group != "" {
+		return "tool group " + groupReason.Group + " was withdrawn"
+	}
+
+	withdrawnCaps, err := GrantedBy(event)
+	if err != nil {
+		return ""
+	}
+
+	return withdrawal(withdrawnCaps)
 }

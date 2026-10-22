@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/waiting"
 	"crdx.org/oh/pkg/tool"
 )
@@ -35,6 +36,8 @@ const (
 )
 
 var ErrClosed = errors.New("the task supervisor is closed")
+
+var errSessionClosed = stop.BecauseOf("the session closed", ErrClosed)
 
 type RunOutcome struct {
 	Run     int    `json:"run"`
@@ -203,7 +206,7 @@ func (self *Manager) WaitOrDetach(ctx context.Context, id string) (Conclusion, b
 	self.mutex.Unlock()
 	if err := ctx.Err(); err != nil {
 		if isBackground {
-			_ = self.Stop(id)
+			_ = self.Stop(id, stopReason(ctx))
 			return Conclusion{}, false, err
 		}
 		return self.cancelOrResult(id, err)
@@ -341,18 +344,18 @@ func (self *Manager) Hold(id string) (<-chan struct{}, func(), error) {
 	return current.over, func() { self.release(current) }, nil
 }
 
-func (self *Manager) Stop(id string) error {
+func (self *Manager) Stop(id string, reason string) error {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 	current := self.entries[id]
 	if current == nil {
 		return fmt.Errorf("there is no task named %s", id)
 	}
-	self.stopLocked(current, errors.New("task stopped"))
+	self.stopLocked(current, stop.Because(reason))
 	return nil
 }
 
-func (self *Manager) StopWhere(holds func(id string, policy any) bool) []string {
+func (self *Manager) StopWhere(holds func(id string, policy any) bool, reason string) []string {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 	names := make([]string, 0)
@@ -360,7 +363,7 @@ func (self *Manager) StopWhere(holds func(id string, policy any) bool) []string 
 		if current.snapshot.State != Running && current.snapshot.State != Queued && !current.isRestarting {
 			continue
 		}
-		if holds(id, current.policy) && self.stopLocked(current, errors.New("task stopped")) {
+		if holds(id, current.policy) && self.stopLocked(current, stop.Because(reason)) {
 			names = append(names, id)
 		}
 	}
@@ -373,7 +376,7 @@ func (self *Manager) Close() {
 	self.isClosed = true
 	self.cancel()
 	for _, current := range self.entries {
-		self.stopLocked(current, ErrClosed)
+		self.stopLocked(current, errSessionClosed)
 	}
 	self.mutex.Unlock()
 	self.workers.Wait()
@@ -512,7 +515,7 @@ func (self *Manager) run(ctx context.Context, current *entry, execute Execution)
 	case <-self.done:
 		cause := context.Cause(ctx)
 		if cause == nil {
-			cause = ErrClosed
+			cause = errSessionClosed
 		}
 		self.finish(current, cause)
 		return
@@ -520,7 +523,7 @@ func (self *Manager) run(ctx context.Context, current *entry, execute Execution)
 	self.mutex.Lock()
 	select {
 	case <-self.done:
-		current.cancel(ErrClosed)
+		current.cancel(errSessionClosed)
 	default:
 	}
 	if current.snapshot.State == Queued && ctx.Err() == nil && !self.isClosed {
@@ -552,7 +555,7 @@ func (self *Manager) run(ctx context.Context, current *entry, execute Execution)
 	go func() {
 		select {
 		case <-self.done:
-			cancel(ErrClosed)
+			cancel(errSessionClosed)
 		case <-stopSession:
 		}
 	}()
@@ -745,4 +748,11 @@ func (self *Manager) forgetForeground(current *entry) {
 	}
 	delete(self.entries, current.snapshot.ID)
 	self.order = slices.DeleteFunc(self.order, func(id string) bool { return id == current.snapshot.ID })
+}
+
+func stopReason(ctx context.Context) string {
+	if sentence := stop.Sentence(ctx); sentence != "" {
+		return sentence
+	}
+	return "its request stopped"
 }

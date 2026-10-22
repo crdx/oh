@@ -55,11 +55,11 @@ func TestAStopSupersedesAnInProgressRestart(t *testing.T) {
 					go func() { _, failure := manager.Restart(t.Context(), "worker"); restarted <- failure }()
 					<-preparationStarted
 					if withdrawAccess {
-						stopped := manager.StopWhere(func(_ string, policy any) bool { return policy == "old access" })
+						stopped := manager.StopWhere(func(_ string, policy any) bool { return policy == "old access" }, "access was withdrawn")
 						if !slices.Equal(stopped, []string{"worker"}) {
 							t.Errorf("withdrawal did not stop the pending restart: %v", stopped)
 						}
-					} else if err := manager.Stop("worker"); err != nil {
+					} else if err := manager.Stop("worker", "the user stopped it"); err != nil {
 						t.Fatal(err)
 					}
 					close(releasePreparation)
@@ -190,7 +190,7 @@ func TestRespawnQuickRunDetectionExcludesApprovalTime(t *testing.T) {
 		case <-over:
 		case <-tooManyRuns:
 			t.Error("approval time bypassed the quick-run breaker")
-			if err := manager.Stop("quick"); err != nil {
+			if err := manager.Stop("quick", "the user stopped it"); err != nil {
 				t.Fatal(err)
 			}
 			<-over
