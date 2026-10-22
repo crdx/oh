@@ -1755,6 +1755,27 @@ func drawNoticeBesideTwoCalls(t *testing.T, lines int, isRedrawn bool) frameEdge
 	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
 }
 
+func drawChildFactBesideTwoCalls(t *testing.T, lines int, isRedrawn bool) frameEdgeStreams {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := frameEdgeConversation(t, &screenOutput, lines)
+	requestTwoCalls(self)
+	self.recordChildFact(subagentrecord.StartedEvent(
+		"tame-adder", "child-1", "Inspect the redraw", subagentrecord.Origin{},
+	))
+	self.show(self.inputLine)
+	if isRedrawn {
+		self.redraw()
+	}
+	live := screenOutput.String()
+
+	self.currentTurn.painter.Close(dynamic.Cancelled)
+	self.show(self.inputLine)
+
+	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
+}
+
 func TestRunningCallsAndAReportSurviveARedraw(t *testing.T) {
 	const concurrentCallLines = 12
 	draw := func(isRedrawn bool) string {
@@ -1948,6 +1969,14 @@ func TestGoldenTheFrameAtItsEdgesDrawsEveryVisibleState(t *testing.T) {
 		add(fmt.Sprintf("a notice beside two calls redrawn at %d lines", lines), redrawn.live, lines)
 		requireSameVisibleScreenOfSize(t, "a redraw beside a notice", replayColumns, lines, plain.live, redrawn.live)
 		requireSameVisibleScreenOfSize(t, "a redraw beside a notice, sealed", replayColumns, lines, plain.sealed, redrawn.sealed)
+	}
+
+	for _, lines := range []int{8, replayLines} {
+		plain := drawChildFactBesideTwoCalls(t, lines, false)
+		redrawn := drawChildFactBesideTwoCalls(t, lines, true)
+		add(fmt.Sprintf("a child fact beside two calls redrawn at %d lines", lines), redrawn.live, lines)
+		requireSameVisibleScreenOfSize(t, "a redraw beside a child fact", replayColumns, lines, plain.live, redrawn.live)
+		requireSameVisibleScreenOfSize(t, "a redraw beside a child fact, sealed", replayColumns, lines, plain.sealed, redrawn.sealed)
 	}
 
 	for kind, name := range map[agent.Kind]string{agent.ModelReasoningEvent: "thought", agent.ModelMessageEvent: "answer"} {

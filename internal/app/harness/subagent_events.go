@@ -140,6 +140,9 @@ func (self *App) recordChildFact(event agent.Event) {
 	self.children.spend.record(event)
 	self.trackRunningChild(event)
 	self.recordedEvents = append(self.recordedEvents, event)
+	if self.currentTurn.Running() && self.currentTurn.painter != nil {
+		self.currentTurn.painter.CountUndrawnEvent()
+	}
 	self.storeEvent(event)
 }
 
