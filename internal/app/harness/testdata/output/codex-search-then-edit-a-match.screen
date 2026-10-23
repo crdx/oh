@@ -1,0 +1,14 @@
+
+ find the error, then fix its wording
+
+
+grep ERROR 1L
+edit server.log +1 −1
+
+Reworded.
+
+
+ finish
+
+
+Done.

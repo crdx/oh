@@ -94,6 +94,32 @@ func TestGrepRecordsTheFilesWhoseContentsItExposes(t *testing.T) {
 	}
 }
 
+func TestGrepRecordsAFileWhoseMatchHoldsALineNumberLikeSequence(t *testing.T) {
+	for name, path := range map[string]string{
+		"a plain name":         "a.txt",
+		"a name with a number": "a:1:b.txt",
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := testRoot(t, true)
+			if err := os.WriteFile(filepath.Join(root.Name(), path), []byte("ERROR 10:30:00 disk full\n"), 0o600); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			tools := RummageWithRunner(root, file.NewSnapshots(), testexec.New())
+
+			if err := runTool(t, toolNamed(t, tools, "grep"), `{"pattern":"ERROR"}`); err != nil {
+				t.Fatalf("unexpected grep error: %v", err)
+			}
+			if err := runTool(
+				t,
+				toolNamed(t, tools, "edit"),
+				`{"path":"`+path+`","old_text":"disk","new_text":"disks"}`,
+			); err != nil {
+				t.Fatalf("the grep did not authorise the edit: %v", err)
+			}
+		})
+	}
+}
+
 func TestWriteRequiresTheCurrentFileToHaveBeenReadBeforeOverwriting(t *testing.T) {
 	root := testRoot(t, true)
 	writeTestFile(t, root, "one\n")

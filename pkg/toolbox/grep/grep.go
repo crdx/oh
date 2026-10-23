@@ -27,7 +27,7 @@ type Args struct {
 	Glob    string `json:"glob"`
 }
 
-var matchPathPattern = regexp.MustCompile(`^(.+):[0-9]+:`)
+var lineNumberPattern = regexp.MustCompile(`^[0-9]+:`)
 
 func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 	return NewWithRunner(root, snapshots, sandbox.DirectArgv())
@@ -199,18 +199,11 @@ func readStateForMatches(root *file.Root, args Args, output string) json.RawMess
 	seen := map[string]bool{}
 	var readSnapshots []file.ReadSnapshot
 	for line := range strings.Lines(output) {
-		match := matchPathPattern.FindStringSubmatch(line)
-		if match == nil || seen[match[1]] {
-			continue
-		}
-		seen[match[1]] = true
-
-		content, err := searchRoot.ReadFile(match[1])
-		if err != nil {
+		path, content, isFound := readMatchedFile(searchRoot, line, seen)
+		if !isFound {
 			continue
 		}
 
-		path := match[1]
 		if searchRoot != root {
 			path = filepath.Join(searchRoot.Name(), path)
 		}
@@ -221,6 +214,38 @@ func readStateForMatches(root *file.Root, args Args, output string) json.RawMess
 		return nil
 	}
 	return file.EncodeReadState(readSnapshots...)
+}
+
+func readMatchedFile(root *file.Root, line string, seen map[string]bool) (string, []byte, bool) {
+	for at := strings.IndexByte(line, ':'); at > 0; at = nextColon(line, at) {
+		if !lineNumberPattern.MatchString(line[at+1:]) {
+			continue
+		}
+
+		path := line[:at]
+		if seen[path] {
+			return "", nil, false
+		}
+
+		content, err := root.ReadFile(path)
+		if err != nil {
+			continue
+		}
+
+		seen[path] = true
+		return path, content, true
+	}
+
+	return "", nil, false
+}
+
+func nextColon(line string, after int) int {
+	next := strings.IndexByte(line[after+1:], ':')
+	if next < 0 {
+		return -1
+	}
+
+	return after + 1 + next
 }
 
 func readMatches(reader io.Reader, shouldTrimWorkingDirectory bool) ([]string, bool, error) {

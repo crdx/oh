@@ -9,6 +9,7 @@
 - Stop showing a 30s limit on custom tool calls that run with no limit
 - Fix crashes drawing some Mermaid loops, and edge labels with no width
 - Fix revoke of a quoted path holding a space
+- Fix grep not marking a file as read when a match holds a `:<number>:`
 
 ## [0.23.0] — 2026-10-23
 

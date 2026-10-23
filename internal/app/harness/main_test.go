@@ -150,7 +150,6 @@ import (
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/fetch"
 	"crdx.org/oh/pkg/toolbox/forward"
-	"crdx.org/oh/pkg/toolbox/grep"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/task"
@@ -19471,6 +19470,7 @@ func newSessionGoldenTools(
 	t.Helper()
 
 	tools := make([]tool.Tool, 0, len(specifications))
+	var searched *sessionGoldenSearchedFiles
 	for _, specification := range specifications {
 		isResuming := len(isResume) > 0 && isResume[0]
 		if isResuming && specification.OnResume == "missing" || !isResuming && specification.OnResume == "added" {
@@ -19503,8 +19503,11 @@ func newSessionGoldenTools(
 			continue
 		}
 
-		if specification.Name == grepToolName {
-			tools = append(tools, newSessionGoldenGrepTool(t, specification.Runner))
+		if isSearchedFilesTool(specification.Name) {
+			if searched == nil {
+				searched = newSessionGoldenSearchedFiles(t)
+			}
+			tools = append(tools, searched.tool(t, specification))
 			continue
 		}
 
@@ -19699,26 +19702,6 @@ func sessionGoldenSearchRunner(t *testing.T, name string) sandbox.ArgvRunner {
 	}
 	t.Fatalf("no search runner is called %q", name)
 	return nil
-}
-
-func newSessionGoldenGrepTool(t *testing.T, runnerName string) tool.Tool {
-	t.Helper()
-
-	searched := t.TempDir()
-	if err := os.WriteFile(filepath.Join(searched, "main.go"), []byte("package main\n"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	rootHandle, err := os.OpenRoot(searched)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = rootHandle.Close() })
-
-	return grep.NewWithRunner(
-		file.New(rootHandle, func(string) error { return nil }),
-		file.NewSnapshots(),
-		sessionGoldenSearchRunner(t, runnerName),
-	)
 }
 
 func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image, tool.ToolCallMetrics) {

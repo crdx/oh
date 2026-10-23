@@ -1,0 +1,22 @@
+{"kind":"head","version":24,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["grep","edit"],"tool_definitions":[{"name":"grep","description":"search file contents","revision":"1","parameters":[{"name":"pattern","type":"string","description":"regexp"},{"name":"path","type":"string","description":"directory, defaults to working directory","optional":true},{"name":"glob","type":"string","description":"path filter, e.g. **/*.go","optional":true}]},{"name":"edit","description":"replace an exact string in a file, which must be read first and appear exactly once","revision":"1","parameters":[{"name":"path","type":"string","description":"file"},{"name":"old_text","type":"string","description":"exact text to replace, including whitespace"},{"name":"new_text","type":"string","description":"replacement text"}]}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsnlg"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"find the error, then fix its wording"}}
+{"kind":"event","event":{"render":"ERROR","emphasis":{"kind":"syntax","value":"regexp"},"read_only":true,"kind":"tool_call_request","id":"call-1","name":"grep","arguments":"{\"pattern\":\"ERROR\"}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","name":"file_read","state":{"files":[{"path":"server.log","sha256":"9d6748a86aed633fe3824b2a1c8337f5f33f1dde1cdb366eae881e3bb70d6b7b"}]}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"server.log:1:ERROR 10:30:00 disk full","id":"call-1","name":"grep","status":"success","stats":{"kind":"search","lines":1,"bytes":37}}}
+{"kind":"event","event":{"render":"server.log","emphasis":{"kind":"focus","value":"server.log"},"kind":"tool_call_request","id":"call-2","name":"edit","arguments":"{\"path\":\"server.log\",\"old_text\":\"disk full\",\"new_text\":\"the disk is full\"}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"edited","id":"call-2","name":"edit","status":"success","stats":{"kind":"diff","added":1,"removed":1}}}
+{"kind":"event","event":{"kind":"model_message","text":"Reworded."}}
+{"kind":"item","payload":{"role":"user","content":"find the error, then fix its wording"}}
+{"kind":"item","payload":{"type":"function_call","call_id":"call-1","name":"grep","arguments":"{\"pattern\":\"ERROR\"}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"server.log:1:ERROR 10:30:00 disk full"}}
+{"kind":"item","payload":{"type":"function_call","call_id":"call-2","name":"edit","arguments":"{\"path\":\"server.log\",\"old_text\":\"disk full\",\"new_text\":\"the disk is full\"}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"edited"}}
+{"kind":"item","payload":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Reworded."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"finish"}}
+{"kind":"event","event":{"kind":"model_message","text":"Done."}}
+{"kind":"item","payload":{"role":"user","content":"finish"}}
+{"kind":"item","payload":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Done."}]}}
+{"kind":"turn_completion","turn":{}}
