@@ -5,6 +5,7 @@
 ### Changes
 
 - Stop a `/!` command that runs as another user, such as through `pkexec`
+- State why a task stopped when it reaches its time limit
 
 ## [0.23.0] — 2026-10-23
 

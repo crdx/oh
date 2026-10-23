@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/waiting"
 	"crdx.org/oh/pkg/tool"
 )
@@ -567,7 +568,7 @@ func (self *Manager) run(ctx context.Context, current *entry, execute Execution)
 	if current.runLimit > 0 {
 		go func() {
 			if activeTimeExpired(runContext, current.clock, current.runLimit, runFinished) {
-				cancel(fmt.Errorf("task exceeded its %s execution limit: %w", current.runLimit, context.DeadlineExceeded))
+				cancel(stop.BecauseOf("the task reached its "+util.CompactDuration(current.runLimit)+" time limit", context.DeadlineExceeded))
 			}
 		}()
 	}

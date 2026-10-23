@@ -6,7 +6,9 @@ import (
 	"testing/synctest"
 	"time"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tasks"
+	"crdx.org/oh/pkg/tool"
 )
 
 func buildAfter(t *testing.T, manager *tasks.Manager, wait time.Duration) tasks.Snapshot {
@@ -80,6 +82,29 @@ func TestARestartKeepsTheLimitItsPlanGives(t *testing.T) {
 		}
 		if snapshot := buildAfter(t, manager, 2*time.Minute); snapshot.State != tasks.TimedOut {
 			t.Errorf("the restarted task was %s after 46 minutes, want it stopped at its limit", snapshot.State)
+		}
+	})
+}
+
+func TestATaskAtItsLimitTellsTheCallWhy(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		reportStop := func(ctx context.Context) (tool.ToolCallResult, error) {
+			<-ctx.Done()
+			return tool.ToolCallResult{}, stop.Error(ctx, "the command")
+		}
+		if _, err := manager.Start(t.Context(), "build", "offload", true, false, reportStop, nil,
+			tasks.StartOptions{RunLimit: 3 * time.Second}); err != nil {
+			t.Fatal(err)
+		}
+
+		snapshot := buildAfter(t, manager, 4*time.Second)
+		if snapshot.State != tasks.TimedOut {
+			t.Errorf("the task was %s after its limit", snapshot.State)
+		}
+		if want := "the task reached its 3s time limit"; snapshot.Failure != want {
+			t.Errorf("got failure %q, want %q", snapshot.Failure, want)
 		}
 	})
 }
