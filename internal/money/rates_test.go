@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 )
@@ -71,6 +72,41 @@ func TestAStaleRateIsFetchedAgain(t *testing.T) {
 	}
 	if *requests != 2 {
 		t.Errorf("expected the stale rate to be asked for again, got %d requests", *requests)
+	}
+}
+
+func TestFetchingOneCurrencyRefreshesEveryCachedRate(t *testing.T) {
+	quoted := map[string]float64{"EUR": 0.92, "GBP": 0.78}
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		var rates []string
+		for code := range strings.SplitSeq(request.URL.Query().Get("symbols"), ",") {
+			rates = append(rates, strconv.Quote(code)+":"+formatFloat(quoted[code]))
+		}
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{"base":"USD","rates":{` + strings.Join(rates, ",") + `}}`))
+	}))
+	defer server.Close()
+	path := filepath.Join(t.TempDir(), "rates.json")
+
+	if _, err := Ensure(t.Context(), server.URL, path, "EUR"); err != nil {
+		t.Fatal(err)
+	}
+	stale := loadRateCache(path)
+	stale.FetchedAt = time.Now().Add(-maximumCacheAge - time.Minute)
+	if err := saveRateCache(path, stale); err != nil {
+		t.Fatal(err)
+	}
+
+	quoted["EUR"] = 0.95
+	if _, err := Ensure(t.Context(), server.URL, path, "GBP"); err != nil {
+		t.Fatal(err)
+	}
+	euros, err := Ensure(t.Context(), server.URL, path, "EUR")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if euros.Rate != 0.95 {
+		t.Errorf("got the euro at %v, want the refreshed 0.95", euros.Rate)
 	}
 }
 

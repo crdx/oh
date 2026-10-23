@@ -4,9 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 	"time"
 
 	"crdx.org/oh/internal/req"
@@ -87,14 +90,27 @@ func Ensure(ctx context.Context, address string, path string, code string) (Curr
 		return currencyOnFile, nil
 	}
 
-	rate, err := fetchRate(ctx, address, code)
+	codes := slices.Sorted(maps.Keys(cache.Rates))
+	if !slices.Contains(codes, code) {
+		codes = append(codes, code)
+	}
+	rates, err := fetchRates(ctx, address, codes)
 	if err != nil {
 		return currencyOnFile, err
+	}
+	rate := rates[code]
+	if rate <= 0 {
+		return currencyOnFile, fmt.Errorf("no %s rate was quoted against %s", code, DollarCode)
 	}
 
 	cache.Base = DollarCode
 	cache.FetchedAt = time.Now()
-	cache.Rates[code] = rate
+	cache.Rates = map[string]float64{}
+	for quotedCode, quotedRate := range rates {
+		if quotedRate > 0 {
+			cache.Rates[quotedCode] = quotedRate
+		}
+	}
 
 	if err := saveRateCache(path, cache); err != nil {
 		return currencyOnFile, err
@@ -111,12 +127,12 @@ func isRateCurrent(cache rateCache, code string, now time.Time) bool {
 	return now.Sub(cache.FetchedAt) < maximumCacheAge
 }
 
-func fetchRate(ctx context.Context, address string, code string) (float64, error) {
+func fetchRates(ctx context.Context, address string, codes []string) (map[string]float64, error) {
 	if address == "" {
 		address = Endpoint
 	}
 
-	query := url.Values{"base": {DollarCode}, "symbols": {code}}
+	query := url.Values{"base": {DollarCode}, "symbols": {strings.Join(codes, ",")}}
 
 	var payload struct {
 		Base  string             `json:"base"`
@@ -124,13 +140,8 @@ func fetchRate(ctx context.Context, address string, code string) (float64, error
 	}
 
 	if err := req.New(fetchTimeout).Get(ctx, address+"?"+query.Encode(), nil, &payload); err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	rate := payload.Rates[code]
-	if rate <= 0 {
-		return 0, fmt.Errorf("no %s rate was quoted against %s", code, DollarCode)
-	}
-
-	return rate, nil
+	return payload.Rates, nil
 }
