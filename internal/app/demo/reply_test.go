@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/sim"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/toolbox/ls"
 )
 
 func userTurn(said string) sim.Request {
@@ -102,10 +104,13 @@ func TestTheSimulationAnswersTheWorkThatCameBack(t *testing.T) {
 		output   string
 		wants    string
 	}{
-		"a file":       {toolName: readTool, output: "one\ntwo\nthree\n", wants: "3 lines"},
-		"a listing":    {toolName: listTool, output: "main.go\n", wants: "one entry"},
-		"some matches": {toolName: grepTool, output: "a.go:1:x\nb.go:2:y\n", wants: "2 matches"},
-		"no matches":   {toolName: grepTool, output: "", wants: "Nothing matched"},
+		"a file":           {toolName: readTool, output: "one\ntwo\nthree\n", wants: "3 lines"},
+		"a listing":        {toolName: listTool, output: "main.go", wants: "That's one entry."},
+		"a longer list":    {toolName: listTool, output: "a.go\nb.go", wants: "That's 2 entries."},
+		"an empty list":    {toolName: listTool, output: ls.EmptyListing, wants: "There's nothing there."},
+		"some matches":     {toolName: grepTool, output: "a.go:1:x\nb.go:2:y\n", wants: "2 matches"},
+		"no matches":       {toolName: grepTool, output: util.NoMatches, wants: "Nothing matched"},
+		"no output at all": {toolName: grepTool, output: "", wants: "Nothing matched"},
 	}
 
 	for name, test := range tests {

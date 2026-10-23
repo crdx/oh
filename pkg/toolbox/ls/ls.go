@@ -10,6 +10,8 @@ import (
 	"crdx.org/oh/pkg/tool"
 )
 
+const EmptyListing = "(empty)"
+
 type Args struct {
 	Path string `json:"path"`
 }
@@ -74,7 +76,7 @@ func exec(root *file.Root, args Args) (string, error) {
 	}
 
 	if len(names) == 0 {
-		return "(empty)", nil
+		return EmptyListing, nil
 	}
 
 	slices.Sort(names)

@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/sim"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/toolbox/ls"
 )
 
 func Tools() []string {
@@ -236,16 +238,20 @@ func report(enquiry request) sim.Turn {
 		}
 
 	case listTool:
+		if enquiry.toolOutput == ls.EmptyListing {
+			return sim.Turn{Think: []string{reportThought}, Say: "There's nothing there."}
+		}
+
 		return sim.Turn{
 			Think: []string{reportThought},
 			Say: fmt.Sprintf(
-				"There are %s there. Name one and I'll read it.",
+				"That's %s. Name one and I'll read it.",
 				measured(lines, "entry", "entries"),
 			),
 		}
 
 	case grepTool:
-		if lines == 0 {
+		if lines == 0 || enquiry.toolOutput == util.NoMatches {
 			return sim.Turn{Think: []string{reportThought}, Say: "Nothing matched."}
 		}
 

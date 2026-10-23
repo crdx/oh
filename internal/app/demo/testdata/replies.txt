@@ -11,3 +11,31 @@ Anything else and you'll be answered by the DOCTOR script Weizenbaum published i
 missing path
 
 Name a path and I'll read it, like `read main.go`.
+
+one line read
+
+That's one line of output.
+
+one entry listed
+
+That's one entry. Name one and I'll read it.
+
+several entries listed
+
+That's 2 entries. Name one and I'll read it.
+
+nothing listed
+
+There's nothing there.
+
+one match
+
+That's one match. The path and line number are on each one.
+
+several matches
+
+That's 2 matches. The path and line number are on each one.
+
+no matches
+
+Nothing matched.

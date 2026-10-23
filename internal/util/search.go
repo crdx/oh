@@ -10,7 +10,10 @@ import (
 	"crdx.org/oh/pkg/tool"
 )
 
-const MaxSearchBytes = 16 * 1024
+const (
+	MaxSearchBytes = 16 * 1024
+	NoMatches      = "(no matches)"
+)
 
 var skipDirs = map[string]bool{
 	".git":         true,
@@ -111,7 +114,7 @@ func ReportSearchResults(results []string, isTruncated bool) string {
 		)
 	}
 	if joinedResults == "" {
-		return "(no matches)"
+		return NoMatches
 	}
 
 	return joinedResults
