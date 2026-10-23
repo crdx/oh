@@ -43,6 +43,11 @@ type Outcome struct {
 	Failure error
 }
 
+var (
+	signalGroup  = syscall.Kill
+	abandonDelay = 2 * waitDelay
+)
+
 func Run(stopContext context.Context, directory string, command string, output *Output) (Result, error) {
 	startedAt := time.Now()
 	runContext, cancel := context.WithTimeout(stopContext, TimeLimit)
@@ -53,14 +58,11 @@ func Run(stopContext context.Context, directory string, command string, output *
 	shell.Dir = directory
 	shell.Stdin = nil
 	shell.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
-	shell.Cancel = func() error {
-		return syscall.Kill(-shell.Process.Pid, syscall.SIGKILL)
-	}
 	shell.WaitDelay = waitDelay
 	shell.Stdout = output
 	shell.Stderr = output
 
-	err := runBesideTerminal(shell, output)
+	err := runBesideTerminal(runContext, shell, output)
 	result := Result{Command: command, Output: output.Settled()}
 
 	switch {
@@ -86,16 +88,30 @@ func Run(stopContext context.Context, directory string, command string, output *
 	return result, nil
 }
 
-func runBesideTerminal(shell *exec.Cmd, output *Output) error {
+func runBesideTerminal(runContext context.Context, shell *exec.Cmd, output *Output) error {
+	shell.Cancel = func() error {
+		return signalGroup(-shell.Process.Pid, syscall.SIGKILL)
+	}
+
 	commandTerminal, err := openTerminal()
 	if err != nil {
-		return shell.Run()
+		if err := shell.Start(); err != nil {
+			return err
+		}
+
+		return await(runContext, shell)
 	}
 	defer commandTerminal.close()
 
 	shell.ExtraFiles = []*os.File{commandTerminal.device}
 	shell.SysProcAttr.Setctty = true
 	shell.SysProcAttr.Ctty = terminalDescriptor
+	shell.Cancel = func() error {
+		err := signalGroup(-shell.Process.Pid, syscall.SIGKILL)
+		commandTerminal.hangUp()
+
+		return err
+	}
 	commandTerminal.copyTo(output)
 
 	if err := shell.Start(); err != nil {
@@ -103,7 +119,25 @@ func runBesideTerminal(shell *exec.Cmd, output *Output) error {
 	}
 	commandTerminal.started()
 
-	return shell.Wait()
+	return await(runContext, shell)
+}
+
+func await(runContext context.Context, shell *exec.Cmd) error {
+	shellExit := make(chan error, 1)
+	go func() { shellExit <- shell.Wait() }()
+
+	select {
+	case err := <-shellExit:
+		return err
+	case <-runContext.Done():
+	}
+
+	select {
+	case err := <-shellExit:
+		return err
+	case <-time.After(abandonDelay):
+		return runContext.Err()
+	}
 }
 
 func RanEvent(result Result) agent.Event {

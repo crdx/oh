@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Changes
+
+- Stop a `/!` command that runs as another user, such as through `pkexec`
+
 ## [0.23.0] — 2026-10-23
 
 ### Changes

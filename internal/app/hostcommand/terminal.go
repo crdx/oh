@@ -37,12 +37,23 @@ func openTerminal() (*terminal, error) {
 }
 
 func openDevice(controller *os.File) (*os.File, error) {
-	if err := unix.IoctlSetPointerInt(int(controller.Fd()), unix.TIOCSPTLCK, 0); err != nil {
-		return nil, err
-	}
-	number, err := unix.IoctlGetInt(int(controller.Fd()), unix.TIOCGPTN)
+	connection, err := controller.SyscallConn()
 	if err != nil {
 		return nil, err
+	}
+
+	var number int
+	var ioctlErr error
+	err = connection.Control(func(descriptor uintptr) {
+		if ioctlErr = unix.IoctlSetPointerInt(int(descriptor), unix.TIOCSPTLCK, 0); ioctlErr == nil {
+			number, ioctlErr = unix.IoctlGetInt(int(descriptor), unix.TIOCGPTN)
+		}
+	})
+	if err != nil {
+		return nil, err
+	}
+	if ioctlErr != nil {
+		return nil, ioctlErr
 	}
 	device, err := os.OpenFile(fmt.Sprintf("/dev/pts/%d", number), os.O_RDWR|unix.O_NOCTTY, 0)
 	if err != nil {
@@ -71,6 +82,10 @@ func (self *terminal) copyTo(output io.Writer) {
 
 func (self *terminal) started() {
 	_ = self.device.Close()
+}
+
+func (self *terminal) hangUp() {
+	_ = self.controller.Close()
 }
 
 func (self *terminal) close() {
