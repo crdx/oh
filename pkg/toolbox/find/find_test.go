@@ -97,6 +97,24 @@ func TestASearchStartsWhereItIsTold(t *testing.T) {
 	}
 }
 
+func TestAPatternStartingWithTheCurrentDirectoryStillMatches(t *testing.T) {
+	root := testRoot(t, "main.go", "inner/thing.go")
+
+	for pattern, want := range map[string]string{
+		"./main.go": "main.go",
+		"./**/*.go": "inner/thing.go\nmain.go",
+		"./inner/*": "inner/thing.go",
+	} {
+		output, err := exec(t, root, `{"pattern":"`+pattern+`"}`)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if output != want {
+			t.Errorf("for %q got %q, want %q", pattern, output, want)
+		}
+	}
+}
+
 func TestTheGitDirectoryIsNotSearched(t *testing.T) {
 	root := testRoot(t, ".git/objects/thing.go", "main.go")
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -75,6 +76,25 @@ func TestAMatchIsReportedWithItsPathAndLine(t *testing.T) {
 
 	if output != "main.go:3:func main() {}" {
 		t.Errorf("expected the path, line and text, got %q", output)
+	}
+}
+
+func TestAPathStartingWithTheCurrentDirectoryReportsPlainPaths(t *testing.T) {
+	root := testRoot(t, map[string]string{"main.go": "package main\n", "inner/thing.go": "package inner\n"})
+
+	for searched, want := range map[string]string{
+		"./":      "inner/thing.go:1:package inner\nmain.go:1:package main",
+		"./inner": "inner/thing.go:1:package inner",
+	} {
+		output, err := runGrep(t, root, `{"pattern":"package","path":"`+searched+`"}`)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		lines := strings.Split(output, "\n")
+		slices.Sort(lines)
+		if strings.Join(lines, "\n") != want {
+			t.Errorf("for %q got %q, want %q", searched, output, want)
+		}
 	}
 }
 

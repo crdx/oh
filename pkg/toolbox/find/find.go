@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"io/fs"
+	"path"
 	"path/filepath"
 
 	"crdx.org/oh/internal/file"
@@ -54,6 +55,7 @@ func exec(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCal
 	if err != nil {
 		return "", tool.ToolCallMetrics{}, err
 	}
+	pattern := path.Clean(args.Pattern)
 
 	var matches []string
 	returnedBytes := int64(0)
@@ -69,7 +71,7 @@ func exec(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCal
 			return nil //nolint:nilerr // an unrelatable path is skipped, not fatal
 		}
 
-		if !util.MatchGlob(args.Pattern, relativePath) {
+		if !util.MatchGlob(pattern, relativePath) {
 			return nil
 		}
 

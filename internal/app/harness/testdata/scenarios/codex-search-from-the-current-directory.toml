@@ -1,0 +1,48 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "find"
+
+[[tool]]
+name = "grep"
+runner = "unconfined"
+
+[first]
+prompt = "find the logs and the Go files from here, then search them"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-1","name":"find","arguments":"{\"pattern\":\"./*.log\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-2","name":"find","arguments":"{\"pattern\":\"./**/*.go\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-3","name":"grep","arguments":"{\"pattern\":\"^package\",\"path\":\"./\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Found them."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Found them."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "finish"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Done."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Done."}]}}''',
+    '''{"type":"response.completed"}''',
+]

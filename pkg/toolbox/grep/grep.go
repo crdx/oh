@@ -94,6 +94,7 @@ func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRun
 	if err != nil {
 		return "", tool.ToolCallMetrics{}, err
 	}
+	name = filepath.Clean(name)
 	if err := confined(root, name); err != nil {
 		return "", tool.ToolCallMetrics{}, err
 	}

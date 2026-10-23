@@ -1,0 +1,15 @@
+
+ find the logs and the Go files from here, then search them
+
+
+find ./*.log 1L
+find ./**/*.go 1L
+grep ^package ./ 1L
+
+Found them.
+
+
+ finish
+
+
+Done.
