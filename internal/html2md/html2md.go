@@ -2,6 +2,7 @@ package html2md
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -132,6 +133,9 @@ func renderBlockquote(output *textwriter.Writer, node *html.Node) {
 func renderList(output *textwriter.Writer, node *html.Node, isOrdered bool, depth int) {
 	output.Newlines(1)
 	index := 1
+	if start, err := strconv.Atoi(strings.TrimSpace(attribute(node, "start"))); err == nil {
+		index = start
+	}
 	for item := node.FirstChild; item != nil; item = item.NextSibling {
 		if item.Type != html.ElementNode || item.Data != "li" {
 			continue
@@ -163,6 +167,9 @@ func nodeText(node *html.Node) string {
 	walk = func(current *html.Node) {
 		if current.Type == html.TextNode {
 			output.WriteString(current.Data)
+		}
+		if current.Type == html.ElementNode && current.Data == "br" {
+			output.WriteByte('\n')
 		}
 		for child := current.FirstChild; child != nil; child = child.NextSibling {
 			walk(child)

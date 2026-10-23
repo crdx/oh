@@ -12,6 +12,7 @@
 - Fix grep not marking a file as read when a match holds a `:<number>:`
 - Fix a stale exchange rate passing as fresh after another currency was fetched
 - Fix find and grep mishandling a pattern or path that starts with `./`
+- Fix fetched pages losing ordered list numbers and preformatted line breaks
 
 ## [0.23.0] — 2026-10-23
 

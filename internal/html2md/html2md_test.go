@@ -42,6 +42,20 @@ func TestConvertHandlesFragmentsWithoutText(t *testing.T) {
 	}
 }
 
+func TestAnOrderedListKeepsTheNumberItStartsAt(t *testing.T) {
+	root := parseBody(t, `<body><ol start="5"><li>fifth</li><li>sixth</li></ol></body>`)
+	if got, want := Convert(root), "5. fifth\n6. sixth"; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestALineBreakInPreformattedTextStartsANewLine(t *testing.T) {
+	root := parseBody(t, `<body><pre>first<br>second<br/>third</pre></body>`)
+	if got, want := Convert(root), "```\nfirst\nsecond\nthird\n```"; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func parseBody(t *testing.T, source string) *html.Node {
 	t.Helper()
 
