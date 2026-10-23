@@ -26100,7 +26100,7 @@ group = "a"
 			acknowledgement = entry.Output
 		}
 	}
-	if !strings.Contains(acknowledgement, "task-1 scheduled") {
+	if !strings.Contains(acknowledgement, "scheduled as task-1") {
 		t.Errorf("background call returned %q", acknowledgement)
 	}
 	if !strings.Contains(fmt.Sprint(requests[2].Input), "forecast complete") {

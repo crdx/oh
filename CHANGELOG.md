@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Tasks
+
+- Shorten overbose backgrounded call message
+
 ## [0.22.1] — 2026-10-23
 
 ### Changes

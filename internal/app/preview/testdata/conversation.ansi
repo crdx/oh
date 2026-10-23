@@ -15,7 +15,7 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;52;53;65m rebuild whenever it changes                                                                        \e[0m
 \e[48;2;52;53;65m                                                                                                    \e[0m
 
-\e[3m\e[38;2;150;152;150mRebuilding whenever it changes\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m \e[38;2;150;152;150mtask watch scheduled\e[0m
+\e[3m\e[38;2;150;152;150mRebuilding whenever it changes\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m \e[38;2;150;152;150mscheduled as watch\e[0m
 
 \e[48;2;48;58;67m                                                                                                    \e[0m
 \e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m done; respawning.                                                                    \e[0m
@@ -68,7 +68,7 @@ why it stutters while a tool holds the line.
 \e[48;2;52;53;65m rebuild whenever it changes                  \e[0m
 \e[48;2;52;53;65m                                              \e[0m
 
-\e[3m\e[38;2;150;152;150mRebuilding whenever it changes\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m \e[38;2;150;152;150mt…\e[0m
+\e[3m\e[38;2;150;152;150mRebuilding whenever it changes\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m \e[38;2;150;152;150ms…\e[0m
 
 \e[48;2;48;58;67m                                              \e[0m
 \e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m done; respawning.              \e[0m

@@ -232,7 +232,7 @@ func TestAForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *testing.T
 		if elapsed := time.Since(startedAt); elapsed != 30*time.Second {
 			t.Errorf("handoff took %s, want 30s", elapsed)
 		}
-		if err != nil || !receipt.IsPending || !strings.Contains(receipt.Output, "task-1 continues in the background") {
+		if err != nil || !receipt.IsPending || !strings.Contains(receipt.Output, "moved to the background as task-1") {
 			t.Errorf("automatic handoff returned %+v, %v", receipt, err)
 		}
 		close(release)
@@ -266,7 +266,7 @@ func TestNamedBackgroundLaunchesPublishTheirPortOnceStarted(t *testing.T) {
 			t.Fatal(err)
 		}
 		receipt, err := call.Exec(t.Context())
-		if err != nil || !strings.Contains(receipt.Output, "task docs scheduled") || !strings.Contains(receipt.Output, "http://127.1.2.3:8000") {
+		if err != nil || !strings.Contains(receipt.Output, "scheduled as docs") || !strings.Contains(receipt.Output, "http://127.1.2.3:8000") {
 			t.Errorf("named server receipt is %+v, %v", receipt, err)
 		}
 		synctest.Wait()

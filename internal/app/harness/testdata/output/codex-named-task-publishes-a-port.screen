@@ -2,7 +2,7 @@
  start named background work and publish its port
 
 
-$ bash task docs scheduled Use http://127.82.233.168:8000 for the user; use localhost:8000 inside t…
+$ bash scheduled as docs Use http://127.82.233.168:8000 for the user; use localhost:8000 inside the…
 
 
  🤖 Port 8000 is now forwarded to http://127.82.233.168:8000.
