@@ -1,19 +1,19 @@
 
- run the slow tests, then start the build in the background
+ run the slow tests as checks, then start the build in the background
 
 
-$ bash backgrounded (task-1)
+$ bash backgrounded (checks); end your turn to wait
 
 
- 🤖 Task task-1 done.
+ 🤖 Task checks done.
 
     tests passed
 
 
-$ bash scheduled as task-2
+$ bash scheduled as task-1
 
 
- 🤖 Task task-2 done.
+ 🤖 Task task-1 done.
 
     build finished
 

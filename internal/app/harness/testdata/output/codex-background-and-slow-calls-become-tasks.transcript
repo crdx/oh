@@ -12,18 +12,18 @@
 
 ## User · +0s
 
-run the slow tests, then start the build in the background
+run the slow tests as checks, then start the build in the background
 
 ## Tool calls · +0s
 
 ```
-bash: bash [info, 1 line, 21B, call-1]
+bash: bash [info, 1 line, 44B, call-1]
 ```
 
 ## Task run ended · +0s
 
 ````
-Task `task-1` done.
+Task `checks` done.
 
 ```
 tests passed
@@ -39,7 +39,7 @@ bash: bash [info, 1 line, 19B, call-2]
 ## Task run ended · +0s
 
 ````
-Task `task-2` done.
+Task `task-1` done.
 
 ```
 build finished

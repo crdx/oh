@@ -205,8 +205,8 @@ func (self configuredTool) validateOptions(options callOptions, values map[strin
 	if options.ForwardPort != 0 && self.options.PublishPort == nil {
 		return errors.New("port forwarding is unavailable")
 	}
-	if !options.IsBackground && (options.Name != "" || options.ForwardPort != 0) {
-		return errors.New("task_name and forward_port require background=true")
+	if !options.IsBackground && options.ForwardPort != 0 {
+		return errors.New("forward_port requires background=true")
 	}
 	if self.Name() == "bash" && options.ForwardPort != 0 {
 		var network string
@@ -264,7 +264,7 @@ func (self scheduledCall) Exec(ctx context.Context) (tool.ToolCallResult, error)
 	}
 	receipt := "scheduled as " + snapshot.ID
 	if !self.options.IsBackground {
-		receipt = "backgrounded (" + snapshot.ID + ")"
+		receipt = "backgrounded (" + snapshot.ID + "); end your turn to wait"
 	}
 	if port != 0 {
 		publication, state := self.manager.AwaitPublication(ctx, snapshot.ID, tasks.ForegroundLimit)

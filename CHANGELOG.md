@@ -4,6 +4,8 @@
 
 ### Changes
 
+- Tell the model to end its turn to wait for a backgrounded call
+- Let a foreground call name the task it becomes if it continues in the background
 - Stop a `/!` command that runs as another user, such as through `pkexec`
 - State why a task stopped when it reaches its time limit
 - Stop showing a 30s limit on custom tool calls that run with no limit

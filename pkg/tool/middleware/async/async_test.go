@@ -216,14 +216,36 @@ func TestFrozenBackgroundRequestNamesWhyTaskControlsAreUnavailable(t *testing.T)
 	}
 }
 
-func TestAForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *testing.T) {
+func TestANamedForegroundCallCanFinishWithoutLeavingATask(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		release := make(chan struct{})
+		close(release)
+		runs := 0
+		subject := async.Tool(heldTool(release, &runs), manager, async.Options{})
+		call, err := subject.Parse(`{"command":"quick command","task_name":"build"}`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := call.Exec(t.Context())
+		if err != nil || result.IsPending || result.Output != "done" || runs != 1 {
+			t.Errorf("foreground call returned %+v, %v after %d runs", result, err, runs)
+		}
+		if _, err := manager.Status("build"); err == nil {
+			t.Error("foreground call left a named task")
+		}
+	})
+}
+
+func TestANamedForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
 		release := make(chan struct{})
 		runs := 0
 		subject := async.Tool(heldTool(release, &runs), manager, async.Options{})
-		call, err := subject.Parse(`{"command":"slow command"}`)
+		call, err := subject.Parse(`{"command":"slow command","task_name":"build"}`)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -232,14 +254,14 @@ func TestAForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *testing.T
 		if elapsed := time.Since(startedAt); elapsed != 30*time.Second {
 			t.Errorf("handoff took %s, want 30s", elapsed)
 		}
-		if err != nil || !receipt.IsPending || !strings.Contains(receipt.Output, "backgrounded (task-1)") {
+		if err != nil || !receipt.IsPending || receipt.Output != "backgrounded (build); end your turn to wait" {
 			t.Errorf("automatic handoff returned %+v, %v", receipt, err)
 		}
 		close(release)
 		synctest.Wait()
 		conclusions := manager.Drain()
-		if runs != 1 || len(conclusions) != 1 || conclusions[0].Result.Output != "done" {
-			t.Errorf("handoff restarted or lost the call: %d runs, %+v", runs, conclusions)
+		if runs != 1 || len(conclusions) != 1 || conclusions[0].Snapshot.ID != "build" || conclusions[0].Result.Output != "done" {
+			t.Errorf("handoff restarted or lost the named call: %d runs, %+v", runs, conclusions)
 		}
 	})
 }
@@ -376,7 +398,7 @@ func TestARevokedPortIsNotPublishedAgainOnRestart(t *testing.T) {
 	})
 }
 
-func TestTaskLaunchOptionsRequireBackgroundAndSandboxNetworking(t *testing.T) {
+func TestTaskLaunchOptionsAreValidated(t *testing.T) {
 	manager := tasks.New(t.Context())
 	defer manager.Close()
 	subject := async.Tool(heldTool(nil, new(int)), manager, async.Options{
@@ -387,9 +409,8 @@ func TestTaskLaunchOptionsRequireBackgroundAndSandboxNetworking(t *testing.T) {
 		t.Errorf("task_name description hides its pattern: %+v", nameParameter)
 	}
 	for _, arguments := range []string{
-		`{"command":"true","task_name":"build"}`,
 		`{"command":"true","forward_port":8000}`,
-		`{"command":"true","background":true,"task_name":"two words"}`,
+		`{"command":"true","task_name":"two words"}`,
 		`{"command":"true","background":true,"forward_port":65536}`,
 		`{"command":"true","background":true,"forward_port":-1}`,
 	} {
@@ -412,7 +433,6 @@ func TestAnInvalidAsyncOptionDoesNotHideTheCallRendering(t *testing.T) {
 		`{"command":"serve docs","background":true,"task_name":7}`,
 		`{"command":"serve docs","background":true,"forward_port":"8000"}`,
 		`{"command":"serve docs","background":true,"respawn":"yes"}`,
-		`{"command":"serve docs","task_name":"docs"}`,
 	} {
 		if _, err := subject.Parse(arguments); err == nil {
 			t.Errorf("accepted invalid async options: %s", arguments)
