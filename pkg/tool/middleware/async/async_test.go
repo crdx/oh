@@ -492,3 +492,34 @@ func TestABackgroundCallRunsUnderTheLongerToolLimit(t *testing.T) {
 		synctest.Wait()
 	})
 }
+
+func TestAScheduledCallTakesAtMostItsTaskRunLimit(t *testing.T) {
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	subject := tool.Implement(
+		tool.Definition{Name: "build", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering { return tool.CallRendering{} },
+	).
+		TakesAtMost(func(struct{}) time.Duration { return 30 * time.Second }).
+		Plain(func(context.Context, struct{}) (string, error) { return "", nil })
+
+	tests := map[string]struct {
+		subject tool.Tool
+		want    time.Duration
+	}{
+		"scheduled without a run limit": {subject: async.Tool(subject, manager, async.Options{}), want: 0},
+		"scheduled with a run limit":    {subject: async.Tool(subject, manager, async.Options{RunLimit: time.Hour}), want: time.Hour},
+		"without background calls":      {subject: async.Tool(subject, nil, async.Options{BackgroundUnavailable: "background calls are unavailable in print mode"}), want: 30 * time.Second},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			call, err := test.subject.Parse(`{}`)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := call.TimeLimit(); got != test.want {
+				t.Errorf("got time limit %s, want %s", got, test.want)
+			}
+		})
+	}
+}

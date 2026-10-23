@@ -217,9 +217,6 @@ func (self Config) buildCustomTool(name string, options command.Options) (tool.T
 	if options.GroupForTool != nil {
 		declaration.Group = options.GroupForTool(name)
 	}
-	if declaration.TimeLimit == 0 {
-		declaration.IsManagedUnlimited = true
-	}
 
 	return command.New(declaration, options)
 }

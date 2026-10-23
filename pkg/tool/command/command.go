@@ -57,19 +57,17 @@ type Parameter struct {
 }
 
 type Declaration struct {
-	Name               string
-	Description        string
-	Command            []string
-	Parameters         []Parameter
-	Subject            string
-	TimeLimit          time.Duration
-	ManagedLimit       time.Duration
-	IsManagedUnlimited bool
-	Concurrency        int
-	MustAsk            bool
-	ApprovalTimeout    time.Duration
-	Group              string
-	Version            int
+	Name            string
+	Description     string
+	Command         []string
+	Parameters      []Parameter
+	Subject         string
+	TimeLimit       time.Duration
+	Concurrency     int
+	MustAsk         bool
+	ApprovalTimeout time.Duration
+	Group           string
+	Version         int
 }
 
 type Options struct {
@@ -344,13 +342,9 @@ func run(
 		return "", fmt.Errorf(groupWithheldFormat, declaration.Name, declaration.Group)
 	}
 
-	isManaged := tasks.Managed(ctx)
-	if declaration.ManagedLimit > 0 && isManaged {
-		timeLimit = declaration.ManagedLimit
-	}
 	var runContext context.Context
 	var cancel context.CancelFunc
-	if declaration.IsManagedUnlimited && isManaged {
+	if tasks.Managed(ctx) {
 		runContext, cancel = context.WithCancel(ctx)
 	} else {
 		runContext, cancel = context.WithTimeout(ctx, timeLimit)

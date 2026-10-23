@@ -305,7 +305,7 @@ func Bind(subject tool.Tool, schema tool.Schema) {
 	})
 }
 
-func (self scheduledCall) TimeLimit() time.Duration { return self.ToolCall.TimeLimit() }
+func (self scheduledCall) TimeLimit() time.Duration { return self.settings.RunLimit }
 
 var (
 	_ tool.SchemaParser  = configuredTool{}
