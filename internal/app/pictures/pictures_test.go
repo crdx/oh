@@ -2,6 +2,7 @@ package pictures_test
 
 import (
 	"bytes"
+	"errors"
 	"image"
 	"image/color"
 	"image/gif"
@@ -9,12 +10,20 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"slices"
+	"strconv"
 	"strings"
+	"sync"
 	"testing"
 
 	"crdx.org/oh/internal/app/pictures"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+)
+
+const (
+	concurrentPictures = 8
+	pictureStoreRounds = 50
 )
 
 func drawnPNG(t *testing.T, width int, height int) []byte {
@@ -178,6 +187,126 @@ func TestTheSamePictureReadTwiceIsStoredOnce(t *testing.T) {
 	}
 	if len(entries) != 2 {
 		t.Errorf("stored %d files, want the original and its drawn copy", len(entries))
+	}
+}
+
+func TestPicturesStoredAtOnceIntoAFreshSessionAreAllKept(t *testing.T) {
+	directory, ensure := session(t)
+	if err := ensure(); err != nil {
+		t.Fatal(err)
+	}
+	data := drawnPNG(t, 50, 25)
+	alreadyPersisted := func() error { return nil }
+
+	for range pictureStoreRounds {
+		var group sync.WaitGroup
+		start := make(chan struct{})
+		failures := make(chan error, concurrentPictures)
+		for range concurrentPictures {
+			group.Go(func() {
+				<-start
+				_, err := pictures.Store(directory, alreadyPersisted, tool.Image{MediaType: "image/png", Data: data})
+				if err != nil {
+					failures <- err
+				}
+			})
+		}
+		close(start)
+		group.Wait()
+		close(failures)
+
+		for err := range failures {
+			t.Fatalf("a picture stored beside another was lost: %v", err)
+		}
+		removePictures(t, directory)
+	}
+}
+
+func TestAPictureStoredBesideTheSamePictureIsWholeWhenItIsDrawn(t *testing.T) {
+	directory, ensure := session(t)
+	if err := ensure(); err != nil {
+		t.Fatal(err)
+	}
+	data := drawnPNG(t, pictures.DisplayWidth, pictures.DisplayWidth)
+	alreadyPersisted := func() error { return nil }
+
+	for range pictureStoreRounds {
+		var group sync.WaitGroup
+		start := make(chan struct{})
+		failures := make(chan error, concurrentPictures)
+		for range concurrentPictures {
+			group.Go(func() {
+				<-start
+				failures <- drawStoredPicture(directory, alreadyPersisted, data)
+			})
+		}
+		close(start)
+		group.Wait()
+		close(failures)
+
+		for err := range failures {
+			if err != nil {
+				t.Fatalf("a picture stored beside the same picture was drawn part written: %v", err)
+			}
+		}
+		removePictures(t, directory)
+	}
+}
+
+func drawStoredPicture(directory string, ensure func() error, data []byte) error {
+	reference, err := pictures.Store(directory, ensure, tool.Image{MediaType: "image/png", Data: data})
+	if err != nil {
+		return err
+	}
+
+	drawing, isStored := pictures.Prepare(directory, reference)
+	if !isStored {
+		return errors.New("the stored picture was not found")
+	}
+
+	drawn, isRead := pictures.Read(drawing.Path)
+	if !isRead {
+		return errors.New("the stored picture could not be read")
+	}
+
+	_, err = png.Decode(bytes.NewReader(drawn))
+
+	return err
+}
+
+func TestStoringAPictureLeavesOnlyTheOriginalAndItsDrawnCopy(t *testing.T) {
+	directory, ensure := session(t)
+	data := drawnPNG(t, pictures.DisplayWidth*2, pictures.DisplayWidth)
+
+	reference, err := pictures.Store(directory, ensure, tool.Image{MediaType: "image/png", Data: data})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	entries, err := os.ReadDir(pictures.GetDirectory(directory))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var names []string
+	for _, entry := range entries {
+		names = append(names, entry.Name())
+	}
+
+	want := []string{
+		reference.Digest + "-w" + strconv.Itoa(pictures.DisplayWidth) + ".png",
+		reference.Digest + ".png",
+	}
+	if !slices.Equal(names, want) {
+		t.Errorf("stored %q, want %q", names, want)
+	}
+}
+
+func removePictures(t *testing.T, sessionDirectory string) {
+	t.Helper()
+
+	if err := os.RemoveAll(pictures.GetDirectory(sessionDirectory)); err != nil {
+		t.Fatal(err)
 	}
 }
 

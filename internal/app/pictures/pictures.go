@@ -185,11 +185,10 @@ func prepare(sessionDirectory string, ensureSession func() error) (string, error
 
 	info, err := os.Lstat(directory)
 	if errors.Is(err, fs.ErrNotExist) {
-		if err := os.Mkdir(directory, 0o700); err != nil {
-			return "", fmt.Errorf("prepare the pictures directory: %w", err)
+		if mkdirErr := os.Mkdir(directory, 0o700); mkdirErr != nil && !errors.Is(mkdirErr, fs.ErrExist) {
+			return "", fmt.Errorf("prepare the pictures directory: %w", mkdirErr)
 		}
-
-		return directory, nil
+		info, err = os.Lstat(directory)
 	}
 	if err != nil {
 		return "", fmt.Errorf("inspect the pictures directory: %w", err)
@@ -210,8 +209,24 @@ func write(path string, data []byte) error {
 		return nil
 	}
 
-	//nolint:gosec // a path built from a validated digest under the session directory
-	if err := os.WriteFile(path, data, 0o600); err != nil {
+	file, err := os.CreateTemp(filepath.Dir(path), "."+filepath.Base(path)+"-*")
+	if err != nil {
+		return fmt.Errorf("write the picture: %w", err)
+	}
+
+	if _, err := file.Write(data); err != nil {
+		_ = file.Close()
+		_ = os.Remove(file.Name())
+		return fmt.Errorf("write the picture: %w", err)
+	}
+
+	if err := file.Close(); err != nil {
+		_ = os.Remove(file.Name())
+		return fmt.Errorf("write the picture: %w", err)
+	}
+
+	if err := os.Rename(file.Name(), path); err != nil {
+		_ = os.Remove(file.Name())
 		return fmt.Errorf("write the picture: %w", err)
 	}
 
