@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.23.0] — 2026-10-23
+
 ### Changes
 
 - Show the mode as `rxw snlg`, with custom tool groups in their own section
