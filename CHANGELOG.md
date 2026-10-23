@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.22.2] — 2026-10-23
+
 ### Tasks
 
 - Shorten overbose backgrounded call message
