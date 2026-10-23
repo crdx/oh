@@ -103,6 +103,32 @@ Model returned no reply.
 ── ·✦· ─ r[meeting notes] ─────────────────────────────────────────────────────────── tame-impala ──
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+=== quoted paths revoked ===
+
+ 🤖 Granted temporary read-only access to
+    /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference/meeting
+    notes.
+ 🤖 Granted temporary read-only access to
+    /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/user.
+
+
+
+ continue
+
+
+Model returned no reply.
+
+
+ ⏳ Revoked temporary access to
+    /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference/meeting
+    notes.
+ ⏳ Revoked temporary access to
+    /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/user.
+                                                                               double-enter to send
+
+── ·✦· ────────────────────────────────────────────────────────────────────────────── tame-impala ──
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === repeated path granted once ===
 
  ⏳ Granted temporary read-only access to
@@ -138,6 +164,26 @@ Model returned no reply.
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Temporary access could not be restored: path does not exist                                    │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== revoke with unclosed quote rejected ===
+
+ 🤖 Granted temporary read-only access to
+    /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference/meeting
+    notes.
+ 🤖 Granted temporary read-only access to
+    /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/user.
+
+
+
+ continue
+
+
+Model returned no reply.
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Usage: /revoke <target>... (prepend a space to send)                                           │
+─┴── ·✦· ─ r[meeting notes user] ────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === revoke without grant rejected ===

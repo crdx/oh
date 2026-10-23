@@ -171,8 +171,12 @@ func revokeCommand(grants PathGrants, forwards Forwards) slash.Command {
 			if arguments.Text == "" {
 				return slash.Usage()
 			}
+			subjects, isWellFormed := revokedSubjects(grants, forwards, arguments)
+			if !isWellFormed {
+				return slash.Usage()
+			}
 			var failures []string
-			for _, subject := range revokedSubjects(grants, forwards, arguments) {
+			for _, subject := range subjects {
 				event, err := revoke(grants, forwards, subject)
 				if err != nil {
 					failures = append(failures, err.Error())
@@ -195,12 +199,13 @@ func revokedSubjects(
 	grants PathGrants,
 	forwards Forwards,
 	arguments slash.Arguments,
-) []string {
+) ([]string, bool) {
 	if slices.Contains(revocableSubjects(grants, forwards), arguments.Text) {
-		return []string{arguments.Text}
+		return []string{arguments.Text}, true
 	}
 
-	return distinct(arguments.Fields)
+	fields, isWellFormed := slash.QuotedFields(arguments.Text)
+	return distinct(fields), isWellFormed
 }
 
 func distinct(values []string) []string {

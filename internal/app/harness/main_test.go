@@ -17313,6 +17313,8 @@ const (
 	pathGrantUnclosedQuote
 	pathGrantAllMissing
 	pathGrantRevokedAfterSwap
+	pathGrantRevokeQuoted
+	pathGrantRevokeUnclosedQuote
 )
 
 func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
@@ -17342,8 +17344,12 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 		"unclosed quote rejected":        func() string { return pathGrantGoldenStream(t, pathGrantUnclosedQuote) },
 		"every path missing":             func() string { return pathGrantGoldenStream(t, pathGrantAllMissing) },
 		"several revoked at once":        func() string { return pathGrantGoldenStream(t, pathGrantRevokeSeveral) },
-		"settled into next turn":         func() string { return pathGrantGoldenStream(t, pathGrantSettled) },
-		"unknown access rejected":        func() string { return pathGrantGoldenStream(t, pathGrantUnknownAccess) },
+		"quoted paths revoked":           func() string { return pathGrantGoldenStream(t, pathGrantRevokeQuoted) },
+		"revoke with unclosed quote rejected": func() string {
+			return pathGrantGoldenStream(t, pathGrantRevokeUnclosedQuote)
+		},
+		"settled into next turn":  func() string { return pathGrantGoldenStream(t, pathGrantSettled) },
+		"unknown access rejected": func() string { return pathGrantGoldenStream(t, pathGrantUnknownAccess) },
 	}
 	compareWithGolden(t, "path-grant-lifecycle", ".ansi", passes)
 	compareWithGolden(t, "path-grant-lifecycle", ".screen", shownPasses(t, passes))
@@ -17789,12 +17795,8 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.handleCommand("/grant rw " + referencePath + " " + homePath)
 		self.start("continue")
 		self.waitForCurrentTurn()
-	case pathGrantQuoted:
-		spacedPath := filepath.Join(referencePath, "meeting notes")
-		if err := os.MkdirAll(spacedPath, 0o700); err != nil {
-			t.Fatal(err)
-		}
-		self.handleCommand(`/grant r "` + spacedPath + `"`)
+	case pathGrantQuoted, pathGrantRevokeQuoted, pathGrantRevokeUnclosedQuote:
+		grantQuotedPath(t, self, scenario, referencePath, homePath)
 	case pathGrantRepeated:
 		self.handleCommand("/grant r " + referencePath + " " + referencePath)
 	case pathGrantUnclosedQuote:
@@ -17894,6 +17896,28 @@ func stableGoldenGrantPath(t *testing.T, label string, shouldExist bool) string 
 		t.Fatal(err)
 	}
 	return path
+}
+
+func grantQuotedPath(t *testing.T, self *App, scenario pathGrantGoldenScenario, referencePath string, homePath string) {
+	t.Helper()
+
+	spacedPath := filepath.Join(referencePath, "meeting notes")
+	if err := os.MkdirAll(spacedPath, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if scenario == pathGrantQuoted {
+		self.handleCommand(`/grant r "` + spacedPath + `"`)
+		return
+	}
+
+	self.handleCommand(`/grant r "` + spacedPath + `" ` + homePath)
+	self.start("continue")
+	self.waitForCurrentTurn()
+	revocation := `/revoke "` + spacedPath
+	if scenario == pathGrantRevokeQuoted {
+		revocation += `" ` + homePath
+	}
+	self.handleCommand(revocation)
 }
 
 func revokeAfterSwappedPath(t *testing.T, self *App, referencePath string, homePath string) {

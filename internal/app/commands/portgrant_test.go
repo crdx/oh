@@ -8,6 +8,7 @@ import (
 
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -227,6 +228,34 @@ func TestRevokeReadsAGrantedPathHoldingASpaceWhole(t *testing.T) {
 	}
 	if !slices.Equal(pathGrantPaths(*paths), []string{"/some"}) {
 		t.Errorf("got path grants %#v, want only /some left", *paths)
+	}
+}
+
+func TestRevokeReadsAQuotedPathHoldingASpaceWhole(t *testing.T) {
+	grants, paths := fixturePathGrants()
+	*paths = []pathgrant.Grant{
+		{Path: "/some", Access: pathgrant.ReadAccess},
+		{Path: "/some path", Access: pathgrant.ReadAccess},
+		{Path: "/other", Access: pathgrant.ReadAccess},
+	}
+
+	if _, err := invokeGrantCommand(t, grants, Forwards{}, `/revoke "/some path" /other`); err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(pathGrantPaths(*paths), []string{"/some"}) {
+		t.Errorf("got path grants %#v, want only /some left", *paths)
+	}
+}
+
+func TestRevokeRefusesAnUnclosedQuote(t *testing.T) {
+	grants, paths := fixturePathGrants()
+	*paths = []pathgrant.Grant{{Path: "/some", Access: pathgrant.ReadAccess}}
+
+	if _, err := invokeGrantCommand(t, grants, Forwards{}, `/revoke "/some`); !slash.IsUsageError(err) {
+		t.Errorf("got %v, want a usage error", err)
+	}
+	if len(*paths) != 1 {
+		t.Errorf("got path grants %#v, want /some left alone", *paths)
 	}
 }
 
