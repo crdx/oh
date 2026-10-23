@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.24.0] — 2026-10-23
+
 ### Changes
 
 - Tell the model to end its turn to wait for a backgrounded call
