@@ -46,9 +46,16 @@ func newIdleWatchdog(
 		quietSince: util.WallClock(now()),
 	}
 
-	watchdog.timer = time.AfterFunc(min(after, every), watchdog.check)
+	watchdog.arm()
 
 	return watchdog
+}
+
+func (self *idleWatchdog) arm() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	self.timer = time.AfterFunc(min(self.after, self.every), self.check)
 }
 
 func (self *idleWatchdog) check() {
