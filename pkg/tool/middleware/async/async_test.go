@@ -232,7 +232,7 @@ func TestAForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *testing.T
 		if elapsed := time.Since(startedAt); elapsed != 30*time.Second {
 			t.Errorf("handoff took %s, want 30s", elapsed)
 		}
-		if err != nil || !receipt.IsPending || !strings.Contains(receipt.Output, "moved to the background as task-1") {
+		if err != nil || !receipt.IsPending || !strings.Contains(receipt.Output, "backgrounded (task-1)") {
 			t.Errorf("automatic handoff returned %+v, %v", receipt, err)
 		}
 		close(release)

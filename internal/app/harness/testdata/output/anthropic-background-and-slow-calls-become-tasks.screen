@@ -2,7 +2,7 @@
  run the slow tests, then start the build in the background
 
 
-$ bash moved to the background as task-1
+$ bash backgrounded (task-1)
 
 
  🤖 Task task-1 done.
