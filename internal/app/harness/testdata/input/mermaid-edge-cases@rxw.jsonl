@@ -1,0 +1,3 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"draw a subgraph looping back on itself, an edge with an invisible label, and a node looping twice"}}
+{"event":{"kind":"model_message","text":"# Edge cases\n\n```mermaid\nflowchart TD\nsubgraph S\nA\nend\nS-->S\n```\n\n```mermaid\ngraph LR\nsubgraph S\nA\nB\nend\nS-->S\n```\n\n```mermaid\ngraph TD\nA-->|\u200b|B\n```\n\n```mermaid\ngraph TD\nA-->A\nA-->|yes|A\n```\n"}}

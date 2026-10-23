@@ -260,7 +260,7 @@ func (self *graph) setDrawingSizeToGridConstraints() {
 	for _, h := range self.rowHeight {
 		maxY += h
 	}
-	self.drawing.increaseSize(maxX-1, maxY-1)
+	self.drawing.increaseSize(self.offsetX+maxX-1, self.offsetY+maxY-1)
 }
 
 func mergeJunctions(c1 string, c2 string) string {

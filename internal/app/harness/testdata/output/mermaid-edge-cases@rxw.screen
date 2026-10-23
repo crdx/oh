@@ -1,0 +1,757 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ draw a subgraph looping back on
+ itself, an edge with an invisible
+ label, and a node looping twice
+
+
+Edge cases
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │   ┌───┐
+│ │   │ │   │   │
+│ │ A │ │   │ S │◄┐
+│ │   │ │   │   │ │
+│ └───┘ │   └─┬─┘ │
+│       │     │   │
+└───────┘     └───┘
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ A │ │
+│ │   │ │
+│ └───┘ │
+│       │
+│       │
+│       │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ B │ │
+│ │   │ │
+│ └───┘ │
+│       │
+└───────┘
+
+
+
+  ┌───┐
+  │   │
+  │ S ├─┐
+  │   │ │
+  └───┘ │
+    ▲   │
+    └───┘
+
+┌───┐
+│   │
+│ A │
+│   │
+└─┬─┘
+  │
+  │
+  │
+  │
+  ▼
+┌───┐
+│   │
+│ B │
+│   │
+└───┘
+
+┌───┐
+│   │
+│ A │◄┐
+│   │ │
+└─┬─┘ │
+  │   │
+  └───┘
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+d
+
+r
+
+a
+
+w
+
+a
+
+s
+
+u
+
+b
+
+g
+
+r
+
+a
+
+p
+
+h
+
+l
+
+o
+
+o
+
+p
+
+i
+
+n
+
+g
+
+b
+
+a
+
+c
+
+k
+
+o
+
+n
+
+i
+
+t
+
+s
+
+e
+
+l
+
+f
+
+,
+
+a
+
+n
+
+e
+
+d
+
+g
+
+e
+
+w
+
+i
+
+t
+
+h
+
+a
+
+n
+
+i
+
+n
+
+v
+
+i
+
+s
+
+i
+
+b
+
+l
+
+e
+
+l
+
+a
+
+b
+
+e
+
+l
+
+,
+
+a
+
+n
+
+d
+
+a
+
+n
+
+o
+
+d
+
+e
+
+l
+
+o
+
+o
+
+p
+
+i
+
+n
+
+g
+
+t
+
+w
+
+i
+
+c
+
+e
+
+
+E
+d
+g
+e
+c
+a
+s
+e
+s
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+1
+9
+c
+o
+l
+u
+m
+n
+s
+.
+f
+l
+o
+w
+c
+h
+a
+r
+t
+
+T
+D
+s
+u
+b
+g
+r
+a
+p
+h
+
+S
+A
+e
+n
+d
+S
+-
+-
+>
+S
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+9
+c
+o
+l
+u
+m
+n
+s
+.
+g
+r
+a
+p
+h
+
+L
+R
+s
+u
+b
+g
+r
+a
+p
+h
+
+S
+A
+B
+e
+n
+d
+S
+-
+-
+>
+S
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+5
+c
+o
+l
+u
+m
+n
+s
+.
+g
+r
+a
+p
+h
+
+T
+D
+A
+-
+-
+>
+|​
+|
+B
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+7
+c
+o
+l
+u
+m
+n
+s
+.
+g
+r
+a
+p
+h
+
+T
+D
+A
+-
+-
+>
+A
+A
+-
+-
+>
+|
+y
+e
+s
+|
+A
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw a subgraph looping back on itself, an edge with an invisible label, and a node looping twice
+
+
+Edge cases
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │   ┌───┐
+│ │   │ │   │   │
+│ │ A │ │   │ S │◄┐
+│ │   │ │   │   │ │
+│ └───┘ │   └─┬─┘ │
+│       │     │   │
+└───────┘     └───┘
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ A │ │
+│ │   │ │
+│ └───┘ │
+│       │
+│       │
+│       │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ B │ │
+│ │   │ │
+│ └───┘ │
+│       │
+└───────┘
+
+
+
+  ┌───┐
+  │   │
+  │ S ├─┐
+  │   │ │
+  └───┘ │
+    ▲   │
+    └───┘
+
+┌───┐
+│   │
+│ A │
+│   │
+└─┬─┘
+  │
+  │
+  │
+  │
+  ▼
+┌───┐
+│   │
+│ B │
+│   │
+└───┘
+
+┌───┐
+│   │
+│ A │◄┐
+│   │ │
+└─┬─┘ │
+  │   │
+  └───┘
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ draw a
+ subgraph
+ looping
+ back on
+ itself, an
+ edge with
+ an
+ invisible
+ label, and
+ a node
+ looping
+ twice
+
+
+Edge cases
+
+Diagram
+needs 19
+columns.
+flowchart TD
+subgraph S
+A
+end
+S-->S
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ A │ │
+│ │   │ │
+│ └───┘ │
+│       │
+│       │
+│       │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ B │ │
+│ │   │ │
+│ └───┘ │
+│       │
+└───────┘
+
+
+
+  ┌───┐
+  │   │
+  │ S ├─┐
+  │   │ │
+  └───┘ │
+    ▲   │
+    └───┘
+
+┌───┐
+│   │
+│ A │
+│   │
+└─┬─┘
+  │
+  │
+  │
+  │
+  ▼
+┌───┐
+│   │
+│ B │
+│   │
+└───┘
+
+┌───┐
+│   │
+│ A │◄┐
+│   │ │
+└─┬─┘ │
+  │   │
+  └───┘
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw a subgraph looping back on itself, an edge with an invisible label, and a node looping twice
+
+
+Edge cases
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │   ┌───┐
+│ │   │ │   │   │
+│ │ A │ │   │ S │◄┐
+│ │   │ │   │   │ │
+│ └───┘ │   └─┬─┘ │
+│       │     │   │
+└───────┘     └───┘
+
+┌───────┐
+│   S   │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ A │ │
+│ │   │ │
+│ └───┘ │
+│       │
+│       │
+│       │
+│       │
+│       │
+│ ┌───┐ │
+│ │   │ │
+│ │ B │ │
+│ │   │ │
+│ └───┘ │
+│       │
+└───────┘
+
+
+
+  ┌───┐
+  │   │
+  │ S ├─┐
+  │   │ │
+  └───┘ │
+    ▲   │
+    └───┘
+
+┌───┐
+│   │
+│ A │
+│   │
+└─┬─┘
+  │
+  │
+  │
+  │
+  ▼
+┌───┐
+│   │
+│ B │
+│   │
+└───┘
+
+┌───┐
+│   │
+│ A │◄┐
+│   │ │
+└─┬─┘ │
+  │   │
+  └───┘

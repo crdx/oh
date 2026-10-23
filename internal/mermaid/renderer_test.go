@@ -37,6 +37,46 @@ func TestSupportedDiagramsRender(t *testing.T) {
 	}
 }
 
+func TestALoopBesideASubgraphStaysOnTheCanvas(t *testing.T) {
+	for name, source := range map[string]string{
+		"top down":   "flowchart TD\nsubgraph S\nA\nend\nS-->S",
+		"left right": "graph LR\nsubgraph S\nA\nB\nend\nS-->S",
+	} {
+		output, err := Render(source)
+		if err != nil {
+			t.Fatalf("%s: unexpected error: %v", name, err)
+		}
+		if !strings.Contains(output, "◄") && !strings.Contains(output, "▲") {
+			t.Errorf("%s: expected the loop's arrow head in %q", name, output)
+		}
+	}
+}
+
+func TestAnEdgeLabelTakingNoColumnsIsLeftOff(t *testing.T) {
+	for name, source := range map[string]string{
+		"between two nodes": "graph TD\nA-->|\u200b|B",
+		"on a loop":         "graph LR\nA-->|\u200b|A",
+	} {
+		output, err := Render(source)
+		if err != nil {
+			t.Fatalf("%s: unexpected error: %v", name, err)
+		}
+		if strings.Contains(output, "\u200b") {
+			t.Errorf("%s: expected the label left off, got %q", name, output)
+		}
+	}
+}
+
+func TestALabelledEdgeWithNoRouteStillLetsTheRestDraw(t *testing.T) {
+	output, err := Render("graph TD\nA-->A\nA-->|yes|A")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(output, "A") || !strings.Contains(output, "◄") {
+		t.Errorf("expected the node and its first loop in %q", output)
+	}
+}
+
 func TestMalformedSourceReturnsAnError(t *testing.T) {
 	for name, source := range map[string]string{
 		"unknown direction":    "graph SIDEWAYS\nA --> B",

@@ -88,7 +88,7 @@ func (self *graph) parallelDirections(e *edge, duplicateIndex int) (direction, d
 
 func (self *graph) determineLabelLine(edge *edge) {
 	lenLabel := runewidth.StringWidth(edge.text)
-	if lenLabel == 0 {
+	if lenLabel == 0 || len(edge.path) < 2 {
 		return
 	}
 	previousStep := edge.path[0]

@@ -310,7 +310,7 @@ func (self *graph) drawCorners(path []gridCoord) *drawing {
 
 func (self *graph) drawArrowLabel(edge *edge) *drawing {
 	sketch := copyCanvas(self.drawing)
-	if edge.text == "" {
+	if len(edge.labelLine) == 0 {
 		return sketch
 	}
 

@@ -1,0 +1,48 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+draw a subgraph looping back on itself, an edge with an invisible label, and a node looping twice
+
+## Assistant · +2s
+
+# Edge cases
+
+```mermaid
+flowchart TD
+subgraph S
+A
+end
+S-->S
+```
+
+```mermaid
+graph LR
+subgraph S
+A
+B
+end
+S-->S
+```
+
+```mermaid
+graph TD
+A-->|​|B
+```
+
+```mermaid
+graph TD
+A-->A
+A-->|yes|A
+```
