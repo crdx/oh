@@ -348,6 +348,13 @@ func TestTheSimulationIsRefusedBesideASessionOrAModel(t *testing.T) {
 			t.Errorf("expected %v to be refused", arguments)
 		}
 	}
+
+	for _, arguments := range [][]string{{"--demo", "-r"}, {"--demo", "--from", "earlier-session"}} {
+		err := bind(t, arguments...).Check(false)
+		if want := "the simulation keeps nothing, so it has no session to resume or fork"; err == nil || err.Error() != want {
+			t.Errorf("for %v got %v, want %q", arguments, err, want)
+		}
+	}
 }
 
 func TestTheIgnoredModelsAreAskedForAlongsideAnUpdate(t *testing.T) {

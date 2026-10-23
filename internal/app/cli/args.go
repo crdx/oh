@@ -306,7 +306,7 @@ func (self Input) Check(isPromptPiped bool) error {
 
 	if self.IsDemoing {
 		if self.isResuming() || self.SourceSession != "" {
-			return errors.New("the simulation keeps nothing, so there is no session of its to resume")
+			return errors.New("the simulation keeps nothing, so it has no session to resume or fork")
 		}
 
 		if self.isChoosingModel() {
