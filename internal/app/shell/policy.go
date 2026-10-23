@@ -8,37 +8,28 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"runtime"
 	"slices"
 	"strings"
-	"time"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util/pathutil"
-	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
 
 const (
-	shellTimeout    = bash.CommandTimeout
-	shellCPUPercent = 80
-	shellFileSize   = 64 << 30
-	shellOpenFiles  = 1 << 20
-	shellProcesses  = 8192
+	shellFileSize  = 64 << 30
+	shellOpenFiles = 1 << 20
+	shellProcesses = 8192
 
 	goBuildCacheDir  = "go-build"
 	goModuleCacheDir = "go-mod"
 	goLintCacheDir   = "golangci-lint"
 	goFlags          = "-trimpath"
 )
-
-func shellCPUTime() time.Duration {
-	return shellTimeout * time.Duration(runtime.NumCPU()) * shellCPUPercent / 100
-}
 
 func execPaths(workspaceDir string, writableRoots ...string) []string {
 	paths := []string{workspaceDir}
@@ -262,8 +253,6 @@ func createPolicyWithSupportProbe(
 			"TMPDIR":                  sandbox.TmpDir,
 		},
 
-		Timeout:      shellTimeout,
-		MaxCPUTime:   shellCPUTime(),
 		MaxFileSize:  shellFileSize,
 		MaxOpenFiles: shellOpenFiles,
 		MaxProcesses: shellProcesses,
@@ -454,8 +443,6 @@ func YoloPolicy(homeDir string, tmpDir string) sandbox.Policy {
 			location.StateDirVariable: location.GetStateDir(),
 			"TMPDIR":                  tmpDir,
 		},
-
-		Timeout: shellTimeout,
 	}
 }
 
@@ -620,11 +607,7 @@ func freshPolicy(
 	}
 
 	if isYolo {
-		policy := YoloPolicy(roots.HomeDirectory, roots.ScratchDirectory)
-		if tasks.Managed(ctx) {
-			policy.Timeout = tasks.RunLimit
-		}
-		return policy, nil
+		return YoloPolicy(roots.HomeDirectory, roots.ScratchDirectory), nil
 	}
 
 	extraPaths, optionalPaths := pathAccess.getPaths()
@@ -644,10 +627,6 @@ func freshPolicy(
 		return policy, fmt.Errorf("the shell cannot be confined: %w", err)
 	}
 
-	if tasks.Managed(ctx) {
-		policy.Timeout = tasks.RunLimit
-		policy.MaxCPUTime = tasks.RunLimit * time.Duration(runtime.NumCPU()) * shellCPUPercent / 100
-	}
 	policy.DenyPaths, err = pathAccess.getDenyPaths(policy)
 	if err != nil {
 		return policy, fmt.Errorf("the shell cannot resolve sandbox denials: %w", err)

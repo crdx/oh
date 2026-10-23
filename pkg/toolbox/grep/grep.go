@@ -18,7 +18,6 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/sandbox"
-	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -86,8 +85,6 @@ func confined(root *file.Root, name string) error {
 	return nil
 }
 
-const searchTimeout = tasks.RunLimit
-
 func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRunner) (string, tool.ToolCallMetrics, error) {
 	if args.Pattern == "" {
 		return "", tool.ToolCallMetrics{}, errors.New("pattern is required")
@@ -146,11 +143,10 @@ func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRun
 		return "", tool.ToolCallMetrics{}, fmt.Errorf("the workspace changed on disk: %w", err)
 	}
 	policy := sandbox.Policy{
-		Deny:    deniedPaths,
-		Read:    []string{root.Name()},
-		Exec:    []string{binary},
-		Env:     []string{"LANG", "TERM"},
-		Timeout: searchTimeout,
+		Deny: deniedPaths,
+		Read: []string{root.Name()},
+		Exec: []string{binary},
+		Env:  []string{"LANG", "TERM"},
 	}
 	command, err := runner.StartArgv(searchContext, root.Name(), arguments, policy, output)
 	if err != nil {

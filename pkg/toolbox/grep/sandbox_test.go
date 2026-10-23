@@ -51,7 +51,7 @@ func TestGrepUsesAReadOnlyWorkspacePolicy(t *testing.T) {
 		t.Fatal(err)
 	}
 	policy := runner.policy
-	if !slices.Equal(policy.Read, []string{root.Name()}) || len(policy.Write) != 0 || policy.Network || policy.Yolo || policy.TmpDir != "" || policy.Timeout <= 0 {
+	if !slices.Equal(policy.Read, []string{root.Name()}) || len(policy.Write) != 0 || policy.Network || policy.Yolo || policy.TmpDir != "" || policy.Timeout != 0 {
 		t.Errorf("grep used an unsafe policy: %+v", policy)
 	}
 }

@@ -40,9 +40,12 @@ func (self configuredTool) Description() string {
 	if description != "" && !strings.HasSuffix(description, ".") {
 		description += "."
 	}
+	taskLifetime := "A task runs until it exits or you stop it, unless the tool has its own time limit."
+	if self.options.RunLimit > 0 {
+		taskLifetime = fmt.Sprintf("A task stops after %s, or sooner where the tool has a shorter time limit.", activeSpan(self.options.RunLimit))
+	}
 	return description + fmt.Sprintf(" A call still running after %s continues in the background; ", activeSpan(self.manager.ForegroundLimit())) +
-		fmt.Sprintf("set background=true to start it there at once. A task stops after %s, ", activeSpan(max(tasks.RunLimit, self.options.RunLimit))) +
-		"or sooner where the tool has a shorter time limit. To wait for a task, you can just end your turn."
+		"set background=true to start it there at once. " + taskLifetime + " To wait for a task, you can just end your turn."
 }
 
 func activeSpan(limit time.Duration) string {

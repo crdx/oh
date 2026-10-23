@@ -636,7 +636,7 @@ func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 		timedOutTask := func(name string, command string) tasks.Snapshot {
 			snapshot := finishedTask(name, command)
 			snapshot.State = tasks.TimedOut
-			snapshot.Failure = "task exceeded its 30m0s execution limit: context deadline exceeded"
+			snapshot.Failure = "task exceeded its 45m0s execution limit: context deadline exceeded"
 			return snapshot
 		}
 		queuedTask := func(name string, command string) tasks.Snapshot {

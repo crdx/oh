@@ -23,34 +23,40 @@ func buildAfter(t *testing.T, manager *tasks.Manager, wait time.Duration) tasks.
 	return tasks.Snapshot{}
 }
 
-func TestATaskRunsForTheLongerOfTheCommonLimitAndItsOwn(t *testing.T) {
-	for _, test := range []struct {
-		name  string
-		limit time.Duration
-		want  time.Duration
-	}{
-		{"none of its own", 0, tasks.RunLimit},
-		{"a shorter one of its own", 10 * time.Minute, tasks.RunLimit},
-		{"a longer one of its own", 45 * time.Minute, 45 * time.Minute},
-	} {
-		t.Run(test.name, func(t *testing.T) {
-			synctest.Test(t, func(t *testing.T) {
-				manager := tasks.New(t.Context())
-				defer manager.Close()
-				if _, err := manager.Start(t.Context(), "build", "offload", true, false, holdUntilStopped, nil,
-					tasks.StartOptions{RunLimit: test.limit}); err != nil {
-					t.Fatal(err)
-				}
+func TestATaskWithoutALimitRunsUntilItIsStopped(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		if _, err := manager.Start(t.Context(), "build", "offload", true, false, holdUntilStopped, nil); err != nil {
+			t.Fatal(err)
+		}
 
-				if snapshot := buildAfter(t, manager, test.want-time.Second); snapshot.State != tasks.Running {
-					t.Fatalf("the task was %s a second before its limit of %s", snapshot.State, test.want)
-				}
-				if snapshot := buildAfter(t, manager, 2*time.Second); snapshot.State != tasks.TimedOut {
-					t.Errorf("the task was %s a second after its limit of %s", snapshot.State, test.want)
-				}
-			})
-		})
-	}
+		if snapshot := buildAfter(t, manager, time.Hour); snapshot.State != tasks.Running {
+			t.Fatalf("the task was %s after an hour", snapshot.State)
+		}
+		if err := manager.Stop("build", "the user stopped it"); err != nil {
+			t.Fatal(err)
+		}
+	})
+}
+
+func TestATaskHonoursItsExplicitLimit(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		limit := 10 * time.Minute
+		if _, err := manager.Start(t.Context(), "build", "offload", true, false, holdUntilStopped, nil,
+			tasks.StartOptions{RunLimit: limit}); err != nil {
+			t.Fatal(err)
+		}
+
+		if snapshot := buildAfter(t, manager, limit-time.Second); snapshot.State != tasks.Running {
+			t.Fatalf("the task was %s a second before its limit of %s", snapshot.State, limit)
+		}
+		if snapshot := buildAfter(t, manager, 2*time.Second); snapshot.State != tasks.TimedOut {
+			t.Errorf("the task was %s a second after its limit of %s", snapshot.State, limit)
+		}
+	})
 }
 
 func TestARestartKeepsTheLimitItsPlanGives(t *testing.T) {

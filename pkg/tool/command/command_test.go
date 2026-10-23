@@ -1020,6 +1020,43 @@ func TestOnlyASupervisedCallGetsTheManagedLimit(t *testing.T) {
 	}
 }
 
+func TestOnlyASupervisedCallCanRunWithoutATimeLimit(t *testing.T) {
+	declaration := command.Declaration{
+		Name:               "server",
+		Description:        "run a server",
+		Command:            []string{writeScript(t, "sleep 0.4\necho finished")},
+		TimeLimit:          100 * time.Millisecond,
+		IsManagedUnlimited: true,
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output, err := call(t, subject, `{}`); err == nil || strings.Contains(output, "finished") {
+		t.Errorf("a plain call outlived its limit: %q, %v", output, err)
+	}
+	parsed, err := subject.Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	snapshot, err := manager.Start(t.Context(), "server", "server", true, false, parsed.Exec, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	over, release, err := manager.Hold(snapshot.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer release()
+	<-over
+	conclusions := manager.Drain()
+	if len(conclusions) != 1 || conclusions[0].Failure != nil || !strings.Contains(conclusions[0].Result.Output, "finished") {
+		t.Errorf("a supervised call was cut short: %+v", conclusions)
+	}
+}
+
 func TestACustomCommandRunsAtLowerPriority(t *testing.T) {
 	own, err := unix.Getpriority(unix.PRIO_PROCESS, os.Getpid())
 	if err != nil {

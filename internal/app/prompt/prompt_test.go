@@ -1059,7 +1059,6 @@ func TestWaitingForTheUserFollowsBackgroundShellAvailability(t *testing.T) {
 				"The watcher must exit once the condition holds",
 				"done < <(inotifywait --monitor …); kill \"$!\"",
 				"otherwise poll every 2s",
-				"A task stops after 30 active minutes; when the watcher ends without the condition, start it again",
 				"When the task ends, continue",
 			} {
 				present := strings.Contains(got, rule)

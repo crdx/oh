@@ -80,7 +80,7 @@ func TestAFullQueueRefusesRestartBeforeStoppingTheWorkingTask(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
-		for index := range tasks.MaxRunning {
+		for index := range tasks.DefaultMaximumRunning {
 			_, err := manager.Start(t.Context(), fmt.Sprintf("active-%d", index), "bash", true, false,
 				holdUntilStopped, nil, tasks.StartOptions{Invocation: &tasks.Invocation{Arguments: `{}`}})
 			if err != nil {
@@ -288,7 +288,7 @@ func TestAQueuedForegroundCallDetachesAfterTheForegroundLimit(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
-		for index := range tasks.MaxRunning {
+		for index := range tasks.DefaultMaximumRunning {
 			if _, err := manager.Start(t.Context(), fmt.Sprintf("hold-%d", index), "bash", true, false, holdUntilStopped, nil); err != nil {
 				t.Fatal(err)
 			}

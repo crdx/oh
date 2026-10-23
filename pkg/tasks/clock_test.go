@@ -9,7 +9,7 @@ import (
 )
 
 func TestAnActiveClockExcludesApprovalTimeBeforeItsTimerStarts(t *testing.T) {
-	for _, limit := range []time.Duration{ForegroundLimit, RunLimit} {
+	for _, limit := range []time.Duration{ForegroundLimit, 45 * time.Minute} {
 		t.Run(limit.String(), func(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {
 				ctx, _ := waiting.Track(t.Context())

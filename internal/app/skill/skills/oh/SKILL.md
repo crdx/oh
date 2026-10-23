@@ -49,7 +49,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
 - `[editor]` — editor command
-- `[experimental]` — opt-in toggles, and `forward_hostname`, the forwarded-port hostname, holding only letters, digits, dots, dashes, and `{session}` once
+- `[experimental]` — opt-in settings; `forward_hostname` names the forwarded-port host, and `maximum_running_tasks` caps concurrent tasks at 16 by default
 - A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `experimental.forward_hostname` to use the numeric address, and `editor.command` to find an editor
 - With no `editor.command`, oh takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and, under `experimental.reply_command`, `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
 
@@ -278,24 +278,24 @@ The table name is the tool name. Use lowercase letters, digits, and underscores.
 
 The command runs on the host, in the workspace directory. The sandbox does not confine it. A configured `group` gates it through a mode flag, then `permission` decides whether each allowed call needs approval.
 
-| Key           | Holds                                                                   |
-|---------------|-------------------------------------------------------------------------|
-| `version`     | positive compatibility version; `1` by default                          |
-| `description` | what the tool does; required                                            |
-| `command`     | the executable and its fixed arguments; required                        |
-| `parameters`  | the arguments the model supplies, each one a table                      |
-| `subject`     | the primary parameter; the first by default                             |
-| `timeout`     | the limit for one call; `30s` by default, `30m` as a task unless longer |
-| `concurrency` | maximum simultaneous calls; `1` by default                              |
-| `permission`  | `ask` by default; a table can set its optional timeout                  |
-| `group`       | one lowercase mode flag that must grant access                          |
-| `enabled`     | offer the tool to new sessions; `true` by default                       |
-| `background`  | permit background calls; `false` by default for custom tools            |
-| `granted`     | grant its group at session start; `false` by default                    |
+| Key           | Holds                                                            |
+|---------------|------------------------------------------------------------------|
+| `version`     | positive compatibility version; `1` by default                   |
+| `description` | what the tool does; required                                     |
+| `command`     | the executable and its fixed arguments; required                 |
+| `parameters`  | the arguments the model supplies, each one a table               |
+| `subject`     | the primary parameter; the first by default                      |
+| `timeout`     | the limit for one call; `30s` by default and unlimited as a task |
+| `concurrency` | maximum simultaneous calls; `1` by default                       |
+| `permission`  | `ask` by default; a table can set its optional timeout           |
+| `group`       | one lowercase mode flag that must grant access                   |
+| `enabled`     | offer the tool to new sessions; `true` by default                |
+| `background`  | permit background calls; `false` by default for custom tools     |
+| `granted`     | grant its group at session start; `false` by default             |
 
 The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments. Remove a tool's table or set `enabled = false` to stop offering it in new sessions.
 
-`concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and oh's global limit of 16 tool calls. Calls beyond the limit wait for a slot without consuming their command timeout. A task waiting for a slot shows as queued, and the wait does not count towards its 30-minute limit. This setting does not split one call into multiple tasks or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls, or when calls run as background tasks. Leave it at one for commands that share mutable state without their own locking.
+`concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and `experimental.maximum_running_tasks`. Calls beyond the limit wait for a slot without consuming their command timeout. A task waiting for a slot shows as queued. This setting does not split one call into multiple tasks or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls, or when calls run as background tasks. Leave it at one for commands that share mutable state without their own locking.
 
 A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `granted = true` on a tool or add its letter to `default.caps` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 
@@ -339,13 +339,13 @@ The result holds standard output and standard error. A non-zero exit reports a f
 
 `-t` selects the tools for a session, custom tools included. `-t weather` also offers `task` when weather permits background calls. New definitions reach new sessions; an incompatible change disables the tool in sessions that froze its previous contract.
 
-A backgroundable tool accepts `background = true` on a call. `bash`, `grep`, and `lookup` always permit it; other built-ins stay in the foreground. A foreground call to an eligible tool hands its same invocation to the background after 30 active seconds, or after `experimental.background_after_seconds` from the next start. The common limit is 30 active minutes from the first start, or the tool's own `timeout` where that is longer, with time spent queued or awaiting approval excluded. `bash` alone also accepts `respawn = true` beside `background = true`, retaining the same task identity across runs. Use `task` for status, output, restart, stop, discard, list, and prune. The person does the same with `/tasks` and `/task`. A stop or discard from the keyboard tells the model. Stopping a `bash` task kills its whole process group at once with `SIGKILL`, so its `TERM` and `EXIT` traps do not run. A custom tool gets `SIGTERM` first, then `SIGKILL` after a grace of 2 seconds. Completion reports its result and wakes the conversation, so end the turn to wait for a task. Never wait with sleep or by polling its status. Tasks need an interactive terminal: print mode and sessions without one offer no `task` tool and no `background` argument. A task ends when oh closes and does not restart automatically on resume; `task restart` starts it again.
+A backgroundable tool accepts `background = true` on a call. `bash`, `grep`, and `lookup` always permit it; other built-ins stay in the foreground. A foreground call to an eligible tool hands its same invocation to the background after 30 active seconds, or after `experimental.background_after_seconds` from the next start. A task runs until it exits, it is stopped, the session closes, or its tool reaches an explicit `timeout`. Time spent queued or awaiting approval does not consume an explicit timeout. `experimental.maximum_running_tasks` caps concurrent tasks at 16 by default, and additional tasks wait in the queue. `bash` alone also accepts `respawn = true` beside `background = true`, retaining the same task identity across runs. Use `task` for status, output, restart, stop, discard, list, and prune. The person does the same with `/tasks` and `/task`. A stop or discard from the keyboard tells the model. Stopping a `bash` task kills its whole process group at once with `SIGKILL`, so its `TERM` and `EXIT` traps do not run. A custom tool gets `SIGTERM` first, then `SIGKILL` after a grace of 2 seconds. Completion reports its result and wakes the conversation, so end the turn to wait for a task. Never wait with sleep or by polling its status. Tasks need an interactive terminal: print mode and sessions without one offer no `task` tool and no `background` argument. A task ends when oh closes and does not restart automatically on resume; `task restart` starts it again.
 
 Set `task_name` beside `background = true` to choose a short role such as `build` or `docs`. Names use 1–10 lowercase letters, digits, or hyphens. A duplicate keeps its whole name and receives a numbered suffix, such as `build-1`. Without a name, oh assigns `task-1`, `task-2`, and so on.
 
 Set `forward_port` beside `background = true` on a `bash` call to expose a server's fixed TCP port. It is offered only where the `forward` tool is offered, or under `--yolo`. In a confined session, oh forwards that sandbox port once the command has started, through the `forward` tool and its permission. The receipt gives the user's URL when the forward opens within 30 seconds; otherwise a notice gives it later. Under `--yolo`, the server uses the host network, so oh returns its host URL directly. A failed publication stops the command and the run fails. Removing the forward also removes the port from the task, so a restart does not forward it again. Stopping or discarding a task leaves its forward open.
 
-`task restart` reuses the saved tool arguments, including after a resume. It stops a running invocation before starting the next run. It checks current access and approvals again. An explicit restart starts a new 30-minute allowance. `task discard` stops and removes one task. `task prune` removes all finished tasks.
+`task restart` reuses the saved tool arguments, including after a resume. It stops a running invocation before starting the next run. It checks current access and approvals again. `task discard` stops and removes one task. `task prune` removes all finished tasks.
 
 `task output` reads collected output while a shell or custom command is still running. The live buffer keeps the most recent 256 KiB and reports omitted bytes. Finished tasks retain their final result and up to eight previous run results. The session's tool-output limit still applies.
 

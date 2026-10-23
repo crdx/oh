@@ -116,7 +116,6 @@ If a state blocks the work and no workflow below covers it, ask the user to chan
 - The watcher must exit once the condition holds; an `exit` inside `inotifywait … | while read` ends only the loop's subshell, so the task never ends
 - Feed the loop by process substitution instead, break on success, then kill inotifywait:
     - `while read -r _; do done_yet && break; done < <(inotifywait --monitor …); kill "$!"`
-- A task stops after 30 active minutes; when the watcher ends without the condition, start it again
 - When the task ends, continue where you stopped
 
 # Read-only Workspaces

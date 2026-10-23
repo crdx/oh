@@ -12,7 +12,6 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/internal/app/toolset"
-	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/async"
@@ -218,8 +217,8 @@ func (self Config) buildCustomTool(name string, options command.Options) (tool.T
 	if options.GroupForTool != nil {
 		declaration.Group = options.GroupForTool(name)
 	}
-	if self.IsToolBackgroundable(name) && declaration.TimeLimit == 0 {
-		declaration.ManagedLimit = tasks.RunLimit
+	if declaration.TimeLimit == 0 {
+		declaration.IsManagedUnlimited = true
 	}
 
 	return command.New(declaration, options)

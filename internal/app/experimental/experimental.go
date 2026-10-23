@@ -15,6 +15,7 @@ const (
 	CommandStartsTurn      Name = "command_starts_turn"
 	EnterInterrupts        Name = "enter_interrupts"
 	ForwardHostname        Name = "forward_hostname"
+	MaximumRunningTasks    Name = "maximum_running_tasks"
 	RedrawTimingFeedback   Name = "redraw_timing_feedback"
 	ReplyCommand           Name = "reply_command"
 	SharedHistory          Name = "shared_history"
@@ -49,6 +50,7 @@ var toggleKinds = map[Name]Kind{
 	CommandStartsTurn:      BooleanKind,
 	EnterInterrupts:        BooleanKind,
 	ForwardHostname:        TextKind,
+	MaximumRunningTasks:    WholeNumberKind,
 	RedrawTimingFeedback:   BooleanKind,
 	ReplyCommand:           BooleanKind,
 	SharedHistory:          BooleanKind,

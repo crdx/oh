@@ -63,13 +63,15 @@ func TestTimeWaitingForAToolSlotIsExcludedFromTheRunLimit(t *testing.T) {
 		defer manager.Close()
 		slots := make(chan struct{}, 1)
 		slots <- struct{}{}
-		snapshot, err := manager.Start(t.Context(), "late", "offload", true, false, waitForSlot(slots, tasks.RunLimit-time.Minute), nil)
+		limit := 30 * time.Minute
+		snapshot, err := manager.Start(t.Context(), "late", "offload", true, false, waitForSlot(slots, limit-time.Minute), nil,
+			tasks.StartOptions{RunLimit: limit})
 		if err != nil {
 			t.Fatal(err)
 		}
-		time.Sleep(tasks.RunLimit)
+		time.Sleep(limit)
 		<-slots
-		time.Sleep(tasks.RunLimit)
+		time.Sleep(limit)
 		synctest.Wait()
 		if state := stateOf(t, manager, snapshot.ID); state != tasks.Done {
 			t.Errorf("a task that waited for a slot is %s, want done", state)

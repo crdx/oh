@@ -23,6 +23,16 @@ func TestBackgroundAfterSecondsIsAWholeNumberToggle(t *testing.T) {
 	}
 }
 
+func TestMaximumRunningTasksIsAWholeNumberSetting(t *testing.T) {
+	if complaints := Check(map[string]any{string(MaximumRunningTasks): int64(10)}); len(complaints) != 0 {
+		t.Errorf("got complaints %v", complaints)
+	}
+	complaints := Check(map[string]any{string(MaximumRunningTasks): "ten"})
+	if len(complaints) != 1 || !strings.Contains(complaints[0].Reason, "a whole number") {
+		t.Errorf("got complaints %v, want the setting to require a whole number", complaints)
+	}
+}
+
 func TestCommandStartsTurnIsABooleanToggle(t *testing.T) {
 	if complaints := Check(map[string]any{string(CommandStartsTurn): true}); len(complaints) != 0 {
 		t.Errorf("got complaints %v", complaints)

@@ -1911,6 +1911,28 @@ func TestCommandsStartTurnsByDefault(t *testing.T) {
 	}
 }
 
+func TestMaximumRunningTasksDefaultsToTenAndCanBeChanged(t *testing.T) {
+	defaults := configFrom(t, "")
+	if value, isSet := defaults.Experimental["maximum_running_tasks"]; !isSet || value != int64(10) {
+		t.Errorf("got experimental defaults %v", defaults.Experimental)
+	}
+
+	configured := configFrom(t, "[experimental]\nmaximum_running_tasks = 4\n")
+	if configured.Experimental["maximum_running_tasks"] != int64(4) {
+		t.Errorf("got experimental settings %v", configured.Experimental)
+	}
+}
+
+func TestMaximumRunningTasksMustBePositive(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[experimental]\nmaximum_running_tasks = 0\n"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "experimental.maximum_running_tasks must be at least 1") {
+		t.Errorf("got %v", err)
+	}
+}
+
 func TestEnterInterruptsDefaultsToOffAndCanBeEnabled(t *testing.T) {
 	defaults := configFrom(t, "")
 	if value, isSet := defaults.Experimental["enter_interrupts"]; !isSet || value != false {

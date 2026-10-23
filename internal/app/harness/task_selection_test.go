@@ -275,7 +275,7 @@ func TestAToolsConfiguredTimeoutBecomesItsTaskLimit(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for index, want := range []string{"A task stops after 45 active minutes", "A task stops after 30 active minutes"} {
+	for index, want := range []string{"A task stops after 45 active minutes", "A task runs until it exits or you stop it"} {
 		if description := tools[index].Description(); !strings.Contains(description, want) {
 			t.Errorf("%s described itself as %q, want %q", tools[index].Name(), description, want)
 		}

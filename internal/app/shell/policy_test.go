@@ -8,12 +8,10 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"slices"
 	"strconv"
 	"strings"
 	"testing"
-	"time"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/file"
@@ -99,35 +97,17 @@ func newTestPathAccess(t *testing.T, files *file.Root, mode *caps.Mode) *PathAcc
 	return access
 }
 
-func TestOnlyACommandSaturatingTheMachineReachesTheProcessorLimit(t *testing.T) {
-	if shellTimeout != 30*time.Minute {
-		t.Errorf("got a shell timeout of %s, want 30m", shellTimeout)
-	}
-
-	limit := shellCPUTime()
-	cores := runtime.NumCPU()
-
-	saturated := shellTimeout * time.Duration(cores)
-	if limit >= saturated {
-		t.Errorf("got %s, want less than the %s a command could burn on every core", limit, saturated)
-	}
-
-	threeQuarters := shellTimeout * time.Duration(cores) * 3 / 4
-	if limit <= threeQuarters {
-		t.Errorf("got %s, want more than the %s a command using most of them would", limit, threeQuarters)
-	}
-
-	if cores > 1 && limit <= shellTimeout {
-		t.Errorf("got %s, want more than the %s wall clock a command is given", limit, shellTimeout)
-	}
-
+func TestAShellPolicyHasNoTimeLimits(t *testing.T) {
 	policy, err := createTestPolicy(t, t.TempDir(), t.TempDir(), t.TempDir(), Paths{}, 0)
 	if err != nil {
 		t.Fatalf("could not create the policy: %v", err)
 	}
 
-	if policy.MaxCPUTime != limit {
-		t.Errorf("got %s, want the shell to carry the %s limit", policy.MaxCPUTime, limit)
+	if policy.Timeout != 0 {
+		t.Errorf("got a wall timeout of %s", policy.Timeout)
+	}
+	if policy.MaxCPUTime != 0 {
+		t.Errorf("got a processor limit of %s", policy.MaxCPUTime)
 	}
 }
 
@@ -1339,14 +1319,14 @@ func TestAWaivedSandboxRunsACommandWhereTheSandboxCouldNot(t *testing.T) {
 	}
 }
 
-func TestAWaivedSandboxBoundsNothingButTheDeadline(t *testing.T) {
+func TestAWaivedSandboxHasNoResourceBounds(t *testing.T) {
 	policy := YoloPolicy(t.TempDir(), t.TempDir())
 
 	if !policy.Yolo {
 		t.Error("expected the policy to say the sandbox has been waived")
 	}
-	if policy.Timeout != shellTimeout {
-		t.Errorf("got a deadline of %s, want %s", policy.Timeout, shellTimeout)
+	if policy.Timeout != 0 {
+		t.Errorf("got a wall timeout of %s", policy.Timeout)
 	}
 	for name, bound := range map[string]int64{
 		"file size": policy.MaxFileSize, "open files": policy.MaxOpenFiles, "processes": policy.MaxProcesses,

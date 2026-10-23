@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Changes
+
+- Remove the task timeout, and use the concurrent task limit to control it instead
+
 ## [0.22.2] — 2026-10-23
 
 ### Tasks

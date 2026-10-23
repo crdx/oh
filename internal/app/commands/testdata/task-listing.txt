@@ -46,11 +46,11 @@
 === queued and timed out (120 columns) ===
 [38;2;129;162;190mBackground tasks:[0m
   [38;2;192;128;80mthird[0m  queued                                                                                  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m
-  [38;2;192;128;80mslow[0m   [38;2;204;102;102mtimed out after 3s, task exceeded its 30m0s execution limit: context deadline exceeded[0m  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190msoak[0m
+  [38;2;192;128;80mslow[0m   [38;2;204;102;102mtimed out after 3s, task exceeded its 45m0s execution limit: context deadline exceeded[0m  [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190msoak[0m
 === queued and timed out (60 columns) ===
 [38;2;129;162;190mBackground tasks:[0m
   [38;2;192;128;80mthird[0m  queued                                            …
-  [38;2;192;128;80mslow[0m   [38;2;204;102;102mtimed out after 3s, task exceeded its 30m0s execut…[0m
+  [38;2;192;128;80mslow[0m   [38;2;204;102;102mtimed out after 3s, task exceeded its 45m0s execut…[0m
 === queued and timed out (30 columns) ===
 [38;2;129;162;190mBackground tasks:[0m
   [38;2;192;128;80mthird[0m  queued              …

@@ -176,8 +176,8 @@ func TestAQueuedBackgroundReceiptDoesNotClaimTheTaskIsRunning(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
-		started := make(chan struct{}, tasks.MaxRunning)
-		for index := range tasks.MaxRunning {
+		started := make(chan struct{}, tasks.DefaultMaximumRunning)
+		for index := range tasks.DefaultMaximumRunning {
 			_, err := manager.Start(t.Context(), fmt.Sprintf("hold-%d", index), "bash", true, false,
 				func(ctx context.Context) (tool.ToolCallResult, error) {
 					started <- struct{}{}
@@ -188,7 +188,7 @@ func TestAQueuedBackgroundReceiptDoesNotClaimTheTaskIsRunning(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		for range tasks.MaxRunning {
+		for range tasks.DefaultMaximumRunning {
 			<-started
 		}
 		call, err := async.Tool(heldTool(nil, new(int)), manager, async.Options{}).Parse(`{"command":"later","background":true}`)
@@ -440,22 +440,22 @@ func TestTheDescriptionNamesTheForegroundLimit(t *testing.T) {
 			defer manager.Close()
 			manager.SetForegroundLimit(test.limit)
 			description := async.Tool(heldTool(nil, new(int)), manager, async.Options{}).Description()
-			if !strings.Contains(description, test.want) || !strings.Contains(description, "A task stops after 30 active minutes") {
+			if !strings.Contains(description, test.want) || !strings.Contains(description, "A task runs until it exits or you stop it") {
 				t.Errorf("got description %q, want it to say %q", description, test.want)
 			}
 		})
 	}
 }
 
-func TestALongerToolLimitIsTheTaskLimitTheModelIsTold(t *testing.T) {
+func TestAnExplicitToolLimitIsTheTaskLimitTheModelIsTold(t *testing.T) {
 	for _, test := range []struct {
 		name  string
 		limit time.Duration
 		want  string
 	}{
-		{"none", 0, "A task stops after 30 active minutes"},
-		{"shorter", 10 * time.Minute, "A task stops after 30 active minutes"},
-		{"longer", 45 * time.Minute, "A task stops after 45 active minutes"},
+		{"none", 0, "A task runs until it exits or you stop it"},
+		{"ten minutes", 10 * time.Minute, "A task stops after 10 active minutes"},
+		{"forty-five minutes", 45 * time.Minute, "A task stops after 45 active minutes"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			manager := tasks.New(t.Context())

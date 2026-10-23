@@ -1344,7 +1344,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	doesWake := !args.IsPrinting
 	var taskManager *tasks.Manager
 	if canSuperviseTasks(args.IsPrinting, keyboard) {
-		taskManager = tasks.New(ctx)
+		maximumRunningTasks := experimentalToggles.GetWholeNumber(experimental.MaximumRunningTasks, tasks.DefaultMaximumRunning)
+		taskManager = tasks.NewWithMaximumRunning(ctx, maximumRunningTasks)
 		defer taskManager.Close()
 		taskManager.SetForegroundLimit(time.Duration(experimentalToggles.GetWholeNumber(experimental.BackgroundAfterSeconds, 0)) * time.Second)
 		toolsBeforeShell = append(toolsBeforeShell, task.New(taskManager))

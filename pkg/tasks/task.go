@@ -14,13 +14,12 @@ import (
 )
 
 const (
-	MaxRunning         = 16
-	MaxQueued          = 64
-	ForegroundLimit    = 30 * time.Second
-	RunLimit           = 30 * time.Minute
-	QuickRunLimit      = 2 * time.Second
-	QuickRunsTolerated = 3
-	PreviousRunLimit   = 8
+	DefaultMaximumRunning = 16
+	MaxQueued             = 64
+	ForegroundLimit       = 30 * time.Second
+	QuickRunLimit         = 2 * time.Second
+	QuickRunsTolerated    = 3
+	PreviousRunLimit      = 8
 )
 
 type State string
@@ -134,11 +133,18 @@ type Manager struct {
 }
 
 func New(ctx context.Context) *Manager {
+	return NewWithMaximumRunning(ctx, DefaultMaximumRunning)
+}
+
+func NewWithMaximumRunning(ctx context.Context, maximumRunning int) *Manager {
+	if maximumRunning < 1 {
+		maximumRunning = DefaultMaximumRunning
+	}
 	sessionContext, cancel := context.WithCancel(ctx)
 	return &Manager{
 		entries:         make(map[string]*entry),
 		changes:         make(chan struct{}, 1),
-		slots:           make(chan struct{}, MaxRunning),
+		slots:           make(chan struct{}, maximumRunning),
 		done:            sessionContext.Done(),
 		cancel:          cancel,
 		now:             time.Now,
@@ -492,7 +498,7 @@ func (self *Manager) startLocked(
 		slotWait:          &slotWait{},
 		publish:           options.Publish,
 		publicationSignal: make(chan struct{}),
-		runLimit:          max(RunLimit, options.RunLimit),
+		runLimit:          options.RunLimit,
 	}
 	self.entries[id] = current
 	if options.replaces == nil {
@@ -558,11 +564,13 @@ func (self *Manager) run(ctx context.Context, current *entry, execute Execution)
 	}
 	runContext, cancel := context.WithCancelCause(ctx)
 	runFinished := make(chan struct{})
-	go func() {
-		if activeTimeExpired(runContext, current.clock, current.runLimit, runFinished) {
-			cancel(fmt.Errorf("task exceeded its %s execution limit: %w", current.runLimit, context.DeadlineExceeded))
-		}
-	}()
+	if current.runLimit > 0 {
+		go func() {
+			if activeTimeExpired(runContext, current.clock, current.runLimit, runFinished) {
+				cancel(fmt.Errorf("task exceeded its %s execution limit: %w", current.runLimit, context.DeadlineExceeded))
+			}
+		}()
+	}
 	stopSession := make(chan struct{})
 	go func() {
 		select {

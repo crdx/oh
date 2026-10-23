@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"slices"
-	"strings"
 	"testing"
 	"testing/synctest"
 	"time"
@@ -48,6 +47,26 @@ func TestAForegroundCallHandsOffWithoutRunningAgain(t *testing.T) {
 	})
 }
 
+func TestTheConfiguredMaximumLimitsRunningTasks(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.NewWithMaximumRunning(t.Context(), 2)
+		defer manager.Close()
+		for _, name := range []string{"one", "two", "three"} {
+			if _, err := manager.Start(t.Context(), name, "bash", true, false, holdUntilStopped, nil); err != nil {
+				t.Fatal(err)
+			}
+		}
+		synctest.Wait()
+		counts := map[tasks.State]int{}
+		for _, snapshot := range manager.List() {
+			counts[snapshot.State]++
+		}
+		if counts[tasks.Running] != 2 || counts[tasks.Queued] != 1 {
+			t.Errorf("task states were %v", counts)
+		}
+	})
+}
+
 func TestAnImmediateBackgroundCallCompletesOnlyOnce(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
@@ -72,7 +91,7 @@ func TestAnImmediateBackgroundCallCompletesOnlyOnce(t *testing.T) {
 	})
 }
 
-func TestABackgroundCallEndsAtThirtyMinutes(t *testing.T) {
+func TestABackgroundCallRunsUntilItIsStopped(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
@@ -83,16 +102,17 @@ func TestABackgroundCallEndsAtThirtyMinutes(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		over, release, err := manager.Hold("one")
-		if err != nil {
+		time.Sleep(time.Hour)
+		synctest.Wait()
+		if snapshot, err := manager.Status("one"); err != nil || snapshot.State != tasks.Running {
+			t.Fatalf("the task was %s after an hour, failure %v", snapshot.State, err)
+		}
+		if err := manager.Stop("one", "the user stopped it"); err != nil {
 			t.Fatal(err)
 		}
-		defer release()
-		<-over
-		conclusions := manager.Drain()
-		if len(conclusions) != 1 || !errors.Is(conclusions[0].Failure, context.DeadlineExceeded) ||
-			!strings.Contains(conclusions[0].Snapshot.Failure, "30m0s") {
-			t.Errorf("wrong thirty-minute outcome: %v", conclusions)
+		synctest.Wait()
+		if snapshot, err := manager.Status("one"); err != nil || snapshot.State != tasks.Stopped {
+			t.Errorf("the stopped task was %s, failure %v", snapshot.State, err)
 		}
 	})
 }
@@ -155,15 +175,15 @@ func TestApprovalTimeDoesNotConsumeForegroundOrBackgroundAllowance(t *testing.T)
 		if isBackground := <-handedOff; !isBackground {
 			t.Error("the call did not hand off after approval")
 		}
-		over, release, err := manager.Hold("one")
-		if err != nil {
+		time.Sleep(time.Hour)
+		synctest.Wait()
+		if snapshot, err := manager.Status("one"); err != nil || snapshot.State != tasks.Running {
+			t.Fatalf("the task was %s after an hour, failure %v", snapshot.State, err)
+		}
+		if err := manager.Stop("one", "the user stopped it"); err != nil {
 			t.Fatal(err)
 		}
-		defer release()
-		<-over
-		if conclusions := manager.Drain(); len(conclusions) != 1 || !strings.Contains(conclusions[0].Snapshot.Failure, "30m0s") {
-			t.Errorf("the background allowance was lost during approval: %v", conclusions)
-		}
+		synctest.Wait()
 	})
 }
 

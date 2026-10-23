@@ -704,6 +704,9 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
 		return fmt.Errorf("%s: subagent.concurrency must be at least 1, got %d", displayPath, config.Subagent.Concurrency)
 	}
+	if err := validateMaximumRunningTasks(config, meta); err != nil {
+		return fmt.Errorf("%s: %w", displayPath, err)
+	}
 	if meta.IsDefined(defaultSetting, "tool_output") && config.Defaults.ToolOutput.Bytes < minimumToolOutputBytes {
 		return fmt.Errorf(
 			"%s: %s.tool_output is too small to say anything with; write at least %d bytes",
@@ -995,6 +998,14 @@ func refuseEmptySettings(config *Config, meta toml.MetaData) error {
 	}
 	if meta.IsDefined("editor", "command") && (len(config.Editor.Command) == 0 || config.Editor.Command[0] == "") {
 		return errors.New("editor.command is empty; leave it out to find an editor automatically")
+	}
+	return nil
+}
+
+func validateMaximumRunningTasks(config *Config, meta toml.MetaData) error {
+	maximumRunningTasks, hasMaximumRunningTasks := config.Experimental[string(experimental.MaximumRunningTasks)].(int64)
+	if meta.IsDefined(experimentalSetting, string(experimental.MaximumRunningTasks)) && hasMaximumRunningTasks && maximumRunningTasks < 1 {
+		return fmt.Errorf("experimental.maximum_running_tasks must be at least 1, got %d", maximumRunningTasks)
 	}
 	return nil
 }

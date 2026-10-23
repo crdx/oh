@@ -17,7 +17,6 @@ import (
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
-	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -38,8 +37,6 @@ type Args struct {
 }
 
 const Name = "bash"
-
-const CommandTimeout = tasks.RunLimit
 
 const IntentDescription = `what you are doing, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as "Regenerating every golden in the scratch copy"`
 
