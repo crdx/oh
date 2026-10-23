@@ -15,12 +15,14 @@ import (
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/middleware/async"
 	"crdx.org/oh/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/task"
 )
 
@@ -74,12 +76,14 @@ func withOptionalIntent(subject tool.Tool) tool.Tool {
 	})
 }
 
-func callRowTools(isFrozen bool, isBackgroundable bool) func(string) (tool.Tool, bool) {
+func callRowTools(t *testing.T, isFrozen bool, isBackgroundable bool) func(string) (tool.Tool, bool) {
+	t.Helper()
 	shellTool := shellRowTool()
 	if isFrozen {
 		shellTool = withOptionalIntent(shellTool)
 	}
 	manager := tasks.New(context.Background())
+	t.Cleanup(manager.Close)
 	if isBackgroundable {
 		shellTool = async.Tool(shellTool, manager, async.Options{
 			IsRestartable: true,
@@ -89,6 +93,12 @@ func callRowTools(isFrozen bool, isBackgroundable bool) func(string) (tool.Tool,
 		})
 	}
 	taskTool := task.New(manager)
+	rootHandle, err := os.OpenRoot(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = rootHandle.Close() })
+	readTool := read.New(file.New(rootHandle, func(string) error { return nil }), file.NewSnapshots())
 
 	return func(name string) (tool.Tool, bool) {
 		switch name {
@@ -96,6 +106,8 @@ func callRowTools(isFrozen bool, isBackgroundable bool) func(string) (tool.Tool,
 			return shellTool, true
 		case "task":
 			return taskTool, true
+		case "read":
+			return readTool, true
 		}
 
 		return nil, false
@@ -147,6 +159,18 @@ func taskAnswered(text string) *callRowOutcome {
 		text:   text,
 		metrics: &tool.ToolCallMetrics{
 			Kind:  tool.MetricOutput,
+			Lines: int64(strings.Count(text, "\n") + 1),
+			Bytes: int64(len(text)),
+		},
+	}
+}
+
+func readAnswered(text string) *callRowOutcome {
+	return &callRowOutcome{
+		status: agent.SuccessStatus,
+		text:   text,
+		metrics: &tool.ToolCallMetrics{
+			Kind:  tool.MetricRead,
 			Lines: int64(strings.Count(text, "\n") + 1),
 			Bytes: int64(len(text)),
 		},
@@ -206,6 +230,7 @@ func callRowCases() []callRowCase {
 			{"bash", `{"command":"curl -s localhost:8080 | head -1","intent":"Checking the docs answer requests"}`, shellSucceeded("<!DOCTYPE html>", 1)},
 			{"task", `{"action":"stop","name":"docs"}`, taskAnswered("docs: stopped")},
 		}},
+		{title: "read with an overflowing range", calls: []callRowCall{{"read", `{"path":"notes.txt","offset":2,"limit":9223372036854775807}`, readAnswered("two\nthree")}}},
 	}
 }
 
@@ -237,8 +262,9 @@ func callRowEvents(item callRowCase, getTool func(string) (tool.Tool, bool), isS
 	return events
 }
 
-func drawCallRows(item callRowCase, columns int, isStored bool) string {
-	getTool := callRowTools(item.isFrozen, item.isBackgroundable)
+func drawCallRows(t *testing.T, item callRowCase, columns int, isStored bool) string {
+	t.Helper()
+	getTool := callRowTools(t, item.isFrozen, item.isBackgroundable)
 	events := callRowEvents(item, getTool, isStored)
 
 	var screenOutput bytes.Buffer
@@ -258,10 +284,11 @@ func drawCallRows(item callRowCase, columns int, isStored bool) string {
 	return strings.Trim(strings.ReplaceAll(screenOutput.String(), "\r\n", "\n"), "\n")
 }
 
-func drawRunningCallRow(made callRowCall, columns int) string {
+func drawRunningCallRow(t *testing.T, made callRowCall, columns int) string {
+	t.Helper()
 	label := call.LabelFor(
 		agent.Event{Kind: agent.ToolCallRequestEvent, ID: "call-1", Name: made.name, Arguments: made.arguments},
-		callRowTools(false, false),
+		callRowTools(t, false, false),
 		nil,
 	)
 	block := dynamic.NewBlock(func() {})
@@ -315,10 +342,10 @@ func compareCallRowGolden(t *testing.T, name string, drawn string) {
 
 func TestGoldenEveryShellAndJobRowIsDrawnAsBefore(t *testing.T) {
 	settled := callRowDocument(func(item callRowCase, columns int) string {
-		return drawCallRows(item, columns, false)
+		return drawCallRows(t, item, columns, false)
 	}, callRowCases())
 	running := callRowDocument(func(item callRowCase, columns int) string {
-		return drawRunningCallRow(item.calls[0], columns)
+		return drawRunningCallRow(t, item.calls[0], columns)
 	}, runningCallRows())
 
 	compareCallRowGolden(t, "call-rows.ansi", settled)
@@ -330,8 +357,8 @@ func TestGoldenEveryShellAndJobRowIsDrawnAsBefore(t *testing.T) {
 func TestGoldenAStoredCallIsDrawnAsItWasLive(t *testing.T) {
 	for _, item := range callRowCases() {
 		for _, columns := range callRowColumns {
-			live := drawCallRows(item, columns, false)
-			stored := drawCallRows(item, columns, true)
+			live := drawCallRows(t, item, columns, false)
+			stored := drawCallRows(t, item, columns, true)
 			if live != stored {
 				t.Errorf("%s at %d columns:\n--- live ---\n%s\n--- stored ---\n%s", item.title, columns, style.Plain(live), style.Plain(stored))
 			}

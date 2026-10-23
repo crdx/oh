@@ -531,3 +531,21 @@
 ── shell and task calls mixed in one round · 16 columns
 [3m[38;2;150;152;150mChecking the …[0m[0m [38;2;76;154;44m✓[0m
 ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m
+
+── read with an overflowing range · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\read]8;;\ [38;2;192;128;80mnotes.txt[0m [38;2;150;152;150m2+[0m [38;2;150;152;150m2L[0m
+
+── read with an overflowing range · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\read]8;;\ [38;2;192;128;80mnotes.txt[0m [38;2;150;152;150m2+[0m [38;2;150;152;150m2L[0m
+
+── read with an overflowing range · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\read]8;;\ [38;2;192;128;80mnotes.txt[0m [38;2;150;152;150m2+[0m [38;2;150;152;150m2L[0m
+
+── read with an overflowing range · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\read]8;;\ [38;2;192;128;80mnotes.txt[0m [38;2;150;152;150m2+[0m [38;2;150;152;150m2L[0m
+
+── read with an overflowing range · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\read]8;;\ [38;2;192;128;80mnotes.txt[0m [38;2;150;152;150m2+[0m [38;2;150;152;150m2L[0m
+
+── read with an overflowing range · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\read]8;;\ [38;2;192;128;80mnotes.t…[0m [38;2;150;152;150m2L[0m

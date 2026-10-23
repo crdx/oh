@@ -1,0 +1,52 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+discarded-task-on-resume = "task-3"
+
+[[tool]]
+name = "bash"
+declared = '''
+echo broken build >&2
+exit 1
+'''
+
+[[tool]]
+name = "task"
+
+[first]
+prompt = "remember that old tasks were tidied"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"I will remember the task history."}''',
+    '''{"type":"response.output_text.done","text":"I will remember the task history."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"I will remember the task history."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"I will remember the task history."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "start another build in the background"
+settle-tasks-after-tool-result = true
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"bash","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-2","delta":"{\"dish\":\"release build\",\"background\":true}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-2","arguments":"{\"dish\":\"release build\",\"background\":true}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"bash","arguments":"{\"dish\":\"release build\",\"background\":true}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The new build used the next unused task ID and reported its failure."}''',
+    '''{"type":"response.output_text.done","text":"The new build used the next unused task ID and reported its failure."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The new build used the next unused task ID and reported its failure."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"The new build used the next unused task ID and reported its failure."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

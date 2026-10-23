@@ -1,6 +1,7 @@
 package bash
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
 )
 
@@ -257,4 +259,39 @@ func TestGoldenEveryWholeReportACommandCanEndOnMatchesTheGolden(t *testing.T) {
 	}
 
 	compareWithGolden(t, "report.txt", strings.TrimSuffix(written.String(), "\n"))
+}
+
+func TestGoldenAReplacedWorkspaceExplainsItsRefusal(t *testing.T) {
+	directory := t.TempDir()
+	rootHandle, err := os.OpenRoot(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = rootHandle.Close() })
+	root := file.New(rootHandle, func(string) error { return nil })
+	moved := directory + "-moved"
+	if err := os.Rename(directory, moved); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(moved) })
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	subject := New(
+		root,
+		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+		func(context.Context, string, string) error { return nil },
+		sandbox.Direct(),
+		true,
+	)
+	call, err := subject.Parse(`{"intent":"Checking the changed workspace","command":"true"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, refusal := call.Exec(t.Context())
+	if refusal == nil {
+		t.Fatal("the replaced workspace was accepted")
+	}
+	compareWithGolden(t, "workspace-refusal.txt", refusal.Error()+"\n")
 }

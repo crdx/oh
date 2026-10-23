@@ -1,0 +1,44 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+remember that old tasks were tidied
+
+## Assistant · +0s
+
+I will remember the task history.
+
+## User · +0s
+
+start another build in the background
+
+## Tool calls · +0s
+
+```
+bash: release build [info, 1 line, 19B, toolu_2]
+```
+
+## Task run ended · +0s
+
+````
+Task `task-4` failed: the command exited with status 1.
+
+```
+exit(1):
+broken build
+```
+````
+
+## Assistant · +0s
+
+The new build used the next unused task ID and reported its failure.

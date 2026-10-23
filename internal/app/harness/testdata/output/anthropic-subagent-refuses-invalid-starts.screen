@@ -1,0 +1,10 @@
+
+ try duplicate names and the parent scratch as a subagent workspace
+
+
+spawn 2 subagents · 2× anthropic/claude-opus-5@… ✗ subagents[1].name "worker" is given to another s…
+spawn subagent · anthropic/claude-opus-5@medium ✗ /tmp lies inside the parent's scratch space, whic…
+
+Both invalid subagent starts were refused.
+
+Finished.

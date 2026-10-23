@@ -284,6 +284,18 @@ func TestGoldenAForkCarriesItsSourceOver(t *testing.T) {
 				})}
 			},
 		},
+		"a discarded task completion left behind": {
+			events: func(forkGoldenPaths) []agent.Event {
+				discarded := tasks.Snapshot{ID: "task-3", ToolName: "bash", Run: 1, State: tasks.Done, Output: "discarded completion must stay hidden"}
+				retained := tasks.Snapshot{ID: "task-4", ToolName: "bash", Run: 1, State: tasks.Done, Output: "retained completion is announced"}
+				return []agent.Event{
+					taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: discarded, IsFinal: true}),
+					taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: retained, IsFinal: true}),
+					taskrecord.ListingEvent([]tasks.Snapshot{discarded, retained}),
+					taskrecord.ListingEvent([]tasks.Snapshot{retained}),
+				}
+			},
+		},
 		"everything carried over at once": {
 			events: func(paths forkGoldenPaths) []agent.Event {
 				return []agent.Event{

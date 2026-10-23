@@ -1,0 +1,49 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[first]
+prompt = "try duplicate names and the parent scratch as a subagent workspace"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"subagent","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"action\":\"start\",\"subagents\":[{\"name\":\"worker\",\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect one\",\"intent\":\"Inspecting the first area\"},{\"name\":\"worker\",\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect two\",\"intent\":\"Inspecting the second area\"}]}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"action\":\"start\",\"subagents\":[{\"name\":\"worker\",\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect one\",\"intent\":\"Inspecting the first area\"},{\"name\":\"worker\",\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect two\",\"intent\":\"Inspecting the second area\"}]}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"name\":\"worker\",\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect one\",\"intent\":\"Inspecting the first area\"},{\"name\":\"worker\",\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect two\",\"intent\":\"Inspecting the second area\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"subagent","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-2","delta":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect scratch\",\"intent\":\"Inspecting the parent scratch\",\"workspace\":\"/tmp\"}]}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-2","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect scratch\",\"intent\":\"Inspecting the parent scratch\",\"workspace\":\"/tmp\"}]}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Inspect scratch\",\"intent\":\"Inspecting the parent scratch\",\"workspace\":\"/tmp\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Both invalid subagent starts were refused."}''',
+    '''{"type":"response.output_text.done","text":"Both invalid subagent starts were refused."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Both invalid subagent starts were refused."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Both invalid subagent starts were refused."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Finished."}''',
+    '''{"type":"response.output_text.done","text":"Finished."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Finished."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Finished."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

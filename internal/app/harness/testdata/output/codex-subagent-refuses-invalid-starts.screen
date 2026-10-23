@@ -1,0 +1,10 @@
+
+ try duplicate names and the parent scratch as a subagent workspace
+
+
+spawn 2 subagents · 2× codex/gpt-5.6-sol@medium ✗ subagents[1].name "worker" is given to another su…
+spawn subagent · codex/gpt-5.6-sol@medium ✗ /tmp lies inside the parent's scratch space, which the …
+
+Both invalid subagent starts were refused.
+
+Finished.

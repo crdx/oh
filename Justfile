@@ -116,6 +116,7 @@ golden:
         ./internal/app/usage \
         ./internal/app/ctl/... \
         ./pkg/session \
+        ./pkg/tool/command \
         ./pkg/toolbox/bash \
         ./pkg/toolbox/read \
         -run '^TestGolden'

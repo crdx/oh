@@ -1,3 +1,11 @@
+=== a background tool parameter is reserved ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ The configuration could not be reloaded:                                                       │
+ │ config.toml: tool.weather:  │
+ │ parameter task_name is reserved for task execution                                             │
+─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a grant that waits for the next run ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │

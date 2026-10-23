@@ -39,6 +39,7 @@ var sessionGoldenModelNames = map[string]string{
 
 const (
 	sessionGoldenUnreadable     = "/unreadable"
+	sessionGoldenParentScratch  = "/tmp"
 	sessionGoldenRevoked        = "/revoked"
 	sessionGoldenSubagentPath   = "/subagent/"
 	sessionGoldenSubagentSettle = 20 * time.Second
@@ -261,6 +262,9 @@ func (self *sessionGoldenChildren) manager(
 				return sessionGoldenWorkspace, nil
 			case sessionGoldenUnreadable:
 				return "", errors.New(sessionGoldenUnreadable + " is not a directory you can read")
+			case sessionGoldenParentScratch:
+				fixture := newChildWorkspaceFixture(self.t, false)
+				return fixture.resolve(directory)
 			}
 			return directory, nil
 		},

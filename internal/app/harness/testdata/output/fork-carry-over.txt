@@ -1,3 +1,52 @@
+=== a discarded task completion left behind ===
+--- told the model ---
+<system-reminder>
+Task `task-4` done.
+
+```
+retained completion is announced
+```
+</system-reminder>
+---
+This session was forked from able-dolphin.
+Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+Its own opening message will say whether able-dolphin was forked from an earlier session.
+If so, follow the chain to get the full context.
+--- chat.md ---
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** ``
+- **Provider:** ``
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rw · +0s
+
+## Task run ended · +0s
+
+````
+Task `task-4` done.
+
+```
+retained completion is announced
+```
+````
+
+## User · +0s
+
+This session was forked from able-dolphin.
+Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+Its own opening message will say whether able-dolphin was forked from an earlier session.
+If so, follow the chain to get the full context.
+
+## Silent turn · +0s
+
+```
+Model returned no reply.
+```
+
 === a forward carried over ===
 --- told the model ---
 <system-reminder>

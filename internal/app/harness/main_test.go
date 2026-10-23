@@ -14323,6 +14323,7 @@ const (
 	configReloadSettingThatIsNotLive
 	configReloadGrantThatWaitsForTheNextRun
 	configReloadToolPermissionThatLandsLive
+	configReloadReservedToolParameter
 	configReloadDebugThatWaitsForTheNextRun
 	configReloadSnippets
 	configReloadRoundRobinFile
@@ -14354,6 +14355,7 @@ func TestGoldenReloadingConfigDrawsEveryVisibleState(t *testing.T) {
 		"revision to a setting only a new session picks up": configReloadSettingThatIsNotLive,
 		"a grant that waits for the next run":               configReloadGrantThatWaitsForTheNextRun,
 		"a tool permission that lands live":                 configReloadToolPermissionThatLandsLive,
+		"a background tool parameter is reserved":           configReloadReservedToolParameter,
 		"debug settings wait for the next run":              configReloadDebugThatWaitsForTheNextRun,
 	}
 
@@ -14743,6 +14745,18 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 		settleLiveConfig(t, self)
 		self.show(inputLine)
 		return screenOutput.String()
+	case configReloadReservedToolParameter:
+		writeLiveConfig(t, path, initialConfig+`
+
+[tool.weather]
+description = "report the weather"
+command = ["true"]
+background = true
+parameters = [{ name = "task_name", kind = "string", description = "a conflicting parameter" }]
+`)
+		settleLiveConfig(t, self)
+		self.show(inputLine)
+		return strings.ReplaceAll(screenOutput.String(), path, "config.toml")
 	case configReloadDebugThatWaitsForTheNextRun:
 		writeLiveConfig(t, path, initialConfig+"\n[debug]\nstalls = true\ncpu_profile = true\n")
 		settleLiveConfig(t, self)
@@ -19247,6 +19261,7 @@ type sessionGoldenTool struct {
 	FetchWithheld         bool          `toml:"fetch-withheld"`
 	LookupAnswer          string        `toml:"lookup-answer"`
 	Blocks                bool          `toml:"blocks"`
+	Detaches              bool          `toml:"detaches"`
 	StoppedOutput         string        `toml:"stopped-output"`
 	IsLargeRead           bool          `toml:"large-read"`
 	Declared              string        `toml:"declared"`
@@ -19301,6 +19316,7 @@ type sessionGoldenScenario struct {
 	TaskHoldingGit         string                    `toml:"task-holding-git"`
 	TaskHoldingConfigured  string                    `toml:"task-holding-configured"`
 	TasksRunningIntoResume []string                  `toml:"tasks-running-into-resume"`
+	DiscardedTaskOnResume  string                    `toml:"discarded-task-on-resume"`
 	RunBeforeFirst         string                    `toml:"run-before-first"`
 	Prices                 *sessionGoldenPrices      `toml:"prices"`
 	Tools                  []sessionGoldenTool       `toml:"tool"`
@@ -19881,6 +19897,11 @@ func newSessionGoldenTools(
 			continue
 		}
 
+		if specification.Detaches {
+			tools = append(tools, newSessionGoldenDetachingTool(t, specification))
+			continue
+		}
+
 		callCount := 0
 		description := "A deterministic scenario tool."
 		if isResuming && specification.OnResume == "changed" {
@@ -20191,6 +20212,65 @@ func newSessionGoldenBlockingTool(specification sessionGoldenTool) tool.Tool {
 		return tool.ToolCallResult{Output: specification.StoppedOutput}, errSessionGoldenToolStopped
 	})
 }
+
+func newSessionGoldenDetachingTool(t *testing.T, specification sessionGoldenTool) tool.Tool {
+	t.Helper()
+
+	manager, isLoaded := sessionGoldenTaskManagers.Load(t)
+	if !isLoaded {
+		t.Fatal("a detaching tool scenario needs a task manager")
+	}
+	taskManager, isManager := manager.(*tasks.Manager)
+	if !isManager {
+		t.Fatal("the task manager has the wrong type")
+	}
+	taskManager.SetForegroundLimit(time.Second)
+	gate := &sessionGoldenGate{open: make(chan struct{})}
+	sessionGoldenGates.Store(t, gate)
+	callCount := 0
+	return tool.Implement(
+		tool.Definition{Name: specification.Name, Description: "A scenario tool that waits for its task to settle."},
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: specification.Name}
+		},
+	).Run(func(ctx context.Context, _ struct{}) (tool.ToolCallResult, error) {
+		release := gate.opened()
+		if err := tool.Launched(ctx); err != nil {
+			return tool.ToolCallResult{}, err
+		}
+		if callCount >= len(specification.Outputs) {
+			return tool.ToolCallResult{}, fmt.Errorf("tool %s has no output for call %d", specification.Name, callCount+1)
+		}
+		output := specification.Outputs[callCount]
+		callCount++
+		select {
+		case <-release:
+			return tool.ToolCallResult{Output: output}, nil
+		case <-ctx.Done():
+			return tool.ToolCallResult{Output: specification.StoppedOutput}, errSessionGoldenToolStopped
+		}
+	})
+}
+
+type sessionGoldenGate struct {
+	mutex sync.Mutex
+	open  chan struct{}
+}
+
+func (self *sessionGoldenGate) opened() <-chan struct{} {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	return self.open
+}
+
+func (self *sessionGoldenGate) release() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	close(self.open)
+	self.open = make(chan struct{})
+}
+
+var sessionGoldenGates sync.Map
 
 type sessionGoldenSearcher struct {
 	answer string
@@ -20665,6 +20745,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	t.Cleanup(func() { firstTaskManager.Close() })
 	sessionGoldenTaskManagers.Store(t, firstTaskManager)
 	t.Cleanup(func() { sessionGoldenTaskManagers.Delete(t) })
+	t.Cleanup(func() { sessionGoldenGates.Delete(t) })
 	var firstHarness *App
 	var firstChildManager *subagents.Manager
 	if children != nil {
@@ -20747,6 +20828,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 	firstHarness.currentTurn = Turn{Stream: testRunningTurnStream(), painter: firstHarness.newPainter(true)}
 	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals, children)
+	if scenario.DiscardedTaskOnResume != "" {
+		recordSessionGoldenDiscardedTask(firstHarness, scenario.DiscardedTaskOnResume)
+	}
 	firstHarness.dropPendingInput()
 	if children != nil {
 		if scenario.SubagentsKilled {
@@ -21349,6 +21433,12 @@ func settleSessionGoldenTasks(t *testing.T, testHarness *App) {
 		return
 	}
 
+	if gate, isLoaded := sessionGoldenGates.Load(t); isLoaded {
+		if detachingGate, isGate := gate.(*sessionGoldenGate); isGate {
+			detachingGate.release()
+		}
+	}
+
 	for {
 		var live tasks.Snapshot
 		isLive := false
@@ -21388,6 +21478,24 @@ func endedSessionGoldenTask(id string) tasks.Conclusion {
 		},
 		Result:  tool.ToolCallResult{},
 		IsFinal: true,
+	}
+}
+
+func recordSessionGoldenDiscardedTask(testHarness *App, id string) {
+	startedAt := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
+	retained := tasks.Snapshot{ID: "task-1", ToolName: "bash", Run: 1, State: tasks.Done, StartedAt: startedAt, EndedAt: startedAt.Add(time.Second)}
+	discarded := tasks.Snapshot{
+		ID: id, ToolName: "bash", Run: 1, State: tasks.Done, StartedAt: startedAt, EndedAt: startedAt.Add(2 * time.Second),
+		Output: "discarded completion must not be repeated",
+	}
+	events := []agent.Event{
+		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: discarded, IsFinal: true}),
+		taskrecord.ListingEvent([]tasks.Snapshot{retained, discarded}),
+		taskrecord.ListingEvent([]tasks.Snapshot{retained}),
+	}
+	for _, event := range events {
+		testHarness.recordedEvents = append(testHarness.recordedEvents, event)
+		testHarness.storeEvent(event)
 	}
 }
 
@@ -24420,6 +24528,24 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 		"completed during a running turn": drawnAt(func(self *App) {
 			self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
 			self.hostCommandRan(hostCommandRun())
+		}),
+		"completed as an experimental turn finished": drawnAt(func(self *App) {
+			self.experimental = experimental.New(map[string]any{
+				string(experimental.CommandStartsTurn): true,
+			})
+			self.start("check the working tree")
+			for report := range self.currentTurn.Events() {
+				self.takeTurn(report)
+			}
+			self.hostCommandRan(hostCommandRun())
+			self.finish()
+			if !self.currentTurn.Running() {
+				t.Fatal("the completed command did not wake a turn after the previous turn finished")
+			}
+			for report := range self.currentTurn.Events() {
+				self.takeTurn(report)
+			}
+			self.finish()
 		}),
 		"stopped in the next turn": drawnAt(func(self *App) {
 			history := edit.NewHistory("", historyLimit)

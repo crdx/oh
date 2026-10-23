@@ -1,0 +1,30 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+try duplicate names and the parent scratch as a subagent workspace
+
+## Tool calls · +0s
+
+```
+subagent start: 2 subagents · 2× anthropic/claude-opus-5@medium [error, toolu_1]
+subagent start: subagent · anthropic/claude-opus-5@medium [error, 1 line, 130B, toolu_2]
+```
+
+## Assistant · +0s
+
+Both invalid subagent starts were refused.
+
+## Assistant · +0s
+
+Finished.

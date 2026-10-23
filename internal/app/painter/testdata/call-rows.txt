@@ -531,3 +531,21 @@ stop docs
 ── shell and task calls mixed in one round · 16 columns
 Checking the … ✓
 stop docs
+
+── read with an overflowing range · 120 columns
+read notes.txt 2+ 2L
+
+── read with an overflowing range · 80 columns
+read notes.txt 2+ 2L
+
+── read with an overflowing range · 60 columns
+read notes.txt 2+ 2L
+
+── read with an overflowing range · 44 columns
+read notes.txt 2+ 2L
+
+── read with an overflowing range · 30 columns
+read notes.txt 2+ 2L
+
+── read with an overflowing range · 16 columns
+read notes.t… 2L

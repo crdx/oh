@@ -1,0 +1,10 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try duplicate names and the parent scratch as a subagent workspace                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m2 subagents · 2× anthropic/claude-opus-5@…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[1].name "worker" is given to another s…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/claude-opus-5@medium\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102m/tmp lies inside the parent's scratch space, whic…\e[0m\r
+\r
+Both invalid subagent starts were refused.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r
+\r\e[K\r
+Finished.\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\r
