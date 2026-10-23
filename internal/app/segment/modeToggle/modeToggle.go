@@ -74,15 +74,19 @@ func (self state) Render(segment.Context) string {
 		gap +
 		self.letter(caps.Subagents, grantedCaps.Has(caps.Subagents), style.Subagents, isPrefixPending) +
 		self.letter(caps.Network, grantedCaps.Has(caps.Network), style.Network, isPrefixPending) +
-		self.letter(caps.Git, grantedCaps.Has(caps.Git), style.Git, isPrefixPending) +
-		self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending)
+		self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending) +
+		self.letter(caps.Git, grantedCaps.Has(caps.Git), style.Git, isPrefixPending)
 
 	return renderedMode + self.groupLetters(isPrefixPending)
 }
 
 func (self state) groupLetters(isPrefixPending bool) string {
 	groups := self.getGroupStatus()
+	if groups.Flags == "" {
+		return ""
+	}
 	var groupLetters strings.Builder
+	groupLetters.WriteString(gap)
 	for _, flag := range groups.Flags {
 		groupLetters.WriteString(self.groupLetter(string(flag), groups.Has(string(flag)), isPrefixPending))
 	}

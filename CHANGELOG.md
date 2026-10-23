@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Show the mode as `rxw snlg`, with custom tool groups in their own section
 - Remove the task timeout, and use the concurrent task limit to control it instead
 
 ## [0.22.2] — 2026-10-23

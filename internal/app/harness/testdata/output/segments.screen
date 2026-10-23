@@ -198,29 +198,29 @@ r[reference], +1
 === local-time / default format ===
 14:32
 === mode-toggle / all granted ===
-rxw sngl
+rxw snlg
 === mode-toggle / custom group disabled by default ===
-rxw snglc
+rxw snlg c
 === mode-toggle / custom group enabled by tool ===
-rxw snglc
+rxw snlg c
 === mode-toggle / custom group fully disabled ===
-rxw sngl
+rxw snlg
 === mode-toggle / custom group pending prefix ===
-rxw snglc
+rxw snlg c
 === mode-toggle / custom group with compatible peer ===
-rxw sngla
+rxw snlg a
 === mode-toggle / custom groups ===
-rxw snglabc
+rxw snlg abc
 === mode-toggle / lookup only ===
-rxw sngl
+rxw snlg
 === mode-toggle / network only ===
-rxw sngl
+rxw snlg
 === mode-toggle / pending prefix ===
-rxw sngl
+rxw snlg
 === mode-toggle / read only ===
-rxw sngl
+rxw snlg
 === mode-toggle / unconfined ===
-slabc
+sl abc
 === mode-toggle / unconfined with lookup pending prefix ===
 sl
 === scroll-overflow / down ===

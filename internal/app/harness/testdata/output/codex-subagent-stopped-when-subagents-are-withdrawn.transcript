@@ -8,7 +8,7 @@
 - **Workspace:** ``
 - **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
 
-## Mode · rxwsngl · +0s
+## Mode · rxwsnlg · +0s
 
 ## User · +0s
 
@@ -42,7 +42,7 @@ The build tool is just.
 
 ## Subagent finished · tame-adder · stopped · +0s
 
-## Mode · rxwngl · toggled s · +0s
+## Mode · rxwnlg · toggled s · +0s
 
 ```
 The subagent tool is now refused.

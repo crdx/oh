@@ -32,8 +32,8 @@ var capsMap = []struct {
 	{Write, "w"},
 	{Subagents, "s"},
 	{Network, "n"},
-	{Git, "g"},
 	{Lookup, "l"},
+	{Git, "g"},
 }
 
 var AllFlags = All().Flags()

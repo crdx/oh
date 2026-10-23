@@ -8,7 +8,7 @@
 - **Workspace:** ``
 - **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
 
-## Mode · rxwsngl · +0s
+## Mode · rxwsnlg · +0s
 
 ## User · +0s
 
@@ -22,7 +22,7 @@ Partial answer.
 
 Turn stopped because access changed.
 
-## Mode · rxsngl · toggled w · +0s
+## Mode · rxsnlg · toggled w · +0s
 
 ```
 The workspace is now read-only.

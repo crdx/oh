@@ -215,7 +215,7 @@ func TestEffortCompletionsAreBareLevels(t *testing.T) {
 
 func TestCapabilityCompletionsGrowOneAtATime(t *testing.T) {
 	sets := CapsCompletions("", "ab", false)
-	if sets[0] != "r" || sets[len(sets)-1] != "rxwsnglab" {
+	if sets[0] != "r" || sets[len(sets)-1] != "rxwsnlgab" {
 		t.Errorf("got %v", sets)
 	}
 }
@@ -237,7 +237,7 @@ func TestWritingCompletionsLinesThemUp(t *testing.T) {
 	var out bytes.Buffer
 	WriteCompletions(&out, []string{"--complete", completeCaps, "rxw"}, func() Sources { return Sources{} })
 
-	if out.String() != "rxw\nrxws\nrxwsn\nrxwsng\nrxwsngl\n" {
+	if out.String() != "rxw\nrxws\nrxwsn\nrxwsnl\nrxwsnlg\n" {
 		t.Errorf("got %q", out.String())
 	}
 

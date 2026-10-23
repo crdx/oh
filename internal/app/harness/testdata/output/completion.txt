@@ -35,8 +35,8 @@ anthropic
 rxw
 rxws
 rxwsn
-rxwsng
-rxwsngl
+rxwsnl
+rxwsnlg
 === tools ===
 read
 ls

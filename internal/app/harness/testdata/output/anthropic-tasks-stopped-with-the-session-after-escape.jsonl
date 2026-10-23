@@ -1,5 +1,5 @@
 {"kind":"head","version":24,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsnlg"}}
 {"kind":"event","event":{"kind":"task_listing","state":[{"invocation":{"arguments":"{}"},"id":"docs","tool_name":"bash","run":1,"is_respawning":true,"state":"running","started_at":"2026-08-23T14:32:09Z","ended_at":"0001-01-01T00:00:00Z","output":"","failure":""}]}}
 {"kind":"event","event":{"kind":"user_message","text":"interrupt while the tool is working"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}"}}

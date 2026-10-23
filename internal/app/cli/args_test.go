@@ -396,7 +396,7 @@ func TestTheDefaultCapabilitiesAreReadingAndTheShell(t *testing.T) {
 }
 
 func TestCapabilitiesAreReadAsTheLettersTheyAreSpelledWith(t *testing.T) {
-	for _, capString := range []string{"rxwsngl", "lgnswxr", "wxsngl"} {
+	for _, capString := range []string{"rxwsnlg", "glnswxr", "wxsnlg"} {
 		currentCaps, err := caps.Parse(capString)
 		if err != nil {
 			t.Fatalf("%s: unexpected error: %v", capString, err)

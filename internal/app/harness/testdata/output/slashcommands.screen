@@ -360,9 +360,9 @@ Run the tests.
   rxw
   rxws
   rxwsn
-  rxwsng
-  rxwsngl
-  rxwsngla
+  rxwsnl
+  rxwsnlg
+  rxwsnlga
 ────────────────────────────────────────────────────────────
 === 59 a waived sandbox lists only what it can take ===
 ────────────────────────────────────────────────────────────
@@ -452,7 +452,7 @@ Run the tests.
 === 69 enter on an unknown capability refuses it ===
  ╭────────────────────────────────────────────────────────╮
  │ /new: Unknown capability flag "z" — must be one of     │
- │ "rxwsngla" (prepend a space to send)                   │
+ │ "rxwsnlga" (prepend a space to send)                   │
 ─┴────────────────────────────────────────────────────────┴─
 /new -c rz
 ────────────────────────────────────────────────────────────

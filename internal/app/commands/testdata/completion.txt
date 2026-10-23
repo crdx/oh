@@ -143,16 +143,16 @@
   rxw → /new -c rxw
   rxws → /new -c rxws
   rxwsn → /new -c rxwsn
-  rxwsng → /new -c rxwsng
-  rxwsngl → /new -c rxwsngl
-  rxwsngla → /new -c rxwsngla
+  rxwsnl → /new -c rxwsnl
+  rxwsnlg → /new -c rxwsnlg
+  rxwsnlga → /new -c rxwsnlga
 "/new -c rxw"
   rxw → /new -c rxw
   rxws → /new -c rxws
   rxwsn → /new -c rxwsn
-  rxwsng → /new -c rxwsng
-  rxwsngl → /new -c rxwsngl
-  rxwsngla → /new -c rxwsngla
+  rxwsnl → /new -c rxwsnl
+  rxwsnlg → /new -c rxwsnlg
+  rxwsnlga → /new -c rxwsnlga
 "/new --yolo -c "
   s → /new --yolo -c s
   sl → /new --yolo -c sl

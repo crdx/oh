@@ -8,7 +8,7 @@
 - **Workspace:** ``
 - **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
 
-## Mode · rxwsngl · +0s
+## Mode · rxwsnlg · +0s
 
 ## User · +0s
 
@@ -17,7 +17,7 @@ run the slow tests, then start the build in the background
 ## Tool calls · +0s
 
 ```
-bash: bash [info, 1 line, 33B, call-1]
+bash: bash [info, 1 line, 21B, call-1]
 ```
 
 ## Task run ended · +0s

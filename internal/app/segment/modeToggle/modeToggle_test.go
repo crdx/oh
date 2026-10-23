@@ -11,13 +11,13 @@ import (
 )
 
 func TestEveryCapabilitySetKeepsTheSameLetters(t *testing.T) {
-	for _, flags := range []string{"", "r", "rw", "rx", "rxw", "rxws", "rxwsn", "rxwsng", "rxwsngl", "rn", "rg", "rl", "rs"} {
+	for _, flags := range []string{"", "r", "rw", "rx", "rxw", "rxws", "rxwsn", "rxwsnl", "rxwsnlg", "rn", "rg", "rl", "rs"} {
 		grantedCaps, err := caps.Parse(flags)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if got := style.Plain(render(t, grantedCaps, false)); got != "rxw sngl" {
+		if got := style.Plain(render(t, grantedCaps, false)); got != "rxw snlg" {
 			t.Errorf("caps %q drew %q, want the letters to stand whatever is granted", flags, got)
 		}
 	}
@@ -35,12 +35,12 @@ func TestOnlyTheStylingSaysWhatIsGranted(t *testing.T) {
 	if pending == refused {
 		t.Errorf("a pending prefix drew nothing new: %q", pending)
 	}
-	if got := style.Plain(pending); got != "rxw sngl" {
+	if got := style.Plain(pending); got != "rxw snlg" {
 		t.Errorf("a pending prefix drew %q, want the same letters", got)
 	}
 }
 
-func TestCustomToolGroupsJoinTheSecondSection(t *testing.T) {
+func TestCustomToolGroupsFormTheirOwnSection(t *testing.T) {
 	built, err := modeToggle.New(
 		func() caps.Set { return caps.Read },
 		func() bool { return false },
@@ -50,7 +50,7 @@ func TestCustomToolGroupsJoinTheSecondSection(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got := style.Plain(built.Render(segment.Context{})); got != "rxw snglabc" {
+	if got := style.Plain(built.Render(segment.Context{})); got != "rxw snlg abc" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -77,8 +77,8 @@ func TestAnUnconfinedSessionDrawsOnlyWhatItCanStillToggle(t *testing.T) {
 
 		got := built.Render(segment.Context{})
 		lead := test.subagentsPaint("s") + test.lookupPaint("l")
-		if style.Plain(got) != "slab" || !strings.HasPrefix(got, lead) {
-			t.Errorf("caps %q drew %q, want %q led by %q", test.grantedCaps.Flags(), got, "slab", lead)
+		if style.Plain(got) != "sl ab" || !strings.HasPrefix(got, lead) {
+			t.Errorf("caps %q drew %q, want %q led by %q", test.grantedCaps.Flags(), got, "sl ab", lead)
 		}
 	}
 }
