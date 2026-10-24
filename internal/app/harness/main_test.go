@@ -6108,6 +6108,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"fork-mode":                {".ansi"},
 		"running":                  {".ansi", ".screen"},
 		"schedule":                 {".ansi", ".screen"},
+		"stash":                    {".ansi", ".screen"},
 		"segments":                 {".ansi", ".screen"},
 		"shedding":                 {".ansi", ".screen"},
 		"shared-history":           {".ansi", ".screen"},

@@ -50,6 +50,7 @@ import (
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/startup"
+	"crdx.org/oh/internal/app/stash"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/taskrecord"
@@ -239,6 +240,7 @@ type App struct {
 	workspace            *work.Space
 	nudge                string
 	speedDial            speedDial
+	draftStash           *stash.Store
 	display              displayState
 	runMode              runMode
 	commands             slash.Registry
@@ -571,10 +573,79 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 	case edit.ReplyToAnswer:
 		self.replyToLastAnswer()
 
+	case edit.StashInput:
+		self.stashDraft(inputLine)
+
+	case edit.PopStash:
+		self.popStash(inputLine, true)
+
 	case edit.DrawInput:
 	}
 
 	return !self.isTransitionRequested() || self.currentTurn.Running()
+}
+
+func (self *App) stashDraft(inputLine *edit.Input) {
+	if inputLine.Text() == "" {
+		self.popStash(inputLine, false)
+		return
+	}
+
+	if _, err := self.getDraftStash().Push(inputLine.Text()); err != nil {
+		self.showFeedback(feedback.Command, feedback.Message{
+			Text:   "Could not stash input: " + err.Error(),
+			Status: agent.ErrorStatus,
+		})
+		return
+	}
+
+	self.clearDraftState()
+	inputLine.Reset()
+}
+
+func (self *App) popStash(inputLine *edit.Input, doesReportEmpty bool) {
+	restoredDraft, _, isFound, err := self.getDraftStash().Exchange(inputLine.Text())
+	if err != nil {
+		self.showFeedback(feedback.Command, feedback.Message{
+			Text:   "Could not restore stashed input: " + err.Error(),
+			Status: agent.ErrorStatus,
+		})
+		return
+	}
+	if !isFound {
+		if doesReportEmpty {
+			self.showFeedback(feedback.Command, feedback.Message{
+				Text:   "Stash is empty",
+				Status: agent.InfoStatus,
+			})
+		}
+		return
+	}
+
+	self.clearDraftState()
+	inputLine.SetText(restoredDraft)
+}
+
+func (self *App) clearDraftState() {
+	self.feedback.Dismiss()
+	self.speedDial.stop()
+	if self.completer != nil {
+		self.completer.Close()
+	}
+}
+
+func (self *App) getDraftStash() *stash.Store {
+	if self.draftStash == nil {
+		self.draftStash = stash.NewMemory()
+	}
+	return self.draftStash
+}
+
+func (self *App) stashCount() int {
+	if self.draftStash == nil {
+		return 0
+	}
+	return self.draftStash.Count()
 }
 
 func (self *App) receivePaste(inputLine *edit.Input, report *key.ClipboardReport) bool {
@@ -1318,6 +1389,7 @@ func (self *App) getBarSources() bar.Sources {
 		GetTurnCount:       self.turnCount,
 		GetTasks:           self.getTasks,
 		GetSubagents:       self.getSubagents,
+		GetStashCount:      self.stashCount,
 	}
 }
 

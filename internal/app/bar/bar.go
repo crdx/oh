@@ -26,6 +26,7 @@ import (
 	"crdx.org/oh/internal/app/segment/sessionEmoji"
 	"crdx.org/oh/internal/app/segment/sessionName"
 	"crdx.org/oh/internal/app/segment/sessionSpend"
+	"crdx.org/oh/internal/app/segment/stashCount"
 	"crdx.org/oh/internal/app/segment/subUsage"
 	"crdx.org/oh/internal/app/segment/subagentCounts"
 	"crdx.org/oh/internal/app/segment/taskNames"
@@ -65,6 +66,7 @@ const (
 	subUsageSegment        = "subscription-usage"
 	taskNamesSegment       = "tasks"
 	subagentCountsSegment  = "subagents"
+	stashCountSegment      = "stash-count"
 )
 
 type Options struct {
@@ -99,6 +101,7 @@ type Sources struct {
 	GetTurnCount       func() int
 	GetTasks           func() []tasks.Snapshot
 	GetSubagents       func() []subagents.Snapshot
+	GetStashCount      func() int
 }
 
 func NewRegistry(options Options) segment.Registry {
@@ -137,6 +140,7 @@ func NewRegistry(options Options) segment.Registry {
 		gitStatusSegment:      gitStatus.New(options.Workspace.GetDir(), sandbox.ArgvFor(options.IsUnconfined)),
 		taskNamesSegment:      taskNames.New(options.Sources.GetTasks, options.Sources.GetForwardedRoutes, time.Now),
 		subagentCountsSegment: subagentCounts.New(options.Sources.GetSubagents, time.Now),
+		stashCountSegment:     stashCount.New(options.Sources.GetStashCount),
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,
 			CachePath:        options.UsageCachePath,

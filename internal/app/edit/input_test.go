@@ -995,3 +995,26 @@ func TestAltReturnSelectsTheAlternateAcceptAction(t *testing.T) {
 		t.Errorf("got action %v", got)
 	}
 }
+
+func TestControlSStashesWithoutChangingTheDraft(t *testing.T) {
+	self := inputFromKeys(t, "future task")
+
+	if got := self.Apply(key.Key{Code: key.Rune, Value: 's', Mod: key.Ctrl}, true); got != StashInput {
+		t.Errorf("got %v, want a stash action", got)
+	}
+	if got := self.Text(); got != "future task" {
+		t.Errorf("stash action changed the draft to %q", got)
+	}
+}
+
+func TestShiftControlSPopsWithoutChangingTheDraft(t *testing.T) {
+	self := inputFromKeys(t, "current task")
+
+	keypress := key.Key{Code: key.Rune, Value: 'S', Mod: key.Ctrl | key.Shift}
+	if got := self.Apply(keypress, true); got != PopStash {
+		t.Errorf("got %v, want a pop action", got)
+	}
+	if got := self.Text(); got != "current task" {
+		t.Errorf("pop action changed the draft to %q", got)
+	}
+}

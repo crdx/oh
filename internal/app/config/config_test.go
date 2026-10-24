@@ -1198,6 +1198,7 @@ func testSegments() segment.Registry {
 		"git-status":         inertFactory,
 		"tasks":              inertFactory,
 		"subagents":          inertFactory,
+		"stash-count":        inertFactory,
 		"subscription-usage": inertFactory,
 	}
 }

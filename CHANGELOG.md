@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Changes
+
+- Stash drafts with ctrl+s and ctrl+shift+s
+
 ## [0.24.0] — 2026-10-23
 
 ### Changes

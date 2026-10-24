@@ -181,6 +181,7 @@ left = [
     { segment = "workspace-dir", type = "base" },
     { segment = "git-status" },
     { segment = "git-branch" },
+    { segment = "stash-count" },
 ]
 center = [
     { segment = "session-name", emoji = true },

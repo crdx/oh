@@ -76,6 +76,7 @@ import (
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/startup"
+	"crdx.org/oh/internal/app/stash"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/terminal"
@@ -1602,6 +1603,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	usageCachePath := location.GetUsageCachePath(selection.Provider, endpointURL != "")
 	providerClient := guardUsage(ctx, client.Client, choice, selection, usageCachePath)
 
+	draftStash, err := stash.Open(sessionInfo.Directory, log.EnsurePersisted)
+	if err != nil {
+		return "", err
+	}
+
 	app = &App{
 		agent:    agent.NewWithEnabledTools(systemPrompt, providerClient, registeredTools, offeredTools),
 		screen:   screen,
@@ -1617,6 +1623,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			directory: session.ChildrenDir(sessionsDir, log.Name()),
 		},
 		editorConfig:    editorConfiguration,
+		draftStash:      draftStash,
 		toolOutputLimit: toolOutputLimit,
 		saveOverflow:    dropKeeper.SaveOutput,
 		experimental:    experimentalToggles,

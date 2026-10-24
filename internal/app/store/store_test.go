@@ -1132,3 +1132,40 @@ func TestASessionCreatedWithTheWireKeepsRecordingItWhenResumed(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestExplicitPersistenceFlushesEventsHeldBeforeTheFirstMessage(t *testing.T) {
+	directory := t.TempDir()
+	log, err := store.Create(directory, store.Meta{Model: "gpt-5.6-sol"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	held := []agent.Event{
+		{Kind: agent.StartupEvent, Took: time.Millisecond},
+		{Kind: caps.ModeChange, Name: "w", Text: "rxwgs"},
+	}
+	for _, event := range held {
+		if err := log.Event(event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := log.EnsurePersisted(); err != nil {
+		t.Fatal(err)
+	}
+	if err := log.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, log.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := make([]agent.Kind, 0, len(storedSession.Events))
+	for _, event := range storedSession.Events {
+		got = append(got, event.Kind)
+	}
+	want := []agent.Kind{agent.StartupEvent, caps.ModeChange}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("expected %v, got %v", want, got)
+	}
+}

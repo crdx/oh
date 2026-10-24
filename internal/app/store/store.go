@@ -110,6 +110,7 @@ type canonicalSession interface {
 type Writer struct {
 	innerWriter canonicalWriter
 	writerMutex sync.Mutex
+	eventMutex  sync.Mutex
 
 	eventBuffer []agent.Event
 	directory   string
@@ -256,6 +257,9 @@ func open(directory string, name string, shouldStartRecorders bool) (*Writer, er
 }
 
 func (self *Writer) Event(event agent.Event) error {
+	self.eventMutex.Lock()
+	defer self.eventMutex.Unlock()
+
 	for _, releasedEvent := range self.release(event) {
 		if err := self.appendEvent(releasedEvent); err != nil {
 			return err
@@ -319,13 +323,28 @@ func (self *Writer) IsPersisted() bool {
 }
 
 func (self *Writer) EnsurePersisted() error {
+	self.eventMutex.Lock()
+	defer self.eventMutex.Unlock()
+
 	self.writerMutex.Lock()
 	err := self.innerWriter.EnsurePersisted()
-	self.writerMutex.Unlock()
 	if err != nil {
+		self.writerMutex.Unlock()
 		return err
 	}
+	events := self.eventBuffer
+	self.eventBuffer = nil
+	self.writerMutex.Unlock()
+
 	self.startRecorders()
+	for i, event := range events {
+		if err := self.appendEvent(event); err != nil {
+			self.writerMutex.Lock()
+			self.eventBuffer = append(slices.Clone(events[i:]), self.eventBuffer...)
+			self.writerMutex.Unlock()
+			return err
+		}
+	}
 	return nil
 }
 
@@ -340,6 +359,9 @@ func (self *Writer) TakeWarnings() []error {
 }
 
 func (self *Writer) Close() error {
+	self.eventMutex.Lock()
+	defer self.eventMutex.Unlock()
+
 	self.writerMutex.Lock()
 	canonicalError := self.innerWriter.Close()
 	self.writerMutex.Unlock()

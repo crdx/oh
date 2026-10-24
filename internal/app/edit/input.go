@@ -26,6 +26,8 @@ const (
 	ToggleToolGroup
 	EditDraft
 	ReplyToAnswer
+	StashInput
+	PopStash
 )
 
 type Input struct {
@@ -423,6 +425,12 @@ func (self *Input) rune(keypress key.Key, isRunning bool) Action {
 
 	case 'g':
 		return EditDraft
+
+	case 's', 'S':
+		if keypress.Mod.Has(key.Shift) {
+			return PopStash
+		}
+		return StashInput
 
 	case '.':
 		return ReplyToAnswer
