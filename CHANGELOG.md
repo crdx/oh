@@ -9,6 +9,7 @@
 - Reduce the amount of time a completed task's bullet persists
 - Truncate task output notice, and hyperlink the title to full output
 - Fix blank line between list items not being drawn
+- Fix config reload spamming every setting when the file is replaced
 
 ## [0.24.0] — 2026-10-23
 

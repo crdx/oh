@@ -514,6 +514,87 @@ func TestAReloadOfAnUnchangedSettingBesideACommentNamesNoSetting(t *testing.T) {
 	}
 }
 
+func TestAConfigRemovedAndWrittenAgainReloadsOnceNamingOnlyWhatChanged(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[ui]\ncurrency = \"GBP\"\nstreaming = \"asap\"\n"); err != nil {
+		t.Fatal(err)
+	}
+	_, observer := observeConfig(t, path)
+	reloads := make(chan ReloadResult, 1)
+	go func() {
+		for failure := range observer.Changes() {
+			if result := observer.Reload(failure, testSegments()); result.Status != ReloadUnchanged {
+				reloads <- result
+				return
+			}
+		}
+	}()
+
+	if err := os.Remove(path); err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(settleDuration / 10)
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(settleDuration / 10)
+	if err := writeConfigFile(path, "[ui]\ncurrency = \"EUR\"\nstreaming = \"asap\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	var applied ReloadResult
+	select {
+	case applied = <-reloads:
+	case <-time.After(watchTestTimeout):
+		t.Fatal("timed out waiting for a config change")
+	}
+	if applied.Status != ReloadApplied {
+		t.Fatalf("reload status=%v failure=%v", applied.Status, applied.Failure)
+	}
+	if len(applied.Changes) != 1 || applied.Changes[0].IsRemoved {
+		t.Fatalf("got %v, want the config named once as present", applied.Changes)
+	}
+	if want := []string{"ui.currency"}; !slices.Equal(applied.Changes[0].Settings, want) {
+		t.Errorf("got settings %v, want %v", applied.Changes[0].Settings, want)
+	}
+}
+
+func TestAConfigChangeIsReportedWhileItsDirectoryKeepsChanging(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(path, "[ui]\ncurrency = \"GBP\"\n"); err != nil {
+		t.Fatal(err)
+	}
+	_, observer := observeConfig(t, path)
+	if err := writeConfigFile(path, "[ui]\ncurrency = \"EUR\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	ticker := time.NewTicker(settleDuration / 5)
+	defer ticker.Stop()
+	timeout := time.NewTimer(watchTestTimeout)
+	defer timeout.Stop()
+	for {
+		select {
+		case failure := <-observer.Changes():
+			settings, _, err := observer.refresh(failure)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if settings.Ui.Currency != "EUR" {
+				t.Errorf("got currency %q", settings.Ui.Currency)
+			}
+			return
+		case <-ticker.C:
+			if err := os.WriteFile(filepath.Join(directory, "other"), []byte("other"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+		case <-timeout.C:
+			t.Fatal("timed out waiting for the config change")
+		}
+	}
+}
+
 func TestAReloadReportsAnOverrideThatWentAway(t *testing.T) {
 	directory := t.TempDir()
 	globalPath := filepath.Join(directory, "config.toml")

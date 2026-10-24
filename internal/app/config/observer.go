@@ -13,6 +13,7 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"golang.org/x/sys/unix"
@@ -512,6 +513,11 @@ func (self *Observer) refresh(watchFailure error) (Config, []SourceChange, error
 	return settings, current.changesSince(previous), nil
 }
 
+const (
+	settleDuration = 50 * time.Millisecond
+	settleLimit    = time.Second
+)
+
 const watchMask = unix.IN_ATTRIB |
 	unix.IN_CLOSE_WRITE |
 	unix.IN_CREATE |
@@ -633,14 +639,21 @@ func (self *fileWatcher) run() {
 		{Fd: int32(self.cancelRead), Events: unix.POLLIN},
 	}
 	buffer := make([]byte, unix.SizeofInotifyEvent*64)
+	timeout := -1
+	var pendingSince time.Time
 	for {
-		_, err := unix.Poll(pollDescriptors, -1)
+		count, err := unix.Poll(pollDescriptors, timeout)
 		if errors.Is(err, unix.EINTR) {
 			continue
 		}
 		if err != nil {
 			self.publishFailure(err)
 			return
+		}
+		if count == 0 {
+			timeout, pendingSince = -1, time.Time{}
+			self.publishChange()
+			continue
 		}
 		if pollDescriptors[1].Revents&unix.POLLIN != 0 {
 			return
@@ -661,7 +674,15 @@ func (self *fileWatcher) run() {
 			self.publishFailure(err)
 			return
 		}
-		self.publishChange()
+		if pendingSince.IsZero() {
+			pendingSince = time.Now()
+		}
+		if time.Since(pendingSince) >= settleLimit {
+			timeout, pendingSince = -1, time.Time{}
+			self.publishChange()
+			continue
+		}
+		timeout = int(settleDuration.Milliseconds())
 	}
 }
 
