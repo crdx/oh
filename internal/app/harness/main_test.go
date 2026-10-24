@@ -7463,7 +7463,7 @@ func runTestBinary(t *testing.T, binary string, workspaceDir string, environment
 	return string(output)
 }
 
-func TestTheToolResultFlagUsesTheMainBinary(t *testing.T) {
+func TestTheViewFlagShowsAToolResultThroughTheMainBinary(t *testing.T) {
 	stateDirectory := t.TempDir()
 	writer, err := session.Create(filepath.Join(stateDirectory, "sessions"), nil, nil)
 	if err != nil {
@@ -7497,7 +7497,7 @@ func TestTheToolResultFlagUsesTheMainBinary(t *testing.T) {
 		binary,
 		t.TempDir(),
 		environment,
-		"--tool-result",
+		"--view",
 		toolresult.URL(writer.Name(), "call-1"),
 	)
 

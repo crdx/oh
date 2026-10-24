@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	requestFlag = "--tool-result"
+	requestFlag = "--view"
 	pagerFlag   = "--pager"
 )
 

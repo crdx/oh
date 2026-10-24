@@ -20,8 +20,8 @@ func TestAnInternalRequestIsParsed(t *testing.T) {
 		arguments []string
 		want      Request
 	}{
-		"direct": {arguments: []string{"--tool-result", "oh://tool-result?call=one"}, want: Request{URL: "oh://tool-result?call=one"}},
-		"pager":  {arguments: []string{"--tool-result", "oh://tool-result?call=one", "--pager"}, want: Request{URL: "oh://tool-result?call=one", ShouldPage: true}},
+		"direct": {arguments: []string{"--view", "oh://tool-result?call=one"}, want: Request{URL: "oh://tool-result?call=one"}},
+		"pager":  {arguments: []string{"--view", "oh://tool-result?call=one", "--pager"}, want: Request{URL: "oh://tool-result?call=one", ShouldPage: true}},
 	} {
 		t.Run(name, func(t *testing.T) {
 			request, isRequested, err := ParseRequest(test.arguments)
@@ -34,10 +34,10 @@ func TestAnInternalRequestIsParsed(t *testing.T) {
 
 func TestAnInternalRequestMustHaveItsExactShape(t *testing.T) {
 	for _, arguments := range [][]string{
-		{"--tool-result"},
-		{"--tool-result", "--pager"},
-		{"--tool-result", "oh://tool-result?call=one", "--other"},
-		{"--tool-result", "oh://tool-result?call=one", "--pager", "extra"},
+		{"--view"},
+		{"--view", "--pager"},
+		{"--view", "oh://tool-result?call=one", "--other"},
+		{"--view", "oh://tool-result?call=one", "--pager", "extra"},
 	} {
 		if _, isRequested, err := ParseRequest(arguments); !isRequested || err == nil {
 			t.Errorf("arguments %q produced requested %v and error %v", arguments, isRequested, err)
