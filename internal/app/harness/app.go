@@ -2086,7 +2086,7 @@ func (self *App) newPainter(isRunning bool) *painter.Picasso {
 	}
 	picasso.SuggestForkingWith(self.display.modelName)
 	picasso.PriceCacheRebuildsAt(self.display.tariff)
-	picasso.ShowCacheMissNoticesWhen(self.experimental)
+	picasso.ReadTogglesFrom(self.experimental)
 	return picasso
 }
 

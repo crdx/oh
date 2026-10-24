@@ -66,7 +66,7 @@ type Picasso struct {
 	resultLinkSessionName string
 	forkModelName         string
 	tariff                Tariff
-	cacheMissNotices      *experimental.Toggles
+	toggles               *experimental.Toggles
 
 	workspace     *work.Space
 	pictures      pictures.Display
@@ -145,8 +145,8 @@ func (self *Picasso) PriceCacheRebuildsAt(tariff Tariff) {
 	self.tariff = tariff
 }
 
-func (self *Picasso) ShowCacheMissNoticesWhen(toggles *experimental.Toggles) {
-	self.cacheMissNotices = toggles
+func (self *Picasso) ReadTogglesFrom(toggles *experimental.Toggles) {
+	self.toggles = toggles
 }
 
 func (self *Picasso) DrawDelta(delta agent.Delta) {
@@ -608,7 +608,7 @@ func isRecordOnlyTaskFact(event agent.Event) bool {
 
 func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
 	return event.Kind == agent.CacheRebuildEvent &&
-		(!self.cacheMissNotices.IsEnabled(experimental.CacheMissNotices) ||
+		(!self.toggles.IsEnabled(experimental.CacheMissNotices) ||
 			!agent.IsCacheRebuildWorthNoticing(event, self.tariff.Prices))
 }
 

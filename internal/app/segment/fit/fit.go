@@ -51,6 +51,20 @@ func Shown(count int, partsShowing func(int) []string) []string {
 	return Ladder(append(rungs, style.Subtle(hiddenMark))...)
 }
 
+func DetailsAtMost(count int, maximumDetailed int, partsShowing func(int) []string) []string {
+	if count == 0 {
+		return nil
+	}
+
+	maximumDetailed = min(max(maximumDetailed, 0), count)
+	rungs := make([]string, 0, maximumDetailed+2)
+	for detailedCount := maximumDetailed; detailedCount >= 0; detailedCount-- {
+		rungs = append(rungs, join(partsShowing(detailedCount)))
+	}
+
+	return Ladder(append(rungs, style.Subtle(hiddenMark))...)
+}
+
 func join(parts []string) string {
 	return strings.Join(parts, style.Subtle(separator))
 }

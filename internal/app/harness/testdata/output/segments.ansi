@@ -394,24 +394,48 @@ usage \e[38;2;204;102;102mfailed\e[0m
 
 === tasks / a ghost beside a live task ===
 \e[38;2;129;162;190m● docs\e[0m \e[38;2;150;152;150m○ builder\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;150;152;150m○\e[0m
+\e[38;2;129;162;190m●\e[0m \e[38;2;150;152;150m○\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / a ghost whose linger is up ===
 \e[38;2;129;162;190m● docs\e[0m
+\e[38;2;129;162;190m●\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / associated task named by port ===
 \e[38;2;129;162;190m● watch\e[0m
+\e[38;2;129;162;190m●\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / failures alone ===
 \e[38;2;204;102;102m✗ builder\e[0m \e[38;2;204;102;102m✗ api\e[0m
+\e[38;2;204;102;102m✗ builder\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / failures beside those running ===
 \e[38;2;129;162;190m● docs\e[0m \e[38;2;204;102;102m✗ builder\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;129;162;190m●\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / none ===
 
 === tasks / nothing is left of a closed session ===
 
 === tasks / one being stopped among those running ===
 \e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m \e[38;2;207;173;0m● api\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m \e[38;2;207;173;0m●\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;207;173;0m●\e[0m
+\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;207;173;0m●\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / queued, running and failed together ===
-\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● checks\e[0m \e[38;2;129;162;190m● build\e[0m \e[38;2;204;102;102m✗ lint\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● build\e[0m \e[38;2;129;162;190m● checks\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● build\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190m●\e[0m \e[38;2;204;102;102m✗\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / running ===
 \e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m● watch\e[0m
+\e[38;2;129;162;190m● docs\e[0m \e[38;2;129;162;190m●\e[0m
+\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190m●\e[0m
+\e[38;2;150;152;150m+\e[0m
 === turn-count / nothing asked yet ===
 
 === turn-count / third turn ===

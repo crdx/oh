@@ -5,6 +5,7 @@
 ### Changes
 
 - Stash drafts with ctrl+s and ctrl+shift+s
+- Show a max of 3 tasks, and the rest as bullets
 
 ## [0.24.0] — 2026-10-23
 

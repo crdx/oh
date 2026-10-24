@@ -1,6 +1,7 @@
 package taskNames
 
 import (
+	"cmp"
 	"slices"
 	"strings"
 	"time"
@@ -8,13 +9,15 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/schedule"
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/pkg/tasks"
 )
 
 const (
-	beat      = time.Second
-	ghostLife = 30 * time.Second
+	beat             = time.Second
+	ghostLife        = 30 * time.Second
+	maximumTaskNames = 3
 )
 
 const (
@@ -31,6 +34,11 @@ type state struct {
 	now       func() time.Time
 }
 
+type taskMark struct {
+	icon  string
+	label string
+}
+
 func New(
 	getTasks func() []tasks.Snapshot,
 	getRoutes func() []portgrant.Route,
@@ -41,33 +49,30 @@ func New(
 	}
 }
 
-func (self state) Render(segment.Context) string {
-	var marks []string
-
-	listing := self.getWork()
-	slices.SortStableFunc(listing, func(left tasks.Snapshot, right tasks.Snapshot) int {
-		if isLive(left.State) == isLive(right.State) {
-			return 0
-		}
-		if isLive(left.State) {
-			return -1
-		}
-
-		return 1
-	})
-
-	associatedWork := self.associatedWork()
-	for _, item := range listing {
-		if associatedWork[item.ID] || !self.isShown(item) {
-			continue
-		}
-
-		if mark := describe(item); mark != "" {
-			marks = append(marks, mark)
-		}
+func (self state) Render(context segment.Context) string {
+	ladder := self.Ladder(context)
+	if len(ladder) == 0 {
+		return ""
 	}
 
-	return strings.Join(marks, " ")
+	return ladder[0]
+}
+
+func (self state) Ladder(segment.Context) []string {
+	marks := self.marks()
+
+	return fit.DetailsAtMost(len(marks), maximumTaskNames, func(namedCount int) []string {
+		parts := make([]string, 0, len(marks))
+		for i, mark := range marks {
+			if i < namedCount {
+				parts = append(parts, mark.label)
+			} else {
+				parts = append(parts, mark.icon)
+			}
+		}
+
+		return []string{strings.Join(parts, " ")}
+	})
 }
 
 func (self state) NextRefresh(segment.Phase) time.Time {
@@ -90,6 +95,28 @@ func (self state) NextRefresh(segment.Phase) time.Time {
 	}
 
 	return schedule.Soonest(due...)
+}
+
+func (self state) marks() []taskMark {
+	var marks []taskMark
+
+	listing := self.getWork()
+	slices.SortStableFunc(listing, func(left tasks.Snapshot, right tasks.Snapshot) int {
+		return cmp.Compare(taskStateOrder(left.State), taskStateOrder(right.State))
+	})
+
+	associatedWork := self.associatedWork()
+	for _, item := range listing {
+		if associatedWork[item.ID] || !self.isShown(item) {
+			continue
+		}
+
+		if mark := describe(item); mark.label != "" {
+			marks = append(marks, mark)
+		}
+	}
+
+	return marks
 }
 
 func (self state) getWork() []tasks.Snapshot {
@@ -119,11 +146,28 @@ func (self state) isShown(item tasks.Snapshot) bool {
 	return !item.EndedAt.IsZero() && self.now().Sub(item.EndedAt) < ghostLife
 }
 
+func taskStateOrder(state tasks.State) int {
+	switch state {
+	case tasks.Running:
+		return 0
+	case tasks.Queued:
+		return 1
+	case tasks.Stopping:
+		return 2
+	case tasks.Failed, tasks.TimedOut:
+		return 3
+	case tasks.Done, tasks.Stopped:
+		return 4
+	default:
+		return 5
+	}
+}
+
 func isLive(state tasks.State) bool {
 	return state == tasks.Queued || state == tasks.Running || state == tasks.Stopping
 }
 
-func describe(item tasks.Snapshot) string {
+func describe(item tasks.Snapshot) taskMark {
 	var mark string
 	switch item.State {
 	case tasks.Queued, tasks.Running, tasks.Stopping:
@@ -133,10 +177,13 @@ func describe(item tasks.Snapshot) string {
 	case tasks.Done, tasks.Stopped:
 		mark = finishedMark
 	default:
-		return ""
+		return taskMark{}
 	}
 
-	return RenderState(item.State, mark+" "+item.ID)
+	return taskMark{
+		icon:  RenderState(item.State, mark),
+		label: RenderState(item.State, mark+" "+item.ID),
+	}
 }
 
 func RenderState(state tasks.State, text string) string {

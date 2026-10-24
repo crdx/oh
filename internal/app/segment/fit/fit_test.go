@@ -53,6 +53,28 @@ func TestPartsHideOneMoreAtEveryRung(t *testing.T) {
 	}
 }
 
+func TestDetailsAtMostStartsAtItsMaximumAndShortensEverythingElse(t *testing.T) {
+	parts := []string{"one", "two", "three", "four", "five"}
+	got := plainly(DetailsAtMost(len(parts), 3, func(detailedCount int) []string {
+		drawn := slices.Clone(parts)
+		for i := detailedCount; i < len(drawn); i++ {
+			drawn[i] = "•"
+		}
+		return drawn
+	}))
+	want := []string{
+		"one, two, three, •, •",
+		"one, two, •, •, •",
+		"one, •, •, •, •",
+		"•, •, •, •, •",
+		"+",
+	}
+
+	if !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestASolePartIsHiddenBehindItsCountAndThenTheCountAlone(t *testing.T) {
 	got := plainly(Parts([]string{"one"}))
 	if want := []string{"one", "+1", "+"}; !slices.Equal(got, want) {

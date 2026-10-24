@@ -15813,8 +15813,16 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 		}
 	}))
 	forwardedPortsSegment := goldenShedSegment(t, forwardedPorts.New(goldenForwardedPorts(8000, 8080, 3000)))
-	jobsSegment := goldenShedSegment(t, taskNames.New(tasksOf(
-		tasks.Snapshot{ID: "docs", State: tasks.Running},
+	taskNamesSegment := goldenShedSegment(t, taskNames.New(tasksOf(
+		tasks.Snapshot{ID: "golden", State: tasks.Running},
+		tasks.Snapshot{ID: "foo", State: tasks.Running},
+		tasks.Snapshot{ID: "bar", State: tasks.Running},
+		tasks.Snapshot{ID: "build", State: tasks.Running},
+		tasks.Snapshot{ID: "lint", State: tasks.Running},
+		tasks.Snapshot{ID: "serve", State: tasks.Running},
+		tasks.Snapshot{ID: "docs", State: tasks.Done, EndedAt: at.Add(-time.Second)},
+		tasks.Snapshot{ID: "watch", State: tasks.Done, EndedAt: at.Add(-time.Second)},
+		tasks.Snapshot{ID: "check", State: tasks.Done, EndedAt: at.Add(-time.Second)},
 	), noPortRoutes, clockAt(at)))
 
 	passes := map[string]func() string{
@@ -15822,6 +15830,7 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 		"a lone model":               goldenShedPass(t, activeModelSegment),
 		"a lone context":             goldenShedPass(t, contextUsageSegment),
 		"a lone list of grants":      goldenShedPass(t, pathGrantsSegment),
+		"a lone list of tasks":       goldenShedPass(t, taskNamesSegment),
 		"fitters between segments drawn whole": goldenShedPass(
 			t,
 			modeSegment,
@@ -15834,7 +15843,7 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 			t,
 			forwardedPortsSegment,
 			pathGrantsSegment,
-			jobsSegment,
+			taskNamesSegment,
 		),
 	}
 

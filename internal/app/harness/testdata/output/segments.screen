@@ -354,24 +354,48 @@ usage failed
 ● ███░┃░░░
 === tasks / a ghost beside a live task ===
 ● docs ○ builder
+● docs ○
+● ○
++
 === tasks / a ghost whose linger is up ===
 ● docs
+●
++
 === tasks / associated task named by port ===
 ● watch
+●
++
 === tasks / failures alone ===
 ✗ builder ✗ api
+✗ builder ✗
+✗ ✗
++
 === tasks / failures beside those running ===
 ● docs ✗ builder
+● docs ✗
+● ✗
++
 === tasks / none ===
 
 === tasks / nothing is left of a closed session ===
 
 === tasks / one being stopped among those running ===
 ● docs ● watch ● api
+● docs ● watch ●
+● docs ● ●
+● ● ●
++
 === tasks / queued, running and failed together ===
-● docs ● checks ● build ✗ lint
+● docs ● build ● checks ✗
+● docs ● build ● ✗
+● docs ● ● ✗
+● ● ● ✗
++
 === tasks / running ===
 ● docs ● watch
+● docs ●
+● ●
++
 === turn-count / nothing asked yet ===
 
 === turn-count / third turn ===

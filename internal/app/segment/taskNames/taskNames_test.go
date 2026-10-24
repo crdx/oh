@@ -1,6 +1,7 @@
 package taskNames_test
 
 import (
+	"slices"
 	"testing"
 	"time"
 
@@ -55,6 +56,38 @@ func TestEveryRunningTaskIsNamed(t *testing.T) {
 	}
 }
 
+func TestEachRungNamesAtMostThreeTasksAndUsesStateMarksForTheRest(t *testing.T) {
+	built := build(t,
+		tasks.Snapshot{ID: "golden", State: tasks.Running},
+		tasks.Snapshot{ID: "foo", State: tasks.Running},
+		tasks.Snapshot{ID: "bar", State: tasks.Done, EndedAt: endedAgo(time.Second)},
+		tasks.Snapshot{ID: "one", State: tasks.Done, EndedAt: endedAgo(time.Second)},
+		tasks.Snapshot{ID: "two", State: tasks.Done, EndedAt: endedAgo(time.Second)},
+		tasks.Snapshot{ID: "three", State: tasks.Done, EndedAt: endedAgo(time.Second)},
+	)
+	fitter, isFitter := built.(segment.Fitter)
+	if !isFitter {
+		t.Fatal("task names segment does not fit itself to available room")
+	}
+
+	ladder := fitter.Ladder(segment.Context{})
+	got := make([]string, 0, len(ladder))
+	for _, rung := range ladder {
+		got = append(got, style.Plain(rung))
+	}
+
+	want := []string{
+		"\u25cf golden \u25cf foo \u25cb bar \u25cb \u25cb \u25cb",
+		"\u25cf golden \u25cf foo \u25cb \u25cb \u25cb \u25cb",
+		"\u25cf golden \u25cf \u25cb \u25cb \u25cb \u25cb",
+		"\u25cf \u25cf \u25cb \u25cb \u25cb \u25cb",
+		"+",
+	}
+	if !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestATaskWithAForwardedPortIsLeftForThePortSegmentToName(t *testing.T) {
 	drawn := style.Plain(buildWithRoutes(t, []portgrant.Route{{Port: 8000, TaskName: "docs"}},
 		tasks.Snapshot{ID: "docs", State: tasks.Running},
@@ -66,7 +99,7 @@ func TestATaskWithAForwardedPortIsLeftForThePortSegmentToName(t *testing.T) {
 	}
 }
 
-func TestLiveTasksComeBeforeFinishedTasks(t *testing.T) {
+func TestTasksAreSortedByStatusWithRunningFirst(t *testing.T) {
 	drawn := style.Plain(build(t,
 		tasks.Snapshot{ID: "failed", State: tasks.Failed, EndedAt: endedAgo(time.Second)},
 		tasks.Snapshot{ID: "queued", State: tasks.Queued},
@@ -75,9 +108,9 @@ func TestLiveTasksComeBeforeFinishedTasks(t *testing.T) {
 		tasks.Snapshot{ID: "stopping", State: tasks.Stopping},
 	).Render(segment.Context{}))
 
-	want := "\u25cf queued \u25cf running \u25cf stopping \u2717 failed \u25cb done"
+	want := "\u25cf running \u25cf queued \u25cf stopping \u2717 \u25cb"
 	if drawn != want {
-		t.Errorf("got %q, want live tasks first and finished tasks last as %q", drawn, want)
+		t.Errorf("got %q, want tasks sorted by status as %q", drawn, want)
 	}
 }
 

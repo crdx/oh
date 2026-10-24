@@ -830,7 +830,7 @@ func TestReasoningDrawnADeltaAtATimeIsTheReasoningDrawnAtOnce(t *testing.T) {
 func TestACacheRebuildIsCostedInTheChosenCurrency(t *testing.T) {
 	var screenOutput bytes.Buffer
 	paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
-	paint.ShowCacheMissNoticesWhen(experimental.New(map[string]any{string(experimental.CacheMissNotices): true}))
+	paint.ReadTogglesFrom(experimental.New(map[string]any{string(experimental.CacheMissNotices): true}))
 	paint.PriceCacheRebuildsAt(Tariff{
 		Prices:   &agent.TokenPrices{Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
 		Currency: money.In("GBP", 0.5),
@@ -852,7 +852,7 @@ func TestCacheMissNoticesFollowLiveExperimentalToggle(t *testing.T) {
 	var screenOutput bytes.Buffer
 	paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
 	toggles := experimental.New(nil)
-	paint.ShowCacheMissNoticesWhen(toggles)
+	paint.ReadTogglesFrom(toggles)
 	event := agent.Event{
 		Kind:  agent.CacheRebuildEvent,
 		Name:  string(agent.CacheExpired),
