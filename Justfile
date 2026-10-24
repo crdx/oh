@@ -8,6 +8,9 @@ import? 'local.just'
 set positional-arguments
 
 LINT_CACHE := env('GOLANGCI_LINT_CACHE', home_directory() / '.cache' / 'golangci-lint')
+TEST_CACHE := env('XDG_CACHE_HOME', home_directory() / '.cache') / 'oh' / 'test'
+TEST_BINARY := TEST_CACHE / sha256(justfile_directory()) / 'oh'
+HARNESS_SHARD_COUNT := "8"
 
 export GOLANGCI_LINT_CACHE := LINT_CACHE / sha256(justfile_directory())
 
@@ -27,16 +30,85 @@ fix:
 # run every test, naming the failures last
 test:
     #!/bin/bash
-    set -uo pipefail
+    set -euo pipefail
     RED='\e[31m'
+    YELLOW='\e[33m'
     NC='\e[0m'
-    LOG=$(mktemp -t oh-test.XXXXXX)
-    trap 'rm -f "$LOG"' EXIT
-    go test -cover ./... 2>&1 | tee "$LOG"
-    STATUS=${PIPESTATUS[0]}
+    SHARD_COUNT={{ HARNESS_SHARD_COUNT }}
+    LOG_DIRECTORY=$(mktemp -d -t oh-test.XXXXXX)
+    trap 'rm -rf "$LOG_DIRECTORY"' EXIT
+    PIDS=()
+    LOGS=()
+    ALL_LOGS=()
+    STATUS=0
+
+    function run_tests {
+        local NAME=$1
+        shift
+        local LOG="$LOG_DIRECTORY/$NAME.log"
+        go test "$@" >"$LOG" 2>&1 &
+        PIDS+=("$!")
+        LOGS+=("$LOG")
+        ALL_LOGS+=("$LOG")
+    }
+
+    function wait_for_tests {
+        for I in "${!PIDS[@]}"; do
+            if ! wait "${PIDS[$I]}"; then
+                STATUS=1
+            fi
+            cat "${LOGS[$I]}"
+        done
+        PIDS=()
+        LOGS=()
+    }
+
+    echo -e "${YELLOW}Preparing tests…${NC}"
+    PACKAGE_LIST=$(go list ./...)
+    mapfile -t PACKAGES < <(
+        printf '%s\n' "$PACKAGE_LIST" |
+            grep -vx 'crdx.org/oh/internal/app/harness'
+    )
+    HARNESS_TEST_LIST=$(go test ./internal/app/harness -list '.')
+    mapfile -t HARNESS_TESTS < <(
+        printf '%s\n' "$HARNESS_TEST_LIST" |
+            grep -E '^(Test|Example|Fuzz)' |
+            grep -vx 'TestGoldenScenariosProduceCanonicalOutputs'
+    )
+
+    export OH_TEST_BINARY='{{ TEST_BINARY }}'
+    mkdir -p "$(dirname "$OH_TEST_BINARY")"
+    go build -tags=oh_grep_test -o "$OH_TEST_BINARY" crdx.org/oh
+    export OH_TEST_BINARY_BUILD_ID
+    OH_TEST_BINARY_BUILD_ID=$(go tool buildid "$OH_TEST_BINARY")
+
+    echo -e "${YELLOW}Running tests in parallel…${NC}"
+    run_tests packages "${PACKAGES[@]}"
+    for ((SHARD = 0; SHARD < SHARD_COUNT; SHARD++)); do
+        PATTERN=$(
+            printf '%s\n' "${HARNESS_TESTS[@]}" |
+                awk -v shard="$SHARD" -v count="$SHARD_COUNT" '(NR - 1) % count == shard' |
+                paste -sd '|' -
+        )
+        run_tests "harness-$SHARD" \
+            ./internal/app/harness \
+            -run "^(${PATTERN})$"
+    done
+    wait_for_tests
+
+    echo -e "${YELLOW}Running scenario tests in parallel…${NC}"
+    for ((SHARD = 0; SHARD < SHARD_COUNT; SHARD++)); do
+        run_tests "scenarios-$SHARD" \
+            ./internal/app/harness \
+            -run '^TestGoldenScenariosProduceCanonicalOutputs$' \
+            -session-golden-shard "$SHARD" \
+            -session-golden-shard-count "$SHARD_COUNT"
+    done
+    wait_for_tests
+
     if [[ $STATUS -ne 0 ]]; then
         echo -e "${RED}Failed:${NC}"
-        grep -E '^ *--- FAIL|^FAIL\s|^panic: ' "$LOG" || true
+        grep -hE '^ *--- FAIL|^FAIL\s|^panic: ' "${ALL_LOGS[@]}" || true
     fi
     exit "$STATUS"
 
@@ -83,6 +155,12 @@ golden:
     PIDS=()
     LOGS=()
     trap 'rm -f "${LOGS[@]}"' EXIT
+    export OH_TEST_BINARY='{{ TEST_BINARY }}'
+    mkdir -p "$(dirname "$OH_TEST_BINARY")"
+    go build -tags=oh_grep_test -o "$OH_TEST_BINARY" crdx.org/oh
+    export OH_TEST_BINARY_BUILD_ID
+    OH_TEST_BINARY_BUILD_ID=$(go tool buildid "$OH_TEST_BINARY")
+
     function generate_goldens {
         local LOG
         LOG=$(mktemp -t io-golden.XXXXXX)
@@ -95,7 +173,17 @@ golden:
 
     # isolate shards because the generator harness mutates process-wide state
     for PATTERN in '[A-D]' '[E-L]' '[M-R]' '[S-Z]'; do
-        generate_goldens ./internal/app/harness -run "^TestGolden${PATTERN}"
+        generate_goldens \
+            ./internal/app/harness \
+            -run "^TestGolden${PATTERN}" \
+            -skip-session-goldens
+    done
+    for ((SHARD = 0; SHARD < {{ HARNESS_SHARD_COUNT }}; SHARD++)); do
+        generate_goldens \
+            ./internal/app/harness \
+            -run '^TestGoldenScenariosProduceCanonicalOutputs$' \
+            -session-golden-shard "$SHARD" \
+            -session-golden-shard-count {{ HARNESS_SHARD_COUNT }}
     done
 
     generate_goldens \

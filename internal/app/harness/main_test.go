@@ -7416,6 +7416,12 @@ func checkedModelCache(providers string) []byte {
 var testBinaryDirectory string
 
 var testBinary = sync.OnceValues(func() (string, error) {
+	coverageDirectory := os.Getenv(binaryCoverageVariable)
+	if binary := os.Getenv(providedTestBinaryVariable); binary != "" && coverageDirectory == "" {
+		_ = os.Getenv(providedTestBinaryBuildIDVariable)
+		return binary, nil
+	}
+
 	directory, err := os.MkdirTemp("", "oh-binary")
 	if err != nil {
 		return "", err
@@ -7424,7 +7430,6 @@ var testBinary = sync.OnceValues(func() (string, error) {
 	testBinaryDirectory = directory
 	binary := filepath.Join(directory, "oh")
 
-	coverageDirectory := os.Getenv(binaryCoverageVariable)
 	if coverageDirectory == "" {
 		return binary, buildBinary(binary)
 	}
@@ -7441,7 +7446,11 @@ var testBinary = sync.OnceValues(func() (string, error) {
 	return binary, nil
 })
 
-const binaryCoverageVariable = "OH_TEST_BINARY_COVERAGE"
+const (
+	providedTestBinaryVariable        = "OH_TEST_BINARY"
+	providedTestBinaryBuildIDVariable = "OH_TEST_BINARY_BUILD_ID"
+	binaryCoverageVariable            = "OH_TEST_BINARY_COVERAGE"
+)
 
 func buildBinary(binary string, flags ...string) error {
 	arguments := append([]string{"build", "-tags=oh_grep_test"}, flags...)
@@ -9440,7 +9449,12 @@ const (
 	retiredAnimalSession = "brave-vulture"
 )
 
-var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
+var (
+	updateGoldens           = flag.Bool("update", false, "write what was drawn back to the golden files")
+	sessionGoldenShard      = flag.Int("session-golden-shard", 0, "run this session golden shard")
+	sessionGoldenShardCount = flag.Int("session-golden-shard-count", 1, "split session goldens into this many shards")
+	skipSessionGoldens      = flag.Bool("skip-session-goldens", false, "skip the session golden scenarios")
+)
 
 type replayEntry struct {
 	Event *agent.Event `json:"event,omitempty"`
@@ -19068,6 +19082,16 @@ type sessionGoldenScenario struct {
 }
 
 func TestGoldenScenariosProduceCanonicalOutputs(t *testing.T) {
+	if *skipSessionGoldens {
+		t.Skip("session golden scenarios run in separate shards")
+	}
+	if *sessionGoldenShardCount < 1 {
+		t.Fatal("the session golden shard count must be positive")
+	}
+	if *sessionGoldenShard < 0 || *sessionGoldenShard >= *sessionGoldenShardCount {
+		t.Fatalf("session golden shard %d is outside a count of %d", *sessionGoldenShard, *sessionGoldenShardCount)
+	}
+
 	paths, err := filepath.Glob(filepath.Join("testdata", "scenarios", "*.toml"))
 	if err != nil {
 		t.Fatal(err)
@@ -19076,7 +19100,10 @@ func TestGoldenScenariosProduceCanonicalOutputs(t *testing.T) {
 		t.Fatal("no session golden scenarios")
 	}
 
-	for _, path := range paths {
+	for index, path := range paths {
+		if index%*sessionGoldenShardCount != *sessionGoldenShard {
+			continue
+		}
 		scenario := readSessionGoldenScenario(t, path)
 		t.Run(scenario.Name, func(t *testing.T) {
 			for extension, got := range runSessionGoldenScenario(t, scenario) {
