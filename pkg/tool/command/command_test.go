@@ -359,13 +359,13 @@ func TestACommandThatFailsReportsItsExitCodeAndOutput(t *testing.T) {
 	}
 }
 
-func TestTheCommandRunsInTheDirectoryItWasGiven(t *testing.T) {
-	directory := t.TempDir()
+func TestTheCommandRunsInTheWorkspaceItWasGiven(t *testing.T) {
+	workspace := t.TempDir()
 	declaration := echoingDeclaration(t)
 	declaration.Command = []string{writeScript(t, "pwd")}
 	declaration.Parameters = nil
 
-	subject, err := command.New(declaration, command.Options{Directory: directory})
+	subject, err := command.New(declaration, command.Options{Workspace: workspace})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -375,7 +375,7 @@ func TestTheCommandRunsInTheDirectoryItWasGiven(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	resolved, err := filepath.EvalSymlinks(directory)
+	resolved, err := filepath.EvalSymlinks(workspace)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

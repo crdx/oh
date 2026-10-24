@@ -1380,7 +1380,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		),
 	)
 	customTools, err := settings.BuildCustomTools(command.Options{
-		Directory:      workspace.GetDir(),
+		Workspace:      workspace.GetDir(),
 		Scratch:        tmpDir,
 		Session:        log.Name(),
 		GroupForTool:   frozenToolGroups.GroupOf,

@@ -73,7 +73,7 @@ type Declaration struct {
 }
 
 type Options struct {
-	Directory string
+	Workspace string
 	Scratch   string
 	Session   string
 	Approve   func(
@@ -357,7 +357,7 @@ func run(
 
 	//nolint:gosec // the person declared this executable themselves, and every argument is its own word
 	process := exec.CommandContext(context.WithoutCancel(runContext), line[0], line[1:]...)
-	process.Dir = options.Directory
+	process.Dir = options.Workspace
 	process.Stdin = nil
 	process.Env = environment(process.Environ(), declaration.Name, options)
 	process.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
