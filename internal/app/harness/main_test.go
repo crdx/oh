@@ -5475,6 +5475,17 @@ func testConversation(t *testing.T, screenOutput *bytes.Buffer) *App {
 	}
 }
 
+func namedGoldenRecorder(t *testing.T) *record.Recorder {
+	t.Helper()
+
+	log, err := store.CreateNamed(t.TempDir(), goldenSessionName, store.Meta{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = log.Close() })
+	return record.New(log)
+}
+
 func completeTurn(self *App) {
 	self.start("are you there")
 
@@ -7507,6 +7518,44 @@ func TestTheViewFlagShowsAToolResultThroughTheMainBinary(t *testing.T) {
 
 	if result != "read · notes.txt\n\none\ntwo\n" {
 		t.Errorf("tool result is %q", result)
+	}
+}
+
+func TestTheViewFlagShowsATaskRunThroughTheMainBinary(t *testing.T) {
+	stateDirectory := t.TempDir()
+	writer, err := session.Create(filepath.Join(stateDirectory, "sessions"), nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	completion := taskrecord.Completion{Snapshot: tasks.Snapshot{
+		Invocation: &tasks.Invocation{Arguments: `{"command":"seq 1 3"}`},
+		ID:         "count",
+		ToolName:   "bash",
+		Run:        1,
+		State:      tasks.Done,
+		EndedAt:    time.Date(2026, 10, 24, 12, 0, 0, 0, time.UTC),
+		Output:     "1\n2\n3\n",
+	}, IsFinal: true}
+	if _, err := writer.Event(taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: completion.Snapshot, IsFinal: true})); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	binary := buildTestBinary(t)
+	environment := append(testBinaryEnvironment(t, t.TempDir()), location.StateDirVariable+"="+stateDirectory)
+	result := runTestBinary(
+		t,
+		binary,
+		t.TempDir(),
+		environment,
+		"--view",
+		toolresult.TaskURL(completion.Reference(writer.Name())),
+	)
+
+	if want := "task · count · run 1 done\n\n$ seq 1 3\n\n1\n2\n3\n"; result != want {
+		t.Errorf("task result is %q, want %q", result, want)
 	}
 }
 
@@ -18987,6 +19036,7 @@ type sessionGoldenScenario struct {
 	Asleep                 string                    `toml:"asleep"`
 	Grouping               output.Grouping           `toml:"grouping"`
 	CacheMissNotices       bool                      `toml:"cache-miss-notices"`
+	TaskOutputLines        *int64                    `toml:"task-output-lines"`
 	Hostname               string                    `toml:"hostname"`
 	FirstTokenError        string                    `toml:"first-token-error"`
 	CredentialRefresh      string                    `toml:"credential-refresh"`
@@ -18997,6 +19047,8 @@ type sessionGoldenScenario struct {
 	EnvironmentOnResume    *sessionGoldenEnvironment `toml:"environment-on-resume"`
 	EndTaskBeforeFirst     string                    `toml:"end-task-before-first"`
 	EndTaskOutput          string                    `toml:"end-task-output"`
+	EndTaskIntent          string                    `toml:"end-task-intent"`
+	EndTaskTimesOut        bool                      `toml:"end-task-times-out"`
 	TaskHoldingWorkspace   string                    `toml:"task-holding-workspace"`
 	TaskHoldingGit         string                    `toml:"task-holding-git"`
 	TaskHoldingConfigured  string                    `toml:"task-holding-configured"`
@@ -19184,6 +19236,14 @@ func (self sessionGoldenScenario) prices() *agent.TokenPrices {
 		CacheRead:  self.Prices.CacheRead,
 		CacheWrite: self.Prices.CacheWrite,
 	}
+}
+
+func (self sessionGoldenScenario) toggles() map[string]any {
+	toggles := map[string]any{string(experimental.CacheMissNotices): self.CacheMissNotices}
+	if self.TaskOutputLines != nil {
+		toggles[string(experimental.TaskOutputLines)] = *self.TaskOutputLines
+	}
+	return toggles
 }
 
 func (self sessionGoldenScenario) display() displayState {
@@ -20485,7 +20545,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		recorder:     record.New(log),
 		forwards:     goldenPorts,
 		display:      scenario.display(),
-		experimental: experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
+		experimental: experimental.New(scenario.toggles()),
 		nudge:        builtInConfig(t).Input.Nudge,
 		children:     childState{manager: firstChildManager},
 		tasks:        firstTaskManager,
@@ -20523,6 +20583,17 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if scenario.EndTaskBeforeFirst != "" {
 		conclusion := endedSessionGoldenTask(scenario.EndTaskBeforeFirst)
 		conclusion.Snapshot.Output = scenario.EndTaskOutput
+		if scenario.EndTaskTimesOut {
+			conclusion.Snapshot.State = tasks.TimedOut
+			conclusion.Snapshot.Failure = "the call reached its time limit of 5m"
+		}
+		if scenario.EndTaskIntent != "" {
+			arguments, err := json.Marshal(bash.Args{Command: "go test ./...", Intent: scenario.EndTaskIntent})
+			if err != nil {
+				t.Fatal(err)
+			}
+			conclusion.Snapshot.Invocation = &tasks.Invocation{Arguments: string(arguments)}
+		}
 		firstHarness.holdNotice(taskrecord.EndedEvent(conclusion), false)
 		firstHarness.settleAccess()
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
@@ -20631,7 +20702,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		recordedEvents: slices.Clone(storedSession.Events),
 		forwards:       goldenPorts,
 		display:        scenario.display(),
-		experimental:   experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
+		experimental:   experimental.New(scenario.toggles()),
 		children: childState{
 			manager:   resumedChildManager,
 			directory: session.ChildrenDir(directory, sessionName),
@@ -20719,7 +20790,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		screen:         scenario.screen(&replayOutput),
 		recordedEvents: storedSession.Events,
 		display:        scenario.display(),
-		experimental:   experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
+		experimental:   experimental.New(scenario.toggles()),
 	}
 	replayHarness.replay()
 
@@ -20737,7 +20808,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		recordedEvents: storedSession.Events,
 		runMode:        runMode{isPrinting: true},
 		display:        scenario.display(),
-		experimental:   experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
+		experimental:   experimental.New(scenario.toggles()),
 	}
 	printedReplayHarness.replay()
 
@@ -21275,7 +21346,7 @@ func drawPrintedSessionGoldenTurn(
 		recorder:     record.New(log),
 		runMode:      runMode{isPrinting: true},
 		display:      scenario.display(),
-		experimental: experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
+		experimental: experimental.New(scenario.toggles()),
 	}
 	if len(restoredEvents) > 0 {
 		printedHarness.recordedEvents = slices.Clone(restoredEvents)
@@ -24316,6 +24387,7 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
 			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+			self.recorder = namedGoldenRecorder(t)
 			self.nudge = "."
 			self.settleAccess()
 
@@ -24380,6 +24452,21 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 			IsFinal:  true,
 		})
 	}
+	endOneTaskWithOutput := func(self *App) {
+		self.experimental = experimental.New(map[string]any{string(experimental.TaskOutputLines): int64(1)})
+		self.taskEnded(tasks.Conclusion{
+			Snapshot: tasks.Snapshot{
+				Invocation: &tasks.Invocation{Arguments: `{"command":"go build ./...","intent":"Building every package once more"}`},
+				ID:         "build",
+				ToolName:   "bash",
+				Run:        1,
+				State:      tasks.Failed,
+				Failure:    "exit status 1",
+				Output:     "go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\ncmd/oh/draw.go:52:3: undefined: getHeight\nexit status 1\n",
+			},
+			IsFinal: true,
+		})
+	}
 	withdrawWrites := func(self *App) { self.toggleCap(caps.Write) }
 	stopATaskAndGrantWritesBack := func(self *App) {
 		self.tasks = tasks.New(t.Context())
@@ -24395,6 +24482,8 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		"2 a restored task flushed":                         drawnAt(restoreOneTask, 2),
 		"3 an ended task standing":                          drawnAt(endOneTask, 0),
 		"4 an ended task flushed":                           drawnAt(endOneTask, 2),
+		"4b an ended task with output standing":             drawnAt(endOneTaskWithOutput, 0),
+		"4c an ended task with output flushed":              drawnAt(endOneTaskWithOutput, 2),
 		"5 a mode change flushed":                           drawnAt(withdrawWrites, 2),
 		"6 nothing standing carries on":                     drawnAt(func(*App) {}, 2),
 		"7 a restored task and one return":                  drawnAt(restoreOneTask, 1),
@@ -25919,7 +26008,8 @@ group = "a"
 		t.Fatal(err)
 	}
 	session.waitFor("Completed.")
-	session.requireShown("forecast complete")
+	session.requireShown("Task task-1 done.")
+	session.requireHidden("forecast complete")
 	session.quit()
 
 	requests := endpoint.Requests()

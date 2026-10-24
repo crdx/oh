@@ -663,3 +663,19 @@ func TestRevocationCannotMissATaskBeingAdmitted(t *testing.T) {
 		}
 	})
 }
+
+func TestEveryStateIsSpokenWithoutUnderscores(t *testing.T) {
+	for state, want := range map[tasks.State]string{
+		tasks.Queued:   "queued",
+		tasks.Running:  "running",
+		tasks.Stopping: "stopping",
+		tasks.Done:     "done",
+		tasks.Failed:   "failed",
+		tasks.TimedOut: "timed out",
+		tasks.Stopped:  "stopped",
+	} {
+		if got := state.Spoken(); got != want {
+			t.Errorf("%s is spoken as %q, want %q", state, got, want)
+		}
+	}
+}

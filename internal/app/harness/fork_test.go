@@ -142,7 +142,7 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 	provider := &messageCaptureProvider{}
 	self.agent = agent.New("", provider, nil)
 	sessionsDir := t.TempDir()
-	log, err := store.Create(sessionsDir, store.Meta{})
+	log, err := store.CreateNamed(sessionsDir, goldenSessionName, store.Meta{})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -2,13 +2,17 @@ package taskrecord
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/app/access"
 	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tasks"
 )
 
@@ -110,18 +114,58 @@ func PendingNotices(events []agent.Event) []agent.Event {
 	return notices
 }
 
-func EndedNotice(event agent.Event) (string, bool) {
+var errRunFound = errors.New("task run found")
+
+func CompletionOf(event agent.Event) (Completion, bool) {
 	var fact Completion
 	if event.Kind != RunEnded || json.Unmarshal(event.State, &fact) != nil || fact.Snapshot.ID == "" {
+		return Completion{}, false
+	}
+	return fact, true
+}
+
+func EndedNotice(event agent.Event) (string, bool) {
+	fact, isEnded := CompletionOf(event)
+	if !isEnded {
 		return "", false
 	}
-	snapshot := fact.Snapshot
+	return fact.notice(strings.TrimRight(fact.Snapshot.Output, "\n")), true
+}
+
+func (self Completion) NoticeWithin(edgeLines int) string {
+	return self.notice(centralLines(strings.TrimRight(self.Snapshot.Output, "\n"), edgeLines))
+}
+
+func (self Completion) Intent() string {
+	if self.Snapshot.Invocation == nil {
+		return ""
+	}
+	var arguments struct {
+		Intent string `json:"intent"`
+	}
+	if json.Unmarshal([]byte(self.Snapshot.Invocation.Arguments), &arguments) != nil {
+		return ""
+	}
+	return strings.TrimSpace(arguments.Intent)
+}
+
+func (self Completion) Reference(sessionName string) toolresult.TaskReference {
+	return toolresult.TaskReference{
+		EndedAt:     self.Snapshot.EndedAt,
+		SessionName: sessionName,
+		TaskName:    self.Snapshot.ID,
+		Run:         self.Snapshot.Run,
+	}
+}
+
+func (self Completion) notice(output string) string {
+	snapshot := self.Snapshot
 	status := "Task " + markdown.CodeSpan(snapshot.ID)
 	if snapshot.Run > 1 {
 		status += fmt.Sprintf(" run %d", snapshot.Run)
 	}
-	status += " " + string(snapshot.State)
-	if !fact.IsFinal {
+	status += " " + snapshot.State.Spoken()
+	if !self.IsFinal {
 		status += "; respawning"
 	}
 	if snapshot.IsRespawnLimitReached {
@@ -131,10 +175,51 @@ func EndedNotice(event agent.Event) (string, bool) {
 		status += ": " + snapshot.Failure
 	}
 	status += "."
-	if output := strings.TrimRight(snapshot.Output, "\n"); output != "" {
+	if output != "" {
 		status += "\n\n" + markdown.CodeBlock("", output)
 	}
-	return status, true
+	return status
+}
+
+func centralLines(output string, edgeLines int) string {
+	if output == "" || edgeLines <= 0 {
+		return ""
+	}
+	lines := strings.Split(output, "\n")
+	hiddenLines := len(lines) - 2*edgeLines
+	if hiddenLines <= 1 {
+		return output
+	}
+	keptLines := slices.Concat(
+		lines[:edgeLines],
+		[]string{fmt.Sprintf("%s %d more lines", width.VerticalEllipsis, hiddenLines)},
+		lines[len(lines)-edgeLines:],
+	)
+	return strings.Join(keptLines, "\n")
+}
+
+func Read(directory string, reference toolresult.TaskReference) (tasks.Snapshot, error) {
+	var found tasks.Snapshot
+	err := session.Records(directory, reference.SessionName, func(line session.Line) error {
+		if line.Kind != session.Event || line.Event == nil || line.Event.Kind != Finished || line.Event.Name != reference.TaskName {
+			return nil
+		}
+		var fact Completion
+		isDecoded := json.Unmarshal(line.Event.State, &fact) == nil
+		snapshot := fact.Snapshot
+		if !isDecoded || snapshot.ID != reference.TaskName || snapshot.Run != reference.Run || !snapshot.EndedAt.Equal(reference.EndedAt) {
+			return nil
+		}
+		found = snapshot
+		return errRunFound
+	})
+	if errors.Is(err, errRunFound) {
+		return found, nil
+	}
+	if err != nil {
+		return tasks.Snapshot{}, err
+	}
+	return tasks.Snapshot{}, errors.New("task run not found")
 }
 
 func ListingEvent(snapshots []tasks.Snapshot) agent.Event {

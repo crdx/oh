@@ -5,7 +5,7 @@
 The build is still\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m failed: exit status 1.                                                               \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exit status 1.                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user pressed escape.\e[0m\e[?25h\e[?2026l\r

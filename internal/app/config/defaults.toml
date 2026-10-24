@@ -137,6 +137,7 @@ maximum_running_tasks = 10
 redraw_timing_feedback = false
 reply_command = false
 shared_history = false
+task_output_lines = 0
 
 [debug]
 stalls = false

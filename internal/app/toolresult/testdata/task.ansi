@@ -1,0 +1,38 @@
+=== shell task done ===
+\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 done\e[0m
+
+\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mgo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[38;2;150;152;150m ./...\e[0m
+
+building
+built oh
+
+
+=== shell task failed ===
+\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 failed: exit status 1\e[0m
+
+\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mcheck\e[0m
+
+\e[38;2;204;102;102mlint1  ✗
+main.go:12: undefined: run
+\e[0m
+
+=== shell task stopped ===
+\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 stopped\e[0m
+
+\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m30\e[0m
+
+\e[38;2;150;152;150m(no output)\e[0m
+
+=== search task ===
+\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 done\e[0m
+
+\e[38;2;207;173;0mgrep\e[0m · \e[38;2;150;152;150mfunc Run\e[0m
+
+\e[38;2;150;152;150mcmd/oh/main.go:12:\e[0m\e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mRun\e[0m() \e[38;2;240;198;116merror\e[0m {
+
+
+=== task without invocation ===
+\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mrestored\e[0m · \e[38;2;150;152;150mrun 2 timed out: time limit reached\e[0m
+
+\e[38;2;150;152;150m(no output)\e[0m
+

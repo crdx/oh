@@ -122,10 +122,10 @@ func (self *pendingNotices) notices() []string {
 	return notices
 }
 
-func (self *pendingNotices) drawnNotices(introductions *painter.Introductions) []painter.Notice {
+func (self *pendingNotices) drawnNotices(drawing painter.NoticeDrawing) []painter.Notice {
 	var notices []painter.Notice
 	for _, item := range self.items {
-		if itemNotices, areSaid := painter.DrawnNotices(item.state, introductions); areSaid {
+		if itemNotices, areSaid := painter.DrawnNotices(item.state, drawing); areSaid {
 			notices = append(notices, itemNotices...)
 		}
 	}
@@ -1069,7 +1069,7 @@ func (self *App) refreshPendingMessages() {
 		return
 	}
 
-	messages := self.pendingNotices.drawnNotices(self.introductions)
+	messages := self.pendingNotices.drawnNotices(self.noticeDrawing())
 	if self.pendingNotices.renderer == nil {
 		self.pendingNotices.renderer = painter.NewPendingMessages(
 			messages,
@@ -2086,9 +2086,7 @@ func (self *App) newPainter(isRunning bool) *painter.Picasso {
 	}
 	picasso.DescribeCallsWith(self.describer)
 	picasso.RenderReasoningAs(self.display.reasoningRendering)
-	if self.screen.IsTerminal() && self.recorder != nil {
-		picasso.LinkToolResults(self.recorder.Name())
-	}
+	picasso.LinkToolResults(self.resultLinkSessionName())
 	if self.display.pictures.SessionDirectory != "" {
 		picasso.DrawPicturesFrom(self.display.pictures)
 	}
@@ -2096,6 +2094,21 @@ func (self *App) newPainter(isRunning bool) *painter.Picasso {
 	picasso.PriceCacheRebuildsAt(self.display.tariff)
 	picasso.ReadTogglesFrom(self.experimental)
 	return picasso
+}
+
+func (self *App) resultLinkSessionName() string {
+	if !self.screen.IsTerminal() || self.recorder == nil {
+		return ""
+	}
+	return self.recorder.Name()
+}
+
+func (self *App) noticeDrawing() painter.NoticeDrawing {
+	return painter.NoticeDrawing{
+		Introductions: self.introductions,
+		Toggles:       self.experimental,
+		SessionName:   self.resultLinkSessionName(),
+	}
 }
 
 func (self *App) replay() {

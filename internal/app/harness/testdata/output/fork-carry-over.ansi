@@ -1,6 +1,6 @@
 === a discarded task completion left behind ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mtask-4\e[0m\e[48;2;48;58;67m done.                                                                               \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?run=1&session=tame-impala&task=task-4\e\\\e[38;2;192;128;80mtask-4\e[0m\e[48;2;48;58;67m\e]8;;\e\\ done.                                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mretained completion is announced\e[0m\e[48;2;48;58;67m                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e]9;4;3\e\\\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r

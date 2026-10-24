@@ -336,6 +336,10 @@ func submittedContentRows(
 	} else {
 		content = markdown.Render(strutil.StripControl(message.text), contentColumns)
 	}
+	content = withIntent(content, strutil.StripControl(message.intent), contentColumns)
+	if shouldRenderHyperlinks {
+		linkCode(content, message.link)
+	}
 	for i, row := range content {
 		prefix := " "
 		switch {
@@ -349,6 +353,31 @@ func submittedContentRows(
 	}
 
 	return content
+}
+
+func withIntent(rows []string, intent string, columns int) []string {
+	if intent == "" || len(rows) == 0 {
+		return rows
+	}
+	end := slices.IndexFunc(rows, func(row string) bool { return style.Plain(row) == "" })
+	if end < 0 {
+		end = len(rows)
+	}
+	paragraph := strings.Join(rows[:end], " ") + " " + style.Reasoning("("+intent+")")
+	return slices.Concat(width.Wrap(paragraph, columns), rows[end:])
+}
+
+func linkCode(rows []string, noticeLink NoticeLink) {
+	if noticeLink.URL == "" {
+		return
+	}
+	code := style.Code(strutil.StripControl(noticeLink.Code))
+	for index, row := range rows {
+		if strings.Contains(row, code) {
+			rows[index] = strings.Replace(row, code, link.RenderURL(code, noticeLink.URL), 1)
+			return
+		}
+	}
 }
 
 func frameSubmitted(content []string, foot string, columns int, background style.Style) []string {
@@ -613,13 +642,17 @@ func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
 }
 
 func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage)) {
-	notices, areSaid := DrawnNotices(event, self.introductions)
+	notices, areSaid := DrawnNotices(event, NoticeDrawing{
+		Introductions: self.introductions,
+		Toggles:       self.toggles,
+		SessionName:   self.resultLinkSessionName,
+	})
 	if !areSaid {
 		return
 	}
 
 	for _, notice := range notices {
-		draw(submittedMessage{text: notice.Text, kind: sentHarnessSubmission, mark: notice.Mark})
+		draw(submittedMessage{text: notice.Text, kind: sentHarnessSubmission, mark: notice.Mark, intent: notice.Intent, link: notice.Link})
 	}
 }
 

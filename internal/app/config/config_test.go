@@ -1934,6 +1934,31 @@ func TestMaximumRunningTasksMustBePositive(t *testing.T) {
 	}
 }
 
+func TestTaskOutputLinesDefaultsToNoneAndCanBeChanged(t *testing.T) {
+	defaults := configFrom(t, "")
+	if value, isSet := defaults.Experimental["task_output_lines"]; !isSet || value != int64(0) {
+		t.Errorf("got experimental defaults %v", defaults.Experimental)
+	}
+
+	configured := configFrom(t, "[experimental]\ntask_output_lines = 3\n")
+	if configured.Experimental["task_output_lines"] != int64(3) {
+		t.Errorf("got experimental settings %v", configured.Experimental)
+	}
+	if ReachOf("experimental.task_output_lines") != ReachLive {
+		t.Error("task_output_lines does not reach a running session")
+	}
+}
+
+func TestTaskOutputLinesMustNotBeNegative(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[experimental]\ntask_output_lines = -1\n"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "experimental.task_output_lines must be at least 0, got -1") {
+		t.Errorf("got %v", err)
+	}
+}
+
 func TestEnterInterruptsDefaultsToOffAndCanBeEnabled(t *testing.T) {
 	defaults := configFrom(t, "")
 	if value, isSet := defaults.Experimental["enter_interrupts"]; !isSet || value != false {

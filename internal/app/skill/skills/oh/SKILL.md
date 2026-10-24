@@ -49,7 +49,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
 - `[editor]` — editor command
-- `[experimental]` — opt-in settings; `forward_hostname` names the forwarded-port host, and `maximum_running_tasks` caps concurrent tasks at 16 by default
+- `[experimental]` — opt-in settings; `forward_hostname` names the forwarded-port host, `maximum_running_tasks` caps concurrent tasks at 16 by default, and `task_output_lines` keeps that many lines at each end of a task's output in the notice the person sees, none by default, while the model reads it whole
 - A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `experimental.forward_hostname` to use the numeric address, and `editor.command` to find an editor
 - With no `editor.command`, oh takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and, under `experimental.reply_command`, `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
 

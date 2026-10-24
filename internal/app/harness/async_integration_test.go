@@ -38,6 +38,7 @@ func TestBackgroundAndForegroundShellCallsKeepTheirResultsAcrossResume(t *testin
 			{Say: "Stored background output is still available."},
 		},
 	}))
+	writeRigConfig(t, rig, "[experimental]\ntask_output_lines = 3\n")
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "compare background and foreground shell execution")
 	session.waitFor("Both paths are ready.")
 	if err := os.WriteFile(gate, []byte("go"), 0o600); err != nil {

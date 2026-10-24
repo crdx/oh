@@ -1,12 +1,14 @@
 package painter
 
 import (
+	"math"
 	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/environment"
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
@@ -19,6 +21,7 @@ import (
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -30,6 +33,7 @@ const (
 	unwrappedPreviewColumns = 1 << 16
 	sendHint                = "double-enter to send"
 	stoppingHint            = "sending" + width.Ellipsis
+	everyTaskOutputLine     = math.MaxInt32
 )
 
 type submissionKind uint8
@@ -41,9 +45,11 @@ const (
 )
 
 type submittedMessage struct {
-	text string
-	kind submissionKind
-	mark string
+	text   string
+	kind   submissionKind
+	mark   string
+	intent string
+	link   NoticeLink
 }
 
 func (self submittedMessage) marker() string {
@@ -174,7 +180,7 @@ func (self *PendingMessages) Rows(columns int) []string {
 	for _, message := range self.messages {
 		parts = append(parts, output.StackPart{
 			Rows: submittedContentRows(
-				submittedMessage{text: message.Text, kind: self.kind, mark: message.Mark},
+				submittedMessage{text: message.Text, kind: self.kind, mark: message.Mark, intent: message.Intent, link: message.Link},
 				columns,
 				self.shouldRenderHyperlinks,
 				self.pathRoots,
@@ -234,23 +240,46 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 }
 
 type Notice struct {
-	Text string
-	Mark string
+	Text   string
+	Mark   string
+	Intent string
+	Link   NoticeLink
 }
 
-func DrawnNotices(event agent.Event, introductions *Introductions) ([]Notice, bool) {
+type NoticeLink struct {
+	Code string
+	URL  string
+}
+
+type NoticeDrawing struct {
+	Introductions *Introductions
+	Toggles       *experimental.Toggles
+	SessionName   string
+}
+
+func DrawnNotices(event agent.Event, drawing NoticeDrawing) ([]Notice, bool) {
 	if reports, isReported := subagentrecord.ReportsOf(event); isReported {
 		notices := make([]Notice, len(reports))
 		for index, report := range reports {
-			notices[index] = Notice{Text: report.Notice(introductions.SubagentAlias(report.Name)), Mark: session.Emoji(report.Name)}
+			notices[index] = Notice{Text: report.Notice(drawing.Introductions.SubagentAlias(report.Name)), Mark: session.Emoji(report.Name)}
 		}
 		return notices, true
 	}
 	if event.Kind == subagentrecord.AccessWithdrawnStop {
-		if notice, isSaid := subagentrecord.AccessWithdrawnStopNoticeTitled(event, introductions.SubagentTitle); isSaid {
+		if notice, isSaid := subagentrecord.AccessWithdrawnStopNoticeTitled(event, drawing.Introductions.SubagentTitle); isSaid {
 			return []Notice{{Text: notice}}, true
 		}
 		return nil, false
+	}
+	if completion, isEnded := taskrecord.CompletionOf(event); isEnded {
+		notice := Notice{
+			Text:   completion.NoticeWithin(drawing.Toggles.GetWholeNumber(experimental.TaskOutputLines, everyTaskOutputLine)),
+			Intent: completion.Intent(),
+		}
+		if drawing.SessionName != "" {
+			notice.Link = NoticeLink{Code: completion.Snapshot.ID, URL: toolresult.TaskURL(completion.Reference(drawing.SessionName))}
+		}
+		return []Notice{notice}, true
 	}
 	texts, areSaid := HarnessNotices(event)
 	notices := make([]Notice, len(texts))

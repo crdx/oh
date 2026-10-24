@@ -319,6 +319,63 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 	assertGolden(t, "render.ansi", drawn.String())
 }
 
+func TestGoldenTaskRunsRenderForTheUser(t *testing.T) {
+	cases := []struct {
+		name     string
+		snapshot tasks.Snapshot
+	}{
+		{
+			name: "shell task done",
+			snapshot: taskSnapshot(bash.Args{Command: "go build ./..."}, tasks.Done, "",
+				"building\nbuilt oh\n"),
+		},
+		{
+			name: "shell task failed",
+			snapshot: taskSnapshot(bash.Args{Command: "just check"}, tasks.Failed, "exit status 1",
+				"lint1  ✗\nmain.go:12: undefined: run\n"),
+		},
+		{
+			name:     "shell task stopped",
+			snapshot: taskSnapshot(bash.Args{Command: "sleep 30"}, tasks.Stopped, "", ""),
+		},
+		{
+			name: "search task",
+			snapshot: taskSnapshot(grep.Args{Pattern: "func Run"}, tasks.Done, "",
+				"cmd/oh/main.go:12:func Run() error {\n"),
+		},
+		{
+			name:     "task without invocation",
+			snapshot: tasks.Snapshot{ID: "restored", Run: 2, State: tasks.TimedOut, Failure: "time limit reached"},
+		},
+	}
+
+	var drawn strings.Builder
+	for _, test := range cases {
+		fmt.Fprintf(&drawn, "=== %s ===\n%s\n\n", test.name, strutil.VisibleEscapes(renderTask(test.snapshot, 60)))
+	}
+	assertGolden(t, "task.ansi", drawn.String())
+}
+
+func taskSnapshot(arguments any, state tasks.State, failure string, output string) tasks.Snapshot {
+	encodedArguments, err := json.Marshal(arguments)
+	if err != nil {
+		panic(err)
+	}
+	toolName := "bash"
+	if _, isSearch := arguments.(grep.Args); isSearch {
+		toolName = "grep"
+	}
+	return tasks.Snapshot{
+		Invocation: &tasks.Invocation{Arguments: string(encodedArguments)},
+		ID:         "task-1",
+		ToolName:   toolName,
+		Run:        1,
+		State:      state,
+		Failure:    failure,
+		Output:     output,
+	}
+}
+
 func invalidTaskNameError(t *testing.T, name string) string {
 	t.Helper()
 

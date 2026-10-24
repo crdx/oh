@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strings"
 	"sync"
 	"time"
 
@@ -36,6 +37,10 @@ const (
 	TimedOut State = "timed_out"
 	Stopped  State = "stopped"
 )
+
+func (self State) Spoken() string {
+	return strings.ReplaceAll(string(self), "_", " ")
+}
 
 var ErrClosed = errors.New("the task supervisor is closed")
 

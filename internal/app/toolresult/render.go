@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/edit"
 	"crdx.org/oh/pkg/toolbox/fetch"
@@ -63,6 +64,43 @@ func render(exchange toolresult.Exchange, columns int) string {
 		return renderFallback(exchange)
 	}
 	return resultView
+}
+
+func renderTask(snapshot tasks.Snapshot, columns int) string {
+	header := heading("task", safe(snapshot.ID)) + partSeparator + style.Qualifier(taskOutcome(snapshot))
+	if snapshot.Invocation == nil {
+		output := safe(snapshot.Output)
+		if output == "" {
+			output = style.Subtle("(no output)")
+		}
+		return header + "\n\n" + output
+	}
+
+	exchange := toolresult.Exchange{
+		Request: agent.Event{Kind: agent.ToolCallRequestEvent, ID: snapshot.ID, Name: snapshot.ToolName, Arguments: snapshot.Invocation.Arguments},
+		Result:  agent.Event{Kind: agent.ToolCallResultEvent, ID: snapshot.ID, Name: snapshot.ToolName, Status: taskStatus(snapshot.State), Text: snapshot.Output},
+	}
+	return header + "\n\n" + render(exchange, columns)
+}
+
+func taskOutcome(snapshot tasks.Snapshot) string {
+	outcome := fmt.Sprintf("run %d %s", snapshot.Run, snapshot.State.Spoken())
+	if snapshot.Failure != "" {
+		outcome += ": " + safe(snapshot.Failure)
+	}
+	return outcome
+}
+
+func taskStatus(state tasks.State) agent.Status {
+	switch state {
+	case tasks.Done:
+		return agent.SuccessStatus
+	case tasks.Stopped:
+		return agent.CancelledStatus
+	case tasks.Failed, tasks.TimedOut, tasks.Queued, tasks.Running, tasks.Stopping:
+		return agent.ErrorStatus
+	}
+	return agent.ErrorStatus
 }
 
 func renderRead(exchange toolresult.Exchange) (string, error) {

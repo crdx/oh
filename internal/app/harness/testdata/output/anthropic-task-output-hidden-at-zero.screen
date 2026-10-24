@@ -1,0 +1,15 @@
+
+ 🤖 Task build failed: exit status 1.
+
+
+
+ what happened to the build
+
+
+It failed after twelve seconds: getWidth is undefined in draw.go.
+
+
+ carry on
+
+
+Carrying on.

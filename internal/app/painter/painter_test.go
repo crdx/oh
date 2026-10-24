@@ -19,10 +19,12 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tasks"
 )
 
 func TestStartupDrawingUsesTheScreensTextSizingSupport(t *testing.T) {
@@ -481,6 +483,141 @@ func TestToolResultLinksAreOptIn(t *testing.T) {
 				t.Errorf("link presence = %t in %q", hasLink, screenOutput.String())
 			}
 		})
+	}
+}
+
+func TestATaskNoticeLinksItsNameAndShowsTheEndsOfItsOutput(t *testing.T) {
+	ended := taskrecord.EndedEvent(tasks.Conclusion{Snapshot: tasks.Snapshot{
+		ID:      "count",
+		Run:     1,
+		State:   tasks.Done,
+		EndedAt: time.Date(2026, 10, 24, 12, 0, 0, 0, time.UTC),
+		Output:  "first\nsecond\nthird\nfourth\nfifth\nsixth\nseventh\neighth\n",
+	}, IsFinal: true})
+	toggles := experimental.New(nil)
+	for name, test := range map[string]struct {
+		sessionName string
+		lines       map[string]any
+		shown       []string
+		hidden      []string
+		shouldLink  bool
+	}{
+		"unset": {
+			sessionName: "tame-impala",
+			shown:       []string{"first", "fourth", "fifth", "eighth"},
+			hidden:      []string{"more lines"},
+			shouldLink:  true,
+		},
+		"none": {
+			sessionName: "tame-impala",
+			lines:       map[string]any{string(experimental.TaskOutputLines): int64(0)},
+			shown:       []string{"Task count done."},
+			hidden:      []string{"first", "eighth", "more lines"},
+			shouldLink:  true,
+		},
+		"three lines each end": {
+			sessionName: "tame-impala",
+			lines:       map[string]any{string(experimental.TaskOutputLines): int64(3)},
+			shown:       []string{"first", "third", "⋮ 2 more lines", "sixth", "eighth"},
+			hidden:      []string{"fourth", "fifth"},
+			shouldLink:  true,
+		},
+		"one line each end": {
+			sessionName: "tame-impala",
+			lines:       map[string]any{string(experimental.TaskOutputLines): int64(1)},
+			shown:       []string{"first", "⋮ 6 more lines", "eighth"},
+			hidden:      []string{"second", "seventh"},
+			shouldLink:  true,
+		},
+		"unlinked": {
+			lines:  map[string]any{string(experimental.TaskOutputLines): int64(3)},
+			shown:  []string{"first", "⋮ 2 more lines", "eighth"},
+			hidden: []string{"fourth"},
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			toggles.Replace(test.lines)
+			var screenOutput bytes.Buffer
+			paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
+			paint.ReadTogglesFrom(toggles)
+			paint.LinkToolResults(test.sessionName)
+			paint.DrawEvent(ended)
+
+			drawn := style.Plain(screenOutput.String())
+			for _, line := range test.shown {
+				if !strings.Contains(drawn, line) {
+					t.Errorf("%q is missing from %q", line, drawn)
+				}
+			}
+			for _, line := range test.hidden {
+				if strings.Contains(drawn, line) {
+					t.Errorf("%q is drawn in %q", line, drawn)
+				}
+			}
+			address := "\x1b]8;;oh://task-result?ended=1792843200000000000&run=1&session=tame-impala&task=count\x1b\\"
+			if hasLink := strings.Contains(screenOutput.String(), address+style.Code("count")); hasLink != test.shouldLink {
+				t.Errorf("link presence = %t in %q", hasLink, screenOutput.String())
+			}
+		})
+	}
+}
+
+func TestATaskNoticeEndsItsStatusWithTheIntent(t *testing.T) {
+	ended := taskrecord.EndedEvent(tasks.Conclusion{Snapshot: tasks.Snapshot{
+		Invocation: &tasks.Invocation{Arguments: `{"command":"go build ./...","intent":"Building every package once more"}`},
+		ID:         "build",
+		ToolName:   "bash",
+		Run:        1,
+		State:      tasks.Failed,
+		Failure:    "exit status 1",
+		Output:     "main.go:12: undefined: run\n",
+	}, IsFinal: true})
+	notices, isSaid := DrawnNotices(ended, NoticeDrawing{
+		Introductions: NewIntroductions(),
+		Toggles:       experimental.New(map[string]any{string(experimental.TaskOutputLines): int64(3)}),
+	})
+	if !isSaid || len(notices) != 1 || notices[0].Intent != "Building every package once more" {
+		t.Fatalf("got %+v (%t)", notices, isSaid)
+	}
+	if strings.Contains(notices[0].Text, "Building") {
+		t.Errorf("the intent is part of the notice text %q", notices[0].Text)
+	}
+	message := submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, intent: notices[0].Intent}
+
+	wide := submittedContentRows(message, 80, false, link.Roots{})
+	if want := "Task build failed: exit status 1. (Building every package once more)"; !strings.Contains(style.Plain(wide[0]), want) {
+		t.Errorf("first row is %q, want it to hold %q", style.Plain(wide[0]), want)
+	}
+	if !strings.Contains(wide[0], style.Reasoning("(Building every package once more)")) {
+		t.Errorf("the intent is not drawn like a call row's intent in %q", wide[0])
+	}
+	if !slices.ContainsFunc(wide, func(row string) bool { return strings.Contains(style.Plain(row), "main.go:12: undefined: run") }) {
+		t.Errorf("the output block was lost from %q", wide)
+	}
+
+	narrow := submittedContentRows(message, 30, false, link.Roots{})
+	for _, row := range narrow {
+		if style.Width(row) > 30 {
+			t.Errorf("row %q is wider than 30 columns", style.Plain(row))
+		}
+	}
+	if joined := style.Plain(strings.Join(narrow, " ")); !strings.Contains(strings.Join(strings.Fields(joined), " "), "exit status 1. (Building every package once more)") {
+		t.Errorf("the wrapped status lost its intent: %q", joined)
+	}
+}
+
+func TestATaskNoticeWithoutAnIntentEndsAtItsStatus(t *testing.T) {
+	ended := taskrecord.EndedEvent(tasks.Conclusion{Snapshot: tasks.Snapshot{
+		Invocation: &tasks.Invocation{Arguments: `{"pattern":"func Run"}`},
+		ID:         "search",
+		ToolName:   "grep",
+		Run:        1,
+		State:      tasks.Done,
+	}, IsFinal: true})
+	notices, _ := DrawnNotices(ended, NoticeDrawing{Introductions: NewIntroductions()})
+	rows := submittedContentRows(submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, intent: notices[0].Intent}, 80, false, link.Roots{})
+	if got := strings.TrimSpace(style.Plain(rows[0])); got != "🤖 Task search done." {
+		t.Errorf("got %q", got)
 	}
 }
 

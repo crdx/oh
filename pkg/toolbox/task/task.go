@@ -166,7 +166,7 @@ func describeOutput(snapshot tasks.Snapshot) string {
 }
 
 func describe(snapshot tasks.Snapshot) string {
-	status := snapshot.ID + ": " + string(snapshot.State)
+	status := snapshot.ID + ": " + snapshot.State.Spoken()
 	if snapshot.Run > 1 {
 		status += fmt.Sprintf(", run %d", snapshot.Run)
 	}

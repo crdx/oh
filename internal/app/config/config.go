@@ -704,7 +704,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
 		return fmt.Errorf("%s: subagent.concurrency must be at least 1, got %d", displayPath, config.Subagent.Concurrency)
 	}
-	if err := validateMaximumRunningTasks(config, meta); err != nil {
+	if err := validateExperimentalMinimums(config, meta); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 	if meta.IsDefined(defaultSetting, "tool_output") && config.Defaults.ToolOutput.Bytes < minimumToolOutputBytes {
@@ -1002,10 +1002,27 @@ func refuseEmptySettings(config *Config, meta toml.MetaData) error {
 	return nil
 }
 
-func validateMaximumRunningTasks(config *Config, meta toml.MetaData) error {
-	maximumRunningTasks, hasMaximumRunningTasks := config.Experimental[string(experimental.MaximumRunningTasks)].(int64)
-	if meta.IsDefined(experimentalSetting, string(experimental.MaximumRunningTasks)) && hasMaximumRunningTasks && maximumRunningTasks < 1 {
-		return fmt.Errorf("experimental.maximum_running_tasks must be at least 1, got %d", maximumRunningTasks)
+var experimentalMinimums = []struct {
+	name    experimental.Name
+	minimum int64
+}{
+	{name: experimental.MaximumRunningTasks, minimum: 1},
+	{name: experimental.TaskOutputLines, minimum: 0},
+}
+
+func validateExperimentalMinimums(config *Config, meta toml.MetaData) error {
+	for _, setting := range experimentalMinimums {
+		if err := validateExperimentalMinimum(config, meta, setting.name, setting.minimum); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func validateExperimentalMinimum(config *Config, meta toml.MetaData, name experimental.Name, minimum int64) error {
+	value, isWholeNumber := config.Experimental[string(name)].(int64)
+	if meta.IsDefined(experimentalSetting, string(name)) && isWholeNumber && value < minimum {
+		return fmt.Errorf("%s.%s must be at least %d, got %d", experimentalSetting, name, minimum, value)
 	}
 	return nil
 }

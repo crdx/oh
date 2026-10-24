@@ -11,6 +11,7 @@ import (
 	"golang.org/x/term"
 
 	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/toolresult"
 )
 
@@ -51,18 +52,37 @@ func Show(url string, shouldPage bool) error {
 }
 
 func show(url string, shouldPage bool, directory string, output io.Writer, openPager pager) error {
-	exchange, err := toolresult.Read(directory, url)
+	result, err := view(directory, url, getColumns(output))
 	if err != nil {
 		return err
 	}
 
-	result := render(exchange, getColumns(output))
 	if shouldPage {
 		return openPager(result)
 	}
 
 	_, err = fmt.Fprint(output, result)
 	return err
+}
+
+func view(directory string, url string, columns int) (string, error) {
+	if toolresult.IsTask(url) {
+		reference, err := toolresult.ParseTask(url)
+		if err != nil {
+			return "", err
+		}
+		snapshot, err := taskrecord.Read(directory, reference)
+		if err != nil {
+			return "", err
+		}
+		return renderTask(snapshot, columns), nil
+	}
+
+	exchange, err := toolresult.Read(directory, url)
+	if err != nil {
+		return "", err
+	}
+	return render(exchange, columns), nil
 }
 
 func getColumns(output io.Writer) int {

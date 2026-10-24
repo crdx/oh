@@ -6,11 +6,14 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
+	"crdx.org/oh/pkg/tasks"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -65,6 +68,39 @@ func TestShowWritesSafeToolOutput(t *testing.T) {
 	}
 	if strings.Contains(output.String(), "example.test") {
 		t.Errorf("unsafe hyperlink survived in %q", output.String())
+	}
+}
+
+func TestShowWritesTheWholeOutputOfATaskRun(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	completion := taskrecord.Completion{Snapshot: tasks.Snapshot{
+		Invocation: &tasks.Invocation{Arguments: `{"command":"seq 1 9"}`},
+		ID:         "count",
+		ToolName:   "bash",
+		Run:        1,
+		State:      tasks.Done,
+		EndedAt:    time.Date(2026, 10, 24, 12, 0, 0, 0, time.UTC),
+		Output:     "1\n2\n3\n4\n5\n6\n7\n8\n9\n",
+	}, IsFinal: true}
+	conclusion := tasks.Conclusion{Snapshot: completion.Snapshot, IsFinal: true}
+	if _, err := writer.Event(taskrecord.FinishedEvent(conclusion)); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	var output strings.Builder
+	if err := show(toolresult.TaskURL(completion.Reference(name)), false, directory, &output, nil); err != nil {
+		t.Fatalf("unexpected run error: %v", err)
+	}
+	if want := "task · count · run 1 done\n\n$ seq 1 9\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n"; style.Plain(output.String()) != want {
+		t.Errorf("got output %q, want %q", style.Plain(output.String()), want)
 	}
 }
 

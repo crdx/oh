@@ -3,6 +3,7 @@ package toolresult_test
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
@@ -28,6 +29,53 @@ func TestParseRefusesOtherAddresses(t *testing.T) {
 		"oh://tool-result?session=tame-impala&call=one&extra=two",
 	} {
 		if _, err := toolresult.Parse(address); err == nil {
+			t.Errorf("expected %q to be refused", address)
+		}
+	}
+}
+
+func TestATaskURLRoundTripsItsRun(t *testing.T) {
+	want := toolresult.TaskReference{
+		EndedAt:     time.Date(2026, 10, 24, 12, 0, 0, 123456789, time.UTC),
+		SessionName: "tame-impala",
+		TaskName:    "build&test",
+		Run:         2,
+	}
+	address := toolresult.TaskURL(want)
+	if !toolresult.IsTask(address) || toolresult.IsTask(toolresult.URL("tame-impala", "call-1")) {
+		t.Fatalf("%q was not told apart from a tool result", address)
+	}
+	got, err := toolresult.ParseTask(address)
+	if err != nil {
+		t.Fatalf("unexpected parse error: %v", err)
+	}
+	if !got.EndedAt.Equal(want.EndedAt) || got.SessionName != want.SessionName || got.TaskName != want.TaskName || got.Run != want.Run {
+		t.Errorf("got reference %#v, want %#v", got, want)
+	}
+}
+
+func TestATaskURLLeavesOutAnUnknownEndTime(t *testing.T) {
+	address := toolresult.TaskURL(toolresult.TaskReference{SessionName: "tame-impala", TaskName: "build", Run: 1})
+	if want := "oh://task-result?run=1&session=tame-impala&task=build"; address != want {
+		t.Errorf("got %q, want %q", address, want)
+	}
+	got, err := toolresult.ParseTask(address)
+	if err != nil || !got.EndedAt.IsZero() || got.TaskName != "build" || got.Run != 1 {
+		t.Errorf("got %#v and %v", got, err)
+	}
+}
+
+func TestParseTaskRefusesOtherAddresses(t *testing.T) {
+	for _, address := range []string{
+		"oh://tool-result?session=tame-impala&call=one",
+		"oh://task-result?session=tame-impala&task=build",
+		"oh://task-result?session=tame-impala&task=build&run=1&ended=",
+		"oh://task-result?session=tame-impala&task=build&run=0&ended=1",
+		"oh://task-result?session=tame-impala&task=build&run=one&ended=1",
+		"oh://task-result?session=tame-impala&task=build&run=1&ended=soon",
+		"oh://task-result?session=tame-impala&task=build&run=1&ended=1&extra=two",
+	} {
+		if _, err := toolresult.ParseTask(address); err == nil {
 			t.Errorf("expected %q to be refused", address)
 		}
 	}

@@ -20,7 +20,7 @@ check \e[38;2;192;128;80mbuild\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mbuild\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m run 2 done.                                                                          \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495529000000000&run=2&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ run 2 done.                                                                          \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mrestarted command\e[0m\e[48;2;48;58;67m                                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r

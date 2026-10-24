@@ -7,6 +7,7 @@
 - Stash drafts with ctrl+s and ctrl+shift+s
 - Show a max of 3 tasks, and the rest as flashing bullets
 - Reduce the amount of time a completed task's bullet persists
+- Truncate task output notice, and hyperlink the title to full output
 
 ## [0.24.0] — 2026-10-23
 

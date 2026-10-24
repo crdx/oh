@@ -230,7 +230,7 @@ func describeTask(snapshot tasks.Snapshot) string {
 }
 
 func taskOutcome(snapshot tasks.Snapshot, isSilent bool) string {
-	stateWithDuration := strings.ReplaceAll(string(snapshot.State), "_", " ")
+	stateWithDuration := snapshot.State.Spoken()
 	switch {
 	case snapshot.StartedAt.IsZero():
 	case isLiveTask(snapshot):

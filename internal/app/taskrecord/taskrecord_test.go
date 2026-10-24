@@ -3,9 +3,11 @@ package taskrecord_test
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tasks"
 )
 
@@ -131,5 +133,99 @@ func TestARemovedTaskLeavesNoPendingNotice(t *testing.T) {
 
 	if len(pending) != 1 || pending[0].Name != "test" {
 		t.Errorf("got %+v, want only the listed task's notice", pending)
+	}
+}
+
+func TestAShownNoticeKeepsOnlyTheEndsOfLongOutput(t *testing.T) {
+	output := "one\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n"
+	conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done, Output: output}, IsFinal: true}
+	completion, isEnded := taskrecord.CompletionOf(taskrecord.EndedEvent(conclusion))
+	if !isEnded {
+		t.Fatal("the ended event was not read back")
+	}
+
+	for edgeLines, want := range map[int]string{
+		0: "Task `build` done.",
+		2: "Task `build` done.\n\n```\none\ntwo\n⋮ 5 more lines\neight\nnine\n```",
+		3: "Task `build` done.\n\n```\none\ntwo\nthree\n⋮ 3 more lines\nseven\neight\nnine\n```",
+		4: "Task `build` done.\n\n```\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n```",
+		9: "Task `build` done.\n\n```\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n```",
+	} {
+		if got := completion.NoticeWithin(edgeLines); got != want {
+			t.Errorf("%d lines at each end gave %q, want %q", edgeLines, got, want)
+		}
+	}
+	if notice, _ := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion)); !strings.Contains(notice, "four\nfive\nsix") {
+		t.Errorf("the model's notice lost the middle of the output: %q", notice)
+	}
+}
+
+func TestNoLinesAtEachEndHidesEvenASingleLine(t *testing.T) {
+	conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done, Output: "built oh\n"}, IsFinal: true}
+	completion, _ := taskrecord.CompletionOf(taskrecord.EndedEvent(conclusion))
+	if got := completion.NoticeWithin(0); got != "Task `build` done." {
+		t.Errorf("got %q", got)
+	}
+	if got := completion.NoticeWithin(1); got != "Task `build` done.\n\n```\nbuilt oh\n```" {
+		t.Errorf("got %q", got)
+	}
+}
+
+func TestAShownNoticeWithoutOutputHasNoBlock(t *testing.T) {
+	conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done}, IsFinal: true}
+	completion, _ := taskrecord.CompletionOf(taskrecord.EndedEvent(conclusion))
+	if got := completion.NoticeWithin(0); got != "Task `build` done." {
+		t.Errorf("got %q", got)
+	}
+}
+
+func TestReadFindsTheRunALinkNames(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	endedAt := time.Date(2026, 10, 24, 12, 0, 0, 123456789, time.UTC)
+	runs := []tasks.Snapshot{
+		{ID: "build", Run: 1, State: tasks.Failed, EndedAt: endedAt, Output: "first build"},
+		{ID: "build", Run: 2, State: tasks.Done, EndedAt: endedAt.Add(time.Second), Output: "second run"},
+		{ID: "build", Run: 1, State: tasks.Done, EndedAt: endedAt.Add(time.Minute), Output: "a later task of the same name"},
+		{ID: "watch", Run: 1, State: tasks.Done, Output: "a run with no end time"},
+	}
+	for _, run := range runs {
+		if _, err := writer.Event(taskrecord.EndedEvent(tasks.Conclusion{Snapshot: run})); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := writer.Event(taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: run})); err != nil {
+			t.Fatal(err)
+		}
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, run := range runs {
+		completion := taskrecord.Completion{Snapshot: run}
+		found, err := taskrecord.Read(directory, completion.Reference(name))
+		if err != nil || found.Output != run.Output {
+			t.Errorf("run %d ended at %s gave %q and %v", run.Run, run.EndedAt, found.Output, err)
+		}
+	}
+
+	missing := taskrecord.Completion{Snapshot: tasks.Snapshot{ID: "build", Run: 3, EndedAt: endedAt}}
+	if _, err := taskrecord.Read(directory, missing.Reference(name)); err == nil || !strings.Contains(err.Error(), "not found") {
+		t.Errorf("a missing run gave %v", err)
+	}
+}
+
+func TestATimedOutTaskNoticeSpeaksItsState(t *testing.T) {
+	conclusion := tasks.Conclusion{
+		Snapshot: tasks.Snapshot{ID: "deploy-wait", Run: 1, State: tasks.TimedOut, Failure: "the call reached its time limit of 5m"},
+		IsFinal:  true,
+	}
+	notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion))
+	if want := "Task `deploy-wait` timed out: the call reached its time limit of 5m."; !isSaid || notice != want {
+		t.Errorf("got %q (%t), want %q", notice, isSaid, want)
 	}
 }
