@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.25.1] — 2026-10-25
+
 ### Changes
 
 - Name generated tasks after the tool that runs them
