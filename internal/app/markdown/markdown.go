@@ -418,6 +418,7 @@ func (self *renderer) quote(node ast.Node) {
 
 func (self *renderer) list(node *ast.List) {
 	number := node.Start
+	firstRowCount := len(self.rows)
 
 	for item := node.FirstChild(); item != nil; item = item.NextSibling() {
 		marker := "• "
@@ -427,7 +428,16 @@ func (self *renderer) list(node *ast.List) {
 			number++
 		}
 
+		unseparatedRowCount := len(self.rows)
+		if item.HasBlankPreviousLines() && len(self.rows) > firstRowCount {
+			self.add("")
+		}
+
+		separatedRowCount := len(self.rows)
 		self.item(marker, item)
+		if len(self.rows) == separatedRowCount {
+			self.rows = self.rows[:unseparatedRowCount]
+		}
 	}
 }
 
@@ -463,6 +473,11 @@ func (self *renderer) item(marker string, node ast.Node) {
 	for i, row := range inner.rows {
 		if i == 0 {
 			self.add(style.Bullet(marker) + row.Text)
+			continue
+		}
+
+		if row.Text == "" {
+			self.add("")
 			continue
 		}
 

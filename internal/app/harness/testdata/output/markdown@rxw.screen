@@ -24,6 +24,9 @@ func main() {
   answer
   • a nested point, to show the indent
 
+• a second list, kept apart by its blank
+  line
+
 ┌──────┬────────────────────────┬──────┐
 │ Tool │ What it does           │ Cost │
 ├──────┼────────────────────────┼──────┤
@@ -391,6 +394,43 @@ e
 n
 t
 
+•
+a
+s
+e
+c
+o
+n
+d
+l
+i
+s
+t
+,
+k
+e
+p
+t
+a
+p
+a
+r
+t
+b
+y
+i
+t
+s
+b
+l
+a
+n
+k
+l
+i
+n
+e
+
 T
 o
 o
@@ -706,6 +746,8 @@ func main() {
 • run only what the reading could not answer
   • a nested point, to show the indent
 
+• a second list, kept apart by its blank line
+
 ┌──────┬─────────────────────────────────────────────┬──────┐
 │ Tool │ What it does                                │ Cost │
 ├──────┼─────────────────────────────────────────────┼──────┤
@@ -778,6 +820,12 @@ tln("hello")
     the
     indent
 
+• a second
+  list, kept
+  apart by
+  its blank
+  line
+
 Tool | What
 it does |
 Cost
@@ -839,6 +887,8 @@ func main() {
 • read first, and read widely
 • run only what the reading could not answer
   • a nested point, to show the indent
+
+• a second list, kept apart by its blank line
 
 ┌──────┬─────────────────────────────────────────────┬──────┐
 │ Tool │ What it does                                │ Cost │

@@ -212,6 +212,31 @@ func TestANestedListKeepsItsChildrenWithTheirParent(t *testing.T) {
 	}
 }
 
+func TestABlankLineBetweenItemsIsDrawn(t *testing.T) {
+	for source, want := range map[string]string{
+		"- one\n- two\n\n- three":             "• one\n• two\n\n• three",
+		"- one\n\n- two\n\n- three":           "• one\n\n• two\n\n• three",
+		"1. one\n2. two\n\n3. three":          "1. one\n2. two\n\n3. three",
+		"- one\n  - child\n\n  - another":     "• one\n  • child\n\n  • another",
+		"- one\n  - child\n\n- two":           "• one\n  • child\n\n• two",
+		"before\n\n- one\n- two":              "before\n\n• one\n• two",
+		"- one\n\n-\n\n- two":                 "• one\n\n• two",
+		"-\n\n- one\n- two":                   "• one\n• two",
+		"- one\n- two\n\n- three\n\nafter":    "• one\n• two\n\n• three\n\nafter",
+		"> - one\n> - two\n>\n> - three":      "│ • one\n│ • two\n│ \n│ • three",
+		"- one\n- two\n\n* three\n* four":     "• one\n• two\n\n• three\n• four",
+		"- one\n\n  more\n- two\n\n- three":   "• one\n  more\n• two\n\n• three",
+		"- `one`\n\n  - child\n- `two`":       "• one\n  • child\n• two",
+		"- one\n- two\n\n\n\n- three":         "• one\n• two\n\n• three",
+		"1. one\n\n   - child\n\n2. two":      "1. one\n   • child\n\n2. two",
+		"- one\n- two\n\n- three\n- four\n\n": "• one\n• two\n\n• three\n• four",
+	} {
+		if got := style.Plain(strings.Join(Render(source, columns), "\n")); got != want {
+			t.Errorf("%q drew %q, want %q", source, got, want)
+		}
+	}
+}
+
 func TestABlockThatDrawsNothingTakesNoBlankBesideIt(t *testing.T) {
 	for name, block := range map[string]string{
 		"quote":           ">",
