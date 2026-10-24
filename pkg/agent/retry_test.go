@@ -248,7 +248,10 @@ func TestNothingIsRepeatedOnceTheCallerHasStoppedListening(t *testing.T) {
 	provider := &failingProvider{failures: 100, err: wireDiedError{}}
 	assistant := agent.New("", provider, []tool.Tool{noop()})
 
-	for update := range assistant.Stream(t.Context(), "go", nil) {
+	for update, err := range assistant.Stream(t.Context(), "go", nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
 		if update.Delta != nil && update.Delta.Kind == agent.ModelMessageEvent {
 			break
 		}

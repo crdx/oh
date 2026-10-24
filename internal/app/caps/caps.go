@@ -45,8 +45,8 @@ func Unconfined() Set {
 func All() Set {
 	var allCaps Set
 
-	for _, cap := range capsMap {
-		allCaps |= cap.flags
+	for _, capability := range capsMap {
+		allCaps |= capability.flags
 	}
 
 	return allCaps
@@ -55,9 +55,9 @@ func All() Set {
 func (self Set) Flags() string {
 	var out strings.Builder
 
-	for _, cap := range capsMap {
-		if self.Has(cap.flags) {
-			out.WriteString(cap.label)
+	for _, capability := range capsMap {
+		if self.Has(capability.flags) {
+			out.WriteString(capability.label)
 		}
 	}
 
@@ -69,9 +69,9 @@ func (self Set) Has(want Set) bool { return self&want == want }
 func (self Set) CanChangeFiles() bool { return self.Has(Write) || self.Has(Git) }
 
 func (self Set) Flag() string {
-	for _, cap := range capsMap {
-		if cap.flags == self {
-			return cap.label
+	for _, capability := range capsMap {
+		if capability.flags == self {
+			return capability.label
 		}
 	}
 

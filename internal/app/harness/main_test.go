@@ -745,7 +745,9 @@ func standingQuestionWithFocus(t *testing.T, notified *[]string) *App {
 		if self.question.request != nil {
 			self.answerQuestion(key.Key{Code: key.Rune, Value: 'n'})
 		}
-		<-result
+		if err := <-result; err != nil && !errors.Is(err, ask.ErrDenied) && !errors.Is(err, context.Canceled) {
+			t.Errorf("question ended with %v", err)
+		}
 	})
 
 	return self
@@ -1012,7 +1014,9 @@ func (self *questionNotificationRig) queue() {
 func (self *questionNotificationRig) lapse(cancel func(), result <-chan error) {
 	self.step("question lapses", func() {
 		cancel()
-		<-result
+		if err := <-result; !errors.Is(err, context.Canceled) {
+			self.t.Errorf("lapsed question ended with %v", err)
+		}
 		<-self.broker.Changes()
 		self.app.onQuestionChange()
 	})
@@ -16607,6 +16611,15 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
+		"tasks / running after output": goldenSegmentPass(
+			t,
+			taskNames.New(tasksOf(
+				tasks.Snapshot{ID: "docs", State: tasks.Running, ActivityAt: at.Add(-500 * time.Millisecond)},
+				tasks.Snapshot{ID: "watch", State: tasks.Running},
+			), noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
 		"tasks / associated task named by port": goldenSegmentPass(
 			t,
 			taskNames.New(
@@ -19909,21 +19922,58 @@ func newSessionGoldenDetachingTool(t *testing.T, specification sessionGoldenTool
 }
 
 type sessionGoldenGate struct {
-	mutex sync.Mutex
-	open  chan struct{}
+	mutex            sync.Mutex
+	open             chan struct{}
+	waiters          int
+	isReleasePending bool
 }
 
 func (self *sessionGoldenGate) opened() <-chan struct{} {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+	if self.isReleasePending {
+		self.isReleasePending = false
+		released := make(chan struct{})
+		close(released)
+		return released
+	}
+	self.waiters++
 	return self.open
 }
 
 func (self *sessionGoldenGate) release() {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+	if self.waiters == 0 {
+		self.isReleasePending = true
+		return
+	}
 	close(self.open)
 	self.open = make(chan struct{})
+	self.waiters = 0
+}
+
+func TestSessionGoldenGateRetainsAnEarlyRelease(t *testing.T) {
+	gate := &sessionGoldenGate{open: make(chan struct{})}
+	gate.release()
+	select {
+	case <-gate.opened():
+	default:
+		t.Fatal("the early release was lost")
+	}
+
+	waiting := gate.opened()
+	select {
+	case <-waiting:
+		t.Fatal("the next waiter used the earlier release")
+	default:
+	}
+	gate.release()
+	select {
+	case <-waiting:
+	default:
+		t.Fatal("the waiting tool was not released")
+	}
 }
 
 var sessionGoldenGates sync.Map

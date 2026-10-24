@@ -348,6 +348,7 @@ func (self *App) begin(message string) cycle.Transition {
 		Changes:           self.configObserver.Changes(),
 		OnChange:          self.reloadConfig,
 		TaskChanges:       self.taskChanges(),
+		TaskActivity:      self.taskActivity(),
 		OnTasksChanged:    self.tasksChanged,
 		SubagentEvents:    self.subagentEvents(),
 		SubagentActivity:  self.subagentActivity(),
@@ -1528,6 +1529,13 @@ func (self *App) taskChanges() <-chan struct{} {
 		return nil
 	}
 	return self.tasks.Changes()
+}
+
+func (self *App) taskActivity() <-chan struct{} {
+	if self.tasks == nil {
+		return nil
+	}
+	return self.tasks.Activity()
 }
 
 func (self *App) tasksChanged() {

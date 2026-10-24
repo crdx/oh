@@ -27,7 +27,7 @@ func TestARunningForegroundCallDetachesAfterTheSetForegroundLimit(t *testing.T) 
 				if got := manager.ForegroundLimit(); got != test.want {
 					t.Errorf("the manager reports a foreground limit of %s, want %s", got, test.want)
 				}
-				snapshot, err := manager.Start(t.Context(), "", "bash", false, false, holdUntilStopped, nil)
+				snapshot, err := manager.Start(t.Context(), "", "lookup", false, false, holdUntilStopped, nil)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -39,6 +39,15 @@ func TestARunningForegroundCallDetachesAfterTheSetForegroundLimit(t *testing.T) 
 				}
 				if waited := time.Since(started); waited != test.want {
 					t.Errorf("the call detached after %s, want %s", waited, test.want)
+				}
+				select {
+				case <-manager.Changes():
+				default:
+					t.Fatal("the detached lookup did not request a redraw")
+				}
+				listing := manager.List()
+				if len(listing) != 1 || listing[0].ID != snapshot.ID || listing[0].ToolName != "lookup" || listing[0].State != tasks.Running {
+					t.Errorf("the detached lookup is missing from the task listing: %+v", listing)
 				}
 			})
 		})
@@ -63,6 +72,15 @@ func TestAQueuedForegroundCallDetachesAfterTheSetForegroundLimit(t *testing.T) {
 		}
 		if waited := time.Since(started); waited != 5*time.Second {
 			t.Errorf("the call detached after %s, want 5s", waited)
+		}
+		select {
+		case <-manager.Changes():
+		default:
+			t.Fatal("the detached queued call did not request a redraw")
+		}
+		listing := manager.List()
+		if len(listing) != 1 || listing[0].ID != snapshot.ID || listing[0].ToolName != "offload" || listing[0].State != tasks.Queued {
+			t.Errorf("the detached queued call is missing from the task listing: %+v", listing)
 		}
 	})
 }

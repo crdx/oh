@@ -16,14 +16,14 @@ import (
 
 const (
 	beat             = time.Second
-	ghostLife        = 30 * time.Second
+	finishedTaskLife = 10 * time.Second
 	maximumTaskNames = 3
 )
 
 const (
-	liveMark     = "●"
-	finishedMark = "○"
-	failedMark   = "✗"
+	liveMark   = "●"
+	emptyMark  = "○"
+	failedMark = "✗"
 )
 
 var _ segment.Refresher = state{}
@@ -86,11 +86,16 @@ func (self state) NextRefresh(segment.Phase) time.Time {
 			continue
 		}
 		if isLive(item.State) {
-			return now.Add(beat)
+			due = append(due, now.Add(beat))
+			flashEndsAt := item.ActivityAt.Add(tasks.ActivityFlash)
+			if !item.ActivityAt.IsZero() && flashEndsAt.After(now) {
+				due = append(due, flashEndsAt)
+			}
+			continue
 		}
 
-		if self.isShown(item) {
-			due = append(due, item.EndedAt.Add(ghostLife))
+		if isShownAt(item, now) {
+			due = append(due, item.EndedAt.Add(finishedTaskLife))
 		}
 	}
 
@@ -100,6 +105,7 @@ func (self state) NextRefresh(segment.Phase) time.Time {
 func (self state) marks() []taskMark {
 	var marks []taskMark
 
+	now := self.now()
 	listing := self.getWork()
 	slices.SortStableFunc(listing, func(left tasks.Snapshot, right tasks.Snapshot) int {
 		return cmp.Compare(taskStateOrder(left.State), taskStateOrder(right.State))
@@ -107,11 +113,11 @@ func (self state) marks() []taskMark {
 
 	associatedWork := self.associatedWork()
 	for _, item := range listing {
-		if associatedWork[item.ID] || !self.isShown(item) {
+		if associatedWork[item.ID] || !isShownAt(item, now) {
 			continue
 		}
 
-		if mark := describe(item); mark.label != "" {
+		if mark := describe(item, now); mark.label != "" {
 			marks = append(marks, mark)
 		}
 	}
@@ -138,12 +144,12 @@ func (self state) associatedWork() map[string]bool {
 	return associatedWork
 }
 
-func (self state) isShown(item tasks.Snapshot) bool {
+func isShownAt(item tasks.Snapshot, now time.Time) bool {
 	if isLive(item.State) {
 		return true
 	}
 
-	return !item.EndedAt.IsZero() && self.now().Sub(item.EndedAt) < ghostLife
+	return !item.EndedAt.IsZero() && now.Sub(item.EndedAt) < finishedTaskLife
 }
 
 func taskStateOrder(state tasks.State) int {
@@ -167,7 +173,7 @@ func isLive(state tasks.State) bool {
 	return state == tasks.Queued || state == tasks.Running || state == tasks.Stopping
 }
 
-func describe(item tasks.Snapshot) taskMark {
+func describe(item tasks.Snapshot, now time.Time) taskMark {
 	var mark string
 	switch item.State {
 	case tasks.Queued, tasks.Running, tasks.Stopping:
@@ -175,9 +181,20 @@ func describe(item tasks.Snapshot) taskMark {
 	case tasks.Failed, tasks.TimedOut:
 		mark = failedMark
 	case tasks.Done, tasks.Stopped:
-		mark = finishedMark
+		mark = emptyMark
 	default:
 		return taskMark{}
+	}
+
+	if isLive(item.State) {
+		icon := RenderState(item.State, mark)
+		if !item.ActivityAt.IsZero() && now.Before(item.ActivityAt.Add(tasks.ActivityFlash)) {
+			icon = style.Accent(mark)
+		}
+		return taskMark{
+			icon:  icon,
+			label: icon + " " + RenderState(item.State, item.ID),
+		}
 	}
 
 	return taskMark{

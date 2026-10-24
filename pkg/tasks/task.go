@@ -18,9 +18,11 @@ const (
 	DefaultMaximumRunning = 16
 	MaxQueued             = 64
 	ForegroundLimit       = 30 * time.Second
+	ActivityFlash         = time.Second
 	QuickRunLimit         = 2 * time.Second
 	QuickRunsTolerated    = 3
 	PreviousRunLimit      = 8
+	activityPause         = time.Second
 )
 
 type State string
@@ -63,6 +65,7 @@ type Snapshot struct {
 	State                 State        `json:"state"`
 	StartedAt             time.Time    `json:"started_at"`
 	EndedAt               time.Time    `json:"ended_at"`
+	ActivityAt            time.Time    `json:"-"`
 	Output                string       `json:"output"`
 	Failure               string       `json:"failure"`
 }
@@ -123,6 +126,7 @@ type Manager struct {
 	order           []string
 	conclusions     []Conclusion
 	changes         chan struct{}
+	activity        chan struct{}
 	slots           chan struct{}
 	done            <-chan struct{}
 	cancel          context.CancelFunc
@@ -145,6 +149,7 @@ func NewWithMaximumRunning(ctx context.Context, maximumRunning int) *Manager {
 	return &Manager{
 		entries:         make(map[string]*entry),
 		changes:         make(chan struct{}, 1),
+		activity:        make(chan struct{}, 1),
 		slots:           make(chan struct{}, maximumRunning),
 		done:            sessionContext.Done(),
 		cancel:          cancel,
@@ -168,7 +173,8 @@ func (self *Manager) ForegroundLimit() time.Duration {
 	return self.foregroundLimit
 }
 
-func (self *Manager) Changes() <-chan struct{} { return self.changes }
+func (self *Manager) Changes() <-chan struct{}  { return self.changes }
+func (self *Manager) Activity() <-chan struct{} { return self.activity }
 
 func (self *Manager) Start(
 	ctx context.Context,
@@ -495,12 +501,12 @@ func (self *Manager) startLocked(
 		isBackground:      isBackground,
 		isRespawning:      isRespawning,
 		policy:            policy,
-		output:            &tool.OutputBuffer{},
 		slotWait:          &slotWait{},
 		publish:           options.Publish,
 		publicationSignal: make(chan struct{}),
 		runLimit:          options.RunLimit,
 	}
+	current.output = self.outputFor(current)
 	self.entries[id] = current
 	if options.replaces == nil {
 		self.order = append(self.order, id)
@@ -519,6 +525,29 @@ func (self *Manager) startLocked(
 func (self *Manager) signalChange() {
 	select {
 	case self.changes <- struct{}{}:
+	default:
+	}
+}
+
+func (self *Manager) outputFor(current *entry) *tool.OutputBuffer {
+	return tool.NewOutputBuffer(func() { self.markActivity(current) })
+}
+
+func (self *Manager) markActivity(current *entry) {
+	self.mutex.Lock()
+	now := self.now()
+	if now.Before(current.snapshot.ActivityAt.Add(ActivityFlash + activityPause)) {
+		self.mutex.Unlock()
+		return
+	}
+	current.snapshot.ActivityAt = now
+	isBackground := current.isBackground
+	self.mutex.Unlock()
+	if !isBackground {
+		return
+	}
+	select {
+	case self.activity <- struct{}{}:
 	default:
 	}
 }
@@ -688,8 +717,9 @@ func (self *Manager) finishRun(ctx context.Context, current *entry, result tool.
 		current.snapshot.EndedAt = time.Time{}
 		current.snapshot.Output = ""
 		current.snapshot.Failure = ""
+		current.snapshot.ActivityAt = time.Time{}
 		current.runClock = newRunClock(ctx, current.slotWait)
-		current.output = &tool.OutputBuffer{}
+		current.output = self.outputFor(current)
 	} else {
 		current.snapshot.IsRespawning = false
 		self.forgetForeground(current)

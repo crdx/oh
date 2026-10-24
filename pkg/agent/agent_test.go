@@ -698,7 +698,10 @@ func TestACallTheUserStoppedIsMarkedApartFromOneThatFailed(t *testing.T) {
 	assistant := agent.New("", provider, []tool.Tool{stoppedTool})
 
 	var result *agent.Event
-	for update := range assistant.Stream(ctx, "go", nil) {
+	for update, err := range assistant.Stream(ctx, "go", nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
 		if update.Event != nil && update.Event.Kind == agent.ToolCallResultEvent {
 			result = update.Event
 		}
@@ -1523,11 +1526,19 @@ func TestACacheLostByAnAttemptThatNeverCompletedIsReported(t *testing.T) {
 			assistant.TakeRetryWaitsAtOnce()
 			assistant.TakeTimeFrom(func() time.Time { return time.Unix(0, 0) })
 
-			for range assistant.Stream(t.Context(), "go", nil) {
+			for _, err := range assistant.Stream(t.Context(), "go", nil) {
+				if err != nil {
+					t.Fatal(err)
+				}
 			}
 
+			var actualFailure error
 			var got []agent.Kind
-			for update := range assistant.Stream(t.Context(), "go on", nil) {
+			for update, err := range assistant.Stream(t.Context(), "go on", nil) {
+				if err != nil {
+					actualFailure = err
+					continue
+				}
 				if update.Event == nil || update.Event.Kind == agent.UserMessageEvent {
 					continue
 				}
@@ -1537,6 +1548,15 @@ func TestACacheLostByAnAttemptThatNeverCompletedIsReported(t *testing.T) {
 				}
 			}
 
+			expectedFailure := test.attempts[len(test.attempts)-1].err
+			switch {
+			case actualFailure == nil && expectedFailure != nil:
+				t.Errorf("got no failure, want %v", expectedFailure)
+			case actualFailure != nil && expectedFailure == nil:
+				t.Errorf("got failure %v, want none", actualFailure)
+			case actualFailure != nil && actualFailure.Error() != expectedFailure.Error():
+				t.Errorf("got failure %v, want %v", actualFailure, expectedFailure)
+			}
 			if !slices.Equal(got, test.want) {
 				t.Errorf("got %v, want %v", got, test.want)
 			}

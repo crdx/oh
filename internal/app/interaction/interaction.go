@@ -31,6 +31,7 @@ type Handler struct {
 	Changes           <-chan error
 	OnChange          func(error) bool
 	TaskChanges       <-chan struct{}
+	TaskActivity      <-chan struct{}
 	OnTasksChanged    func()
 	SubagentEvents    <-chan agent.Event
 	SubagentActivity  <-chan struct{}
@@ -70,6 +71,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	handler = handler.withDefaults()
 	changes := handler.Changes
 	taskChanges := handler.TaskChanges
+	taskActivity := handler.TaskActivity
 	subagentEvents := handler.SubagentEvents
 	subagentActivity := handler.SubagentActivity
 	forwardChanges := handler.ForwardChanges
@@ -117,6 +119,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		case <-frames.due():
 		case <-taskChanges:
 			handler.OnTasksChanged()
+		case <-taskActivity:
 		case <-subagentActivity:
 		case event, isOpen := <-subagentEvents:
 			if !isOpen {

@@ -450,6 +450,71 @@ func TestABackgroundTaskSignalsItsStartBeforeTheTurnEnds(t *testing.T) {
 	})
 }
 
+func TestABackgroundTaskReportsACompleteOutputLineAsActivity(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		partialWritten := make(chan struct{})
+		completeLine := make(chan struct{})
+		lineWritten := make(chan struct{})
+		secondLine := make(chan struct{})
+		secondLineWritten := make(chan struct{})
+		_, err := manager.Start(t.Context(), "one", "bash", true, false, func(ctx context.Context) (tool.ToolCallResult, error) {
+			output := tool.LiveOutput(ctx)
+			_, _ = output.Write([]byte("partial"))
+			close(partialWritten)
+			<-completeLine
+			_, _ = output.Write([]byte(" line\n"))
+			close(lineWritten)
+			<-secondLine
+			_, _ = output.Write([]byte("second line\n"))
+			close(secondLineWritten)
+			<-ctx.Done()
+			return tool.ToolCallResult{}, ctx.Err()
+		}, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		<-partialWritten
+		<-manager.Changes()
+		if snapshot, err := manager.Status("one"); err != nil || !snapshot.ActivityAt.IsZero() {
+			t.Fatalf("partial output recorded activity: %+v, %v", snapshot, err)
+		}
+
+		close(completeLine)
+		<-lineWritten
+		snapshot, err := manager.Status("one")
+		if err != nil || snapshot.ActivityAt.IsZero() {
+			t.Fatalf("a complete output line did not record activity: %+v, %v", snapshot, err)
+		}
+		select {
+		case <-manager.Activity():
+		default:
+			t.Fatal("task activity did not request a redraw")
+		}
+		select {
+		case <-manager.Changes():
+			t.Fatal("task activity reported a state change")
+		default:
+		}
+
+		close(secondLine)
+		<-secondLineWritten
+		afterSecondLine, err := manager.Status("one")
+		if err != nil || !afterSecondLine.ActivityAt.Equal(snapshot.ActivityAt) {
+			t.Fatalf("activity inside the same burst flashed again: %+v, %v", afterSecondLine, err)
+		}
+		select {
+		case <-manager.Activity():
+			t.Fatal("activity inside the same burst requested another redraw")
+		default:
+		}
+		if err := manager.Stop("one", "the test finished"); err != nil {
+			t.Fatal(err)
+		}
+	})
+}
+
 func TestAnAlreadyCancelledCallNeverStartsBackgroundWork(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())

@@ -39,6 +39,15 @@ func endedAgo(ago time.Duration) time.Time {
 	return noon.Add(-ago)
 }
 
+func refresherOf(t *testing.T, built segment.Segment) segment.Refresher {
+	t.Helper()
+	refresher, isRefresher := built.(segment.Refresher)
+	if !isRefresher {
+		t.Fatal("the segment does not ask for a redraw")
+	}
+	return refresher
+}
+
 func TestNoTasksDrawNothing(t *testing.T) {
 	if drawn := build(t).Render(segment.Context{}); drawn != "" {
 		t.Errorf("got %q, want nothing at all", drawn)
@@ -119,9 +128,9 @@ func TestATaskTakesTheStyleOfItsState(t *testing.T) {
 		state tasks.State
 		want  string
 	}{
-		{state: tasks.Queued, want: style.Info("\u25cf docs")},
-		{state: tasks.Running, want: style.Info("\u25cf docs")},
-		{state: tasks.Stopping, want: style.Change("\u25cf docs")},
+		{state: tasks.Queued, want: style.Info("\u25cf") + " " + style.Info("docs")},
+		{state: tasks.Running, want: style.Info("\u25cf") + " " + style.Info("docs")},
+		{state: tasks.Stopping, want: style.Change("\u25cf") + " " + style.Change("docs")},
 		{state: tasks.Done, want: style.Dim("\u25cb docs")},
 		{state: tasks.Stopped, want: style.Dim("\u25cb docs")},
 		{state: tasks.Failed, want: style.Failure("\u2717 docs")},
@@ -130,6 +139,93 @@ func TestATaskTakesTheStyleOfItsState(t *testing.T) {
 		drawn := build(t, tasks.Snapshot{ID: "docs", State: test.state, EndedAt: endedAgo(time.Second)}).Render(segment.Context{})
 		if drawn != test.want {
 			t.Errorf("state %s drew %q, want %q", test.state, drawn, test.want)
+		}
+	}
+}
+
+func TestTaskActivityFlashExpiresOnTime(t *testing.T) {
+	now := noon.Add(500 * time.Millisecond)
+	built, err := taskNames.New(
+		func() []tasks.Snapshot {
+			return []tasks.Snapshot{{ID: "docs", State: tasks.Running, ActivityAt: noon}}
+		},
+		func() []portgrant.Route { return nil },
+		func() time.Time { return now },
+	)(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	before := built.Render(segment.Context{})
+	wantActive := style.Accent("\u25cf") + " " + style.Info("docs")
+	if before != wantActive {
+		t.Errorf("active task drew %q, want the accent mark in %q", before, wantActive)
+	}
+	if due := refresherOf(t, built).NextRefresh(segment.Phase{At: now}); !due.Equal(noon.Add(tasks.ActivityFlash)) {
+		t.Fatalf("flash expires at %s, want %s", due, noon.Add(tasks.ActivityFlash))
+	}
+	now = noon.Add(tasks.ActivityFlash)
+	after := built.Render(segment.Context{})
+	if before == after || style.Plain(before) != style.Plain(after) {
+		t.Fatalf("flash did not return to the same quiet task mark: %q then %q", before, after)
+	}
+}
+
+func TestACompletedTaskMarkStaysEmptyUntilExpiry(t *testing.T) {
+	for _, state := range []tasks.State{tasks.Done, tasks.Stopped} {
+		for _, age := range []time.Duration{time.Second, 9 * time.Second} {
+			built := build(t, tasks.Snapshot{
+				ID:      "docs",
+				State:   state,
+				EndedAt: endedAgo(age),
+			})
+			if drawn := style.Plain(built.Render(segment.Context{})); drawn != "\u25cb docs" {
+				t.Errorf("a %s task ended %s ago drew %q, want an empty mark", state, age, drawn)
+			}
+
+			wantRefresh := noon.Add(10*time.Second - age)
+			if at := refresherOf(t, built).NextRefresh(segment.Phase{At: noon}); !at.Equal(wantRefresh) {
+				t.Errorf("a %s task ended %s ago refreshes at %s, want %s", state, age, at, wantRefresh)
+			}
+		}
+
+		expired := build(t, tasks.Snapshot{
+			ID:      "docs",
+			State:   state,
+			EndedAt: endedAgo(10 * time.Second),
+		})
+		if drawn := expired.Render(segment.Context{}); drawn != "" {
+			t.Errorf("an expired %s task drew %q, want nothing", state, drawn)
+		}
+	}
+}
+
+func TestAFailedTaskKeepsItsMarkUntilExpiry(t *testing.T) {
+	for _, state := range []tasks.State{tasks.Failed, tasks.TimedOut} {
+		built := build(t, tasks.Snapshot{
+			ID:      "docs",
+			State:   state,
+			EndedAt: endedAgo(5 * time.Second),
+		})
+		if drawn := style.Plain(built.Render(segment.Context{})); drawn != "\u2717 docs" {
+			t.Errorf("a %s task drew %q before expiry, want its failure mark", state, drawn)
+		}
+
+		refresher := refresherOf(t, built)
+		if at := refresher.NextRefresh(segment.Phase{At: noon}); !at.Equal(noon.Add(5 * time.Second)) {
+			t.Errorf("a %s task refreshes at %s, want its expiry at %s", state, at, noon.Add(5*time.Second))
+		}
+
+		expired := build(t, tasks.Snapshot{
+			ID:      "docs",
+			State:   state,
+			EndedAt: endedAgo(10 * time.Second),
+		})
+		if drawn := expired.Render(segment.Context{}); drawn != "" {
+			t.Errorf("an expired %s task drew %q, want nothing", state, drawn)
+		}
+		if at := refresherOf(t, expired).NextRefresh(segment.Phase{At: noon}); !at.IsZero() {
+			t.Errorf("an expired %s task asks for another refresh at %s", state, at)
 		}
 	}
 }
@@ -149,19 +245,6 @@ func TestAGhostIsGoneOnceItHasBeenSeen(t *testing.T) {
 func TestATaskLeftBehindByAClosedSessionIsNeverDrawn(t *testing.T) {
 	if drawn := build(t, tasks.Snapshot{ID: "docs", State: tasks.Stopped}).Render(segment.Context{}); drawn != "" {
 		t.Errorf("got %q, want a task with no end time left off the bar", drawn)
-	}
-}
-
-func TestAGhostAsksForTheRedrawThatWillTakeItAway(t *testing.T) {
-	endedAt := endedAgo(time.Second)
-	refresher, _ := build(t, tasks.Snapshot{ID: "docs", State: tasks.Done, EndedAt: endedAt}).(segment.Refresher)
-
-	at := refresher.NextRefresh(segment.Phase{At: noon})
-	if !at.After(noon) {
-		t.Errorf("got %v, want a redraw still to come", at)
-	}
-	if at.Before(endedAt) {
-		t.Errorf("got %v, want the moment the ghost is due to go", at)
 	}
 }
 

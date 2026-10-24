@@ -2,6 +2,7 @@ package agent_test
 
 import (
 	"context"
+	"errors"
 	"slices"
 	"testing"
 
@@ -456,7 +457,10 @@ func TestANoteAfterAStoppedTurnIsRefused(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
 
-	for range assistant.Stream(ctx, "go", interjections) {
+	for _, err := range assistant.Stream(ctx, "go", interjections) {
+		if err != nil && !errors.Is(err, context.Canceled) {
+			t.Fatal(err)
+		}
 	}
 
 	if interjections.Note(agent.Note{Kind: agent.TaskNote, Text: "the task build has finished"}) {

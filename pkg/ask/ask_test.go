@@ -318,7 +318,9 @@ func TestAQuestionCutShortStillRecordsWhatItTook(t *testing.T) {
 
 		time.Sleep(stood)
 		cancel()
-		<-refused
+		if err := <-refused; !errors.Is(err, context.Canceled) {
+			t.Errorf("got %v, want cancellation", err)
+		}
 
 		if got := waitedTime(); got != stood {
 			t.Errorf("got %s, want the time it stood before it was cut short", got)

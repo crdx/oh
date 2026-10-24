@@ -690,7 +690,10 @@ func TestStreamStopsWhenTheCallerDoes(t *testing.T) {
 
 	var eventCount int
 
-	for update := range assistant.Stream(t.Context(), "what is the weather in London?", nil) {
+	for update, err := range assistant.Stream(t.Context(), "what is the weather in London?", nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
 		eventCount++
 
 		if update.Delta != nil && update.Delta.Kind == agent.ModelMessageEvent {

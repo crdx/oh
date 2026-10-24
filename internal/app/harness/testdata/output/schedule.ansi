@@ -1,8 +1,8 @@
 === a finished task lingers on the bar and then goes ===
-      +1s  \e[38;2;129;162;190m● check\e[0m
-      +2s  \e[38;2;129;162;190m● check\e[0m
+      +1s  \e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190mcheck\e[0m
+      +2s  \e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190mcheck\e[0m
       +3s  \e[38;2;150;152;150m○ check\e[0m
-     +33s
+     +13s
 
 === clock alone to the minute ===
     +1m0s  \e[38;2;150;152;150m00:01\e[0m

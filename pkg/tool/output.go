@@ -1,6 +1,7 @@
 package tool
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"sync"
@@ -13,37 +14,22 @@ type OutputBuffer struct {
 	mutex        sync.Mutex
 	contents     []byte
 	droppedBytes int
+	lineObserver func()
+}
+
+func NewOutputBuffer(lineObserver func()) *OutputBuffer {
+	return &OutputBuffer{lineObserver: lineObserver}
 }
 
 func (self *OutputBuffer) Write(data []byte) (int, error) {
 	self.mutex.Lock()
-	defer self.mutex.Unlock()
+	self.append(data)
+	lineObserver := self.lineObserver
+	self.mutex.Unlock()
 
-	if len(data) >= outputBufferBytes {
-		self.droppedBytes += len(self.contents) + len(data) - outputBufferBytes
-		if cap(self.contents) < outputBufferBytes {
-			self.contents = make([]byte, outputBufferBytes)
-		} else {
-			self.contents = self.contents[:outputBufferBytes]
-		}
-		copy(self.contents, data[len(data)-outputBufferBytes:])
-		return len(data), nil
+	if lineObserver != nil && bytes.ContainsRune(data, '\n') {
+		lineObserver()
 	}
-
-	if excess := len(self.contents) + len(data) - outputBufferBytes; excess > 0 {
-		copy(self.contents, self.contents[excess:])
-		self.contents = self.contents[:len(self.contents)-excess]
-		self.droppedBytes += excess
-	}
-
-	requiredBytes := len(self.contents) + len(data)
-	if cap(self.contents) < requiredBytes {
-		capacity := min(max(2*cap(self.contents), requiredBytes), outputBufferBytes)
-		contents := make([]byte, len(self.contents), capacity)
-		copy(contents, self.contents)
-		self.contents = contents
-	}
-	self.contents = append(self.contents, data...)
 	return len(data), nil
 }
 
@@ -81,6 +67,34 @@ func (self *OutputBuffer) Report() string {
 		text = fmt.Sprintf("[omitted %d earlier output bytes]\n", droppedBytes) + text
 	}
 	return text
+}
+
+func (self *OutputBuffer) append(data []byte) {
+	if len(data) >= outputBufferBytes {
+		self.droppedBytes += len(self.contents) + len(data) - outputBufferBytes
+		if cap(self.contents) < outputBufferBytes {
+			self.contents = make([]byte, outputBufferBytes)
+		} else {
+			self.contents = self.contents[:outputBufferBytes]
+		}
+		copy(self.contents, data[len(data)-outputBufferBytes:])
+		return
+	}
+
+	if excess := len(self.contents) + len(data) - outputBufferBytes; excess > 0 {
+		copy(self.contents, self.contents[excess:])
+		self.contents = self.contents[:len(self.contents)-excess]
+		self.droppedBytes += excess
+	}
+
+	requiredBytes := len(self.contents) + len(data)
+	if cap(self.contents) < requiredBytes {
+		capacity := min(max(2*cap(self.contents), requiredBytes), outputBufferBytes)
+		contents := make([]byte, len(self.contents), capacity)
+		copy(contents, self.contents)
+		self.contents = contents
+	}
+	self.contents = append(self.contents, data...)
 }
 
 func (self *OutputBuffer) prefixBytes() int {

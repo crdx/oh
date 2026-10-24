@@ -674,7 +674,8 @@ func (self *fileWatcher) publishChange() {
 
 func (self *fileWatcher) publishFailure(err error) {
 	select {
-	case <-self.events:
+	case previousFailure := <-self.events:
+		err = errors.Join(previousFailure, err)
 	default:
 	}
 	self.events <- err

@@ -29,6 +29,25 @@ func TestLiveOutputKeepsABoundedTailAndReportsDroppedBytes(t *testing.T) {
 	}
 }
 
+func TestOutputBufferReportsCompleteLinesAfterReleasingItsLock(t *testing.T) {
+	var output *tool.OutputBuffer
+	observed := ""
+	output = tool.NewOutputBuffer(func() { observed = output.String() })
+
+	if _, err := output.Write([]byte("partial")); err != nil {
+		t.Fatal(err)
+	}
+	if observed != "" {
+		t.Errorf("a partial line reported activity with %q", observed)
+	}
+	if _, err := output.Write([]byte(" line\n")); err != nil {
+		t.Fatal(err)
+	}
+	if observed != "partial line\n" {
+		t.Errorf("the completed line reported %q", observed)
+	}
+}
+
 func TestTruncatedTextStartsAtACompleteUTF8Character(t *testing.T) {
 	var output tool.OutputBuffer
 	data := "€" + strings.Repeat("a", (256<<10)-2)
