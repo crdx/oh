@@ -6,11 +6,13 @@ import (
 	"strings"
 	"time"
 
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/schedule"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/tasks"
 )
 
@@ -29,9 +31,10 @@ const (
 var _ segment.Refresher = state{}
 
 type state struct {
-	getTasks  func() []tasks.Snapshot
-	getRoutes func() []portgrant.Route
-	now       func() time.Time
+	sessionName string
+	getTasks    func() []tasks.Snapshot
+	getRoutes   func() []portgrant.Route
+	now         func() time.Time
 }
 
 type taskMark struct {
@@ -40,12 +43,13 @@ type taskMark struct {
 }
 
 func New(
+	sessionName string,
 	getTasks func() []tasks.Snapshot,
 	getRoutes func() []portgrant.Route,
 	now func() time.Time,
 ) segment.Factory {
 	return func(segment.Options) (segment.Segment, error) {
-		return state{getTasks: getTasks, getRoutes: getRoutes, now: now}, nil
+		return state{sessionName: sessionName, getTasks: getTasks, getRoutes: getRoutes, now: now}, nil
 	}
 }
 
@@ -117,7 +121,7 @@ func (self state) marks() []taskMark {
 			continue
 		}
 
-		if mark := describe(item, now); mark.label != "" {
+		if mark := describe(item, now, self.sessionName); mark.label != "" {
 			marks = append(marks, mark)
 		}
 	}
@@ -173,7 +177,7 @@ func isLive(state tasks.State) bool {
 	return state == tasks.Queued || state == tasks.Running || state == tasks.Stopping
 }
 
-func describe(item tasks.Snapshot, now time.Time) taskMark {
+func describe(item tasks.Snapshot, now time.Time, sessionName string) taskMark {
 	var mark string
 	switch item.State {
 	case tasks.Queued, tasks.Running, tasks.Stopping:
@@ -186,20 +190,27 @@ func describe(item tasks.Snapshot, now time.Time) taskMark {
 		return taskMark{}
 	}
 
+	icon := RenderState(item.State, mark)
+	if isLive(item.State) && !item.ActivityAt.IsZero() && now.Before(item.ActivityAt.Add(tasks.ActivityFlash)) {
+		icon = style.Accent(mark)
+	}
+	label := RenderState(item.State, mark+" "+item.ID)
 	if isLive(item.State) {
-		icon := RenderState(item.State, mark)
-		if !item.ActivityAt.IsZero() && now.Before(item.ActivityAt.Add(tasks.ActivityFlash)) {
-			icon = style.Accent(mark)
-		}
-		return taskMark{
-			icon:  icon,
-			label: icon + " " + RenderState(item.State, item.ID),
-		}
+		label = icon + " " + RenderState(item.State, item.ID)
+	}
+	if sessionName == "" || item.Run < 1 {
+		return taskMark{icon: icon, label: label}
 	}
 
+	address := toolresult.TaskURL(toolresult.TaskReference{
+		EndedAt:     item.EndedAt,
+		SessionName: sessionName,
+		TaskName:    item.ID,
+		Run:         item.Run,
+	})
 	return taskMark{
-		icon:  RenderState(item.State, mark),
-		label: RenderState(item.State, mark+" "+item.ID),
+		icon:  link.RenderURL(icon, address),
+		label: link.RenderURL(label, address),
 	}
 }
 

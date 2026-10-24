@@ -325,6 +325,20 @@ func TestGoldenTaskRunsRenderForTheUser(t *testing.T) {
 		snapshot tasks.Snapshot
 	}{
 		{
+			name:     "shell task queued",
+			snapshot: taskSnapshot(bash.Args{Command: "go build ./..."}, tasks.Queued, "", ""),
+		},
+		{
+			name: "shell task running",
+			snapshot: taskSnapshot(bash.Args{Command: "go build ./..."}, tasks.Running, "",
+				"building package two\n"),
+		},
+		{
+			name: "shell task stopping",
+			snapshot: taskSnapshot(bash.Args{Command: "go build ./..."}, tasks.Stopping, "",
+				"building package two\n"),
+		},
+		{
 			name: "shell task done",
 			snapshot: taskSnapshot(bash.Args{Command: "go build ./..."}, tasks.Done, "",
 				"building\nbuilt oh\n"),
@@ -342,6 +356,16 @@ func TestGoldenTaskRunsRenderForTheUser(t *testing.T) {
 			name: "search task",
 			snapshot: taskSnapshot(grep.Args{Pattern: "func Run"}, tasks.Done, "",
 				"cmd/oh/main.go:12:func Run() error {\n"),
+		},
+		{
+			name: "lookup task running",
+			snapshot: taskSnapshot(lookup.Args{Query: "modern Go release"}, tasks.Running, "",
+				"## Current findings\n\nGo has a new release. [Source](https://example.test/release)."),
+		},
+		{
+			name: "lookup task done",
+			snapshot: taskSnapshot(lookup.Args{Query: "modern Go release"}, tasks.Done, "",
+				"## Result\n\nGo has a new release. [Source](https://example.test/release)."),
 		},
 		{
 			name:     "task without invocation",
@@ -362,8 +386,11 @@ func taskSnapshot(arguments any, state tasks.State, failure string, output strin
 		panic(err)
 	}
 	toolName := "bash"
-	if _, isSearch := arguments.(grep.Args); isSearch {
+	switch arguments.(type) {
+	case grep.Args:
 		toolName = "grep"
+	case lookup.Args:
+		toolName = "lookup"
 	}
 	return tasks.Snapshot{
 		Invocation: &tasks.Invocation{Arguments: string(encodedArguments)},

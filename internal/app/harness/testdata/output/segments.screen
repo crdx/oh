@@ -391,6 +391,14 @@ usage failed
 ● docs ● ● ✗
 ● ● ● ✗
 +
+=== tasks / recently stopped ===
+○ deploy
+○
++
+=== tasks / recently timed out ===
+✗ check
+✗
++
 === tasks / running ===
 ● docs ● watch
 ● docs ●

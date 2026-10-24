@@ -93,11 +93,11 @@ func taskOutcome(snapshot tasks.Snapshot) string {
 
 func taskStatus(state tasks.State) agent.Status {
 	switch state {
-	case tasks.Done:
+	case tasks.Queued, tasks.Running, tasks.Stopping, tasks.Done:
 		return agent.SuccessStatus
 	case tasks.Stopped:
 		return agent.CancelledStatus
-	case tasks.Failed, tasks.TimedOut, tasks.Queued, tasks.Running, tasks.Stopping:
+	case tasks.Failed, tasks.TimedOut:
 		return agent.ErrorStatus
 	}
 	return agent.ErrorStatus

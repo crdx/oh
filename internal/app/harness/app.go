@@ -220,6 +220,7 @@ type App struct {
 	tasksDoWake          bool
 	tasksHasRecorded     bool
 	tasksRecordedListing string
+	sessionDirectory     string
 	children             childState
 	settledNotes         []agent.Note
 	settledCaps          caps.Set
@@ -350,6 +351,7 @@ func (self *App) begin(message string) cycle.Transition {
 		TaskChanges:       self.taskChanges(),
 		TaskActivity:      self.taskActivity(),
 		OnTasksChanged:    self.tasksChanged,
+		OnTaskActivity:    self.taskActivityChanged,
 		SubagentEvents:    self.subagentEvents(),
 		SubagentActivity:  self.subagentActivity(),
 		OnSubagentEvent:   self.subagentEvent,
@@ -1546,7 +1548,12 @@ func (self *App) tasksChanged() {
 		self.taskEnded(conclusion)
 	}
 	self.recordTaskListing()
+	self.recordCurrentTaskResults()
 	self.forgetRemovedTaskNotices()
+}
+
+func (self *App) taskActivityChanged() {
+	self.recordCurrentTaskResults()
 }
 
 func (self *App) forgetRemovedTaskNotices() {
@@ -1615,7 +1622,9 @@ func (self *App) endTasks() error {
 		conclusion.Snapshot = self.boundedSnapshot(conclusion.Snapshot)
 		failures = append(failures, self.recordTaskFact(conclusion))
 	}
-	failures = append(failures, self.recordTaskSnapshots(self.tasks.Checkpoint()))
+	snapshots := self.tasks.Checkpoint()
+	failures = append(failures, self.recordTaskSnapshots(snapshots))
+	failures = append(failures, self.writeCurrentTaskResults(snapshots))
 	return errors.Join(failures...)
 }
 
@@ -2323,6 +2332,30 @@ func (self *App) boundedSnapshot(snapshot tasks.Snapshot) tasks.Snapshot {
 	return snapshot
 }
 
+func (self *App) recordCurrentTaskResults() {
+	if self.tasks == nil {
+		return
+	}
+	if err := self.writeCurrentTaskResults(self.tasks.Checkpoint()); err != nil {
+		self.notifyFailure(err.Error())
+	}
+}
+
+func (self *App) writeCurrentTaskResults(snapshots []tasks.Snapshot) error {
+	if self.sessionDirectory == "" {
+		return nil
+	}
+	if self.toolOutputLimit != nil {
+		for index := range snapshots {
+			snapshots[index].Output = truncate.Output(snapshots[index].Output, self.toolOutputLimit, nil)
+			for previous := range snapshots[index].Previous {
+				snapshots[index].Previous[previous].Output = truncate.Output(snapshots[index].Previous[previous].Output, self.toolOutputLimit, nil)
+			}
+		}
+	}
+	return taskrecord.WriteCurrent(self.sessionDirectory, snapshots)
+}
+
 func (self *App) recordTaskSnapshots(listing []tasks.Snapshot) error {
 	if len(listing) == 0 && !self.tasksHasRecorded {
 		return nil
@@ -2360,6 +2393,7 @@ func (self *App) restoreTasks(events []agent.Event) {
 	for _, notice := range taskrecord.PendingNotices(events) {
 		self.pendingNotices.add(notice)
 	}
+	self.recordCurrentTaskResults()
 }
 
 func (self *App) rememberTasks(events []agent.Event) []string {

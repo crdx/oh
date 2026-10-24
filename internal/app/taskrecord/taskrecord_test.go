@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/taskrecord"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tasks"
@@ -227,5 +228,135 @@ func TestATimedOutTaskNoticeSpeaksItsState(t *testing.T) {
 	notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion))
 	if want := "Task `deploy-wait` timed out: the call reached its time limit of 5m."; !isSaid || notice != want {
 		t.Errorf("got %q (%t), want %q", notice, isSaid, want)
+	}
+}
+
+func TestReadFindsTheCurrentProgressOfARunningTask(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "start"}); err != nil {
+		t.Fatal(err)
+	}
+
+	snapshot := tasks.Snapshot{
+		ID:       "build",
+		ToolName: "bash",
+		Run:      2,
+		State:    tasks.Running,
+		Output:   "first phase\n",
+	}
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), []tasks.Snapshot{snapshot}); err != nil {
+		t.Fatal(err)
+	}
+	reference := taskrecord.Completion{Snapshot: snapshot}.Reference(writer.Name())
+	found, err := taskrecord.Read(directory, reference)
+	if err != nil || found.Output != "first phase\n" || found.State != tasks.Running {
+		t.Fatalf("current progress is %+v, %v", found, err)
+	}
+
+	snapshot.Output = "first phase\nsecond phase\n"
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), []tasks.Snapshot{snapshot}); err != nil {
+		t.Fatal(err)
+	}
+	found, err = taskrecord.Read(directory, reference)
+	if err != nil || found.Output != snapshot.Output {
+		t.Errorf("updated progress is %+v, %v", found, err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := taskrecord.Read(directory, reference); err == nil || !strings.Contains(err.Error(), "not found") {
+		t.Errorf("an inactive session exposed stale current progress: %v", err)
+	}
+}
+
+func TestWriteCurrentKeepsEveryLiveTaskState(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = writer.Close() }()
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "start"}); err != nil {
+		t.Fatal(err)
+	}
+
+	snapshots := []tasks.Snapshot{
+		{ID: "queued", Run: 1, State: tasks.Queued},
+		{ID: "running", Run: 1, State: tasks.Running},
+		{ID: "stopping", Run: 1, State: tasks.Stopping},
+	}
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), snapshots); err != nil {
+		t.Fatal(err)
+	}
+	for _, snapshot := range snapshots {
+		reference := taskrecord.Completion{Snapshot: snapshot}.Reference(writer.Name())
+		found, err := taskrecord.Read(directory, reference)
+		if err != nil || found.State != snapshot.State {
+			t.Errorf("%s task is %+v, %v", snapshot.State, found, err)
+		}
+	}
+}
+
+func TestWriteCurrentRemovesATaskOnceItsRunFinishes(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = writer.Close() }()
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "start"}); err != nil {
+		t.Fatal(err)
+	}
+
+	running := tasks.Snapshot{ID: "build", Run: 1, State: tasks.Running, Output: "working\n"}
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), []tasks.Snapshot{running}); err != nil {
+		t.Fatal(err)
+	}
+	finished := running
+	finished.State = tasks.Done
+	finished.EndedAt = time.Unix(1, 0)
+	finished.Output = "done\n"
+	if _, err := writer.Event(taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: finished})); err != nil {
+		t.Fatal(err)
+	}
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), []tasks.Snapshot{finished}); err != nil {
+		t.Fatal(err)
+	}
+
+	reference := taskrecord.Completion{Snapshot: running}.Reference(writer.Name())
+	found, err := taskrecord.Read(directory, reference)
+	if err != nil || found.State != tasks.Done || found.Output != "done\n" {
+		t.Errorf("finished task is %+v, %v", found, err)
+	}
+}
+
+func TestAnUnfinishedLinkFallsBackToTheLatestFinishedMatchingRun(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	first := tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done, EndedAt: time.Unix(1, 0), Output: "first"}
+	latest := tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done, EndedAt: time.Unix(2, 0), Output: "latest"}
+	for _, snapshot := range []tasks.Snapshot{first, latest} {
+		if _, err := writer.Event(taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: snapshot})); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), nil); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	found, err := taskrecord.Read(directory, toolresult.TaskReference{SessionName: name, TaskName: "build", Run: 1})
+	if err != nil || found.Output != "latest" {
+		t.Errorf("latest finished run is %+v, %v", found, err)
 	}
 }

@@ -15536,6 +15536,11 @@ func clockAt(at time.Time) func() time.Time {
 }
 
 func tasksOf(listing ...tasks.Snapshot) func() []tasks.Snapshot {
+	for index := range listing {
+		if listing[index].Run == 0 {
+			listing[index].Run = 1
+		}
+	}
 	return func() []tasks.Snapshot { return listing }
 }
 
@@ -15637,7 +15642,7 @@ func goldenTaskSchedulePass(t *testing.T, runsFor time.Duration, span time.Durat
 				}}
 			}
 
-			built, err := taskNames.New(getTasks, noPortRoutes, time.Now)(goldenSegmentOptions(""))
+			built, err := taskNames.New("tame-impala", getTasks, noPortRoutes, time.Now)(goldenSegmentOptions(""))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -15880,7 +15885,7 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 		}
 	}))
 	forwardedPortsSegment := goldenShedSegment(t, forwardedPorts.New(goldenForwardedPorts(8000, 8080, 3000)))
-	taskNamesSegment := goldenShedSegment(t, taskNames.New(tasksOf(
+	taskNamesSegment := goldenShedSegment(t, taskNames.New("tame-impala", tasksOf(
 		tasks.Snapshot{ID: "golden", State: tasks.Running},
 		tasks.Snapshot{ID: "foo", State: tasks.Running},
 		tasks.Snapshot{ID: "bar", State: tasks.Running},
@@ -16661,13 +16666,13 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / none": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(), noPortRoutes, clockAt(at)),
+			taskNames.New("tame-impala", tasksOf(), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
 		"tasks / running": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Running},
 				tasks.Snapshot{ID: "watch", State: tasks.Running},
 			), noPortRoutes, clockAt(at)),
@@ -16676,8 +16681,8 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / running after output": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
-				tasks.Snapshot{ID: "docs", State: tasks.Running, ActivityAt: at.Add(-500 * time.Millisecond)},
+			taskNames.New("tame-impala", tasksOf(
+				tasks.Snapshot{ID: "docs", Run: 2, State: tasks.Running, ActivityAt: at.Add(-500 * time.Millisecond)},
 				tasks.Snapshot{ID: "watch", State: tasks.Running},
 			), noPortRoutes, clockAt(at)),
 			"",
@@ -16686,6 +16691,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		"tasks / associated task named by port": goldenSegmentPass(
 			t,
 			taskNames.New(
+				"tame-impala",
 				tasksOf(
 					tasks.Snapshot{ID: "docs", State: tasks.Running},
 					tasks.Snapshot{ID: "watch", State: tasks.Running},
@@ -16700,7 +16706,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / one being stopped among those running": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Running},
 				tasks.Snapshot{ID: "watch", State: tasks.Running},
 				tasks.Snapshot{ID: "api", State: tasks.Stopping},
@@ -16710,7 +16716,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / nothing is left of a closed session": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Stopped},
 				tasks.Snapshot{ID: "bridge", State: tasks.Stopped},
 			), noPortRoutes, clockAt(at)),
@@ -16719,7 +16725,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / a ghost beside a live task": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Running},
 				tasks.Snapshot{ID: "builder", State: tasks.Done, EndedAt: at.Add(-5 * time.Second)},
 			), noPortRoutes, clockAt(at)),
@@ -16728,7 +16734,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / a ghost whose linger is up": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Running},
 				tasks.Snapshot{ID: "builder", State: tasks.Done, EndedAt: at.Add(-time.Minute)},
 				tasks.Snapshot{ID: "check", State: tasks.Failed, EndedAt: at.Add(-time.Hour)},
@@ -16736,9 +16742,25 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
+		"tasks / recently stopped": goldenSegmentPass(
+			t,
+			taskNames.New("tame-impala", tasksOf(
+				tasks.Snapshot{ID: "deploy", State: tasks.Stopped, EndedAt: at.Add(-time.Second)},
+			), noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
+		"tasks / recently timed out": goldenSegmentPass(
+			t,
+			taskNames.New("tame-impala", tasksOf(
+				tasks.Snapshot{ID: "check", State: tasks.TimedOut, EndedAt: at.Add(-time.Second)},
+			), noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
 		"tasks / failures alone": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "builder", State: tasks.Failed, EndedAt: at.Add(-time.Second)},
 				tasks.Snapshot{ID: "api", State: tasks.Failed, EndedAt: at.Add(-2 * time.Second)},
 			), noPortRoutes, clockAt(at)),
@@ -16747,7 +16769,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / failures beside those running": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Running},
 				tasks.Snapshot{ID: "builder", State: tasks.Failed, EndedAt: at.Add(-time.Second)},
 			), noPortRoutes, clockAt(at)),
@@ -16756,7 +16778,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"tasks / queued, running and failed together": goldenSegmentPass(
 			t,
-			taskNames.New(tasksOf(
+			taskNames.New("tame-impala", tasksOf(
 				tasks.Snapshot{ID: "docs", State: tasks.Running},
 				tasks.Snapshot{ID: "checks", State: tasks.Queued},
 				tasks.Snapshot{ID: "build", State: tasks.Running},

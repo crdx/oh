@@ -4,12 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
+	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/app/access"
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/state"
 	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -17,6 +21,8 @@ import (
 )
 
 const (
+	currentResultsName = "task-results.json"
+
 	RunEnded         agent.Kind = "task_run_ended"
 	Finished         agent.Kind = "task_run_finished"
 	Listing          agent.Kind = "task_listing"
@@ -114,7 +120,10 @@ func PendingNotices(events []agent.Event) []agent.Event {
 	return notices
 }
 
-var errRunFound = errors.New("task run found")
+var (
+	errRunFound           = errors.New("task run found")
+	errCurrentRunNotFound = errors.New("current task run not found")
+)
 
 func CompletionOf(event agent.Event) (Completion, bool) {
 	var fact Completion
@@ -199,27 +208,98 @@ func centralLines(output string, edgeLines int) string {
 }
 
 func Read(directory string, reference toolresult.TaskReference) (tasks.Snapshot, error) {
+	current, isFound, err := currentResult(directory, reference)
+	if err != nil {
+		return tasks.Snapshot{}, err
+	}
+	if isFound {
+		return current, nil
+	}
+
 	var found tasks.Snapshot
-	err := session.Records(directory, reference.SessionName, func(line session.Line) error {
+	err = session.Records(directory, reference.SessionName, func(line session.Line) error {
 		if line.Kind != session.Event || line.Event == nil || line.Event.Kind != Finished || line.Event.Name != reference.TaskName {
 			return nil
 		}
 		var fact Completion
 		isDecoded := json.Unmarshal(line.Event.State, &fact) == nil
 		snapshot := fact.Snapshot
-		if !isDecoded || snapshot.ID != reference.TaskName || snapshot.Run != reference.Run || !snapshot.EndedAt.Equal(reference.EndedAt) {
+		if !isDecoded || snapshot.ID != reference.TaskName || snapshot.Run != reference.Run ||
+			!reference.EndedAt.IsZero() && !snapshot.EndedAt.Equal(reference.EndedAt) {
 			return nil
 		}
 		found = snapshot
-		return errRunFound
+		if !reference.EndedAt.IsZero() {
+			return errRunFound
+		}
+		return nil
 	})
-	if errors.Is(err, errRunFound) {
+	if errors.Is(err, errRunFound) || err == nil && found.ID != "" {
 		return found, nil
 	}
 	if err != nil {
 		return tasks.Snapshot{}, err
 	}
 	return tasks.Snapshot{}, errors.New("task run not found")
+}
+
+func currentResult(directory string, reference toolresult.TaskReference) (tasks.Snapshot, bool, error) {
+	if !reference.EndedAt.IsZero() {
+		return tasks.Snapshot{}, false, nil
+	}
+	isInUse, err := session.IsInUse(directory, reference.SessionName)
+	if err != nil || !isInUse {
+		return tasks.Snapshot{}, false, err
+	}
+	snapshot, err := readCurrent(session.Dir(directory, reference.SessionName), reference)
+	if errors.Is(err, errCurrentRunNotFound) {
+		return tasks.Snapshot{}, false, nil
+	}
+	return snapshot, err == nil, err
+}
+
+func WriteCurrent(sessionDirectory string, snapshots []tasks.Snapshot) error {
+	live := slices.DeleteFunc(slices.Clone(snapshots), func(snapshot tasks.Snapshot) bool {
+		return snapshot.State != tasks.Queued && snapshot.State != tasks.Running && snapshot.State != tasks.Stopping
+	})
+	path := filepath.Join(sessionDirectory, currentResultsName)
+	if len(live) == 0 {
+		err := os.Remove(path)
+		if errors.Is(err, fs.ErrNotExist) {
+			return nil
+		}
+		return err
+	}
+	snapshotData, err := json.Marshal(live)
+	if err != nil {
+		return err
+	}
+	return state.WriteFile(path, snapshotData)
+}
+
+func readCurrent(directory string, reference toolresult.TaskReference) (tasks.Snapshot, error) {
+	root, err := os.OpenRoot(directory)
+	if err != nil {
+		return tasks.Snapshot{}, err
+	}
+	defer func() { _ = root.Close() }()
+	currentResults, err := root.ReadFile(currentResultsName)
+	if errors.Is(err, fs.ErrNotExist) {
+		return tasks.Snapshot{}, errCurrentRunNotFound
+	}
+	if err != nil {
+		return tasks.Snapshot{}, err
+	}
+	var snapshots []tasks.Snapshot
+	if err := json.Unmarshal(currentResults, &snapshots); err != nil {
+		return tasks.Snapshot{}, fmt.Errorf("read current task results: %w", err)
+	}
+	for _, snapshot := range snapshots {
+		if snapshot.ID == reference.TaskName && snapshot.Run == reference.Run {
+			return snapshot, nil
+		}
+	}
+	return tasks.Snapshot{}, errCurrentRunNotFound
 }
 
 func ListingEvent(snapshots []tasks.Snapshot) agent.Event {

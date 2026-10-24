@@ -187,3 +187,49 @@ func TestAPagerThatCannotRunIsReported(t *testing.T) {
 		t.Errorf("got %v, want the pager's failure reported", err)
 	}
 }
+
+func TestShowWritesTheCurrentOutputOfARunningTask(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = writer.Close() }()
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "start"}); err != nil {
+		t.Fatal(err)
+	}
+
+	snapshot := tasks.Snapshot{
+		Invocation: &tasks.Invocation{Arguments: `{"command":"make build"}`},
+		ID:         "build",
+		ToolName:   "bash",
+		Run:        1,
+		State:      tasks.Running,
+		Output:     "compiling package two\n",
+	}
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), []tasks.Snapshot{snapshot}); err != nil {
+		t.Fatal(err)
+	}
+	address := toolresult.TaskURL(taskrecord.Completion{Snapshot: snapshot}.Reference(writer.Name()))
+	var output strings.Builder
+	if err := show(address, false, directory, &output, nil); err != nil {
+		t.Fatalf("unexpected run error: %v", err)
+	}
+	want := "task · build · run 1 running\n\n$ make build\n\ncompiling package two\n"
+	if got := style.Plain(output.String()); got != want {
+		t.Errorf("got output %q, want %q", got, want)
+	}
+
+	snapshot.Output += "compiling package three\n"
+	if err := taskrecord.WriteCurrent(session.Dir(directory, writer.Name()), []tasks.Snapshot{snapshot}); err != nil {
+		t.Fatal(err)
+	}
+	output.Reset()
+	if err := show(address, false, directory, &output, nil); err != nil {
+		t.Fatalf("unexpected updated run error: %v", err)
+	}
+	want += "compiling package three\n"
+	if got := style.Plain(output.String()); got != want {
+		t.Errorf("updated output is %q, want %q", got, want)
+	}
+}

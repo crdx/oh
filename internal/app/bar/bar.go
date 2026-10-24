@@ -138,7 +138,7 @@ func NewRegistry(options Options) segment.Registry {
 		turnCountSegment:      turnCount.New(options.Sources.GetTurnCount),
 		gitBranchSegment:      gitBranch.New(options.Workspace.GetDir()),
 		gitStatusSegment:      gitStatus.New(options.Workspace.GetDir(), sandbox.ArgvFor(options.IsUnconfined)),
-		taskNamesSegment:      taskNames.New(options.Sources.GetTasks, options.Sources.GetForwardedRoutes, time.Now),
+		taskNamesSegment:      taskNames.New(options.Session.Name, options.Sources.GetTasks, options.Sources.GetForwardedRoutes, time.Now),
 		subagentCountsSegment: subagentCounts.New(options.Sources.GetSubagents, time.Now),
 		stashCountSegment:     stashCount.New(options.Sources.GetStashCount),
 		subUsageSegment: subUsage.New(subUsage.Settings{

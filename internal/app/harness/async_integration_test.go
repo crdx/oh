@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"slices"
 	"strconv"
@@ -19,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/sim"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
@@ -164,6 +166,18 @@ func TestANamedShellTaskStreamsRestartsAfterResumeAndCanBeDiscarded(t *testing.T
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "start and inspect a named shell task")
 	session.waitFor("Shell background started.")
 	waitForTaskMarker(t, ready)
+	stored := rig.storedSessions()
+	if len(stored) != 1 {
+		t.Fatalf("got %d sessions", len(stored))
+	}
+	currentResult := waitForCurrentTaskResult(t, rig, toolresult.TaskURL(toolresult.TaskReference{
+		SessionName: stored[0].Name,
+		TaskName:    "build",
+		Run:         1,
+	}))
+	if !strings.Contains(currentResult, "run 1 running") || !strings.Contains(currentResult, "first phase") {
+		t.Fatalf("current task result is %q", currentResult)
+	}
 	session.typeText("read its running output" + pressEnter)
 	session.waitFor("Partial output read.")
 	requests := endpoint.Requests()
@@ -175,7 +189,7 @@ func TestANamedShellTaskStreamsRestartsAfterResumeAndCanBeDiscarded(t *testing.T
 	}
 	session.waitFor("Initial run complete.")
 	session.quit()
-	stored := rig.storedSessions()
+	stored = rig.storedSessions()
 	if len(stored) != 1 {
 		t.Fatalf("got %d sessions", len(stored))
 	}
@@ -202,6 +216,25 @@ func TestANamedShellTaskStreamsRestartsAfterResumeAndCanBeDiscarded(t *testing.T
 	if requests := endpoint.Requests(); len(requests) != 9 {
 		t.Errorf("discard caused an unwanted completion wake: %d requests", len(requests))
 	}
+}
+
+func waitForCurrentTaskResult(t *testing.T, rig *interactiveRig, address string) string {
+	t.Helper()
+	deadline := time.Now().Add(interactiveDeadline)
+	var output []byte
+	var err error
+	for time.Now().Before(deadline) {
+		command := exec.CommandContext(t.Context(), rig.binary, "--view", address) //nolint:gosec // running the binary under test
+		command.Env = rig.environment
+		command.Dir = rig.workspace
+		output, err = command.CombinedOutput()
+		if err == nil {
+			return string(output)
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	t.Fatalf("current task result was not available: %s: %v", output, err)
+	return ""
 }
 
 func waitForTaskMarker(t *testing.T, path string) {

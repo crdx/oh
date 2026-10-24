@@ -2,13 +2,16 @@ package taskNames_test
 
 import (
 	"slices"
+	"strings"
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/taskNames"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/tasks"
 )
 
@@ -22,8 +25,14 @@ func build(t *testing.T, listing ...tasks.Snapshot) segment.Segment {
 
 func buildWithRoutes(t *testing.T, routes []portgrant.Route, listing ...tasks.Snapshot) segment.Segment {
 	t.Helper()
+	for index := range listing {
+		if listing[index].Run == 0 {
+			listing[index].Run = 1
+		}
+	}
 
 	built, err := taskNames.New(
+		"tame-impala",
 		func() []tasks.Snapshot { return listing },
 		func() []portgrant.Route { return routes },
 		func() time.Time { return noon },
@@ -136,9 +145,20 @@ func TestATaskTakesTheStyleOfItsState(t *testing.T) {
 		{state: tasks.Failed, want: style.Failure("\u2717 docs")},
 		{state: tasks.TimedOut, want: style.Failure("\u2717 docs")},
 	} {
-		drawn := build(t, tasks.Snapshot{ID: "docs", State: test.state, EndedAt: endedAgo(time.Second)}).Render(segment.Context{})
-		if drawn != test.want {
-			t.Errorf("state %s drew %q, want %q", test.state, drawn, test.want)
+		snapshot := tasks.Snapshot{ID: "docs", Run: 1, State: test.state}
+		if test.state == tasks.Done || test.state == tasks.Stopped || test.state == tasks.Failed || test.state == tasks.TimedOut {
+			snapshot.EndedAt = endedAgo(time.Second)
+		}
+		drawn := build(t, snapshot).Render(segment.Context{})
+		address := toolresult.TaskURL(toolresult.TaskReference{
+			EndedAt:     snapshot.EndedAt,
+			SessionName: "tame-impala",
+			TaskName:    snapshot.ID,
+			Run:         snapshot.Run,
+		})
+		want := link.RenderURL(test.want, address)
+		if drawn != want {
+			t.Errorf("state %s drew %q, want %q", test.state, drawn, want)
 		}
 	}
 }
@@ -146,6 +166,7 @@ func TestATaskTakesTheStyleOfItsState(t *testing.T) {
 func TestTaskActivityFlashExpiresOnTime(t *testing.T) {
 	now := noon.Add(500 * time.Millisecond)
 	built, err := taskNames.New(
+		"tame-impala",
 		func() []tasks.Snapshot {
 			return []tasks.Snapshot{{ID: "docs", State: tasks.Running, ActivityAt: noon}}
 		},
@@ -267,5 +288,60 @@ func TestNothingLeftToDrawAsksForNoRedraw(t *testing.T) {
 
 	if at := refresher.NextRefresh(segment.Phase{At: noon}); !at.IsZero() {
 		t.Errorf("got %v, want a segment with nothing to draw to ask for no redraw", at)
+	}
+}
+
+func TestATaskNameAndItsMarkOpenTheCurrentRun(t *testing.T) {
+	snapshot := tasks.Snapshot{ID: "docs", Run: 2, State: tasks.Running}
+	drawn := build(t, snapshot).Render(segment.Context{})
+	address := toolresult.TaskURL(toolresult.TaskReference{
+		SessionName: "tame-impala",
+		TaskName:    snapshot.ID,
+		Run:         snapshot.Run,
+	})
+	want := link.RenderURL(style.Info("●")+" "+style.Info("docs"), address)
+	if drawn != want {
+		t.Errorf("got %q, want the whole task mark and name linked as %q", drawn, want)
+	}
+}
+
+func TestEveryUnnamedTaskMarkOpensItsOwnRun(t *testing.T) {
+	snapshots := []tasks.Snapshot{
+		{ID: "one", Run: 1, State: tasks.Running},
+		{ID: "two", Run: 2, State: tasks.Running},
+		{ID: "three", Run: 3, State: tasks.Running},
+		{ID: "four", Run: 4, State: tasks.Running},
+	}
+	built := build(t, snapshots...)
+	fitter, isFitter := built.(segment.Fitter)
+	if !isFitter {
+		t.Fatal("task names segment does not fit itself to available room")
+	}
+	ladder := fitter.Ladder(segment.Context{})
+	unnamed := ladder[len(ladder)-2]
+	for _, snapshot := range snapshots {
+		address := toolresult.TaskURL(toolresult.TaskReference{
+			SessionName: "tame-impala",
+			TaskName:    snapshot.ID,
+			Run:         snapshot.Run,
+		})
+		if count := strings.Count(unnamed, address); count != 1 {
+			t.Errorf("task %s link occurs %d times in %q", snapshot.ID, count, unnamed)
+		}
+	}
+}
+
+func TestARecentlyFinishedTaskLinksItsExactEndTime(t *testing.T) {
+	endedAt := endedAgo(time.Second)
+	snapshot := tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done, EndedAt: endedAt}
+	drawn := build(t, snapshot).Render(segment.Context{})
+	address := toolresult.TaskURL(toolresult.TaskReference{
+		EndedAt:     endedAt,
+		SessionName: "tame-impala",
+		TaskName:    snapshot.ID,
+		Run:         snapshot.Run,
+	})
+	if !strings.Contains(drawn, address) {
+		t.Errorf("finished task did not link its exact run in %q", drawn)
 	}
 }
