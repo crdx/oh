@@ -374,14 +374,25 @@ func (self *Manager) queueSize(replacement *entry) int {
 	return count
 }
 
-func (self *Manager) allocateID() string {
+func (self *Manager) allocateID(toolName string) string {
+	name := generatedName(toolName)
+	if self.nextIDs == nil {
+		self.nextIDs = make(map[string]int)
+	}
 	for {
-		self.nextID++
-		id := fmt.Sprintf("task-%d", self.nextID)
+		self.nextIDs[name]++
+		id := fmt.Sprintf("%s-%d", name, self.nextIDs[name])
 		if self.entries[id] == nil {
 			return id
 		}
 	}
+}
+
+func generatedName(toolName string) string {
+	if ValidateName(toolName) != nil {
+		return "task"
+	}
+	return toolName
 }
 
 func (self *Manager) stopLocked(current *entry, cause error) bool {

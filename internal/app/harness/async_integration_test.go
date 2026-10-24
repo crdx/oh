@@ -411,8 +411,8 @@ func TestAResumedSessionNeverReusesADiscardedTaskID(t *testing.T) {
 	self := testConversation(t, &screenOutput)
 	self.tasks = tasks.New(t.Context())
 	defer self.tasks.Close()
-	first := tasks.Snapshot{ID: "task-1", ToolName: "bash", Run: 1, State: tasks.Done}
-	discarded := tasks.Snapshot{ID: "task-3", ToolName: "bash", Run: 1, State: tasks.Done}
+	first := tasks.Snapshot{ID: "bash-1", ToolName: "bash", Run: 1, State: tasks.Done}
+	discarded := tasks.Snapshot{ID: "bash-3", ToolName: "bash", Run: 1, State: tasks.Done}
 	self.restoreTasks([]agent.Event{
 		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: discarded, IsFinal: true}),
 		taskrecord.ListingEvent([]tasks.Snapshot{first, discarded}),
@@ -425,7 +425,7 @@ func TestAResumedSessionNeverReusesADiscardedTaskID(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if snapshot.ID != "task-4" {
-		t.Errorf("got %s, want task-4", snapshot.ID)
+	if snapshot.ID != "bash-4" {
+		t.Errorf("got %s, want bash-4", snapshot.ID)
 	}
 }

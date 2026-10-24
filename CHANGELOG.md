@@ -2,6 +2,11 @@
 
 ## [Next]
 
+### Changes
+
+- Name generated tasks after the tool that runs them
+- Tell the model to use single-word custom task names
+
 ## [0.25.0] — 2026-10-25
 
 ### Changes

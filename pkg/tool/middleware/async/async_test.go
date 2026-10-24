@@ -45,7 +45,7 @@ func TestBackgroundCallReturnsAReceiptAndKeepsExecuting(t *testing.T) {
 			t.Fatal(err)
 		}
 		acknowledgement, err := call.Exec(t.Context())
-		if err != nil || !acknowledgement.IsPending {
+		if err != nil || !acknowledgement.IsPending || acknowledgement.Output != "scheduled as bash-1" {
 			t.Errorf("got acknowledgement %+v, %v", acknowledgement, err)
 		}
 		close(release)
@@ -159,13 +159,13 @@ func TestTheSupervisorStoresOnlyTruncatedToolOutput(t *testing.T) {
 		if _, err := call.Exec(t.Context()); err != nil {
 			t.Fatal(err)
 		}
-		over, release, err := manager.Hold("task-1")
+		over, release, err := manager.Hold("weather-1")
 		if err != nil {
 			t.Fatal(err)
 		}
 		<-over
 		release()
-		snapshot, err := manager.Output("task-1")
+		snapshot, err := manager.Output("weather-1")
 		if err != nil || len(snapshot.Output) >= len(output) || !strings.Contains(snapshot.Output, "truncated") {
 			t.Errorf("the saved output was not bounded: %d bytes, %v", len(snapshot.Output), err)
 		}
@@ -199,7 +199,7 @@ func TestAQueuedBackgroundReceiptDoesNotClaimTheTaskIsRunning(t *testing.T) {
 		if err != nil || !strings.Contains(receipt.Output, "scheduled") || strings.Contains(receipt.Output, "is running") {
 			t.Errorf("queued call claimed to run: %+v, %v", receipt, err)
 		}
-		if snapshot, err := manager.Status("task-1"); err != nil || snapshot.State != tasks.Queued {
+		if snapshot, err := manager.Status("bash-1"); err != nil || snapshot.State != tasks.Queued {
 			t.Errorf("task was not queued: %+v, %v", snapshot, err)
 		}
 	})
@@ -405,8 +405,8 @@ func TestTaskLaunchOptionsAreValidated(t *testing.T) {
 		PublishPort: func(context.Context, uint16, string) (string, error) { return "forwarded", nil },
 	})
 	nameParameter := subject.Schema().Find("task_name")
-	if nameParameter == nil || !strings.Contains(nameParameter.Description, tasks.NamePattern()) {
-		t.Errorf("task_name description hides its pattern: %+v", nameParameter)
+	if nameParameter == nil || !strings.Contains(nameParameter.Description, "use a single word") || !strings.Contains(nameParameter.Description, tasks.NamePattern()) {
+		t.Errorf("task_name description does not mandate its shape: %+v", nameParameter)
 	}
 	for _, arguments := range []string{
 		`{"command":"true","forward_port":8000}`,

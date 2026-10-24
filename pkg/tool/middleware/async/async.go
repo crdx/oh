@@ -67,7 +67,7 @@ func (self configuredTool) Schema() tool.Schema {
 	schema = append(
 		schema,
 		tool.Boolean("background", "start this call as a background task").Optional(),
-		tool.String("task_name", "an optional name matching "+tasks.NamePattern()+", such as build or docs; never add a number yourself, since a repeated name is numbered automatically").Optional(),
+		tool.String("task_name", "an optional name; use a single word matching "+tasks.NamePattern()+", such as build or docs; never add a number yourself, since a repeated name is numbered automatically").Optional(),
 	)
 	if self.options.PublishPort != nil {
 		schema = append(schema, tool.Integer("forward_port", "a fixed server TCP port to make reachable to the user when starting a background task").Optional())

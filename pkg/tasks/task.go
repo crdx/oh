@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -127,7 +128,7 @@ type entry struct {
 type Manager struct {
 	mutex           sync.Mutex
 	entries         map[string]*entry
-	nextID          int
+	nextIDs         map[string]int
 	order           []string
 	conclusions     []Conclusion
 	changes         chan struct{}
@@ -433,9 +434,20 @@ func (self *Manager) Reserve(ids []string) {
 }
 
 func (self *Manager) reserveLocked(id string) {
-	var index int
-	if _, err := fmt.Sscanf(id, "task-%d", &index); err == nil && index > self.nextID {
-		self.nextID = index
+	separator := strings.LastIndexByte(id, '-')
+	if separator < 1 {
+		return
+	}
+	name := id[:separator]
+	number, err := strconv.Atoi(id[separator+1:])
+	if err != nil || number < 1 || ValidateName(name) != nil {
+		return
+	}
+	if self.nextIDs == nil {
+		self.nextIDs = make(map[string]int)
+	}
+	if number > self.nextIDs[name] {
+		self.nextIDs[name] = number
 	}
 }
 
@@ -476,7 +488,7 @@ func (self *Manager) startLocked(
 			return Snapshot{}, err
 		}
 	} else if id == "" {
-		id = self.allocateID()
+		id = self.allocateID(toolName)
 	}
 	if found := self.entries[id]; found != nil && found != options.replaces {
 		return Snapshot{}, fmt.Errorf("task %s already exists", id)

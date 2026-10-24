@@ -45,15 +45,22 @@ func TestNamedTasksAreNumberedWithoutLosingTheirName(t *testing.T) {
 	})
 }
 
-func TestAGeneratedTaskIDSkipsARestoredChosenName(t *testing.T) {
+func TestAGeneratedTaskIDNamesItsToolAndSkipsRecordedIDs(t *testing.T) {
 	manager := tasks.New(t.Context())
 	defer manager.Close()
-	manager.Restore([]tasks.Snapshot{{ID: "task-1", State: tasks.Done}})
-	snapshot, err := manager.Start(t.Context(), "", "bash", true, false, func(context.Context) (tool.ToolCallResult, error) {
+	manager.Reserve([]string{"lookup-2"})
+	snapshot, err := manager.Start(t.Context(), "", "lookup", true, false, func(context.Context) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{}, nil
 	}, nil)
-	if err != nil || snapshot.ID != "task-2" {
-		t.Errorf("generated %+v, %v; want task-2", snapshot, err)
+	if err != nil || snapshot.ID != "lookup-3" {
+		t.Errorf("generated %+v, %v; want lookup-3", snapshot, err)
+	}
+
+	fallback, err := manager.Start(t.Context(), "", "weather_forecast", true, false, func(context.Context) (tool.ToolCallResult, error) {
+		return tool.ToolCallResult{}, nil
+	}, nil)
+	if err != nil || fallback.ID != "task-1" {
+		t.Errorf("fallback generated %+v, %v; want task-1", fallback, err)
 	}
 }
 

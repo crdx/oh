@@ -359,12 +359,12 @@ func TestRestoringTasksStopsOutstandingWorkAndRetainsCompletedRuns(t *testing.T)
 	manager := tasks.New(t.Context())
 	defer manager.Close()
 	interrupted := manager.Restore([]tasks.Snapshot{
-		{ID: "task-4", State: tasks.Queued, Run: 1, IsRespawning: true},
-		{ID: "task-9", State: tasks.Running, Run: 3, IsRespawning: true},
-		{ID: "task-11", State: tasks.Stopping, Run: 2},
-		{ID: "task-12", State: tasks.Done, Run: 1, Output: "saved"},
+		{ID: "bash-4", State: tasks.Queued, Run: 1, IsRespawning: true},
+		{ID: "bash-9", State: tasks.Running, Run: 3, IsRespawning: true},
+		{ID: "bash-11", State: tasks.Stopping, Run: 2},
+		{ID: "bash-12", State: tasks.Done, Run: 1, Output: "saved"},
 	})
-	if !slices.Equal(interrupted, []string{"task-4", "task-9", "task-11"}) {
+	if !slices.Equal(interrupted, []string{"bash-4", "bash-9", "bash-11"}) {
 		t.Errorf("interrupted %v", interrupted)
 	}
 	for _, id := range interrupted {
@@ -373,13 +373,13 @@ func TestRestoringTasksStopsOutstandingWorkAndRetainsCompletedRuns(t *testing.T)
 			t.Errorf("%s restored as %+v, %v", id, snapshot, err)
 		}
 	}
-	if snapshot, err := manager.Status("task-12"); err != nil || snapshot.State != tasks.Done || snapshot.Output != "saved" {
+	if snapshot, err := manager.Status("bash-12"); err != nil || snapshot.State != tasks.Done || snapshot.Output != "saved" {
 		t.Errorf("finished task changed on restore: %+v, %v", snapshot, err)
 	}
 	snapshot, err := manager.Start(t.Context(), "", "bash", true, false, func(context.Context) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{}, nil
 	}, nil)
-	if err != nil || snapshot.ID != "task-13" {
+	if err != nil || snapshot.ID != "bash-13" {
 		t.Errorf("new task %+v, %v collides with restored work", snapshot, err)
 	}
 }

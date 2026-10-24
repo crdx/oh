@@ -26035,7 +26035,7 @@ group = "a"
 		t.Fatal(err)
 	}
 	session.waitFor("Completed.")
-	session.requireShown("Task task-1 done.")
+	session.requireShown("Task weather-1 done.")
 	session.requireHidden("forecast complete")
 	session.quit()
 
@@ -26049,7 +26049,7 @@ group = "a"
 			acknowledgement = entry.Output
 		}
 	}
-	if !strings.Contains(acknowledgement, "scheduled as task-1") {
+	if !strings.Contains(acknowledgement, "scheduled as weather-1") {
 		t.Errorf("background call returned %q", acknowledgement)
 	}
 	if !strings.Contains(fmt.Sprint(requests[2].Input), "forecast complete") {

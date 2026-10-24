@@ -8,10 +8,10 @@ I will remember the task history.
  start another build in the background
 
 
-$ release build ✓ scheduled as task-4
+$ release build ✓ scheduled as bash-1
 
 
- 🤖 Task task-4 failed: the command exited with status 1.
+ 🤖 Task bash-1 failed: the command exited with status 1.
 
     exit(1):
     broken build
