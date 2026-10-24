@@ -41,6 +41,8 @@ const (
 	stopGrace              = 2 * time.Second
 	strayOutputGrace       = time.Second
 	toolVariable           = "OH_TOOL"
+	scratchVariable        = "OH_SCRATCH_DIR"
+	sessionVariable        = "OH_SESSION"
 	groupWithheldFormat    = "%s access unavailable; ctrl+x %s grants it"
 )
 
@@ -72,6 +74,8 @@ type Declaration struct {
 
 type Options struct {
 	Directory string
+	Scratch   string
+	Session   string
 	Approve   func(
 		ctx context.Context,
 		name string,
@@ -355,7 +359,7 @@ func run(
 	process := exec.CommandContext(context.WithoutCancel(runContext), line[0], line[1:]...)
 	process.Dir = options.Directory
 	process.Stdin = nil
-	process.Env = append(process.Environ(), toolVariable+"="+declaration.Name)
+	process.Env = environment(process.Environ(), declaration.Name, options)
 	process.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	output, hasEscalated, wasStopped, err := runGroup(runContext, process)
@@ -481,4 +485,18 @@ func status(output string, note string) string {
 
 func stoppedStatus(output string, note string) string {
 	return stop.Report(output, errors.New(note))
+}
+
+func environment(inheritedEnvironment []string, name string, options Options) []string {
+	result := slices.DeleteFunc(slices.Clone(inheritedEnvironment), func(entry string) bool {
+		return strings.HasPrefix(entry, scratchVariable+"=") || strings.HasPrefix(entry, sessionVariable+"=")
+	})
+	result = append(result, toolVariable+"="+name)
+	if options.Scratch != "" {
+		result = append(result, scratchVariable+"="+options.Scratch)
+	}
+	if options.Session != "" {
+		result = append(result, sessionVariable+"="+options.Session)
+	}
+	return result
 }

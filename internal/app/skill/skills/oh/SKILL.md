@@ -313,7 +313,7 @@ Give each parameter a `name`, a `kind`, and a `description`. Add `optional = tru
 | `strings` | `--name` once for each item                      |
 | `enum`    | `--name value`, refused unless `values` holds it |
 
-An underscore in a parameter name becomes a dash in the option, so `max_lines` arrives as `--max-lines`. An optional parameter the model leaves out passes nothing. The command reads the tool name from `OH_TOOL`.
+An underscore in a parameter name becomes a dash in the option, so `max_lines` arrives as `--max-lines`. An optional parameter the model leaves out passes nothing. The command reads the tool name from `OH_TOOL`, the session name from `OH_SESSION`, and the host path of the session's scratch directory from `OH_SCRATCH_DIR`.
 
 ```toml
 [tool.weather]

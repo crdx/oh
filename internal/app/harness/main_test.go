@@ -25533,6 +25533,52 @@ parameters = [
 	}
 }
 
+func TestADeclaredToolReadsItsSessionAndScratchDirectory(t *testing.T) {
+	script := filepath.Join(reachableWorkspaceDir(t), "scratch")
+	//nolint:gosec // a tool the test declares has to be runnable
+	if err := os.WriteFile(script, []byte("#!/bin/bash\necho \"$OH_SESSION $OH_SCRATCH_DIR\"\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
+		Model: "fake",
+		Turns: []sim.Turn{
+			{Calls: []sim.Call{{Name: "scratch", Arguments: `{}`}}},
+			{Say: "Found it."},
+		},
+	}))
+	writeRigConfig(t, rig, `[tool.scratch]
+description = "report the scratch directory"
+command = ["`+script+`"]
+permission = "allow"
+group = "a"
+`)
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "where is the scratch directory")
+	session.waitFor("Found it.")
+	session.quit()
+
+	storedSessions := rig.storedSessions()
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+	}
+	requests := endpoint.Requests()
+	if len(requests) < 2 {
+		t.Fatalf("the endpoint saw %d requests", len(requests))
+	}
+
+	var reported string
+	for _, entry := range requests[1].Input {
+		if entry.Type == sim.CallOutput {
+			reported = entry.Output
+		}
+	}
+	name := storedSessions[0].Name
+	wanted := name + " " + filepath.Join(rig.stateDirectory, "org.crdx", "oh", "farm", name)
+	if reported != wanted {
+		t.Errorf("the tool read %q, wanted %q", reported, wanted)
+	}
+}
+
 func TestACustomToolVersionControlsCompatibilityWhenTheBinaryResumes(t *testing.T) {
 	script := declaredToolScript(t)
 	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{

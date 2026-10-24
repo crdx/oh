@@ -6,6 +6,7 @@
 
 - Name generated tasks after the tool that runs them
 - Tell the model to use single-word custom task names
+- Make `OH_SESSION` and `OH_SCRATCH_DIR` available to custom tools
 
 ## [0.25.0] — 2026-10-25
 

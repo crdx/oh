@@ -384,6 +384,38 @@ func TestTheCommandRunsInTheDirectoryItWasGiven(t *testing.T) {
 	}
 }
 
+func TestTheCommandReadsTheSessionAndScratchDirectoryItWasGiven(t *testing.T) {
+	t.Setenv("OH_SCRATCH_DIR", "/inherited/elsewhere")
+	t.Setenv("OH_SESSION", "inherited-session")
+	declaration := echoingDeclaration(t)
+	declaration.Command = []string{writeScript(t, `echo "${OH_SESSION-unset} ${OH_SCRATCH_DIR-unset}"`)}
+	declaration.Parameters = nil
+
+	given, err := command.New(declaration, command.Options{Scratch: "/farm/given", Session: "given-session"})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	output, err := call(t, given, `{}`)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if output != "given-session /farm/given" {
+		t.Errorf("got %q, wanted the given session and scratch directory", output)
+	}
+
+	withheld, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	output, err = call(t, withheld, `{}`)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if output != "unset unset" {
+		t.Errorf("got %q, wanted no inherited session or scratch directory", output)
+	}
+}
+
 func TestTheApprovalSeesEverySuppliedArgumentAndCanRefuseIt(t *testing.T) {
 	refusal := errors.New("the user said no")
 	var askedName string
