@@ -39,7 +39,11 @@ func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 		{Name: "tame-badger", State: subagentrecord.Failed, EndedAt: at.Add(-time.Second)},
 	}
 	render := func(now time.Time, snapshots []subagents.Snapshot) string {
-		factory := subagentCounts.New(func() []subagents.Snapshot { return snapshots }, func() time.Time { return now })
+		factory := subagentCounts.New(
+			"tame-impala",
+			func() []subagents.Snapshot { return snapshots },
+			func() time.Time { return now },
+		)
 		built, err := factory(nil)
 		if err != nil {
 			t.Fatal(err)
@@ -64,6 +68,7 @@ func TestGoldenSubagentEventsDrawCompactlyAndReplay(t *testing.T) {
 		return func() string {
 			var drawn bytes.Buffer
 			conversation := testConversation(t, &drawn)
+			conversation.recorder = namedGoldenRecorder(t)
 			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
 			conversation.currentTurn = Turn{painter: conversation.newPainter(true)}
 			for _, event := range events {
@@ -82,6 +87,7 @@ func TestGoldenSubagentEventsDrawCompactlyAndReplay(t *testing.T) {
 		return func() string {
 			var drawn bytes.Buffer
 			conversation := testConversation(t, &drawn)
+			conversation.recorder = namedGoldenRecorder(t)
 			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
 			conversation.recordedEvents = events
 			conversation.replay()
@@ -92,6 +98,7 @@ func TestGoldenSubagentEventsDrawCompactlyAndReplay(t *testing.T) {
 		return func() string {
 			var drawn bytes.Buffer
 			conversation := testConversation(t, &drawn)
+			conversation.recorder = namedGoldenRecorder(t)
 			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
 			conversation.children.directory = t.TempDir()
 			conversation.recordedEvents = events

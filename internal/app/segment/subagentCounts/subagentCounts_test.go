@@ -4,16 +4,19 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
+	"crdx.org/oh/internal/toolresult"
 )
 
 func TestFinishedChildrenNeitherRenderNorScheduleRefresh(t *testing.T) {
 	at := time.Date(2026, time.March, 18, 12, 0, 0, 0, time.UTC)
 	for _, outcome := range []subagentrecord.State{subagentrecord.Done, subagentrecord.Stopped, subagentrecord.Ended} {
 		t.Run(string(outcome), func(t *testing.T) {
-			instance, err := New(func() []subagents.Snapshot {
+			instance, err := New("tame-impala", func() []subagents.Snapshot {
 				return []subagents.Snapshot{{Name: "tame-adder", State: outcome, EndedAt: at}}
 			}, func() time.Time { return at })(nil)
 			if err != nil {
@@ -36,7 +39,7 @@ func TestFinishedChildrenNeitherRenderNorScheduleRefresh(t *testing.T) {
 func TestFailureWarningExpires(t *testing.T) {
 	at := time.Date(2026, time.March, 18, 12, 0, 0, 0, time.UTC)
 	now := at
-	instance, err := New(func() []subagents.Snapshot {
+	instance, err := New("tame-impala", func() []subagents.Snapshot {
 		return []subagents.Snapshot{{Name: "tame-adder", State: subagentrecord.Failed, EndedAt: at}}
 	}, func() time.Time { return now })(nil)
 	if err != nil {
@@ -67,7 +70,7 @@ func TestFlashExpiresWithoutHidingTheSubagent(t *testing.T) {
 	get := func() []subagents.Snapshot {
 		return []subagents.Snapshot{{Name: "tame-adder", State: subagentrecord.Running, ActivityAt: at}}
 	}
-	instance, err := New(get, func() time.Time { return now })(nil)
+	instance, err := New("tame-impala", get, func() time.Time { return now })(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,5 +89,31 @@ func TestFlashExpiresWithoutHidingTheSubagent(t *testing.T) {
 	}
 	if due := refresher.NextRefresh(segment.Phase{At: now}); !due.IsZero() {
 		t.Fatalf("expired flash still asks to refresh at %s", due)
+	}
+}
+
+func TestEveryLiveSubagentEmojiOpensItsConversation(t *testing.T) {
+	at := time.Date(2026, time.March, 18, 12, 0, 0, 0, time.UTC)
+	for _, state := range []subagentrecord.State{subagentrecord.Running, subagentrecord.Stopping} {
+		t.Run(string(state), func(t *testing.T) {
+			instance, err := New("tame-impala", func() []subagents.Snapshot {
+				return []subagents.Snapshot{{Name: "tame-adder", State: state, ActivityAt: at}}
+			}, func() time.Time { return at })(nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			address := toolresult.SubagentURL(toolresult.SubagentReference{
+				SessionName:  "tame-impala",
+				SubagentName: "tame-adder",
+			})
+			want := link.RenderURL("🐍", address)
+			if state == subagentrecord.Stopping {
+				want += style.Change("…")
+			}
+			if drawn := instance.Render(segment.Context{}); drawn != want {
+				t.Errorf("state %s drew %q, want only its emoji linked as %q", state, drawn, want)
+			}
+		})
 	}
 }

@@ -9,7 +9,7 @@ Both are running.\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
 \e[48;2;48;58;67m 🤖 Subagent tame-adder stopped because shell execution was withdrawn.                              \e[0m\r
-\e[48;2;48;58;67m 🦙 Subagent tame-alpaca has finished:                                                              \e[0m\r
+\e[48;2;48;58;67m 🦙 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-alpaca\e\\tame-alpaca\e]8;;\e\\ has finished:                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The build tool is just.                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

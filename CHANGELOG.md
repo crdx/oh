@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Changes
+
+- Hyperlink subagent emojis and names to the full conversation
+
 ## [0.25.2] — 2026-10-25
 
 ### Changes

@@ -8,7 +8,7 @@ A subagent is looking in internal.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
-\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The loader is in config.go.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -24,9 +24,9 @@ It found the loader in config.go.\e[?25h\e[?2026l\r
 I asked it again.\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\r
 \e]9;4;3\e\\\e[?2026h\e[?25l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    Its tests are in config_test.go.                                                                \e[0m\r
-\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[48;2;48;58;67m 🐍 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Its tests are in config_test.go.\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[32C\e[?25h\e[?2026l\e]9;4;0\e\\\r

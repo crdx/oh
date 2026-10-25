@@ -146,7 +146,7 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagent 1 restored and standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -156,7 +156,7 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagent 2 restored after one return ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -166,14 +166,14 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagent 3 restored and flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m 🐍 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagent 6 a restored message standing ===
@@ -200,11 +200,11 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagents 4 restored together and standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-alpaca has finished:                                                              \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-alpaca\e\\tame-alpaca\e]8;;\e\\ has finished:                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -214,17 +214,17 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === subagents 5 restored together and flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Subagent tame-alpaca has finished:                                                              \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-alpaca\e\\tame-alpaca\e]8;;\e\\ has finished:                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[10A\r\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\e[4B\r\e[48;2;48;58;67m 🦙 Subagent tame-alpaca has finished:                                                              \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[10A\r\e[48;2;48;58;67m 🐍 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\e[4B\r\e[48;2;48;58;67m 🦙 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-alpaca\e\\tame-alpaca\e]8;;\e\\ has finished:                                                              \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l

@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/toolresult"
@@ -101,6 +102,63 @@ func TestShowWritesTheWholeOutputOfATaskRun(t *testing.T) {
 	}
 	if want := "bash\n\n{\n    \"command\": \"seq 1 9\"\n}\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n"; style.Plain(output.String()) != want {
 		t.Errorf("got output %q, want %q", style.Plain(output.String()), want)
+	}
+}
+
+func TestShowWritesASubagentConversation(t *testing.T) {
+	directory := t.TempDir()
+	parent, err := store.CreateNamed(directory, "tame-impala", store.Meta{WorkspaceDir: t.TempDir()})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := parent.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "Delegate the review"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := parent.Close(); err != nil {
+		t.Fatal(err)
+	}
+	childrenDirectory := session.ChildrenDir(directory, "tame-impala")
+	writer, err := store.CreateNamed(childrenDirectory, "tame-adder", store.Meta{WorkspaceDir: t.TempDir()})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, event := range []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: "Read the README"},
+		{Kind: agent.ModelMessageEvent, Text: "The README says hello."},
+	} {
+		if err := writer.Event(event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	address := toolresult.SubagentURL(toolresult.SubagentReference{
+		SessionName:  "tame-impala",
+		SubagentName: "tame-adder",
+	})
+	var output strings.Builder
+	if err := show(address, false, directory, &output, nil); err != nil {
+		t.Fatalf("unexpected run error: %v", err)
+	}
+	plain := style.Plain(output.String())
+	for _, want := range []string{"Read the README", "The README says hello."} {
+		if !strings.Contains(plain, want) {
+			t.Errorf("subagent conversation does not contain %q in %q", want, plain)
+		}
+	}
+
+	paged := ""
+	output.Reset()
+	if err := show(address, true, directory, &output, func(text string) error {
+		paged = text
+		return nil
+	}); err != nil {
+		t.Fatalf("unexpected pager error: %v", err)
+	}
+	if output.Len() != 0 || paged == "" || style.Plain(paged) != plain {
+		t.Errorf("pager got %q and standard output got %q, want the same conversation only in the pager", paged, output.String())
 	}
 }
 

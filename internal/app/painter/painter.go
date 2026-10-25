@@ -338,7 +338,7 @@ func submittedContentRows(
 	}
 	content = withIntent(content, strutil.StripControl(message.intent), contentColumns)
 	if shouldRenderHyperlinks {
-		linkCode(content, message.link)
+		linkNotice(content, message.link)
 	}
 	for i, row := range content {
 		prefix := " "
@@ -367,14 +367,20 @@ func withIntent(rows []string, intent string, columns int) []string {
 	return slices.Concat(width.Wrap(paragraph, columns), rows[end:])
 }
 
-func linkCode(rows []string, noticeLink NoticeLink) {
+func linkNotice(rows []string, noticeLink NoticeLink) {
 	if noticeLink.URL == "" {
 		return
 	}
-	code := style.Code(strutil.StripControl(noticeLink.Code))
+	text := strutil.StripControl(noticeLink.Text)
+	if text == "" {
+		return
+	}
+	if noticeLink.IsCode {
+		text = style.Code(text)
+	}
 	for index, row := range rows {
-		if strings.Contains(row, code) {
-			rows[index] = strings.Replace(row, code, link.RenderURL(code, noticeLink.URL), 1)
+		if strings.Contains(row, text) {
+			rows[index] = strings.Replace(row, text, link.RenderURL(text, noticeLink.URL), 1)
 			return
 		}
 	}

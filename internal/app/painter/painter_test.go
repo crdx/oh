@@ -19,10 +19,12 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/money"
+	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 )
@@ -483,6 +485,35 @@ func TestToolResultLinksAreOptIn(t *testing.T) {
 				t.Errorf("link presence = %t in %q", hasLink, screenOutput.String())
 			}
 		})
+	}
+}
+
+func TestASubagentCompletionNoticeLinksItsNameButNotItsAlias(t *testing.T) {
+	var screenOutput bytes.Buffer
+	paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
+	paint.LinkToolResults("tame-impala")
+	paint.DrawEvent(subagentrecord.StartedEvent(
+		"tame-adder",
+		"child-session-id",
+		"Reading the README",
+		subagentrecord.Origin{Alias: "goose-two"},
+	))
+	paint.DrawEvent(subagentrecord.DeliveryEvent(
+		[]string{"tame-adder"},
+		"Subagent tame-adder (goose-two) finished:\n\ntame-adder done: complete",
+		[]subagentrecord.Report{{Name: "tame-adder", State: subagentrecord.Done, Answer: "complete"}},
+	))
+
+	address := toolresult.SubagentURL(toolresult.SubagentReference{
+		SessionName:  "tame-impala",
+		SubagentName: "tame-adder",
+	})
+	linkedName := link.RenderURL("tame-adder", address)
+	if want := "Subagent " + linkedName + " (goose-two) has finished:"; !strings.Contains(screenOutput.String(), want) {
+		t.Errorf("completion does not contain %q in %q", want, screenOutput.String())
+	}
+	if strings.Contains(screenOutput.String(), link.RenderURL("tame-adder (goose-two)", address)) {
+		t.Errorf("the alias is linked in %q", screenOutput.String())
 	}
 }
 

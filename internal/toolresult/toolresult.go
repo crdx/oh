@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	scheme         = "oh"
-	toolResultHost = "tool-result"
-	taskResultHost = "task-result"
+	scheme                   = "oh"
+	toolResultHost           = "tool-result"
+	taskResultHost           = "task-result"
+	subagentConversationHost = "subagent-conversation"
 )
 
 var errResultFound = errors.New("tool result found")
@@ -29,6 +30,11 @@ type TaskReference struct {
 	SessionName string
 	TaskName    string
 	Run         int
+}
+
+type SubagentReference struct {
+	SessionName  string
+	SubagentName string
 }
 
 type Exchange struct {
@@ -58,9 +64,23 @@ func TaskURL(reference TaskReference) string {
 	return target.String()
 }
 
+func SubagentURL(reference SubagentReference) string {
+	target := url.URL{Scheme: scheme, Host: subagentConversationHost}
+	query := url.Values{}
+	query.Set("session", reference.SessionName)
+	query.Set("subagent", reference.SubagentName)
+	target.RawQuery = query.Encode()
+	return target.String()
+}
+
 func IsTask(address string) bool {
 	target, err := url.Parse(address)
 	return err == nil && target.Scheme == scheme && target.Host == taskResultHost
+}
+
+func IsSubagent(address string) bool {
+	target, err := url.Parse(address)
+	return err == nil && target.Scheme == scheme && target.Host == subagentConversationHost
 }
 
 func ParseTask(address string) (TaskReference, error) {
@@ -85,6 +105,14 @@ func ParseTask(address string) (TaskReference, error) {
 		reference.EndedAt = time.Unix(0, endedAt)
 	}
 	return reference, nil
+}
+
+func ParseSubagent(address string) (SubagentReference, error) {
+	query, err := parseQuery(address, subagentConversationHost, "session", "subagent")
+	if err != nil {
+		return SubagentReference{}, fmt.Errorf("invalid subagent conversation link: %w", err)
+	}
+	return SubagentReference{SessionName: query.Get("session"), SubagentName: query.Get("subagent")}, nil
 }
 
 func parseQuery(address string, host string, keys ...string) (url.Values, error) {

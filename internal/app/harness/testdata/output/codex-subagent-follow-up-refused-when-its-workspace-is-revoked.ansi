@@ -8,7 +8,7 @@
 A subagent is looking in /revoked.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The loader is in config.go.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

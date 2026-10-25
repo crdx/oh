@@ -247,8 +247,9 @@ type Notice struct {
 }
 
 type NoticeLink struct {
-	Code string
-	URL  string
+	Text   string
+	URL    string
+	IsCode bool
 }
 
 type NoticeDrawing struct {
@@ -261,7 +262,17 @@ func DrawnNotices(event agent.Event, drawing NoticeDrawing) ([]Notice, bool) {
 	if reports, isReported := subagentrecord.ReportsOf(event); isReported {
 		notices := make([]Notice, len(reports))
 		for index, report := range reports {
-			notices[index] = Notice{Text: report.Notice(drawing.Introductions.SubagentAlias(report.Name)), Mark: session.Emoji(report.Name)}
+			notice := Notice{Text: report.Notice(drawing.Introductions.SubagentAlias(report.Name)), Mark: session.Emoji(report.Name)}
+			if drawing.SessionName != "" && !report.IsMessage() {
+				notice.Link = NoticeLink{
+					Text: report.Name,
+					URL: toolresult.SubagentURL(toolresult.SubagentReference{
+						SessionName:  drawing.SessionName,
+						SubagentName: report.Name,
+					}),
+				}
+			}
+			notices[index] = notice
 		}
 		return notices, true
 	}
@@ -277,7 +288,11 @@ func DrawnNotices(event agent.Event, drawing NoticeDrawing) ([]Notice, bool) {
 			Intent: completion.Intent(),
 		}
 		if drawing.SessionName != "" {
-			notice.Link = NoticeLink{Code: completion.Snapshot.ID, URL: toolresult.TaskURL(completion.Reference(drawing.SessionName))}
+			notice.Link = NoticeLink{
+				Text:   completion.Snapshot.ID,
+				URL:    toolresult.TaskURL(completion.Reference(drawing.SessionName)),
+				IsCode: true,
+			}
 		}
 		return []Notice{notice}, true
 	}

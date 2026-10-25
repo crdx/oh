@@ -7,14 +7,10 @@ import (
 
 	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/editor"
-	"crdx.org/oh/internal/app/preview"
-	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagentrecord"
-	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/app/subagentview"
 	"crdx.org/oh/pkg/session"
 )
-
-var errConversationGone = errors.New("that subagent's conversation is gone")
 
 var conversationPager = editor.Launch{Command: editor.Command{"less", "-R", "-+F"}, IsTerminal: true}
 
@@ -80,16 +76,7 @@ func (self *App) showSubagent(name string) error {
 }
 
 func (self *App) drawSubagent(name string, columns int) ([]string, error) {
-	if !session.Exists(self.children.directory, name) {
-		return nil, errConversationGone
-	}
-	storedSession, err := store.Read(self.children.directory, name)
-	if err != nil {
-		return nil, err
-	}
-	return preview.Read(
-		self.children.directory, name, work.At(storedSession.Meta.WorkspaceDir), self.display.tariff.Currency, columns,
-	)
+	return subagentview.Read(self.children.directory, name, self.display.tariff.Currency, columns)
 }
 
 func (self *App) forgetViewedConversation() {

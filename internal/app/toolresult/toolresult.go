@@ -9,13 +9,18 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/subagentview"
 	"crdx.org/oh/internal/app/taskrecord"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/pkg/session"
+	"golang.org/x/term"
 )
 
 const (
-	requestFlag = "--view"
-	pagerFlag   = "--pager"
+	requestFlag        = "--view"
+	pagerFlag          = "--pager"
+	defaultViewColumns = 80
 )
 
 type Request struct {
@@ -50,7 +55,13 @@ func Show(url string, shouldPage bool) error {
 }
 
 func show(url string, shouldPage bool, directory string, output io.Writer, openPager pager) error {
-	result, err := view(directory, url)
+	columns := defaultViewColumns
+	if terminal, isTerminal := output.(*os.File); isTerminal {
+		if measuredColumns, _, err := term.GetSize(int(terminal.Fd())); err == nil {
+			columns = measuredColumns
+		}
+	}
+	result, err := view(directory, url, columns)
 	if err != nil {
 		return err
 	}
@@ -63,7 +74,27 @@ func show(url string, shouldPage bool, directory string, output io.Writer, openP
 	return err
 }
 
-func view(directory string, url string) (string, error) {
+func view(directory string, url string, columns int) (string, error) {
+	if toolresult.IsSubagent(url) {
+		reference, err := toolresult.ParseSubagent(url)
+		if err != nil {
+			return "", err
+		}
+		if !session.Exists(directory, reference.SessionName) {
+			return "", subagentview.ErrConversationGone
+		}
+		rows, err := subagentview.Read(
+			session.ChildrenDir(directory, reference.SessionName),
+			reference.SubagentName,
+			money.Dollar(),
+			columns,
+		)
+		if err != nil {
+			return "", err
+		}
+		return strings.Join(rows, "\n") + "\n", nil
+	}
+
 	if toolresult.IsTask(url) {
 		reference, err := toolresult.ParseTask(url)
 		if err != nil {

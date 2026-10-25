@@ -81,6 +81,34 @@ func TestParseTaskRefusesOtherAddresses(t *testing.T) {
 	}
 }
 
+func TestASubagentURLRoundTripsItsConversation(t *testing.T) {
+	want := toolresult.SubagentReference{SessionName: "tame-impala", SubagentName: "tame-adder"}
+	address := toolresult.SubagentURL(want)
+	if !toolresult.IsSubagent(address) || toolresult.IsSubagent(toolresult.URL("tame-impala", "call-1")) {
+		t.Fatalf("%q was not told apart from a tool result", address)
+	}
+	got, err := toolresult.ParseSubagent(address)
+	if err != nil {
+		t.Fatalf("unexpected parse error: %v", err)
+	}
+	if got != want {
+		t.Errorf("got reference %#v, want %#v", got, want)
+	}
+}
+
+func TestParseSubagentRefusesOtherAddresses(t *testing.T) {
+	for _, address := range []string{
+		"oh://tool-result?session=tame-impala&call=one",
+		"oh://subagent-conversation?session=tame-impala",
+		"oh://subagent-conversation?session=tame-impala&subagent=",
+		"oh://subagent-conversation?session=tame-impala&subagent=tame-adder&extra=two",
+	} {
+		if _, err := toolresult.ParseSubagent(address); err == nil {
+			t.Errorf("expected %q to be refused", address)
+		}
+	}
+}
+
 func TestReadFindsTheSelectedToolResult(t *testing.T) {
 	directory := t.TempDir()
 	writer, err := session.Create(directory, nil, nil)
