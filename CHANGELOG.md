@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.26.0] — 2026-10-25
+
 ### Changes
 
 - Keep loose state data and lock files under `data/`
