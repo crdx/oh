@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.26.1] — 2026-10-25
+
 ### Fixes
 
 - Allow file tools to write through the host scratch path in confined sessions
