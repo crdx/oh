@@ -30,6 +30,7 @@ func OpenHomeCache(roots Roots) (*os.Root, error) {
 
 func MountScratch(files *file.Root, scratchDirectory string, scratchRoot *file.Root, isUnconfined bool) []*file.Root {
 	if !isUnconfined {
+		files.Mount(scratchDirectory, scratchRoot)
 		files.MountVirtual(sandbox.TmpDir, scratchRoot)
 		return []*file.Root{scratchRoot}
 	}

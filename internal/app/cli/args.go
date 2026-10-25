@@ -294,10 +294,6 @@ func (self Input) Check(isPromptPiped bool) error {
 		)
 	}
 
-	if self.IsForced && self.Session == "" {
-		return errors.New("--force restores an archived session, so it needs one named by --resume")
-	}
-
 	if self.isResuming() && len(self.Tools) > 0 {
 		return errors.New(
 			"a resumed conversation preserves its toolbox; start a new session to change them",
@@ -342,15 +338,32 @@ func (self Input) isChoosingModel() bool {
 }
 
 func InheritedOptions(arguments []string, transition cycle.Transition) []string {
-	if transition.Kind != cycle.NewSession || slices.Contains(transition.Arguments, yoloOption) {
+	var inheritedOptions []string
+	if transition.Kind == cycle.Quit {
 		return nil
 	}
-
-	if IsYoloInherited(arguments) {
-		return []string{yoloOption}
+	if transition.Kind == cycle.NewSession && !slices.Contains(transition.Arguments, yoloOption) && IsYoloInherited(arguments) {
+		inheritedOptions = append(inheritedOptions, yoloOption)
 	}
+	if isForceInherited(arguments) && !isForceInherited(transition.Arguments) {
+		inheritedOptions = append(inheritedOptions, "--force")
+	}
+	return inheritedOptions
+}
 
-	return nil
+func isForceInherited(arguments []string) bool {
+	arguments = splitShortFlagGroups(append([]string{"oh"}, arguments...))[1:]
+	for index := 0; index < len(arguments); index++ {
+		switch arguments[index] {
+		case optionTerminator:
+			return false
+		case "-f", "--force":
+			return true
+		case "-c", "--caps", "-t", "--tool", "--from":
+			index++
+		}
+	}
+	return false
 }
 
 func IsYoloInherited(arguments []string) bool {

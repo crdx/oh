@@ -1694,15 +1694,14 @@ func TestTemporaryMountIsWritableBeneathAConfiguredReadPath(t *testing.T) {
 
 	mountTestScratch(t, files, scratch, false)
 
-	resolvedRoot, name, err := files.Resolve("/tmp/probe.txt")
-	if err != nil {
-		t.Fatalf("resolve: %v", err)
-	}
-	if err := resolvedRoot.RefuseWrite(name); err != nil {
-		t.Fatalf("the scratch was not writable: %v", err)
-	}
-	if err := resolvedRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
-		t.Fatalf("write: %v", err)
+	for _, path := range []string{"/tmp/virtual.txt", filepath.Join(scratch, "physical.txt")} {
+		resolvedRoot, name, err := files.Resolve(path)
+		if err != nil {
+			t.Fatalf("resolve %s: %v", path, err)
+		}
+		if err := resolvedRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
+			t.Errorf("write %s: %v", path, err)
+		}
 	}
 }
 

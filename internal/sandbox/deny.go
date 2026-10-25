@@ -163,17 +163,34 @@ func outermostPaths(paths []string) []string {
 	paths = slices.Compact(paths)
 
 	outerPaths := make([]string, 0, len(paths))
+	acceptedPaths := make(map[string]struct{}, len(paths))
 	for _, name := range paths {
+		clean := filepath.Clean(name)
 		isCovered := false
-		for _, earlier := range outerPaths {
-			info, err := filepath.Rel(earlier, name)
-			if err == nil && info != ".." && !strings.HasPrefix(info, ".."+string(filepath.Separator)) {
-				isCovered = true
-				break
+		if !filepath.IsAbs(name) {
+			for _, earlier := range outerPaths {
+				relative, err := filepath.Rel(earlier, name)
+				if err == nil && relative != ".." && !strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
+					isCovered = true
+					break
+				}
+			}
+		} else {
+			for ancestor := clean; ; {
+				if _, ok := acceptedPaths[ancestor]; ok {
+					isCovered = true
+					break
+				}
+				parent := filepath.Dir(ancestor)
+				if parent == ancestor {
+					break
+				}
+				ancestor = parent
 			}
 		}
 		if !isCovered {
 			outerPaths = append(outerPaths, name)
+			acceptedPaths[clean] = struct{}{}
 		}
 	}
 	return outerPaths

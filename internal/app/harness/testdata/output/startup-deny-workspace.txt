@@ -1,0 +1,33 @@
+=== a large workspace refuses name denies with shell access ===
+$ oh -p -cx -m opencode-go/fake a question
+Refreshing the model list...
+✗ Workspace deny-search check: workspace <workspace> has more than 100000 filesystem entries; non-absolute deny patterns with capability x require a recursive search before every command; use absolute deny paths, disable x, or restart with -f/--force
+[exit 1]
+
+=== new and resumed yolo sessions ignore the workspace size ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Yolo answer.
+
+oh -r <session>
+[exit 0]
+$ oh -p -r <session> another question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Yolo answer.
+
+
+ another question
+
+Resumed yolo answer.
+
+oh -r <session>
+[exit 0]

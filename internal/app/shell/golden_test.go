@@ -345,7 +345,8 @@ func virtualTmpMountGolden(t *testing.T) string {
 	}
 	t.Cleanup(func() { _ = openedRoot.Close() })
 	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
-	scratchRoot := mountTestScratch(t, files, outsideTmpTestDirectory(t), false)[0]
+	scratch := outsideTmpTestDirectory(t)
+	scratchRoot := mountTestScratch(t, files, scratch, false)[0]
 	hostTemporary := hostTmpTestDirectory(t)
 	unlisted := filepath.Join(outsideTmpTestDirectory(t), "unlisted")
 	if err := os.Symlink(hostTemporary, unlisted); err != nil {
@@ -358,8 +359,10 @@ func virtualTmpMountGolden(t *testing.T) string {
 	_, _, unlistedError := files.Resolve(filepath.Join(unlisted, "note"))
 	insideRoot, _, insideError := files.Resolve(filepath.Join(inside, "note"))
 	directRoot, _, directError := files.Resolve(filepath.Join(hostTemporary, "note"))
-	return fmt.Sprintf("unlisted alias refused: %t\nworkspace alias sees scratch: %t\ndirect tmp sees scratch: %t",
-		errors.Is(unlistedError, file.ErrOutsideRoot), insideError == nil && insideRoot == scratchRoot, directError == nil && directRoot == scratchRoot)
+	physicalRoot, _, physicalError := files.Resolve(filepath.Join(scratch, "note"))
+	return fmt.Sprintf("unlisted alias refused: %t\nworkspace alias sees scratch: %t\ndirect tmp sees scratch: %t\nphysical scratch uses the same root: %t",
+		errors.Is(unlistedError, file.ErrOutsideRoot), insideError == nil && insideRoot == scratchRoot, directError == nil && directRoot == scratchRoot,
+		physicalError == nil && physicalRoot == scratchRoot)
 }
 
 func changedMountedPathGolden(t *testing.T) string {

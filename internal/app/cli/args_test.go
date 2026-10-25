@@ -203,7 +203,7 @@ func TestANewConversationMayStartFromASession(t *testing.T) {
 	}
 }
 
-func TestForceRestoresOnlyANamedSession(t *testing.T) {
+func TestForceAllowsStartupAndRestoresANamedSession(t *testing.T) {
 	for _, argument := range []string{"-f", "--force"} {
 		parsedOptions := parseOptions(t, "-r", "chosen-lobster", argument)
 		if !parsedOptions.IsForced || parsedOptions.Session != "chosen-lobster" {
@@ -215,8 +215,8 @@ func TestForceRestoresOnlyANamedSession(t *testing.T) {
 	}
 
 	for _, arguments := range [][]string{{"-f"}, {"-r", "-f"}, {"--from", "chosen-lobster", "-f"}} {
-		if err := bind(t, arguments...).Check(false); err == nil || !strings.Contains(err.Error(), "--force restores an archived session") {
-			t.Errorf("expected %v to be refused, got %v", arguments, err)
+		if err := bind(t, arguments...).Check(false); err != nil {
+			t.Errorf("expected %v to allow forced startup, got %v", arguments, err)
 		}
 	}
 }
@@ -568,8 +568,8 @@ func TestAShortFlagGroupResumesWhicheverOrderItsFlagsTake(t *testing.T) {
 
 	if picked := bind(t, "-fr"); !picked.IsSessionPicker || !picked.IsForced {
 		t.Errorf("a group ending in -r opened no picker: %+v", picked.inputFlags)
-	} else if err := picked.Check(false); err == nil {
-		t.Error("expected forcing the picker to be refused")
+	} else if err := picked.Check(false); err != nil {
+		t.Errorf("expected forcing the picker to be allowed, got %v", err)
 	}
 }
 
@@ -581,5 +581,24 @@ func TestAShortFlagGroupWithAValueIsLeftWhole(t *testing.T) {
 
 	if got := splitShortFlagGroups([]string{"oh", "-rm", "--", "-fr"}); !slices.Equal(got, []string{"oh", "-rm", "--", "-fr"}) {
 		t.Errorf("got %q", got)
+	}
+}
+
+func TestForceIsInheritedAcrossSessionTransitions(t *testing.T) {
+	for _, kind := range []cycle.TransitionKind{cycle.NewSession, cycle.ResumeSession, cycle.Restart} {
+		for _, arguments := range [][]string{{"-f"}, {"--force"}, {"-fr"}, {"-pf", "hello"}} {
+			got := InheritedOptions(arguments, cycle.Transition{Kind: kind})
+			if !slices.Equal(got, []string{"--force"}) {
+				t.Errorf("%v, %v: inherited %q", arguments, kind, got)
+			}
+		}
+	}
+	for _, arguments := range [][]string{{"--", "--force"}, {"--tool", "--force"}, {"--from", "-f"}, {"-c", "-f"}} {
+		if got := InheritedOptions(arguments, cycle.Transition{Kind: cycle.NewSession}); got != nil {
+			t.Errorf("inherited prompt/value %v as %q", arguments, got)
+		}
+	}
+	if got := InheritedOptions([]string{"-f"}, cycle.Transition{Kind: cycle.ResumeSession, Arguments: []string{"--force"}}); got != nil {
+		t.Errorf("duplicated force: %q", got)
 	}
 }

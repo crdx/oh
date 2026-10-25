@@ -2,6 +2,12 @@
 
 ## [Next]
 
+### Fixes
+
+- Allow file tools to write through the host scratch path in confined sessions
+- Require force to start in a workspace of 100k+ ents with name-based deny patterns
+- Avoid quadratic filtering of sandbox deny paths, silly
+
 ## [0.26.0] — 2026-10-25
 
 ### Changes

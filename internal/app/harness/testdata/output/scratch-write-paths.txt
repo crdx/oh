@@ -1,0 +1,30 @@
+=== scratch aliases share writes and edits without widening access ===
+write {"path":"/tmp/virtual.txt","content":"virtual\\n"}
+wrote 8B
+
+edit {"path":"<scratch>/virtual.txt","old_text":"virtual","new_text":"physical"}
+edited
+
+write {"path":"<scratch>/physical.txt","content":"physical\\n"}
+wrote 9B
+
+edit {"path":"/tmp/physical.txt","old_text":"physical","new_text":"virtual"}
+edited
+
+write {"path":"workspace.txt","content":"blocked\\n"}
+error: the filesystem is read-only
+
+write {"path":"<farm>/neighbour/private.txt","content":"blocked\\n"}
+error: the filesystem is read-only
+
+write {"path":"<scratch>/secret.key","content":"blocked\\n"}
+error: <scratch>/secret.key: the path is denied by grants.deny
+
+write {"path":"/tmp/secret.key","content":"blocked\\n"}
+error: <scratch>/secret.key: the path is denied by grants.deny
+
+write {"path":"<scratch>/git-link/config","content":"blocked\\n"}
+error: openat git-link/config: path escapes from parent
+
+write {"path":"/tmp/git-link/config","content":"blocked\\n"}
+error: openat git-link/config: path escapes from parent

@@ -1006,6 +1006,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	activeToolGroups := frozenToolGroups.Only(selectedToolGroupNames)
 
 	settings.Grants = sandboxPathsForMode(settings.Grants, args.Yolo)
+	if err := startup.CheckDenyWorkspace(ctx, workspaceDir, settings.Grants.Deny, args.Caps.Has(caps.Shell), args.IsForced); err != nil {
+		return "", err
+	}
 
 	if err := workspace.Validate(); err != nil {
 		return "", err
