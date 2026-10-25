@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.25.2] — 2026-10-25
+
 ### Changes
 
 - Hyperlink the task name in segments to the full output
