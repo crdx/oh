@@ -23,7 +23,7 @@ bash: bash [info, 1 line, 44B, call-1]
 ## Task run ended · +0s
 
 ````
-Task `checks` done in 0.0s
+Task `checks` finished after 0.0s
 
 ```
 tests passed

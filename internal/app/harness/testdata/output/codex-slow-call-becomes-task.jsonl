@@ -11,7 +11,7 @@
 {"kind":"item","payload":{"role":"user","content":"run the slow tests as checks"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":"{\"task_name\":\"checks\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"backgrounded (checks); end your turn to wait"}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `checks` done in 0.0s\n\n```\ntests passed\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `checks` finished after 0.0s\n\n```\ntests passed\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The slow tests moved to the background and finished."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

@@ -11,7 +11,7 @@
 {"kind":"item","payload":{"role":"user","content":"start the build in the background"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":"{\"background\":true}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"scheduled as bash-1"}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `bash-1` done in 0.0s\n\n```\nbuild finished\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `bash-1` finished after 0.0s\n\n```\nbuild finished\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The generated background task finished."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

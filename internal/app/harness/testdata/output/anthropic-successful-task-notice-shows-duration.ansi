@@ -1,5 +1,5 @@
 \e[?2026h\e[?25l\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ done in 12s \e[3m\e[38;2;150;152;150m(Building every package once)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                                            \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ finished after 12s \e[3m\e[38;2;150;152;150m(Building every package once)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mbuild complete\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

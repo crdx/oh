@@ -16,7 +16,7 @@ think it through while the build finishes
 ## Task run ended · +1s
 
 ````
-Task `build` failed in 12s: exit status 2
+Task `build` failed after 12s: exited 2
 
 ```
 go build ./...

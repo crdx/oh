@@ -31,7 +31,7 @@ bash: release build [info, 1 line, 19B, toolu_2]
 ## Task run ended · +0s
 
 ````
-Task `bash-1` failed in 0.0s: the command exited with status 1
+Task `bash-1` failed after 0.0s: exited 1
 
 ```
 exit(1):

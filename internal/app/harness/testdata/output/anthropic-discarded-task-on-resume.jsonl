@@ -18,6 +18,6 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"start another build in the background"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"bash","input":{"dish":"release build","background":true}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"scheduled as bash-1"}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `bash-1` failed in 0.0s: the command exited with status 1\n\n```\nexit(1):\nbroken build\n```\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `bash-1` failed after 0.0s: exited 1\n\n```\nexit(1):\nbroken build\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The new build used the next unused task ID and reported its failure."}]}}
 {"kind":"turn_completion","turn":{}}

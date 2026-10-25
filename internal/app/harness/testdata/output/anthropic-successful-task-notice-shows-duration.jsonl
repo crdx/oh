@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"task_run_ended","name":"build","state":{"snapshot":{"invocation":{"arguments":"{\"command\":\"go test ./...\",\"intent\":\"Building every package once\"}"},"id":"build","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","output":"build complete","failure":""},"is_final":true}}}
 {"kind":"event","event":{"kind":"user_message","text":"what happened to the build"}}
 {"kind":"event","event":{"kind":"model_message","text":"It completed successfully after twelve seconds."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `build` done in 12s\n\n```\nbuild complete\n```\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `build` finished after 12s\n\n```\nbuild complete\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what happened to the build"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It completed successfully after twelve seconds."}]}}
 {"kind":"turn_completion","turn":{}}

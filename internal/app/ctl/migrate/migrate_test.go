@@ -2102,7 +2102,7 @@ func TestFormatTwentyThreeMigrationTurnsJobFactsIntoTaskFacts(t *testing.T) {
 	if err := json.Unmarshal(lines[1]["event"], &ended); err != nil {
 		t.Fatal(err)
 	}
-	if notice, isSaid := taskrecord.EndedNotice(ended); !isSaid || !strings.HasPrefix(notice, "Task `build` failed in 2s: exit status 2") {
+	if notice, isSaid := taskrecord.EndedNotice(ended); !isSaid || !strings.HasPrefix(notice, "Task `build` failed after 2s: exited 2") {
 		t.Errorf("the migrated notice reads %q (%t), want the task notice", notice, isSaid)
 	}
 }

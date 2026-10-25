@@ -13,7 +13,7 @@
 ## Task run ended · +0s
 
 ```
-Task `deploy-wait` timed out in 12s: the call reached its time limit of 5m
+Task `deploy-wait` timed out after 12s: the call reached its time limit of 5m
 ```
 
 ## User · +0s

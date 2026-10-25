@@ -18,7 +18,7 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[3m\e[38;2;207;207;207mRebuilding whenever it changes\e[0m\e[0m \e[38;2;188;220;255m$\e[0m \e[38;2;188;220;255mjust\e[0m\e[38;2;207;207;207m \e[0m\e[38;2;188;220;255mwatch\e[0m \e[38;2;207;207;207mscheduled as watch\e[0m
 
 \e[48;2;66;75;82m                                                                                                    \e[0m
-\e[48;2;66;75;82m 🤖 Task \e[38;2;255;196;154mwatch\e[0m\e[48;2;66;75;82m done in 8s; respawning \e[3m\e[38;2;207;207;207m(Rebuilding whenever it changes)\e[0m\e[48;2;66;75;82m\e[0m\e[48;2;66;75;82m                              \e[0m
+\e[48;2;66;75;82m ⚙️ Task \e[38;2;255;196;154mwatch\e[0m\e[48;2;66;75;82m finished after 8s; respawning \e[3m\e[38;2;207;207;207m(Rebuilding whenever it changes)\e[0m\e[48;2;66;75;82m\e[0m\e[48;2;66;75;82m                       \e[0m
 \e[48;2;66;75;82m                                                                                                    \e[0m
 \e[48;2;66;75;82m    \e[38;2;207;207;207mbuilt in 3s\e[0m\e[48;2;66;75;82m                                                                                     \e[0m
 \e[48;2;66;75;82m                                                                                                    \e[0m
@@ -55,7 +55,7 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[3m\e[38;2;56;59;62mRebuilding whenever it changes\e[0m\e[0m \e[38;2;28;61;99m$\e[0m \e[38;2;28;61;99mjust\e[0m\e[38;2;56;59;62m \e[0m\e[38;2;28;61;99mwatch\e[0m \e[38;2;56;59;62mscheduled as watch\e[0m
 
 \e[48;2;190;200;208m                                                                                                    \e[0m
-\e[48;2;190;200;208m 🤖 Task \e[38;2;106;50;16mwatch\e[0m\e[48;2;190;200;208m done in 8s; respawning \e[3m\e[38;2;56;59;62m(Rebuilding whenever it changes)\e[0m\e[48;2;190;200;208m\e[0m\e[48;2;190;200;208m                              \e[0m
+\e[48;2;190;200;208m ⚙️ Task \e[38;2;106;50;16mwatch\e[0m\e[48;2;190;200;208m finished after 8s; respawning \e[3m\e[38;2;56;59;62m(Rebuilding whenever it changes)\e[0m\e[48;2;190;200;208m\e[0m\e[48;2;190;200;208m                       \e[0m
 \e[48;2;190;200;208m                                                                                                    \e[0m
 \e[48;2;190;200;208m    \e[38;2;56;59;62mbuilt in 3s\e[0m\e[48;2;190;200;208m                                                                                     \e[0m
 \e[48;2;190;200;208m                                                                                                    \e[0m
@@ -92,7 +92,7 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[3m\e[38;2;110;113;117mRebuilding whenever it changes\e[0m\e[0m \e[38;2;61;109;154m$\e[0m \e[38;2;61;109;154mjust\e[0m\e[38;2;110;113;117m \e[0m\e[38;2;61;109;154mwatch\e[0m \e[38;2;110;113;117mscheduled as watch\e[0m
 
 \e[48;2;226;234;240m                                                                                                    \e[0m
-\e[48;2;226;234;240m 🤖 Task \e[38;2;166;93;46mwatch\e[0m\e[48;2;226;234;240m done in 8s; respawning \e[3m\e[38;2;110;113;117m(Rebuilding whenever it changes)\e[0m\e[48;2;226;234;240m\e[0m\e[48;2;226;234;240m                              \e[0m
+\e[48;2;226;234;240m ⚙️ Task \e[38;2;166;93;46mwatch\e[0m\e[48;2;226;234;240m finished after 8s; respawning \e[3m\e[38;2;110;113;117m(Rebuilding whenever it changes)\e[0m\e[48;2;226;234;240m\e[0m\e[48;2;226;234;240m                       \e[0m
 \e[48;2;226;234;240m                                                                                                    \e[0m
 \e[48;2;226;234;240m    \e[38;2;110;113;117mbuilt in 3s\e[0m\e[48;2;226;234;240m                                                                                     \e[0m
 \e[48;2;226;234;240m                                                                                                    \e[0m

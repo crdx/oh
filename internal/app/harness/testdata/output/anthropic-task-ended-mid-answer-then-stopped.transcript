@@ -21,7 +21,7 @@ The build is still
 ## Task run ended · +0s
 
 ```
-Task `build` failed in 12s: exit status 1
+Task `build` failed after 12s: exited 1
 ```
 
 ## Interrupted · +0s

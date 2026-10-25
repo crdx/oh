@@ -35,7 +35,7 @@ bash [info, 2 lines, 101B, call-1]
 ## Task run ended · +0s
 
 ````
-Task `docs` done in 0.0s
+Task `docs` finished after 0.0s
 
 ```
 server ready

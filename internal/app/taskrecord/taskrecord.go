@@ -174,9 +174,9 @@ func (self Completion) notice(output string) string {
 	if snapshot.Run > 1 {
 		status += fmt.Sprintf(" run %d", snapshot.Run)
 	}
-	status += " " + snapshot.State.Spoken()
+	status += " " + noticeState(snapshot.State)
 	if !snapshot.StartedAt.IsZero() && !snapshot.EndedAt.IsZero() && !snapshot.EndedAt.Before(snapshot.StartedAt) {
-		status += " in " + util.FormatDuration(snapshot.EndedAt.Sub(snapshot.StartedAt))
+		status += " after " + util.FormatDuration(snapshot.EndedAt.Sub(snapshot.StartedAt))
 	}
 	if !self.IsFinal {
 		status += "; respawning"
@@ -185,12 +185,28 @@ func (self Completion) notice(output string) string {
 		status += "; " + tasks.RespawnLimitReason()
 	}
 	if snapshot.Failure != "" {
-		status += ": " + snapshot.Failure
+		status += ": " + noticeFailure(snapshot.Failure)
 	}
 	if output != "" {
 		status += "\n\n" + markdown.CodeBlock("", output)
 	}
 	return status
+}
+
+func noticeState(state tasks.State) string {
+	if state == tasks.Done {
+		return "finished"
+	}
+	return state.Spoken()
+}
+
+func noticeFailure(failure string) string {
+	for _, prefix := range []string{"the command exited with status ", "exit status "} {
+		if status, isExit := strings.CutPrefix(failure, prefix); isExit {
+			return "exited " + status
+		}
+	}
+	return failure
 }
 
 func centralLines(output string, edgeLines int) string {

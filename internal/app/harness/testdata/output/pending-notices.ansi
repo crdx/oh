@@ -33,12 +33,12 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[4A\r\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed                                                                               \e[0m\e[1B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[4A\r\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed                                                                               \e[0m\e[1B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 4b an ended task with output standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exit status 1 \e[3m\e[38;2;150;152;150m(Building every package once more)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                             \e[0m\r
+\e[48;2;48;58;67m ⏳ Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exited 1 \e[3m\e[38;2;150;152;150m(Building every package once more)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                                  \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150m⋮ 2 more lines\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
@@ -50,7 +50,7 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 4c an ended task with output flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m ⏳ Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exit status 1 \e[3m\e[38;2;150;152;150m(Building every package once more)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                             \e[0m\r
+\e[48;2;48;58;67m ⏳ Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exited 1 \e[3m\e[38;2;150;152;150m(Building every package once more)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                                  \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150m⋮ 2 more lines\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
@@ -59,7 +59,7 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[8A\r\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exit status 1 \e[3m\e[38;2;150;152;150m(Building every package once more)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                             \e[0m\e[5B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[8A\r\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exited 1 \e[3m\e[38;2;150;152;150m(Building every package once more)\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                                  \e[0m\e[5B\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[3B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 5 a mode change flushed ===

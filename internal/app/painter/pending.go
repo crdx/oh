@@ -30,6 +30,7 @@ import (
 const (
 	unsentMark              = "⏳"
 	harnessMark             = "🤖"
+	taskMark                = "⚙️"
 	unwrappedPreviewColumns = 1 << 16
 	sendHint                = "double-enter to send"
 	stoppingHint            = "sending" + width.Ellipsis
@@ -285,6 +286,7 @@ func DrawnNotices(event agent.Event, drawing NoticeDrawing) ([]Notice, bool) {
 	if completion, isEnded := taskrecord.CompletionOf(event); isEnded {
 		notice := Notice{
 			Text:   completion.NoticeWithin(drawing.Toggles.GetWholeNumber(experimental.TaskOutputLines, everyTaskOutputLine)),
+			Mark:   taskMark,
 			Intent: completion.Intent(),
 		}
 		if drawing.SessionName != "" {

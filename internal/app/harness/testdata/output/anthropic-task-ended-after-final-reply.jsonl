@@ -9,7 +9,7 @@
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"task_run_ended","name":"build","state":{"snapshot":{"id":"build","tool_name":"bash","run":1,"is_respawning":false,"state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","output":"","failure":"exit status 1"},"is_final":true}}}
 {"kind":"event","event":{"kind":"model_message","text":"Correction: the build has now failed because getWidth is undefined."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `build` failed in 12s: exit status 1\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `build` failed after 12s: exited 1\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Correction: the build has now failed because getWidth is undefined."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

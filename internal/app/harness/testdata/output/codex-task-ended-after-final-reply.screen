@@ -7,7 +7,7 @@ The build was still running when last checked.
 The build is still running.
 
 
- 🤖 Task build failed in 12s: exit status 1
+ ⚙️ Task build failed after 12s: exited 1
 
 
 Correction: the build has now failed because getWidth is undefined.

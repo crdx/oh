@@ -5,7 +5,7 @@
 The build is still running.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 1                                                         \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 1                                                           \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 Correction: the build has now failed because getWidth is undefined.\e[?25h\e[?2026l\r

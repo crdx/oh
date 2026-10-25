@@ -8,7 +8,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"Correction: the build has now failed because getWidth is undefined."}}
 {"kind":"item","payload":{"role":"user","content":"has the build finished"}}
 {"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The build is still running."}]}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `build` failed in 12s: exit status 1\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `build` failed after 12s: exited 1\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Correction: the build has now failed because getWidth is undefined."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

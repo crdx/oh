@@ -1,7 +1,7 @@
 === a discarded task completion left behind ===
 --- told the model ---
 <system-reminder>
-Task `task-4` done
+Task `task-4` finished
 
 ```
 retained completion is announced
@@ -27,7 +27,7 @@ If so, follow the chain to get the full context.
 ## Task run ended · +0s
 
 ````
-Task `task-4` done
+Task `task-4` finished
 
 ```
 retained completion is announced

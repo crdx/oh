@@ -6772,7 +6772,7 @@ func pendingEnvironmentChangeStream(t *testing.T) string {
 	return screenOutput.String()
 }
 
-const laterHarnessLine = "Task `build` done in 2s"
+const laterHarnessLine = "Task `build` finished after 2s"
 
 func pendingModeMessagesStream(t *testing.T, toggleCount int) string {
 	t.Helper()
@@ -24053,8 +24053,8 @@ func TestAPendingNoticeIsMarkedSubmittedThoughTheHarnessDrewBesideIt(t *testing.
 	if strings.Contains(drawn, "⏳") {
 		t.Errorf("the submitted notice still reads as unsent:\n%s", drawn)
 	}
-	if !strings.Contains(drawn, "🤖") {
-		t.Errorf("the submitted notice was not marked as the harness speaking:\n%s", drawn)
+	if !strings.Contains(drawn, "⚙️") {
+		t.Errorf("the submitted notice was not marked as a task:\n%s", drawn)
 	}
 }
 
@@ -24136,8 +24136,12 @@ func TestEveryHarnessNoticeReachesTheScreenBesideARegionTallerThanTheTerminal(t 
 			self.show(inputLine)
 
 			drawn := strings.Join(visibleScreen(t, screenOutput.String(), replayColumns), "\n")
-			if !strings.Contains(drawn, "🤖") {
-				t.Errorf("the notice never reached the screen:\n%s", drawn)
+			mark := "🤖"
+			if name == "an ended task" {
+				mark = "⚙️"
+			}
+			if !strings.Contains(drawn, mark) {
+				t.Errorf("the notice never reached the screen with %s:\n%s", mark, drawn)
 			}
 		})
 	}
@@ -26132,7 +26136,7 @@ group = "a"
 		t.Fatal(err)
 	}
 	session.waitFor("Completed.")
-	session.requireShown("Task weather-1 done in ")
+	session.requireShown("Task weather-1 finished after ")
 	session.requireHidden("forecast complete")
 	session.quit()
 

@@ -5,8 +5,8 @@
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit      \e[0m\r
-\e[48;2;48;58;67m    status 2                            \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited \e[0m\r
+\e[48;2;48;58;67m    2                                   \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                      \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined:\e[0m\e[48;2;48;58;67m     \e[0m\r
@@ -101,7 +101,7 @@ first.\r
 \r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m🤖\e[0m\r
+\e[48;2;48;58;67m⚙️\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mT\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -133,9 +133,15 @@ first.\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67md\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m1\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -153,17 +159,9 @@ first.\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mt\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67me\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ma\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67md\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m2\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -530,7 +528,7 @@ t\r
 \e[48;2;52;53;65m think it through while the build finishes\e[0m
 \e[48;2;52;53;65m\e[0m
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m failed in 12s: exit status 2\e[0m
+\e[48;2;48;58;67m ⚙️ Task \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m failed after 12s: exited 2\e[0m
 \e[48;2;48;58;67m    \e[0m
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m\e[0m
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m\e[0m
@@ -546,7 +544,7 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 2                                                         \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 2                                                           \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
@@ -565,7 +563,7 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 2                                                         \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 2                                                           \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
@@ -584,7 +582,7 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe buil\e[K\r\e[8C\e[?25h\e[?20
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 2                                                         \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 2                                                           \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
@@ -603,7 +601,7 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 2                                                         \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 2                                                           \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
@@ -626,12 +624,12 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe buil\e[K\r\e[8C\e[?25h\e[?20
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
-\e[48;2;48;58;67m 🤖 Task    \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task    \e[0m\r
 \e[48;2;48;58;67m    \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\   \e[0m\r
 \e[48;2;48;58;67m    failed  \e[0m\r
-\e[48;2;48;58;67m    in 12s: \e[0m\r
-\e[48;2;48;58;67m    exit    \e[0m\r
-\e[48;2;48;58;67m    status  \e[0m\r
+\e[48;2;48;58;67m    after   \e[0m\r
+\e[48;2;48;58;67m    12s:    \e[0m\r
+\e[48;2;48;58;67m    exited  \e[0m\r
 \e[48;2;48;58;67m    2       \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo\e[0m\e[48;2;48;58;67m      \e[0m\r
@@ -683,7 +681,7 @@ first.\r
 \e[48;2;52;53;65m think it through while the build finishes\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 2\e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 2\e[0m\r
 \e[48;2;48;58;67m    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m\e[0m\r
@@ -699,7 +697,7 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 2                                                         \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed after 12s: exited 2                                                           \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r

@@ -16,7 +16,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"start named background work and publish its port"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"bash","input":{"background":true,"task_name":"docs","forward_port":8000}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"scheduled as docs\nUse http://127.82.233.168:8000 for the user; use localhost:8000 inside the sandbox."}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nPort 8000 is now forwarded to http://127.82.233.168:8000.\n\u003c/system-reminder\u003e\n\n\u003csystem-reminder\u003e\nTask `docs` done in 0.0s\n\n```\nserver ready\n```\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nPort 8000 is now forwarded to http://127.82.233.168:8000.\n\u003c/system-reminder\u003e\n\n\u003csystem-reminder\u003e\nTask `docs` finished after 0.0s\n\n```\nserver ready\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"task","input":{"action":"output","name":"docs"}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"docs: done\nserver ready"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_3","name":"task","input":{"action":"discard","name":"docs"}}]}}

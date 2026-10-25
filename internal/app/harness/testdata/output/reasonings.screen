@@ -1487,7 +1487,7 @@ holds one.
 
 
 
- 🤖 Task build failed in 12s: exit status 2
+ ⚙️ Task build failed after 12s: exited 2
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
@@ -1514,7 +1514,7 @@ The build failed on an undefined getWidth, and the read has to come first.
 
 
 
- 🤖 Task build failed in 12s: exit status 2
+ ⚙️ Task build failed after 12s: exited 2
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
@@ -1541,7 +1541,7 @@ The build failed on an undefined getWidth, and the read has to come first.
 
 
 
- 🤖 Task build failed in 12s: exit status 2
+ ⚙️ Task build failed after 12s: exited 2
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
@@ -2877,7 +2877,7 @@ holds one.
 
 
 
- 🤖 Task build failed in 12s: exit status 2
+ ⚙️ Task build failed after 12s: exited 2
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
@@ -2895,7 +2895,7 @@ The build failed on an undefined getWidth, and the read has to come first.
 
 
 
- 🤖 Task build failed in 12s: exit status 2
+ ⚙️ Task build failed after 12s: exited 2
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
@@ -2913,7 +2913,7 @@ The build failed on an undefined getWidth, and the read has to come first.
 
 
 
- 🤖 Task build failed in 12s: exit status 2
+ ⚙️ Task build failed after 12s: exited 2
 
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth

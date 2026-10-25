@@ -5,6 +5,7 @@
 ### Changes
 
 - Show recent activity and errors in subagent status
+- Mark task notices with ⚙️ to distinguish them from harness notices
 - Show run durations in task completion notices
 - Hyperlink subagent emojis and names to the full conversation
 

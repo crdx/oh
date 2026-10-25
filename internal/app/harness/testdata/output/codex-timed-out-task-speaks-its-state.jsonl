@@ -4,7 +4,7 @@
 {"kind":"event","event":{"kind":"task_run_ended","name":"deploy-wait","state":{"snapshot":{"id":"deploy-wait","tool_name":"bash","run":1,"is_respawning":false,"state":"timed_out","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","output":"","failure":"the call reached its time limit of 5m"},"is_final":true}}}
 {"kind":"event","event":{"kind":"user_message","text":"what happened to the task"}}
 {"kind":"event","event":{"kind":"model_message","text":"deploy-wait hit its five-minute limit."}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `deploy-wait` timed out in 12s: the call reached its time limit of 5m\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `deploy-wait` timed out after 12s: the call reached its time limit of 5m\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"role":"user","content":"what happened to the task"}}
 {"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"deploy-wait hit its five-minute limit."}]}}
 {"kind":"turn_completion","turn":{}}

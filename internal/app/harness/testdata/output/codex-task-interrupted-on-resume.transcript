@@ -41,7 +41,7 @@ task restart: build [ok, 1 line, 20B, call-7]
 ## Task run ended · +0s
 
 ````
-Task `build` run 2 done in 0.0s
+Task `build` run 2 finished after 0.0s
 
 ```
 restarted command
