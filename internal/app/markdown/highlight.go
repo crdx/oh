@@ -14,20 +14,8 @@ import (
 	"crdx.org/oh/internal/app/style"
 )
 
-func Emphasise(line string, language string) string {
-	return Highlight(line, line, language, false)
-}
-
 func HighlightText(text string, language string) string {
 	return strings.Join(emphasise(strings.Split(text, "\n"), language), "\n")
-}
-
-func HighlightFile(path string, text string) string {
-	lexer := lexers.Match(path)
-	if lexer == nil {
-		return HighlightText(text, "")
-	}
-	return HighlightText(text, lexer.Config().Name)
 }
 
 var lexerCache = struct {

@@ -175,7 +175,7 @@ func TestANamedShellTaskStreamsRestartsAfterResumeAndCanBeDiscarded(t *testing.T
 		TaskName:    "build",
 		Run:         1,
 	}))
-	if !strings.Contains(currentResult, "run 1 running") || !strings.Contains(currentResult, "first phase") {
+	if !strings.HasPrefix(currentResult, "bash\n\n{") || !strings.HasSuffix(currentResult, "}\n\nfirst phase\n") {
 		t.Fatalf("current task result is %q", currentResult)
 	}
 	session.typeText("read its running output" + pressEnter)

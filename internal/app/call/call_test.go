@@ -237,7 +237,7 @@ func TestArgumentsWithSyntaxAreHighlighted(t *testing.T) {
 		Subject:  "echo one && true",
 		Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"},
 	}
-	want := style.Change("bash") + " " + markdown.Emphasise(label.Subject, "bash")
+	want := style.Change("bash") + " " + markdown.Highlight(label.Subject, label.Subject, "bash", false)
 
 	if got := label.Render(); got != want {
 		t.Errorf("got %q, want %q", got, want)

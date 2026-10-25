@@ -1,79 +1,103 @@
 === shell task queued ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 queued\e[0m
+\e[38;2;207;173;0mbash\e[0m
 
-\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mgo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[38;2;150;152;150m ./...\e[0m
-
-\e[38;2;150;152;150m(no output)\e[0m
+{
+    "command": \e[38;2;181;189;104m"go build ./..."\e[0m
+}
 
 === shell task running ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 running\e[0m
+\e[38;2;207;173;0mbash\e[0m
 
-\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mgo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[38;2;150;152;150m ./...\e[0m
+{
+    "command": \e[38;2;181;189;104m"go build ./..."\e[0m
+}
 
 building package two
 
 
 === shell task stopping ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 stopping\e[0m
+\e[38;2;207;173;0mbash\e[0m
 
-\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mgo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[38;2;150;152;150m ./...\e[0m
+{
+    "command": \e[38;2;181;189;104m"go build ./..."\e[0m
+}
 
 building package two
 
 
 === shell task done ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 done\e[0m
+\e[38;2;207;173;0mbash\e[0m
 
-\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mgo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[38;2;150;152;150m ./...\e[0m
+{
+    "command": \e[38;2;181;189;104m"go build ./..."\e[0m
+}
 
 building
 built oh
 
 
 === shell task failed ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 failed: exit status 1\e[0m
+\e[38;2;207;173;0mbash\e[0m
 
-\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mcheck\e[0m
+{
+    "command": \e[38;2;181;189;104m"just check"\e[0m
+}
 
-\e[38;2;204;102;102mlint1  ✗
+lint1  ✗
 main.go:12: undefined: run
-\e[0m
+
+
+=== shell task with markup characters ===
+\e[38;2;207;173;0mbash\e[0m
+
+{
+    "command": \e[38;2;181;189;104m"make && echo '<built>'"\e[0m
+}
+
+<built>
+
 
 === shell task stopped ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 stopped\e[0m
+\e[38;2;207;173;0mbash\e[0m
 
-\e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m30\e[0m
-
-\e[38;2;150;152;150m(no output)\e[0m
+{
+    "command": \e[38;2;181;189;104m"sleep 30"\e[0m
+}
 
 === search task ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 done\e[0m
+\e[38;2;207;173;0mgrep\e[0m
 
-\e[38;2;207;173;0mgrep\e[0m · \e[38;2;150;152;150mfunc Run\e[0m
+{
+    "pattern": \e[38;2;181;189;104m"func Run"\e[0m,
+    "path": \e[38;2;181;189;104m""\e[0m,
+    "glob": \e[38;2;181;189;104m""\e[0m
+}
 
-\e[38;2;150;152;150mcmd/oh/main.go:12:\e[0m\e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mRun\e[0m() \e[38;2;240;198;116merror\e[0m {
+cmd/oh/main.go:12:func Run() error {
 
 
 === lookup task running ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 running\e[0m
+\e[38;2;207;173;0mlookup\e[0m
 
-\e[38;2;207;173;0mlookup\e[0m · \e[38;2;192;128;80mmodern Go release\e[0m
+{
+    "query": \e[38;2;181;189;104m"modern Go release"\e[0m
+}
 
-\e[1m\e[38;2;207;173;0mCurrent findings\e[0m\e[0m
+## Current findings
 
-Go has a new release. \e[38;2;129;162;190mSource\e[0m\e[38;2;150;152;150m (https://example.test/release)\e[0m.
+Go has a new release. [Source](https://example.test/release).
 
 === lookup task done ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mtask-1\e[0m · \e[38;2;150;152;150mrun 1 done\e[0m
+\e[38;2;207;173;0mlookup\e[0m
 
-\e[38;2;207;173;0mlookup\e[0m · \e[38;2;192;128;80mmodern Go release\e[0m
+{
+    "query": \e[38;2;181;189;104m"modern Go release"\e[0m
+}
 
-\e[1m\e[38;2;207;173;0mResult\e[0m\e[0m
+## Result
 
-Go has a new release. \e[38;2;129;162;190mSource\e[0m\e[38;2;150;152;150m (https://example.test/release)\e[0m.
+Go has a new release. [Source](https://example.test/release).
 
 === task without invocation ===
-\e[38;2;207;173;0mtask\e[0m · \e[38;2;192;128;80mrestored\e[0m · \e[38;2;150;152;150mrun 2 timed out: time limit reached\e[0m
 
-\e[38;2;150;152;150m(no output)\e[0m
 

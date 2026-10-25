@@ -5,6 +5,7 @@
 ### Changes
 
 - Hyperlink the task name in segments to the full output
+- Show linked tool results as the raw arguments and output
 
 ## [0.25.1] — 2026-10-25
 

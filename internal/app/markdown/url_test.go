@@ -79,7 +79,7 @@ func TestAURLInsideAPaintedArgumentLeavesTheRestOfItAlone(t *testing.T) {
 func TestACommandWithoutAURLIsPaintedAsAnyOtherCommandIs(t *testing.T) {
 	const command = "cd /tmp && go test ./... | tee results"
 
-	if got, want := HighlightURLs(command), Emphasise(command, "bash"); got != want {
+	if got, want := HighlightURLs(command), Highlight(command, command, "bash", false); got != want {
 		t.Errorf("got %q, want the ordinary highlighting %q", got, want)
 	}
 }

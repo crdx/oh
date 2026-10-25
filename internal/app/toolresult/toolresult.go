@@ -8,8 +8,6 @@ import (
 	"os/exec"
 	"strings"
 
-	"golang.org/x/term"
-
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/toolresult"
@@ -52,7 +50,7 @@ func Show(url string, shouldPage bool) error {
 }
 
 func show(url string, shouldPage bool, directory string, output io.Writer, openPager pager) error {
-	result, err := view(directory, url, getColumns(output))
+	result, err := view(directory, url)
 	if err != nil {
 		return err
 	}
@@ -65,7 +63,7 @@ func show(url string, shouldPage bool, directory string, output io.Writer, openP
 	return err
 }
 
-func view(directory string, url string, columns int) (string, error) {
+func view(directory string, url string) (string, error) {
 	if toolresult.IsTask(url) {
 		reference, err := toolresult.ParseTask(url)
 		if err != nil {
@@ -75,26 +73,14 @@ func view(directory string, url string, columns int) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return renderTask(snapshot, columns), nil
+		return renderTask(snapshot), nil
 	}
 
 	exchange, err := toolresult.Read(directory, url)
 	if err != nil {
 		return "", err
 	}
-	return render(exchange, columns), nil
-}
-
-func getColumns(output io.Writer) int {
-	file, isFile := output.(*os.File)
-	if !isFile {
-		return 0
-	}
-	columns, _, err := term.GetSize(int(file.Fd()))
-	if err != nil {
-		return 0
-	}
-	return columns
+	return render(exchange), nil
 }
 
 func page(text string) error {

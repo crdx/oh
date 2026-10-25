@@ -62,7 +62,7 @@ func TestShowWritesSafeToolOutput(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected run error: %v", err)
 	}
-	want := "read · notes.txt\n\none\ntwo\n"
+	want := "read\n\n{\n    \"path\": \"notes.txt\"\n}\n\none\ntwo\n"
 	if style.Plain(output.String()) != want {
 		t.Errorf("got output %q", output.String())
 	}
@@ -99,7 +99,7 @@ func TestShowWritesTheWholeOutputOfATaskRun(t *testing.T) {
 	if err := show(toolresult.TaskURL(completion.Reference(name)), false, directory, &output, nil); err != nil {
 		t.Fatalf("unexpected run error: %v", err)
 	}
-	if want := "task · count · run 1 done\n\n$ seq 1 9\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n"; style.Plain(output.String()) != want {
+	if want := "bash\n\n{\n    \"command\": \"seq 1 9\"\n}\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n"; style.Plain(output.String()) != want {
 		t.Errorf("got output %q, want %q", style.Plain(output.String()), want)
 	}
 }
@@ -117,7 +117,7 @@ func TestPagerReceivesSafeToolOutput(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected run error: %v", err)
 	}
-	if style.Plain(pagedText) != "read · notes.txt\n\none\ntwo\n" {
+	if style.Plain(pagedText) != "read\n\n{\n    \"path\": \"notes.txt\"\n}\n\none\ntwo\n" {
 		t.Errorf("paged text is %q", pagedText)
 	}
 	if output.Len() != 0 {
@@ -215,7 +215,7 @@ func TestShowWritesTheCurrentOutputOfARunningTask(t *testing.T) {
 	if err := show(address, false, directory, &output, nil); err != nil {
 		t.Fatalf("unexpected run error: %v", err)
 	}
-	want := "task · build · run 1 running\n\n$ make build\n\ncompiling package two\n"
+	want := "bash\n\n{\n    \"command\": \"make build\"\n}\n\ncompiling package two\n"
 	if got := style.Plain(output.String()); got != want {
 		t.Errorf("got output %q, want %q", got, want)
 	}
@@ -231,5 +231,20 @@ func TestShowWritesTheCurrentOutputOfARunningTask(t *testing.T) {
 	want += "compiling package three\n"
 	if got := style.Plain(output.String()); got != want {
 		t.Errorf("updated output is %q, want %q", got, want)
+	}
+}
+
+func TestArgumentsShowMarkupEscapesAsTheCharactersTheyStandFor(t *testing.T) {
+	for escaped, want := range map[string]string{
+		`"a \u0026\u0026 b"`: `"a && b"`,
+		`"\u003cdone\u003e"`: `"<done>"`,
+		`"\\u0026"`:          `"\\u0026"`,
+		`"\\\u0026"`:         `"\\&"`,
+		`"\u00e9 \n \u2028"`: `"\u00e9 \n \u2028"`,
+		`"ends with \u002`:   `"ends with \u002`,
+	} {
+		if got := unescapeMarkup(escaped); got != want {
+			t.Errorf("%s: got %s, want %s", escaped, got, want)
+		}
 	}
 }

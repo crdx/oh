@@ -7525,7 +7525,7 @@ func TestTheViewFlagShowsAToolResultThroughTheMainBinary(t *testing.T) {
 		toolresult.URL(writer.Name(), "call-1"),
 	)
 
-	if result != "read · notes.txt\n\none\ntwo\n" {
+	if result != "read\n\n{\n    \"path\": \"notes.txt\"\n}\n\none\ntwo\n" {
 		t.Errorf("tool result is %q", result)
 	}
 }
@@ -7563,7 +7563,7 @@ func TestTheViewFlagShowsATaskRunThroughTheMainBinary(t *testing.T) {
 		toolresult.TaskURL(completion.Reference(writer.Name())),
 	)
 
-	if want := "task · count · run 1 done\n\n$ seq 1 3\n\n1\n2\n3\n"; result != want {
+	if want := "bash\n\n{\n    \"command\": \"seq 1 3\"\n}\n\n1\n2\n3\n"; result != want {
 		t.Errorf("task result is %q, want %q", result, want)
 	}
 }

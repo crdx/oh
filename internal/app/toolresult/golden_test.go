@@ -314,7 +314,7 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 
 	var drawn strings.Builder
 	for _, test := range cases {
-		fmt.Fprintf(&drawn, "=== %s ===\n%s\n\n", test.name, strutil.VisibleEscapes(render(test.exchange, 60)))
+		fmt.Fprintf(&drawn, "=== %s ===\n%s\n\n", test.name, strutil.VisibleEscapes(render(test.exchange)))
 	}
 	assertGolden(t, "render.ansi", drawn.String())
 }
@@ -349,6 +349,11 @@ func TestGoldenTaskRunsRenderForTheUser(t *testing.T) {
 				"lint1  ✗\nmain.go:12: undefined: run\n"),
 		},
 		{
+			name: "shell task with markup characters",
+			snapshot: taskSnapshot(bash.Args{Command: "make && echo '<built>'"}, tasks.Done, "",
+				"<built>\n"),
+		},
+		{
 			name:     "shell task stopped",
 			snapshot: taskSnapshot(bash.Args{Command: "sleep 30"}, tasks.Stopped, "", ""),
 		},
@@ -375,7 +380,7 @@ func TestGoldenTaskRunsRenderForTheUser(t *testing.T) {
 
 	var drawn strings.Builder
 	for _, test := range cases {
-		fmt.Fprintf(&drawn, "=== %s ===\n%s\n\n", test.name, strutil.VisibleEscapes(renderTask(test.snapshot, 60)))
+		fmt.Fprintf(&drawn, "=== %s ===\n%s\n\n", test.name, strutil.VisibleEscapes(renderTask(test.snapshot)))
 	}
 	assertGolden(t, "task.ansi", drawn.String())
 }
