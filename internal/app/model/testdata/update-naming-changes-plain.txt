@@ -11,5 +11,5 @@ Ollama     local-preview         added (ignored: unknown effort level)
 Ollama     output-preview        added (ignored: unknown output limit)
 Ollama     Unidentified Preview  added (ignored: unknown id)
 
-Stored model list in /state/models.json
+Stored model list in /state/data/models.json
 Run oh -u -I to see the 3 models that were ignored.

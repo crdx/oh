@@ -1,0 +1,4 @@
+=== screen ===
+[38;2;150;152;150mmigrated[0m 3 state files into /state/data
+[38;2;150;152;150mthere are no sessions in [0m/state/sessions
+=== failure ===

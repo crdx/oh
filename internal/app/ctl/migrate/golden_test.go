@@ -166,6 +166,73 @@ func TestGoldenNoStoredSessionsMatchesTheGolden(t *testing.T) {
 	assertGolden(t, "no-sessions.txt", migration(t, directory, &inputOpts{}))
 }
 
+func TestGoldenLegacyStateDataMovesIntoItsDirectory(t *testing.T) {
+	directory := goldenSessions(t)
+	root := filepath.Dir(directory)
+	legacyData := map[string]string{
+		"history":                "a question\n",
+		"history.lock":           "",
+		"model-round-robin.json": `{"version":1}`,
+	}
+	for name, body := range legacyData {
+		if err := os.WriteFile(filepath.Join(root, name), []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	assertGolden(t, "state-data.txt", migration(t, directory, &inputOpts{}))
+
+	for name, body := range legacyData {
+		data, err := os.ReadFile(filepath.Join(root, "data", name)) //nolint:gosec // the test's own path
+		if err != nil {
+			t.Errorf("%s was not moved: %v", name, err)
+			continue
+		}
+		if string(data) != body {
+			t.Errorf("%s contains %q, want %q", name, data, body)
+		}
+	}
+}
+
+func TestGoldenLegacyStateDataDryRunLeavesItAlone(t *testing.T) {
+	directory := goldenSessions(t)
+	path := filepath.Join(filepath.Dir(directory), "seen_models.json")
+	if err := os.WriteFile(path, []byte(seenModelsBeforeWires), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	assertGolden(t, "state-data-dry-run.txt", migration(t, directory, &inputOpts{DryRun: true}))
+
+	if _, err := os.Stat(path); err != nil {
+		t.Errorf("dry run changed the legacy state data: %v", err)
+	}
+	if _, err := os.Stat(location.GetDataDir()); !os.IsNotExist(err) {
+		t.Errorf("dry run created the data directory: %v", err)
+	}
+}
+
+func TestLegacyStateDataWaitsForOpenSessions(t *testing.T) {
+	directory := goldenSessions(t, oldJournal())
+	path := filepath.Join(filepath.Dir(directory), "models.json")
+	if err := os.WriteFile(path, []byte("models"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	heldLock, err := session.AcquireLock(directory, goldenName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = heldLock.Release() })
+
+	var screen, failure strings.Builder
+	err = run(&inputOpts{}, console.Output{Screen: &screen, Failure: &failure})
+	if err == nil || !strings.Contains(err.Error(), "close every oh session") {
+		t.Fatalf("open session did not stop the state migration: %v", err)
+	}
+	if _, err := os.Stat(path); err != nil {
+		t.Errorf("state data changed after the refusal: %v", err)
+	}
+}
+
 func currentCodexJournal() []string {
 	return []string{
 		fmt.Sprintf(
@@ -303,6 +370,9 @@ func storedSeenModels(t *testing.T, body string) string {
 	t.Helper()
 
 	path := location.GetSeenModelsPath()
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatal(err)
+	}
 	if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
 		t.Fatal(err)
 	}

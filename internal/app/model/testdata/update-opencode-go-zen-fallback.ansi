@@ -7,4 +7,4 @@ Ollama             \e[38;2;150;152;150m—\e[0m                       \e[38;2;15
 \e[4m\e[38;2;150;152;150mProvider     Model       Reason\e[0m\e[0m
 OpenCode Go  omen-alpha  \e[38;2;150;152;150munknown effort level\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json

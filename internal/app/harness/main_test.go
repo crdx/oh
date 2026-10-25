@@ -7764,7 +7764,7 @@ func corruptedSessionFailure(t *testing.T, binary string, suffix string) string 
 		t.Fatal(err)
 	}
 
-	modelCachePath := filepath.Join(applicationStateDirectory, "models.json")
+	modelCachePath := filepath.Join(applicationStateDirectory, "data", "models.json")
 	if err := os.MkdirAll(filepath.Dir(modelCachePath), 0o700); err != nil {
 		t.Fatal(err)
 	}
@@ -7835,7 +7835,7 @@ func TestVersionDispatchRunsThroughTheBinary(t *testing.T) {
 func TestModelListDispatchRunsThroughTheBinary(t *testing.T) {
 	binary := buildTestBinary(t)
 	stateDirectory := t.TempDir()
-	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "data", "models.json")
 	if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil {
 		t.Fatal(err)
 	}
@@ -8019,7 +8019,7 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 			t.Cleanup(server.Close)
 
 			stateDirectory := t.TempDir()
-			cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+			cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "data", "models.json")
 			if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil {
 				t.Fatal(err)
 			}
@@ -8224,7 +8224,7 @@ func TestASessionResumesWithTheModelItWasCreatedWithAfterTheModelListForgetsIt(t
 		t.Fatalf("expected the session to hold the model it was created with, got %+v", frozenChoice)
 	}
 
-	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "data", "models.json")
 	successorCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
 	if err := os.WriteFile(cachePath, successorCache, 0o600); err != nil {
 		t.Fatal(err)
@@ -8279,7 +8279,7 @@ func TestASessionResumesOverTheWireItWasCreatedOverAfterTheModelListMovesIt(t *t
 		t.Fatalf("expected the session to hold the wire it was created over, got %+v", frozenChoice)
 	}
 
-	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "data", "models.json")
 	movedCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
 	if err := os.WriteFile(cachePath, movedCache, 0o600); err != nil {
 		t.Fatal(err)
@@ -8339,7 +8339,7 @@ func TestASessionStoredBeforeWiresWereRecordedIsMigratedOntoTheWireItWasSpokenOv
 
 	rewriteJournalHeadAsFormatNineteen(t, filepath.Join(sessionsDirectory, name, "session.jsonl"), withoutTheWire)
 
-	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "data", "models.json")
 	movedCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"qwen-fake","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
 	if err := os.WriteFile(cachePath, movedCache, 0o600); err != nil {
 		t.Fatal(err)
@@ -8410,6 +8410,11 @@ func TestASessionHoldingNoModelChoiceResumesOnTheWireItsSeenModelIsMigratedOnto(
 	rewriteJournalHeadAsFormatNineteen(t, filepath.Join(sessionsDirectory, name, "session.jsonl"), withoutTheModelChoice)
 
 	stateRoot := filepath.Join(stateDirectory, "org.crdx", "oh")
+	for _, file := range []string{"models.json", "seen_models.json"} {
+		if err := os.Remove(filepath.Join(stateRoot, "data", file)); err != nil && !os.IsNotExist(err) {
+			t.Fatal(err)
+		}
+	}
 	forgottenCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
 	if err := os.WriteFile(filepath.Join(stateRoot, "models.json"), forgottenCache, 0o600); err != nil {
 		t.Fatal(err)
@@ -8420,6 +8425,14 @@ func TestASessionHoldingNoModelChoiceResumesOnTheWireItsSeenModelIsMigratedOnto(
 	}
 
 	runTestBinary(t, binary, workspaceDir, environment, "--ctl", "migrate")
+	for _, file := range []string{"models.json", "seen_models.json"} {
+		if _, err := os.Stat(filepath.Join(stateRoot, "data", file)); err != nil {
+			t.Errorf("%s was not moved into data: %v", file, err)
+		}
+		if _, err := os.Stat(filepath.Join(stateRoot, file)); !os.IsNotExist(err) {
+			t.Errorf("legacy %s remains: %v", file, err)
+		}
+	}
 
 	migratedSession, err := store.Read(sessionsDirectory, name)
 	if err != nil {
@@ -24053,7 +24066,7 @@ func TestAPendingNoticeIsMarkedSubmittedThoughTheHarnessDrewBesideIt(t *testing.
 	if strings.Contains(drawn, "⏳") {
 		t.Errorf("the submitted notice still reads as unsent:\n%s", drawn)
 	}
-	if !strings.Contains(drawn, "⚙️") {
+	if !strings.Contains(drawn, "⚙") {
 		t.Errorf("the submitted notice was not marked as a task:\n%s", drawn)
 	}
 }
@@ -24138,7 +24151,7 @@ func TestEveryHarnessNoticeReachesTheScreenBesideARegionTallerThanTheTerminal(t 
 			drawn := strings.Join(visibleScreen(t, screenOutput.String(), replayColumns), "\n")
 			mark := "🤖"
 			if name == "an ended task" {
-				mark = "⚙️"
+				mark = "⚙"
 			}
 			if !strings.Contains(drawn, mark) {
 				t.Errorf("the notice never reached the screen with %s:\n%s", mark, drawn)

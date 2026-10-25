@@ -25,7 +25,7 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const Usage = `oh --ctl migrate — bring configuration and stored sessions up to their current formats
+const Usage = `oh --ctl migrate — bring configuration and stored data up to date
 
 Usage:
     $0 --ctl migrate [options] [<session>...]
@@ -60,6 +60,29 @@ func run(inputArgs *inputOpts, output console.Output) error {
 			"%s config %s\n",
 			style.Subtle(verb(inputArgs.DryRun)),
 			style.Subtle(fmt.Sprintf("%d → %d", configFrom, config.Format)),
+		)
+	}
+
+	isDataLayoutMigrationNeeded, err := location.IsDataLayoutMigrationNeeded()
+	if err != nil {
+		return fmt.Errorf("state data: %w", err)
+	}
+	if isDataLayoutMigrationNeeded && !inputArgs.DryRun {
+		if err := refuseDataMigrationWhileSessionsAreOpen(); err != nil {
+			return fmt.Errorf("state data: %w", err)
+		}
+	}
+	migratedDataFiles, err := location.MigrateDataLayout(inputArgs.DryRun)
+	if err != nil {
+		return fmt.Errorf("state data: %w", err)
+	}
+	if migratedDataFiles > 0 {
+		_, _ = fmt.Fprintf(
+			output.Screen,
+			"%s %s into %s\n",
+			style.Subtle(verb(inputArgs.DryRun)),
+			util.Plural(migratedDataFiles, "state file"),
+			location.GetDataDir(),
 		)
 	}
 
@@ -136,6 +159,25 @@ func run(inputArgs *inputOpts, output console.Output) error {
 	return nil
 }
 
+func refuseDataMigrationWhileSessionsAreOpen() error {
+	directory := location.GetSessionsDir()
+	names, err := session.AllNames(directory)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		isInUse, err := session.IsInUse(directory, name)
+		if err != nil {
+			return err
+		}
+		if isInUse {
+			return fmt.Errorf("session %s is in use; close every oh session before migrating state data", name)
+		}
+	}
+
+	return nil
+}
+
 func sweepListingMeta(directory string, isDryRun bool, output console.Output) error {
 	if isDryRun {
 		stale, err := store.StaleMeta(directory)
@@ -185,6 +227,12 @@ func everySessionSubject(count int) string {
 
 func migrateSeenModels(isDryRun bool, output console.Output) error {
 	path := location.GetSeenModelsPath()
+	legacyPath := filepath.Join(location.GetStateDir(), "seen_models.json")
+	if isDryRun {
+		if _, err := os.Stat(legacyPath); err == nil {
+			path = legacyPath
+		}
+	}
 	seenFrom, hasSeenModels, err := MigrateSeenModels(SeenModelsOptions{Path: path, DryRun: isDryRun})
 	if err != nil {
 		return fmt.Errorf("seen models: %w", err)

@@ -4,4 +4,4 @@ OpenCode Go        \e[38;2;150;152;150m—\e[0m                       \e[38;2;15
 Anthropic          \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mnot logged in to Anthropic: run the login command with anthropic\e[0m
 Ollama             \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mGet "http://localhost:11434/api/tags": connect: connection refused\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json

@@ -4,5 +4,5 @@ OpenCode Go        6           \e[38;2;76;154;44m3\e[0m        \e[38;2;207;173;0
 Anthropic          6           \e[38;2;76;154;44m2\e[0m        \e[38;2;207;173;0m4\e[0m  \e[38;2;129;162;190mendpoint\e[0m
 Ollama             5           \e[38;2;76;154;44m1\e[0m        \e[38;2;207;173;0m4\e[0m  \e[38;2;129;162;190mendpoint\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json
 \e[38;2;150;152;150mRun \e[0m\e[38;2;192;128;80moh -u -I\e[0m\e[38;2;150;152;150m to see the 11 models that were ignored.\e[0m

@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/models"
 	"crdx.org/oh/internal/app/ctl/regenerate"
 	"crdx.org/oh/internal/app/ctl/sessions"
+	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/style"
 )
 
@@ -34,10 +35,19 @@ Commands:
     check         Check configuration and stored session health
     analyse       Analyse stored sessions
     regenerate    Write stored transcripts again from their journals
-    migrate       Bring configuration and stored sessions up to their current formats
+    migrate       Bring configuration and stored data up to date
     gc            Remove the caches sessions leave behind
     models        Print the qualified names of usable models
 `
+
+func isCommand(argument string) bool {
+	switch argument {
+	case "sessions", "check", "analyse", "regenerate", "migrate", "gc", "models":
+		return true
+	default:
+		return false
+	}
+}
 
 func Run(arguments []string) int {
 	originalArguments := os.Args
@@ -53,6 +63,16 @@ func Run(arguments []string) int {
 	if len(arguments) < 1 {
 		fmt.Print(usage)
 		return 2
+	}
+	if !isCommand(arguments[0]) {
+		fmt.Print(usage)
+		return 2
+	}
+	if arguments[0] != "migrate" {
+		if err := location.RequireCurrentDataLayout(); err != nil {
+			fmt.Fprintln(os.Stderr, style.Error(err))
+			return 1
+		}
 	}
 
 	var err error

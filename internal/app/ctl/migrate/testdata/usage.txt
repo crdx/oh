@@ -1,4 +1,4 @@
-oh --ctl migrate — bring configuration and stored sessions up to their current formats
+oh --ctl migrate — bring configuration and stored data up to date
 
 Usage:
     oh --ctl migrate [options] [<session>...]

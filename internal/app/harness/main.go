@@ -299,6 +299,12 @@ func Main() {
 	}
 
 	style.Init(os.Stdout)
+	if !isHelpOrVersion(os.Args[1:]) {
+		if err := location.RequireCurrentDataLayout(); err != nil {
+			fmt.Fprintln(os.Stderr, style.Error(err))
+			os.Exit(1)
+		}
+	}
 	startupConfig := readConfig()
 
 	hooks := cycle.NewHooks(func(err error) {
@@ -333,6 +339,13 @@ func Main() {
 
 	fmt.Fprintln(os.Stderr, style.Error(fmt.Errorf("could not open the session: %w", err)))
 	os.Exit(1)
+}
+
+func isHelpOrVersion(arguments []string) bool {
+	return slices.Contains(arguments, "-h") ||
+		slices.Contains(arguments, "--help") ||
+		slices.Contains(arguments, "-v") ||
+		slices.Contains(arguments, "--version")
 }
 
 func isTerminalLocal() bool {

@@ -39,12 +39,16 @@ func GetGlobalContextPath() string {
 	return GetConfigDir("SYSTEM.md")
 }
 
+func GetDataDir(parts ...string) string {
+	return GetStateDir(append([]string{"data"}, parts...)...)
+}
+
 func GetModelCachePath() string {
-	return GetStateDir("models.json")
+	return GetDataDir("models.json")
 }
 
 func GetSeenModelsPath() string {
-	return GetStateDir("seen_models.json")
+	return GetDataDir("seen_models.json")
 }
 
 func GetUsageCachePath(provider string, isSimulation bool) string {
@@ -56,23 +60,23 @@ func GetUsageCachePath(provider string, isSimulation bool) string {
 }
 
 func GetAnalysisCachePath() string {
-	return GetStateDir("analysis.json")
+	return GetDataDir("analysis.json")
 }
 
 func GetExchangeRateCachePath() string {
-	return GetStateDir("rates.json")
+	return GetDataDir("rates.json")
 }
 
 func GetModelRoundRobinPath() string {
-	return GetStateDir("model-round-robin.json")
+	return GetDataDir("model-round-robin.json")
 }
 
 func GetSubagentRoundRobinPath() string {
-	return GetStateDir("subagent-round-robin.json")
+	return GetDataDir("subagent-round-robin.json")
 }
 
 func GetHistoryPath() string {
-	return GetStateDir("history")
+	return GetDataDir("history")
 }
 
 func GetSessionsDir() string {

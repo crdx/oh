@@ -21,5 +21,5 @@ Ollama       a-locally-built-model-with-a-very-long-name  removed
 Ollama       Nothing Identifies This One                  removed
 Ollama       (unnamed)                                    removed
 
-Stored model list in /state/models.json
+Stored model list in /state/data/models.json
 Run oh -u -I to see the 4 models that were ignored.

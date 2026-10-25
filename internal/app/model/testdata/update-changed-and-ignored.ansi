@@ -27,4 +27,4 @@ Anthropic    claude-sonnet-4-6  \e[38;2;150;152;150msuperseded by claude-sonnet-
 Anthropic    claude-opus-4-5    \e[38;2;150;152;150munsupported request shape\e[0m
 Ollama       llama-4            \e[38;2;150;152;150munknown output limit\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json

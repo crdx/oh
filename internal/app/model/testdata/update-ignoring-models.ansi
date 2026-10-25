@@ -17,4 +17,4 @@ Ollama       a-locally-built-model-with-a-very-long-name  \e[38;2;150;152;150mun
 Ollama       Nothing Identifies This One                  \e[38;2;150;152;150munknown id\e[0m
 Ollama       (unnamed)                                    \e[38;2;150;152;150munknown id\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json

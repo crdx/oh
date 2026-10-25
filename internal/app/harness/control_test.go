@@ -57,7 +57,7 @@ func TestAnalysisWritesItsCacheOnlyUnderTheOverriddenStateDirectory(t *testing.T
 	})
 	runTestBinary(t, rig.binary, rig.workspace, environment, "--ctl", "analyse")
 
-	path := filepath.Join(root, "analysis.json")
+	path := filepath.Join(root, "data", "analysis.json")
 	if info, err := os.Stat(path); err != nil || info.Size() == 0 {
 		t.Fatalf("expected a populated analysis cache at %s, got %v, %v", path, info, err)
 	}
@@ -68,6 +68,42 @@ func TestAnalysisWritesItsCacheOnlyUnderTheOverriddenStateDirectory(t *testing.T
 		}
 		if len(entries) != 0 {
 			t.Errorf("analysis wrote outside the overridden state directory: %s contains %v", directory, entries)
+		}
+	}
+}
+
+func TestLegacyStateDataAdvisesMigration(t *testing.T) {
+	binary := buildTestBinary(t)
+	stateDirectory := t.TempDir()
+	root := filepath.Join(stateDirectory, "org.crdx", "oh")
+	if err := os.MkdirAll(root, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "models.json"), []byte("models"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, arguments := range [][]string{{"-l"}, {"--ctl", "models"}} {
+		command := exec.CommandContext(t.Context(), binary, arguments...) //nolint:gosec // running the binary under test
+		command.Env = testBinaryEnvironment(t, stateDirectory)
+		command.Dir = reachableWorkspaceDir(t)
+		output, err := command.CombinedOutput()
+		exitError, isExit := errors.AsType[*exec.ExitError](err)
+		if !isExit || exitError.ExitCode() != 1 {
+			t.Errorf("%v returned %v, want exit 1", arguments, err)
+		}
+		if !strings.Contains(string(output), "State data needs migrating: run `oh --ctl migrate`") {
+			t.Errorf("%v did not advise migration: %q", arguments, output)
+		}
+	}
+
+	for _, arguments := range [][]string{{"--help"}, {"--version"}} {
+		command := exec.CommandContext(t.Context(), binary, arguments...) //nolint:gosec // running the binary under test
+		command.Env = testBinaryEnvironment(t, stateDirectory)
+		command.Dir = reachableWorkspaceDir(t)
+		output, _ := command.CombinedOutput()
+		if strings.Contains(string(output), "needs migrating") {
+			t.Errorf("%v was blocked by state migration: %q", arguments, output)
 		}
 	}
 }

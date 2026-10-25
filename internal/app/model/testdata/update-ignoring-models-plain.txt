@@ -17,4 +17,4 @@ Ollama       a-locally-built-model-with-a-very-long-name  unknown effort level
 Ollama       Nothing Identifies This One                  unknown id
 Ollama       (unnamed)                                    unknown id
 
-Stored model list in /state/models.json
+Stored model list in /state/data/models.json

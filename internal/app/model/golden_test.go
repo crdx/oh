@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	goldenCachePath       = "/state/models.json"
+	goldenCachePath       = "/state/data/models.json"
 	goldenRegistryAddress = `"<registry>"`
 )
 

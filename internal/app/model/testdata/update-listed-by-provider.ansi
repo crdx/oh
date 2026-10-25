@@ -8,4 +8,4 @@ Ollama             2           \e[38;2;76;154;44m1\e[0m        \e[38;2;207;173;0
 Codex     gpt-5.6-sol-preview    \e[38;2;150;152;150munknown output limit\e[0m
 Ollama    an-unselectable-model  \e[38;2;150;152;150munknown effort level\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json

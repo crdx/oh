@@ -11,5 +11,5 @@ Ollama     local-preview         \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150
 Ollama     output-preview        \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown output limit)\e[0m
 Ollama     Unidentified Preview  \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown id)\e[0m
 
-\e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mStored model list in \e[0m/state/data/models.json
 \e[38;2;150;152;150mRun \e[0m\e[38;2;192;128;80moh -u -I\e[0m\e[38;2;150;152;150m to see the 3 models that were ignored.\e[0m

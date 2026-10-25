@@ -157,7 +157,7 @@ func (self *startupRun) onlySessionName(t *testing.T) string {
 func (self *startupRun) ageModelList(t *testing.T) {
 	t.Helper()
 
-	path := self.statePath("models.json")
+	path := self.statePath("data", "models.json")
 	stale := time.Now().Add(-30 * 24 * time.Hour)
 	data, err := os.ReadFile(path) //nolint:gosec // the test's own state
 	if err != nil {
@@ -530,11 +530,12 @@ func TestGoldenASessionCountsItsSpendInTheConfiguredCurrency(t *testing.T) {
 	spendScreen := func(configBody string, rates string) string {
 		run := newStartupRun(t, configBody+spendBar, "Priced answer.")
 		if rates != "" {
-			if err := os.MkdirAll(run.statePath(), 0o700); err != nil {
+			path := run.statePath("data", "rates.json")
+			if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 				t.Fatal(err)
 			}
 			body := fmt.Sprintf(`{"version":1,"fetched":%q,"base":"USD","rates":%s}`, time.Now().Format(time.RFC3339), rates)
-			if err := os.WriteFile(run.statePath("rates.json"), []byte(body), 0o600); err != nil {
+			if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -572,7 +573,11 @@ func TestGoldenAFailedRateRefreshKeepsTheCachedCurrency(t *testing.T) {
 			directory := t.TempDir()
 			t.Setenv(location.StateDirVariable, directory)
 			body := fmt.Sprintf(`{"version":1,"fetched":%q,"base":"USD","rates":{"GBP":0.5}}`, time.Now().Add(-48*time.Hour).Format(time.RFC3339))
-			if err := os.WriteFile(location.GetExchangeRateCachePath(), []byte(body), 0o600); err != nil {
+			path := location.GetExchangeRateCachePath()
+			if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
 				t.Fatal(err)
 			}
 			ctx, cancel := context.WithCancel(t.Context())
