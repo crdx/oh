@@ -129,7 +129,7 @@ $ sleep 60
 $ sleep 61
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 ⋮ 2 more lines
     exit status 1
 
@@ -146,7 +146,7 @@ $ sleep 60
 $ sleep 61
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 
     undefined: getWidth
     exit status 1
@@ -164,7 +164,7 @@ $ sleep 60
 $ sleep 61
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 
     undefined: getWidth
     exit status 1
@@ -182,7 +182,7 @@ $ sleep 60
 $ sleep 61
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 
     undefined: getWidth
     exit status 1

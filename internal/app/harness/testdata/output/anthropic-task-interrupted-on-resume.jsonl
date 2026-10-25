@@ -42,7 +42,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_5","content":"build: stopped — the task did not carry over into this session"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_7","name":"task","input":{"action":"restart","name":"build"}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_7","content":"build: queued, run 2"}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `build` run 2 done.\n\n```\nrestarted command\n```\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `build` run 2 done in 0.0s\n\n```\nrestarted command\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_8","name":"task","input":{"action":"output","name":"build"}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_8","content":"build: done, run 2\nrun 1: stopped — the task did not carry over into this session\nrestarted command"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_9","name":"task","input":{"action":"discard","name":"build"}}]}}

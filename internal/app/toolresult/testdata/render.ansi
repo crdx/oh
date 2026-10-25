@@ -36,6 +36,13 @@ image/png image (48217 bytes)
 
 missing.go: no such file or directory
 
+=== malformed arguments remain raw ===
+\e[38;2;207;173;0mread\e[0m
+
+{"path":
+
+arguments are malformed
+
 === call stopped before running ===
 \e[38;2;207;173;0mread\e[0m
 

@@ -100,12 +100,42 @@ func TestPendingTaskNoticesMatchEachRunAndRespectSilentStops(t *testing.T) {
 
 func TestOnlyALaterRunIsNumberedInItsNotice(t *testing.T) {
 	for run, want := range map[int]string{
-		1: "Task `check` done.",
-		2: "Task `check` run 2 done.",
+		1: "Task `check` done",
+		2: "Task `check` run 2 done",
 	} {
 		conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "check", Run: run, State: tasks.Done}, IsFinal: true}
 		if notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion)); !isSaid || notice != want {
 			t.Errorf("run %d said %q (%t), want %q", run, notice, isSaid, want)
+		}
+	}
+}
+
+func TestEveryTerminalTaskNoticeUsesTheSamePunctuation(t *testing.T) {
+	startedAt := time.Date(2026, time.October, 25, 12, 0, 0, 0, time.UTC)
+	for _, test := range []struct {
+		state                 tasks.State
+		failure               string
+		isFinal               bool
+		isRespawnLimitReached bool
+		want                  string
+	}{
+		{state: tasks.Done, isFinal: true, want: "Task `golden-1` done in 8m 10s"},
+		{state: tasks.Failed, failure: "exit status 1", isFinal: true, want: "Task `golden-1` failed in 8m 10s: exit status 1"},
+		{state: tasks.TimedOut, failure: "time limit reached", isFinal: true, want: "Task `golden-1` timed out in 8m 10s: time limit reached"},
+		{state: tasks.Stopped, failure: "the user stopped it.", isFinal: true, want: "Task `golden-1` stopped in 8m 10s: the user stopped it."},
+		{state: tasks.Done, want: "Task `golden-1` done in 8m 10s; respawning"},
+		{
+			state: tasks.Done, isFinal: true, isRespawnLimitReached: true,
+			want: "Task `golden-1` done in 8m 10s; " + tasks.RespawnLimitReason(),
+		},
+	} {
+		conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{
+			ID: "golden-1", Run: 1, State: test.state, Failure: test.failure,
+			StartedAt: startedAt, EndedAt: startedAt.Add(8*time.Minute + 10*time.Second),
+			IsRespawnLimitReached: test.isRespawnLimitReached,
+		}, IsFinal: test.isFinal}
+		if notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion)); !isSaid || notice != test.want {
+			t.Errorf("state %s said %q (%t), want %q", test.state, notice, isSaid, test.want)
 		}
 	}
 }
@@ -117,7 +147,7 @@ func TestAFailedTaskNoticeSaysWhyItFailed(t *testing.T) {
 	}
 
 	notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion))
-	if want := "Task `task-41` failed: the command exited with status 1.\n\n```\nexit(1):\nnope\n```"; !isSaid || notice != want {
+	if want := "Task `task-41` failed: the command exited with status 1\n\n```\nexit(1):\nnope\n```"; !isSaid || notice != want {
 		t.Errorf("got %q (%t), want %q", notice, isSaid, want)
 	}
 }
@@ -146,11 +176,11 @@ func TestAShownNoticeKeepsOnlyTheEndsOfLongOutput(t *testing.T) {
 	}
 
 	for edgeLines, want := range map[int]string{
-		0: "Task `build` done.",
-		2: "Task `build` done.\n\n```\none\ntwo\n⋮ 5 more lines\neight\nnine\n```",
-		3: "Task `build` done.\n\n```\none\ntwo\nthree\n⋮ 3 more lines\nseven\neight\nnine\n```",
-		4: "Task `build` done.\n\n```\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n```",
-		9: "Task `build` done.\n\n```\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n```",
+		0: "Task `build` done",
+		2: "Task `build` done\n\n```\none\ntwo\n⋮ 5 more lines\neight\nnine\n```",
+		3: "Task `build` done\n\n```\none\ntwo\nthree\n⋮ 3 more lines\nseven\neight\nnine\n```",
+		4: "Task `build` done\n\n```\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n```",
+		9: "Task `build` done\n\n```\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\n```",
 	} {
 		if got := completion.NoticeWithin(edgeLines); got != want {
 			t.Errorf("%d lines at each end gave %q, want %q", edgeLines, got, want)
@@ -164,10 +194,10 @@ func TestAShownNoticeKeepsOnlyTheEndsOfLongOutput(t *testing.T) {
 func TestNoLinesAtEachEndHidesEvenASingleLine(t *testing.T) {
 	conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done, Output: "built oh\n"}, IsFinal: true}
 	completion, _ := taskrecord.CompletionOf(taskrecord.EndedEvent(conclusion))
-	if got := completion.NoticeWithin(0); got != "Task `build` done." {
+	if got := completion.NoticeWithin(0); got != "Task `build` done" {
 		t.Errorf("got %q", got)
 	}
-	if got := completion.NoticeWithin(1); got != "Task `build` done.\n\n```\nbuilt oh\n```" {
+	if got := completion.NoticeWithin(1); got != "Task `build` done\n\n```\nbuilt oh\n```" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -175,7 +205,7 @@ func TestNoLinesAtEachEndHidesEvenASingleLine(t *testing.T) {
 func TestAShownNoticeWithoutOutputHasNoBlock(t *testing.T) {
 	conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{ID: "build", Run: 1, State: tasks.Done}, IsFinal: true}
 	completion, _ := taskrecord.CompletionOf(taskrecord.EndedEvent(conclusion))
-	if got := completion.NoticeWithin(0); got != "Task `build` done." {
+	if got := completion.NoticeWithin(0); got != "Task `build` done" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -226,7 +256,7 @@ func TestATimedOutTaskNoticeSpeaksItsState(t *testing.T) {
 		IsFinal:  true,
 	}
 	notice, isSaid := taskrecord.EndedNotice(taskrecord.EndedEvent(conclusion))
-	if want := "Task `deploy-wait` timed out: the call reached its time limit of 5m."; !isSaid || notice != want {
+	if want := "Task `deploy-wait` timed out: the call reached its time limit of 5m"; !isSaid || notice != want {
 		t.Errorf("got %q (%t), want %q", notice, isSaid, want)
 	}
 }

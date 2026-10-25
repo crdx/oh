@@ -2,10 +2,37 @@ provider = "codex"
 model = "gpt-5.6-sol"
 effort = "medium"
 
+[[tool]]
+name = "check"
+outputs = ["successful payload hidden from status"]
+
 [[subagent]]
 name = "tame-adder"
 
 [[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-child-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Starting the watch."}''',
+    '''{"type":"response.output_text.done","text":"Starting the watch."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Starting the watch."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-child-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Starting the watch."}]}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-child-1","type":"function_call","call_id":"toolu_child","name":"message_parent","arguments":"{\"message\":\" \"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-child-2","type":"function_call","call_id":"toolu_check","name":"check","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-child-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Still watching."}''',
+]
 wait-for-cancellation = true
 
 [first]

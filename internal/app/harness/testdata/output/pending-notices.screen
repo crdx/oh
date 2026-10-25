@@ -20,7 +20,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 3 an ended task standing ===
 
- ⏳ Task build failed.
+ ⏳ Task build failed
                                                                                double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 4 an ended task flushed ===
 
- 🤖 Task build failed.
+ 🤖 Task build failed
 
 
 Model returned no reply.
@@ -38,7 +38,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 4b an ended task with output standing ===
 
- ⏳ Task build failed: exit status 1. (Building every package once more)
+ ⏳ Task build failed: exit status 1 (Building every package once more)
 
     go build ./...
     ⋮ 2 more lines
@@ -50,7 +50,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 4c an ended task with output flushed ===
 
- 🤖 Task build failed: exit status 1. (Building every package once more)
+ 🤖 Task build failed: exit status 1 (Building every package once more)
 
     go build ./...
     ⋮ 2 more lines

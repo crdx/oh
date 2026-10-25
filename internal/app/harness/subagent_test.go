@@ -38,9 +38,9 @@ func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 		{Name: "tame-anchovy", State: subagentrecord.Done, EndedAt: at.Add(-time.Second)},
 		{Name: "tame-badger", State: subagentrecord.Failed, EndedAt: at.Add(-time.Second)},
 	}
-	render := func(now time.Time, snapshots []subagents.Snapshot) string {
+	renderFor := func(sessionName string, now time.Time, snapshots []subagents.Snapshot) string {
 		factory := subagentCounts.New(
-			"tame-impala",
+			sessionName,
 			func() []subagents.Snapshot { return snapshots },
 			func() time.Time { return now },
 		)
@@ -50,11 +50,20 @@ func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 		}
 		return built.Render(segment.Context{})
 	}
+	render := func(now time.Time, snapshots []subagents.Snapshot) string {
+		return renderFor("tame-impala", now, snapshots)
+	}
 	passes := map[string]func() string{
 		"one running one stopping one done one failed": func() string { return render(at, states) },
-		"flash expires but running continues":          func() string { return render(at.Add(time.Second), states) },
-		"idle after outcomes expire":                   func() string { return render(at.Add(31*time.Second), states[2:]) },
-		"just finished child stays hidden":             func() string { return render(at, states[2:3]) },
+		"unknown child uses linked fallback mark": func() string {
+			return render(at, []subagents.Snapshot{{Name: "worker", State: subagentrecord.Running, ActivityAt: at}})
+		},
+		"missing session leaves child unlinked": func() string {
+			return renderFor("", at, []subagents.Snapshot{{Name: "tame-adder", State: subagentrecord.Running, ActivityAt: at}})
+		},
+		"flash expires but running continues": func() string { return render(at.Add(time.Second), states) },
+		"idle after outcomes expire":          func() string { return render(at.Add(31*time.Second), states[2:]) },
+		"just finished child stays hidden":    func() string { return render(at, states[2:3]) },
 		"restored ended child stays hidden": func() string {
 			return render(at, []subagents.Snapshot{{Name: "tame-adder", State: subagentrecord.Ended}})
 		},

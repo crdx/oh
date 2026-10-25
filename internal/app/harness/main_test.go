@@ -6772,7 +6772,7 @@ func pendingEnvironmentChangeStream(t *testing.T) string {
 	return screenOutput.String()
 }
 
-const laterHarnessLine = "Task `build` done."
+const laterHarnessLine = "Task `build` done in 2s"
 
 func pendingModeMessagesStream(t *testing.T, toggleCount int) string {
 	t.Helper()
@@ -16679,6 +16679,20 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
+		"tasks / no session leaves task unlinked": goldenSegmentPass(
+			t,
+			taskNames.New("", tasksOf(tasks.Snapshot{ID: "docs", State: tasks.Running}), noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
+		"tasks / unknown run leaves task unlinked": goldenSegmentPass(
+			t,
+			taskNames.New("tame-impala", func() []tasks.Snapshot {
+				return []tasks.Snapshot{{ID: "docs", State: tasks.Running}}
+			}, noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
 		"tasks / running after output": goldenSegmentPass(
 			t,
 			taskNames.New("tame-impala", tasksOf(
@@ -19084,6 +19098,7 @@ type sessionGoldenScenario struct {
 	EndTaskBeforeFirst     string                    `toml:"end-task-before-first"`
 	EndTaskOutput          string                    `toml:"end-task-output"`
 	EndTaskIntent          string                    `toml:"end-task-intent"`
+	EndTaskSucceeds        bool                      `toml:"end-task-succeeds"`
 	EndTaskTimesOut        bool                      `toml:"end-task-times-out"`
 	TaskHoldingWorkspace   string                    `toml:"task-holding-workspace"`
 	TaskHoldingGit         string                    `toml:"task-holding-git"`
@@ -20630,19 +20645,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		settleSessionGoldenTasks(t, firstHarness)
 	}
 	if scenario.EndTaskBeforeFirst != "" {
-		conclusion := endedSessionGoldenTask(scenario.EndTaskBeforeFirst)
-		conclusion.Snapshot.Output = scenario.EndTaskOutput
-		if scenario.EndTaskTimesOut {
-			conclusion.Snapshot.State = tasks.TimedOut
-			conclusion.Snapshot.Failure = "the call reached its time limit of 5m"
-		}
-		if scenario.EndTaskIntent != "" {
-			arguments, err := json.Marshal(bash.Args{Command: "go test ./...", Intent: scenario.EndTaskIntent})
-			if err != nil {
-				t.Fatal(err)
-			}
-			conclusion.Snapshot.Invocation = &tasks.Invocation{Arguments: string(arguments)}
-		}
+		conclusion := endedSessionGoldenTaskForScenario(t, scenario)
 		firstHarness.holdNotice(taskrecord.EndedEvent(conclusion), false)
 		firstHarness.settleAccess()
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
@@ -21287,6 +21290,32 @@ func settleSessionGoldenTasks(t *testing.T, testHarness *App) {
 	}
 
 	testHarness.tasksChanged()
+}
+
+func endedSessionGoldenTaskForScenario(t *testing.T, scenario sessionGoldenScenario) tasks.Conclusion {
+	t.Helper()
+	if scenario.EndTaskSucceeds && scenario.EndTaskTimesOut {
+		t.Fatal("a task cannot both succeed and time out")
+	}
+	conclusion := endedSessionGoldenTask(scenario.EndTaskBeforeFirst)
+	conclusion.Snapshot.Output = scenario.EndTaskOutput
+	if scenario.EndTaskSucceeds {
+		conclusion.Snapshot.State = tasks.Done
+		conclusion.Snapshot.Failure = ""
+	}
+	if scenario.EndTaskTimesOut {
+		conclusion.Snapshot.State = tasks.TimedOut
+		conclusion.Snapshot.Failure = "the call reached its time limit of 5m"
+	}
+	if scenario.EndTaskIntent == "" {
+		return conclusion
+	}
+	arguments, err := json.Marshal(bash.Args{Command: "go test ./...", Intent: scenario.EndTaskIntent})
+	if err != nil {
+		t.Fatal(err)
+	}
+	conclusion.Snapshot.Invocation = &tasks.Invocation{Arguments: string(arguments)}
+	return conclusion
 }
 
 func endedSessionGoldenTask(id string) tasks.Conclusion {
@@ -26103,7 +26132,7 @@ group = "a"
 		t.Fatal(err)
 	}
 	session.waitFor("Completed.")
-	session.requireShown("Task weather-1 done.")
+	session.requireShown("Task weather-1 done in ")
 	session.requireHidden("forecast complete")
 	session.quit()
 

@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/state"
 	"crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tasks"
@@ -174,6 +175,9 @@ func (self Completion) notice(output string) string {
 		status += fmt.Sprintf(" run %d", snapshot.Run)
 	}
 	status += " " + snapshot.State.Spoken()
+	if !snapshot.StartedAt.IsZero() && !snapshot.EndedAt.IsZero() && !snapshot.EndedAt.Before(snapshot.StartedAt) {
+		status += " in " + util.FormatDuration(snapshot.EndedAt.Sub(snapshot.StartedAt))
+	}
 	if !self.IsFinal {
 		status += "; respawning"
 	}
@@ -183,7 +187,6 @@ func (self Completion) notice(output string) string {
 	if snapshot.Failure != "" {
 		status += ": " + snapshot.Failure
 	}
-	status += "."
 	if output != "" {
 		status += "\n\n" + markdown.CodeBlock("", output)
 	}

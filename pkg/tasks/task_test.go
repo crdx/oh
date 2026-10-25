@@ -194,6 +194,7 @@ func TestARespawningTaskKeepsItsIdentityAndStopsAfterQuickRuns(t *testing.T) {
 		runs := 0
 		_, err := manager.Start(t.Context(), "watch", "bash", true, true, func(context.Context) (tool.ToolCallResult, error) {
 			runs++
+			time.Sleep(time.Duration(runs) * 100 * time.Millisecond)
 			return tool.ToolCallResult{Output: "run"}, nil
 		}, nil)
 		if err != nil {
@@ -211,9 +212,12 @@ func TestARespawningTaskKeepsItsIdentityAndStopsAfterQuickRuns(t *testing.T) {
 		}
 		for index, conclusion := range conclusions {
 			isLast := index == runs-1
+			duration := conclusion.Snapshot.EndedAt.Sub(conclusion.Snapshot.StartedAt)
+			expectedDuration := time.Duration(index+1) * 100 * time.Millisecond
 			if conclusion.Snapshot.ID != "watch" || conclusion.Snapshot.Run != index+1 ||
-				conclusion.IsFinal != isLast || conclusion.Snapshot.IsRespawnLimitReached != isLast {
-				t.Errorf("run %d reported %+v", index+1, conclusion)
+				conclusion.IsFinal != isLast || conclusion.Snapshot.IsRespawnLimitReached != isLast ||
+				duration != expectedDuration {
+				t.Errorf("run %d reported %+v with duration %s, want %s", index+1, conclusion, duration, expectedDuration)
 			}
 		}
 	})

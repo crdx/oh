@@ -1,0 +1,19 @@
+
+ run the slow tests as checks
+
+
+$ bash backgrounded (checks); end your turn to wait
+
+
+ 🤖 Task checks done in 0.0s
+
+    tests passed
+
+
+The slow tests moved to the background and finished.
+
+
+ carry on
+
+
+The checks remain complete.

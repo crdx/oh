@@ -107,13 +107,14 @@ func respawnedRun() agent.Event {
 
 	return taskrecord.EndedEvent(tasks.Conclusion{
 		Snapshot: tasks.Snapshot{
-			ID:        "watch",
-			ToolName:  "bash",
-			State:     tasks.Done,
-			StartedAt: startedAt,
-			EndedAt:   startedAt.Add(8 * time.Second),
-			Run:       1,
-			Output:    "built in 3s\n",
+			Invocation: &tasks.Invocation{Arguments: `{"command":"just watch","intent":"Rebuilding whenever it changes"}`},
+			ID:         "watch",
+			ToolName:   "bash",
+			State:      tasks.Done,
+			StartedAt:  startedAt,
+			EndedAt:    startedAt.Add(8 * time.Second),
+			Run:        1,
+			Output:     "built in 3s\n",
 		},
 	})
 }

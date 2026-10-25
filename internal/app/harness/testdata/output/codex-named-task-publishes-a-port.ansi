@@ -9,7 +9,7 @@
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495529000000000&run=1&session=tame-impala&task=docs\e\\\e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e]8;;\e\\ done.                                                                                 \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495529000000000&run=1&session=tame-impala&task=docs\e\\\e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e]8;;\e\\ done in 0.0s                                                                          \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mserver ready\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

@@ -1,8 +1,20 @@
 === tame-adder ===
-{"kind":"head","version":24,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5","efforts":["medium"]},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace.","tools":["message_parent"],"tool_definitions":[{"name":"message_parent","description":"send your parent a message now and keep working, such as a question, a blocker, or an early finding it can act on; your final answer reaches your parent on its own when you finish, so never send it here; if your parent replies, its reply reaches you after a later round of tool calls","revision":"1","parameters":[{"name":"message","type":"string","description":"the message, as plain text"}]}]}}
+{"kind":"head","version":24,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5","efforts":["medium"]},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace.","tools":["check","message_parent"],"tool_definitions":[{"name":"check","description":"A deterministic scenario tool.","revision":"1"},{"name":"message_parent","description":"send your parent a message now and keep working, such as a question, a blocker, or an early finding it can act on; your final answer reaches your parent on its own when you finish, so never send it here; if your parent replies, its reply reaches you after a later round of tool calls","revision":"1","parameters":[{"name":"message","type":"string","description":"the message, as plain text"}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Watch the build forever"}}
+{"kind":"event","event":{"kind":"model_message","text":"Starting the watch."}}
+{"kind":"event","event":{"kind":"tool_call_request","id":"toolu_child","name":"message_parent","arguments":"{\"message\":\" \"}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"message is required","id":"toolu_child","name":"message_parent","status":"error"}}
+{"kind":"event","event":{"render":"check","kind":"tool_call_request","id":"toolu_check","name":"check","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"toolu_check","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"successful payload hidden from status","id":"toolu_check","name":"check","status":"success","stats":{"kind":"output","lines":1,"bytes":37}}}
+{"kind":"event","event":{"kind":"model_message","text":"Still watching."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Watch the build forever"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Starting the watch."},{"type":"tool_use","id":"toolu_child","name":"message_parent","input":{"message":" "}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_child","content":"message is required","is_error":true}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_check","name":"check","input":{}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_check","content":"successful payload hidden from status"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Still watching."}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the parent stopped it.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"turn_interruption","text":"the parent stopped it"}}

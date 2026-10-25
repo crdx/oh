@@ -4,6 +4,8 @@
 
 ### Changes
 
+- Show recent activity and errors in subagent status
+- Show run durations in task completion notices
 - Hyperlink subagent emojis and names to the full conversation
 
 ## [0.25.2] — 2026-10-25

@@ -17,7 +17,7 @@
 {"kind":"item","payload":{"role":"user","content":"start named background work and publish its port"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":"{\"background\":true,\"task_name\":\"docs\",\"forward_port\":8000}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"scheduled as docs\nUse http://127.82.233.168:8000 for the user; use localhost:8000 inside the sandbox."}}
-{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nPort 8000 is now forwarded to http://127.82.233.168:8000.\n\u003c/environment_context\u003e\n\n\u003ccodex_internal_context source=\"task\"\u003e\nTask `docs` done.\n\n```\nserver ready\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nPort 8000 is now forwarded to http://127.82.233.168:8000.\n\u003c/environment_context\u003e\n\n\u003ccodex_internal_context source=\"task\"\u003e\nTask `docs` done in 0.0s\n\n```\nserver ready\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"task","arguments":"{\"action\":\"output\",\"name\":\"docs\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"docs: done\nserver ready"}}
 {"kind":"item","payload":{"id":"call-item-3","type":"function_call","call_id":"call-3","name":"task","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}"}}

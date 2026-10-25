@@ -12,6 +12,7 @@ import (
 	"sync"
 	"testing"
 	"time"
+	"unicode/utf8"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/model"
@@ -1018,18 +1019,22 @@ func TestAStatusSaysHowFarEachChildHasGot(t *testing.T) {
 	t.Cleanup(manager.Close)
 	manager.mutex.Lock()
 	manager.children["frugal-otter"] = &child{
-		Snapshot:   Snapshot{Name: "frugal-otter", State: subagentrecord.Running, StartedAt: now.Add(-90 * time.Second)},
-		cancel:     func() {},
-		selection:  model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"},
-		choice:     model.Choice{Prices: &agent.TokenPrices{Input: 3, Output: 15}},
-		usage:      agent.Usage{InputTokens: 2_000_000, OutputTokens: 10_000},
-		toolCalls:  12,
-		lastIntent: "Reading the parser",
+		Snapshot:     Snapshot{Name: "frugal-otter", State: subagentrecord.Running, StartedAt: now.Add(-90 * time.Second)},
+		cancel:       func() {},
+		selection:    model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"},
+		choice:       model.Choice{Prices: &agent.TokenPrices{Input: 3, Output: 15}},
+		usage:        agent.Usage{InputTokens: 2_000_000, OutputTokens: 10_000},
+		toolCalls:    12,
+		lastIntent:   "Reading the parser",
+		activityKind: agent.ModelMessageEvent,
+		liveActivity: "first\nsecond\nthird\nfourth\nfifth\nsixth",
 	}
 	manager.children["frugal-heron"] = &child{
-		Snapshot: Snapshot{Name: "frugal-heron", State: subagentrecord.Done},
-		cancel:   func() {},
-		choice:   model.Choice{Provider: "anthropic", ID: "claude-opus-5"},
+		Snapshot:     Snapshot{Name: "frugal-heron", State: subagentrecord.Done},
+		cancel:       func() {},
+		choice:       model.Choice{Provider: "anthropic", ID: "claude-opus-5"},
+		activityKind: agent.ModelMessageEvent,
+		liveActivity: "settled activity does not appear here",
 	}
 	manager.order = append(manager.order, "frugal-otter", "frugal-heron")
 	manager.mutex.Unlock()
@@ -1038,6 +1043,7 @@ func TestAStatusSaysHowFarEachChildHasGot(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := "frugal-otter: running (1m 30s; on anthropic/claude-opus-5@high; 12 tool calls; 2Mt in, 10Kt out; last: Reading the parser)\n" +
+		"recent activity:\n  second\n  third\n  fourth\n  fifth\n  sixth\n" +
 		"frugal-heron: done (on anthropic/claude-opus-5)"
 	if status != want {
 		t.Errorf("the status read\n%s\nwant\n%s", status, want)
@@ -1302,6 +1308,69 @@ func TestModelActivityFlashesOncePerBurst(t *testing.T) {
 	case <-manager.Activity():
 	default:
 		t.Fatal("the later flash did not wake the screen")
+	}
+}
+
+func TestAStatusTracksCompleteLiveActivity(t *testing.T) {
+	manager := &Manager{options: Options{Now: time.Now}, activity: make(chan struct{}, 1)}
+	current := &child{Snapshot: Snapshot{Name: "frugal-otter", State: subagentrecord.Running}}
+	manager.markActivity(current, agent.Update{Delta: &agent.Delta{Kind: agent.ModelMessageEvent, Text: "hello"}})
+	manager.markActivity(current, agent.Update{Delta: &agent.Delta{Kind: agent.ModelMessageEvent, Text: " there"}})
+	manager.markActivity(current, agent.Update{Delta: &agent.Delta{Kind: agent.ModelReasoningEvent, Text: "checking"}})
+	manager.markActivity(current, agent.Update{Event: &agent.Event{
+		Kind: agent.ToolCallRequestEvent,
+		Name: "bash",
+		FallbackRendering: agent.FallbackRendering{
+			Intent: "Running the tests",
+		},
+	}})
+	manager.markActivity(current, agent.Update{Event: &agent.Event{
+		Kind:   agent.ToolCallResultEvent,
+		Name:   "bash",
+		Text:   "command failed",
+		Status: agent.ErrorStatus,
+	}})
+	manager.markActivity(current, agent.Update{Event: &agent.Event{
+		Kind:    agent.RetryingEvent,
+		Failure: &agent.Failure{Kind: agent.GenericFailure, Message: "connection reset"},
+	}})
+	want := "hello there\nchecking\ncalling bash: Running the tests\nerror from bash: command failed\nretry: connection reset"
+	if current.liveActivity != want {
+		t.Fatalf("the live activity was kept as %q, want %q", current.liveActivity, want)
+	}
+	manager.resetLiveActivity(current)
+	if current.activityKind != "" || current.liveActivity != "" {
+		t.Fatalf("the next response inherited %q of kind %q", current.liveActivity, current.activityKind)
+	}
+	manager.markActivity(current, agent.Update{Delta: &agent.Delta{
+		Kind: agent.ModelMessageEvent,
+		Text: strings.Repeat("x", liveActivityBytes) + "£",
+	}})
+	if len(current.liveActivity) > liveActivityBytes || !utf8.ValidString(current.liveActivity) {
+		t.Fatalf("the bounded activity has %d bytes or invalid UTF-8", len(current.liveActivity))
+	}
+}
+
+func TestLiveToolResultsShowOutcomesWithoutSuccessfulPayloads(t *testing.T) {
+	for _, test := range []struct {
+		event agent.Event
+		want  string
+	}{
+		{event: agent.Event{Name: "bash", Status: agent.SuccessStatus, Text: "secret successful output"}, want: "bash completed"},
+		{event: agent.Event{Name: "read", Status: agent.SuccessStatus, Picture: &agent.Picture{}}, want: "read completed"},
+		{event: agent.Event{Name: "bash", Status: agent.ErrorStatus, Text: "exit status 1"}, want: "error from bash: exit status 1"},
+		{
+			event: agent.Event{Name: "bash", Status: agent.SuccessStatus, Failure: &agent.Failure{Kind: agent.GenericFailure, Message: "broken"}},
+			want:  "error from bash: broken",
+		},
+		{event: agent.Event{Name: "bash", Status: agent.CancelledStatus, Text: "the parent stopped it"}, want: "bash cancelled: the parent stopped it"},
+		{event: agent.Event{Name: "bash", Status: agent.WarningStatus, Text: "nearly full"}, want: "warning from bash: nearly full"},
+		{event: agent.Event{Name: "bash", Status: agent.InfoStatus, Text: "scheduled"}, want: "update from bash: scheduled"},
+		{event: agent.Event{Text: "unknown status"}, want: "result from tool: unknown status"},
+	} {
+		if got := liveToolResultText(test.event); got != test.want {
+			t.Errorf("%s result became %q, want %q", test.event.Status, got, test.want)
+		}
 	}
 }
 

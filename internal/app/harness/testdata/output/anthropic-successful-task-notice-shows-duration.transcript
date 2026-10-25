@@ -1,0 +1,37 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsnlg · +0s
+
+## Task run ended · +0s
+
+````
+Task `build` done in 12s
+
+```
+build complete
+```
+````
+
+## User · +0s
+
+what happened to the build
+
+## Assistant · +0s
+
+It completed successfully after twelve seconds.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

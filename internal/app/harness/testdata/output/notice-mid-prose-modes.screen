@@ -80,7 +80,7 @@ Paragraph 23 of something taller than the terminal.
 Paragraph 24 of something taller than the terminal.
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 
     undefined: getWidth
     exit status 1
@@ -126,7 +126,7 @@ than the terminal. Paragraph 22 of something taller than the terminal. Paragraph
 taller than the terminal. Paragraph 24 of something taller than the terminal.
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 
     undefined: getWidth
     exit status 1
@@ -214,7 +214,7 @@ Paragraph 23 of something taller than the terminal.
 Paragraph 24 of something taller than the terminal.
 
 
- 🤖 Task build failed: exit status 2.
+ 🤖 Task build failed: exit status 2
 
     undefined: getWidth
     exit status 1

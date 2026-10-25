@@ -43,7 +43,7 @@
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-5","output":"build: stopped — the task did not carry over into this session"}}
 {"kind":"item","payload":{"id":"call-item-8","type":"function_call","call_id":"call-7","name":"task","arguments":"{\"action\":\"restart\",\"name\":\"build\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-7","output":"build: queued, run 2"}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `build` run 2 done.\n\n```\nrestarted command\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `build` run 2 done in 0.0s\n\n```\nrestarted command\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"call-item-9","type":"function_call","call_id":"call-8","name":"task","arguments":"{\"action\":\"output\",\"name\":\"build\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-8","output":"build: done, run 2\nrun 1: stopped — the task did not carry over into this session\nrestarted command"}}
 {"kind":"item","payload":{"id":"call-item-10","type":"function_call","call_id":"call-9","name":"task","arguments":"{\"action\":\"discard\",\"name\":\"build\"}"}}

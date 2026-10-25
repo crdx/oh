@@ -30,7 +30,7 @@ Transcript: `subagents/tame-adder/chat.md`
 
 ```
 subagent list: subagents [ok, 1 line, 19B, toolu_2]
-subagent status: all [ok, 1 line, 75B, toolu_3]
+subagent status: all [ok, 7 lines, 242B, toolu_3]
 subagent output: tame-adder [ok, 1 line, 168B, toolu_4]
 subagent send: tame-adder [ok, 1 line, 21B, toolu_11]
 subagent stop: tame-adder [ok, 1 line, 19B, toolu_5]
@@ -53,6 +53,8 @@ Every action answered.
 Stop watching
 
 ## Subagent finished · tame-adder · stopped · +0s
+
+Still watching.
 
 ## User · +0s
 

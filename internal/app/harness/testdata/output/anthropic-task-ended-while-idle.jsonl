@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"task_run_ended","name":"task-1","state":{"snapshot":{"id":"task-1","tool_name":"bash","run":1,"is_respawning":false,"state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","output":"","failure":"exit status 1"},"is_final":true}}}
 {"kind":"event","event":{"kind":"user_message","text":"what happened to the task"}}
 {"kind":"event","event":{"kind":"model_message","text":"Task task-1 failed."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `task-1` failed: exit status 1.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTask `task-1` failed in 12s: exit status 1\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what happened to the task"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Task task-1 failed."}]}}
 {"kind":"turn_completion","turn":{}}

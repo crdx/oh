@@ -731,6 +731,7 @@ func (self *Manager) finishRun(ctx context.Context, current *entry, result tool.
 		}
 		current.snapshot.Run++
 		current.snapshot.State = Running
+		current.snapshot.StartedAt = self.now()
 		current.snapshot.EndedAt = time.Time{}
 		current.snapshot.Output = ""
 		current.snapshot.Failure = ""

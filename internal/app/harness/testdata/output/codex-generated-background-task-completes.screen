@@ -1,0 +1,19 @@
+
+ start the build in the background
+
+
+$ bash scheduled as bash-1
+
+
+ 🤖 Task bash-1 done in 0.0s
+
+    build finished
+
+
+The generated background task finished.
+
+
+ carry on
+
+
+The build remains complete.

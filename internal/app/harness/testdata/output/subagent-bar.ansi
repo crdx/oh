@@ -4,6 +4,11 @@
 
 === just finished child stays hidden ===
 
+=== missing session leaves child unlinked ===
+🐍
 === one running one stopping one done one failed ===
 \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\🐍\e]8;;\e\\ \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-alpaca\e\\\e[2m🦙\e[0m\e]8;;\e\\\e[38;2;207;173;0m…\e[0m \e[38;2;204;102;102m✗ 1\e[0m
 === restored ended child stays hidden ===
+
+=== unknown child uses linked fallback mark ===
+\e]8;;oh://subagent-conversation?session=tame-impala&subagent=worker\e\\\e[38;2;129;162;190m●\e[0m\e]8;;\e\\

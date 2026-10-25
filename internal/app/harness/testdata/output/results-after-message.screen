@@ -10,7 +10,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- 🤖 Task docs done.
+ 🤖 Task docs done in 12s
 
 
 Both still mention the spinner.
@@ -143,7 +143,15 @@ n
 
 e
 
-.
+i
+
+n
+
+1
+
+2
+
+s
 
 
 B
@@ -184,7 +192,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- 🤖 Task docs done.
+ 🤖 Task docs done in 12s
 
 
 Both still mention the spinner.
@@ -207,7 +215,8 @@ grep spi… 1L
 
  🤖 Task
     docs
-    done.
+    done in
+    12s
 
 
 Both still
@@ -224,7 +233,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- 🤖 Task docs done.
+ 🤖 Task docs done in 12s
 
 
 Both still mention the spinner.

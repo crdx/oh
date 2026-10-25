@@ -19,6 +19,6 @@
 {"kind":"item","payload":{"role":"user","content":"start another build in the background"}}
 {"kind":"item","payload":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"bash","arguments":"{\"dish\":\"release build\",\"background\":true}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"scheduled as bash-1"}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `bash-1` failed: the command exited with status 1.\n\n```\nexit(1):\nbroken build\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `bash-1` failed in 0.0s: the command exited with status 1\n\n```\nexit(1):\nbroken build\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"The new build used the next unused task ID and reported its failure."}]}}
 {"kind":"turn_completion","turn":{}}

@@ -1,0 +1,15 @@
+{"kind":"head","version":24,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsnlg"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"task_run_ended","name":"build","state":{"snapshot":{"invocation":{"arguments":"{\"command\":\"go test ./...\",\"intent\":\"Building every package once\"}"},"id":"build","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","output":"build complete","failure":""},"is_final":true}}}
+{"kind":"event","event":{"kind":"user_message","text":"what happened to the build"}}
+{"kind":"event","event":{"kind":"model_message","text":"It completed successfully after twelve seconds."}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `build` done in 12s\n\n```\nbuild complete\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"what happened to the build"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"It completed successfully after twelve seconds."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{}}

@@ -48,6 +48,13 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				"missing.go: no such file or directory"),
 		},
 		{
+			name: "malformed arguments remain raw",
+			exchange: toolresult.Exchange{
+				Request: agent.Event{Kind: agent.ToolCallRequestEvent, ID: "call-1", Name: "read", Arguments: `{"path":`},
+				Result:  agent.Event{Kind: agent.ToolCallResultEvent, ID: "call-1", Name: "read", Status: agent.ErrorStatus, Text: "arguments are malformed"},
+			},
+		},
+		{
 			name: "call stopped before running",
 			exchange: resultExchange("read", read.Args{Path: "main.go"}, agent.CancelledStatus,
 				"the call stopped because the user pressed escape"),

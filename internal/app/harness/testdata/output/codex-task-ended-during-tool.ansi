@@ -5,7 +5,7 @@
 \e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed: exit status 1.                                                               \e[0m\r
+\e[48;2;48;58;67m 🤖 Task \e]8;;oh://task-result?ended=1787495541000000000&run=1&session=tame-impala&task=build\e\\\e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m\e]8;;\e\\ failed in 12s: exit status 1                                                         \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 The refactor is done. The build failed on an undefined getWidth, which I will fix next.\e[?25h\e[?2026l\r

@@ -1,0 +1,49 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "bash"
+detaches = true
+outputs = ["tests passed"]
+
+[[tool]]
+name = "task"
+
+[first]
+prompt = "run the slow tests as checks"
+settle-tasks-after-tool-result = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"task_name\":\"checks\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"task_name\":\"checks\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":"{\"task_name\":\"checks\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The slow tests moved to the background and finished."}''',
+    '''{"type":"response.output_text.done","text":"The slow tests moved to the background and finished."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The slow tests moved to the background and finished."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The slow tests moved to the background and finished."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The checks remain complete."}''',
+    '''{"type":"response.output_text.done","text":"The checks remain complete."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The checks remain complete."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"The checks remain complete."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

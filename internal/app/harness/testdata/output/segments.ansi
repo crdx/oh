@@ -415,6 +415,10 @@ usage \e[38;2;204;102;102mfailed\e[0m
 \e]8;;oh://task-result?run=1&session=tame-impala&task=docs\e\\\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190mdocs\e[0m\e]8;;\e\\ \e]8;;oh://task-result?ended=1787495528000000000&run=1&session=tame-impala&task=builder\e\\\e[38;2;204;102;102m✗\e[0m\e]8;;\e\\
 \e]8;;oh://task-result?run=1&session=tame-impala&task=docs\e\\\e[38;2;129;162;190m●\e[0m\e]8;;\e\\ \e]8;;oh://task-result?ended=1787495528000000000&run=1&session=tame-impala&task=builder\e\\\e[38;2;204;102;102m✗\e[0m\e]8;;\e\\
 \e[38;2;150;152;150m+\e[0m
+=== tasks / no session leaves task unlinked ===
+\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190mdocs\e[0m
+\e[38;2;129;162;190m●\e[0m
+\e[38;2;150;152;150m+\e[0m
 === tasks / none ===
 
 === tasks / nothing is left of a closed session ===
@@ -448,6 +452,10 @@ usage \e[38;2;204;102;102mfailed\e[0m
 \e]8;;oh://task-result?run=2&session=tame-impala&task=docs\e\\\e[38;2;192;128;80m●\e[0m \e[38;2;129;162;190mdocs\e[0m\e]8;;\e\\ \e]8;;oh://task-result?run=1&session=tame-impala&task=watch\e\\\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190mwatch\e[0m\e]8;;\e\\
 \e]8;;oh://task-result?run=2&session=tame-impala&task=docs\e\\\e[38;2;192;128;80m●\e[0m \e[38;2;129;162;190mdocs\e[0m\e]8;;\e\\ \e]8;;oh://task-result?run=1&session=tame-impala&task=watch\e\\\e[38;2;129;162;190m●\e[0m\e]8;;\e\\
 \e]8;;oh://task-result?run=2&session=tame-impala&task=docs\e\\\e[38;2;192;128;80m●\e[0m\e]8;;\e\\ \e]8;;oh://task-result?run=1&session=tame-impala&task=watch\e\\\e[38;2;129;162;190m●\e[0m\e]8;;\e\\
+\e[38;2;150;152;150m+\e[0m
+=== tasks / unknown run leaves task unlinked ===
+\e[38;2;129;162;190m●\e[0m \e[38;2;129;162;190mdocs\e[0m
+\e[38;2;129;162;190m●\e[0m
 \e[38;2;150;152;150m+\e[0m
 === turn-count / nothing asked yet ===
 

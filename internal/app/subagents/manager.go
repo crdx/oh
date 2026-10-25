@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/interrupt"
@@ -113,16 +114,18 @@ type Progress struct {
 type child struct {
 	Snapshot
 
-	cancel     context.CancelFunc
-	over       chan struct{}
-	stopReason string
-	caps       caps.Set
-	choice     model.Choice
-	selection  model.Selection
-	usage      agent.Usage
-	inbox      *agent.Interjections
-	toolCalls  int
-	lastIntent string
+	cancel       context.CancelFunc
+	over         chan struct{}
+	stopReason   string
+	caps         caps.Set
+	choice       model.Choice
+	selection    model.Selection
+	usage        agent.Usage
+	inbox        *agent.Interjections
+	toolCalls    int
+	lastIntent   string
+	activityKind agent.Kind
+	liveActivity string
 }
 
 type Rotation struct {
@@ -935,6 +938,7 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 	var runEvents []agent.Event
 	var streamError error
 	for {
+		self.resetLiveActivity(current)
 		for update, failure := range worker.Agent.Stream(ctx, message, inbox) {
 			if failure != nil {
 				streamError = failure
@@ -975,17 +979,29 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 }
 
 const (
-	ActivityFlash = time.Second
-	activityPause = time.Second
+	ActivityFlash     = time.Second
+	activityPause     = time.Second
+	liveActivityBytes = 8 << 10
+	statusOutputBytes = 2 << 10
+	statusOutputLines = 5
 )
 
+func (self *Manager) resetLiveActivity(current *child) {
+	self.mutex.Lock()
+	current.activityKind = ""
+	current.liveActivity = ""
+	self.mutex.Unlock()
+}
+
 func (self *Manager) markActivity(current *child, update agent.Update) {
+	self.mutex.Lock()
+	captureLiveActivity(current, update)
 	if (update.Delta == nil || update.Delta.Text == "") &&
 		(update.Event == nil || update.Event.Kind != agent.ToolCallRequestEvent &&
 			update.Event.Kind != agent.ModelMessageEvent && update.Event.Kind != agent.ModelReasoningEvent) {
+		self.mutex.Unlock()
 		return
 	}
-	self.mutex.Lock()
 	now := self.options.Now()
 	if now.Before(current.ActivityAt.Add(ActivityFlash + activityPause)) {
 		self.mutex.Unlock()
@@ -997,6 +1013,107 @@ func (self *Manager) markActivity(current *child, update agent.Update) {
 	case self.activity <- struct{}{}:
 	default:
 	}
+}
+
+func captureLiveActivity(current *child, update agent.Update) {
+	if update.Delta != nil && update.Delta.Text != "" &&
+		(update.Delta.Kind == agent.ModelMessageEvent || update.Delta.Kind == agent.ModelReasoningEvent) {
+		appendLiveActivity(current, update.Delta.Kind, update.Delta.Text, false)
+	}
+	if update.Event == nil {
+		return
+	}
+	if text := liveEventText(*update.Event); text != "" {
+		appendLiveActivity(current, update.Event.Kind, text, true)
+	}
+}
+
+func appendLiveActivity(current *child, kind agent.Kind, text string, isNewBlock bool) {
+	if isNewBlock || current.activityKind != kind {
+		text = strings.Trim(text, "\n")
+		if text == "" {
+			return
+		}
+		if current.liveActivity != "" && !strings.HasSuffix(current.liveActivity, "\n") {
+			text = "\n" + text
+		}
+	}
+	current.activityKind = kind
+	current.liveActivity = appendByteTail(current.liveActivity, text, liveActivityBytes)
+}
+
+func liveEventText(event agent.Event) string {
+	switch event.Kind {
+	case agent.ToolCallRequestEvent:
+		detail := event.Intent
+		if detail == "" {
+			detail = event.Subject
+		}
+		if detail == "" {
+			detail = event.Arguments
+		}
+		return activityLine("calling "+activityToolName(event.Name), detail)
+	case agent.ToolCallResultEvent:
+		return liveToolResultText(event)
+	case agent.RetryingEvent:
+		return activityLine("retry", agent.FailureText(event))
+	case agent.FailureEvent:
+		return activityLine("error", agent.FailureText(event))
+	case agent.InterruptionEvent:
+		return activityLine("interrupted", event.Text)
+	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,
+		agent.CacheRebuildEvent, agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.StateChangeEvent:
+		return ""
+	default:
+		return ""
+	}
+}
+
+func liveToolResultText(event agent.Event) string {
+	name := activityToolName(event.Name)
+	if event.Failure != nil {
+		return activityLine("error from "+name, agent.FailureText(event))
+	}
+	switch event.Status {
+	case agent.SuccessStatus:
+		return name + " completed"
+	case agent.ErrorStatus:
+		return activityLine("error from "+name, event.Text)
+	case agent.CancelledStatus:
+		return activityLine(name+" cancelled", event.Text)
+	case agent.WarningStatus:
+		return activityLine("warning from "+name, event.Text)
+	case agent.InfoStatus:
+		return activityLine("update from "+name, event.Text)
+	default:
+		return activityLine("result from "+name, event.Text)
+	}
+}
+
+func activityToolName(name string) string {
+	if name == "" {
+		return "tool"
+	}
+	return name
+}
+
+func activityLine(label string, detail string) string {
+	if detail == "" {
+		return label
+	}
+	return label + ": " + detail
+}
+
+func appendByteTail(text string, addition string, limit int) string {
+	text += addition
+	if len(text) <= limit {
+		return text
+	}
+	start := len(text) - limit
+	for start < len(text) && !utf8.RuneStart(text[start]) {
+		start++
+	}
+	return text[start:]
 }
 
 func (self *Manager) count(current *child, event agent.Event) {
@@ -1320,10 +1437,27 @@ func (self *Manager) statusOf(current *child) string {
 	if current.lastIntent != "" {
 		parts = append(parts, "last: "+current.lastIntent)
 	}
-	if len(parts) == 0 {
-		return describe(current.Snapshot)
+	status := describe(current.Snapshot)
+	if len(parts) > 0 {
+		status += " (" + strings.Join(parts, "; ") + ")"
 	}
-	return describe(current.Snapshot) + " (" + strings.Join(parts, "; ") + ")"
+	if current.State.IsLive() {
+		status += liveActivityStatus(current.liveActivity)
+	}
+	return status
+}
+
+func liveActivityStatus(activity string) string {
+	activity = strings.Trim(activity, "\n")
+	if strings.TrimSpace(activity) == "" {
+		return ""
+	}
+	lines := strings.Split(activity, "\n")
+	if len(lines) > statusOutputLines {
+		lines = lines[len(lines)-statusOutputLines:]
+	}
+	activity = appendByteTail("", strings.Join(lines, "\n"), statusOutputBytes)
+	return "\nrecent activity:\n  " + strings.ReplaceAll(activity, "\n", "\n  ")
 }
 
 func (self *Manager) usageOf(current *child) string {

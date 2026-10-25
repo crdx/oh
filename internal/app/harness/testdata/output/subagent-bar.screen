@@ -4,6 +4,11 @@
 
 === just finished child stays hidden ===
 
+=== missing session leaves child unlinked ===
+🐍
 === one running one stopping one done one failed ===
 🐍 🦙… ✗ 1
 === restored ended child stays hidden ===
+
+=== unknown child uses linked fallback mark ===
+●

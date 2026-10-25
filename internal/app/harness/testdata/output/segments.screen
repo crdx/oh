@@ -375,6 +375,10 @@ usage failed
 ● docs ✗
 ● ✗
 +
+=== tasks / no session leaves task unlinked ===
+● docs
+●
++
 === tasks / none ===
 
 === tasks / nothing is left of a closed session ===
@@ -408,6 +412,10 @@ usage failed
 ● docs ● watch
 ● docs ●
 ● ●
++
+=== tasks / unknown run leaves task unlinked ===
+● docs
+●
 +
 === turn-count / nothing asked yet ===
 
