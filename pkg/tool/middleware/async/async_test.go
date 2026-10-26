@@ -444,26 +444,16 @@ func TestAnInvalidAsyncOptionDoesNotHideTheCallRendering(t *testing.T) {
 	}
 }
 
-func TestTheDescriptionNamesTheForegroundLimit(t *testing.T) {
-	for _, test := range []struct {
-		name  string
-		limit time.Duration
-		want  string
-	}{
-		{"default", 0, "after 30 active seconds continues in the background"},
-		{"one second", time.Second, "after 1 active second continues in the background"},
-		{"whole minutes", 2 * time.Minute, "after 2 active minutes continues in the background"},
-		{"odd seconds", 90 * time.Second, "after 90 active seconds continues in the background"},
-	} {
-		t.Run(test.name, func(t *testing.T) {
-			manager := tasks.New(t.Context())
-			defer manager.Close()
-			manager.SetForegroundLimit(test.limit)
-			description := async.Tool(heldTool(nil, new(int)), manager, async.Options{}).Description()
-			if !strings.Contains(description, test.want) || !strings.Contains(description, "A task runs until it exits or you stop it") {
-				t.Errorf("got description %q, want it to say %q", description, test.want)
-			}
-		})
+func TestTheDescriptionStaysTrueWhenTheForegroundLimitChanges(t *testing.T) {
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	subject := async.Tool(heldTool(nil, new(int)), manager, async.Options{})
+	description := subject.Description()
+	for _, limit := range []time.Duration{time.Second, 2 * time.Minute, 90 * time.Second} {
+		manager.SetForegroundLimit(limit)
+		if got := subject.Description(); got != description || !strings.Contains(got, "after the configured foreground limit continues in the background") || !strings.Contains(got, "A task runs until it exits or you stop it") {
+			t.Errorf("got description %q after changing the foreground limit to %s", got, limit)
+		}
 	}
 }
 

@@ -6066,6 +6066,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-yolo":             {".prompt"},
 		"host-command":             {".ansi", ".screen"},
 		"host-command-running":     {".ansi", ".screen"},
+		"live-task-settings":       {".screen"},
 		"host-command-queued":      {".screen"},
 		"inputblock":               {".ansi", ".screen"},
 		"pathrefs":                 {".ansi", ".screen"},
@@ -12232,11 +12233,11 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		},
 		"an experiment read once at startup": {
 			changes: []config.SourceChange{
-				{Path: "config.toml", Settings: []string{"experimental.reply_command", "experimental.shared_history"}},
+				{Path: "config.toml", Settings: []string{"experimental.forward_hostname", "experimental.shared_history"}},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: experimental.reply_command, experimental.shared_history\n" +
-				"applies when oh next starts: experimental.reply_command",
+				"config.toml: experimental.forward_hostname, experimental.shared_history\n" +
+				"applies when oh next starts: experimental.forward_hostname",
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
@@ -12993,7 +12994,7 @@ func TestReloadingCacheMissNoticesChangesAnExistingPainter(t *testing.T) {
 
 func TestTheSharedHistoryToggleDecidesWhetherASessionRecallsOtherSessions(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "")
+	writeLiveConfig(t, path, "[experimental]\nshared_history = false\n")
 
 	self := testConversation(t, &bytes.Buffer{})
 	prepareLiveConfig(t, self, path)
@@ -13006,7 +13007,7 @@ func TestTheSharedHistoryToggleDecidesWhetherASessionRecallsOtherSessions(t *tes
 	history.Add("here one")
 
 	if got, want := recalledHistory(history), []string{"here one"}; !slices.Equal(got, want) {
-		t.Errorf("with the toggle absent, recalled %q, want %q", got, want)
+		t.Errorf("with the toggle off, recalled %q, want %q", got, want)
 	}
 
 	writeLiveConfig(t, path, "[experimental]\nshared_history = true\n")

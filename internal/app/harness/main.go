@@ -884,8 +884,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	experimentalToggles := experimental.New(settings.Experimental)
 
 	endpoints := backend.EndpointSettings{
-		OverrideURL: endpointURL,
-		OllamaHost:  settings.Provider.Ollama.Host,
+		OverrideURL:    endpointURL,
+		OllamaHost:     settings.Provider.Ollama.Host,
+		StreamTimeouts: streamTimeoutsFrom(experimentalToggles),
 	}
 	listProviderModels := func(ctx context.Context, providerName string) ([]agent.Model, error) {
 		return backend.ListModels(ctx, providerName, endpoints)
@@ -1364,7 +1365,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		maximumRunningTasks := experimentalToggles.GetWholeNumber(experimental.MaximumRunningTasks, tasks.DefaultMaximumRunning)
 		taskManager = tasks.NewWithMaximumRunning(ctx, maximumRunningTasks)
 		defer taskManager.Close()
-		taskManager.SetForegroundLimit(time.Duration(experimentalToggles.GetWholeNumber(experimental.BackgroundAfterSeconds, 0)) * time.Second)
+		configureTaskManager(taskManager, experimentalToggles)
 		toolsBeforeShell = append(toolsBeforeShell, task.New(taskManager))
 		forwards.OnRevoke(func(route portgrant.Route) {
 			if route.TaskName != "" {
@@ -1534,9 +1535,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		OpenEditor: func(paths []string) error {
 			return app.openEditor(paths)
 		},
-		ReplyInEditor: replyInEditor(experimentalToggles, func(text string) error {
+		ReplyInEditor: func(text string) error {
 			return app.replyInEditor(text)
-		}),
+		},
 		Output: os.Stdout,
 		PathGrants: commands.PathGrants{
 			DenyPatterns: settings.Grants.Deny,
@@ -1645,7 +1646,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		toolOutputLimit:  toolOutputLimit,
 		saveOverflow:     dropKeeper.SaveOutput,
 		experimental:     experimentalToggles,
-		isReplyOffered:   isReplyOffered(experimentalToggles),
 		workspace:        workspace,
 		mode:             mode,
 		conditions:       restoredConditions.State,

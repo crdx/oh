@@ -2506,3 +2506,27 @@ func TestAGatedActionTakesItsApprovalTimeoutAsACustomToolDoes(t *testing.T) {
 		})
 	}
 }
+
+func TestUserCommandTimeoutDefaultsToTenMinutesAndCanBeChanged(t *testing.T) {
+	defaults := configFrom(t, "")
+	if got := defaults.Experimental["user_command_timeout"]; got != "10m" {
+		t.Errorf("got default timeout %v", got)
+	}
+	configured := configFrom(t, "[experimental]\nuser_command_timeout = \"2m\"\n")
+	if got := configured.Experimental["user_command_timeout"]; got != "2m" {
+		t.Errorf("got configured timeout %v", got)
+	}
+}
+
+func TestProviderTimeoutsDefaultToTenMinutesAndCanBeChanged(t *testing.T) {
+	defaults := configFrom(t, "")
+	configured := configFrom(t, "[experimental]\nresponse_timeout = \"2m\"\nstream_idle_timeout = \"3m\"\n")
+	for setting, want := range map[string]string{"response_timeout": "2m", "stream_idle_timeout": "3m"} {
+		if got := defaults.Experimental[setting]; got != "10m" {
+			t.Errorf("default %s is %v", setting, got)
+		}
+		if got := configured.Experimental[setting]; got != want {
+			t.Errorf("configured %s is %v", setting, got)
+		}
+	}
+}

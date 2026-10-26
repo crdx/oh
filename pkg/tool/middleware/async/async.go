@@ -44,7 +44,7 @@ func (self configuredTool) Description() string {
 	if self.options.RunLimit > 0 {
 		taskLifetime = fmt.Sprintf("A task stops after %s, or sooner where the tool has a shorter time limit.", activeSpan(self.options.RunLimit))
 	}
-	return description + fmt.Sprintf(" A call still running after %s continues in the background; ", activeSpan(self.manager.ForegroundLimit())) +
+	return description + " A call still running after the configured foreground limit continues in the background; " +
 		"set background=true to start it there at once. " + taskLifetime + " To wait for a task, you can just end your turn."
 }
 

@@ -133,7 +133,9 @@ type Manager struct {
 	conclusions     []Conclusion
 	changes         chan struct{}
 	activity        chan struct{}
-	slots           chan struct{}
+	slotChanges     chan struct{}
+	runningCount    int
+	maximumRunning  int
 	done            <-chan struct{}
 	cancel          context.CancelFunc
 	workers         sync.WaitGroup
@@ -156,7 +158,8 @@ func NewWithMaximumRunning(ctx context.Context, maximumRunning int) *Manager {
 		entries:         make(map[string]*entry),
 		changes:         make(chan struct{}, 1),
 		activity:        make(chan struct{}, 1),
-		slots:           make(chan struct{}, maximumRunning),
+		slotChanges:     make(chan struct{}),
+		maximumRunning:  maximumRunning,
 		done:            sessionContext.Done(),
 		cancel:          cancel,
 		now:             time.Now,
@@ -571,20 +574,12 @@ func (self *Manager) markActivity(current *entry) {
 
 func (self *Manager) run(ctx context.Context, current *entry, execute Execution) {
 	defer self.workers.Done()
-	select {
-	case self.slots <- struct{}{}:
-		defer func() { <-self.slots }()
-	case <-ctx.Done():
-		self.finish(current, context.Cause(ctx))
-		return
-	case <-self.done:
-		cause := context.Cause(ctx)
-		if cause == nil {
-			cause = errSessionClosed
-		}
-		self.finish(current, cause)
+	if err := self.takeSlot(ctx); err != nil {
+		self.finish(current, err)
 		return
 	}
+	defer self.releaseSlot()
+
 	self.mutex.Lock()
 	select {
 	case <-self.done:

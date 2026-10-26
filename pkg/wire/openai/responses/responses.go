@@ -33,9 +33,7 @@ const (
 var Efforts = []string{"none", "minimal", "low", "medium", "high", "xhigh", "max"}
 
 const (
-	responseHeaderTimeout = 10 * time.Minute
-	streamIdleTimeout     = 10 * time.Minute
-	asideTimeout          = 30 * time.Second
+	asideTimeout = 30 * time.Second
 )
 
 type Token struct {
@@ -82,7 +80,7 @@ func New(tokens TokenSource, model string, effort string) (*Client, error) {
 		Effort:   effort,
 		tokens:   tokens,
 		session:  newToken(),
-		requests: req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		requests: req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 	}
 	client.headerSource = client.codexHeaders
 	client.isEffortRequired = true
@@ -114,7 +112,7 @@ func NewAt(
 		MaxOutputTokens: maxOutputTokens,
 		tokens:          noTokens{},
 		session:         newToken(),
-		requests:        req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		requests:        req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 		headerSource: func(Token) http.Header {
 			header := fixedHeader.Clone()
 			if header == nil {
@@ -154,6 +152,10 @@ func (self *Client) UseSession(id string) {
 func (self *Client) Configure(instructions string, tools []tool.Definition) {
 	self.instructions = instructions
 	self.tools = describe(tools)
+}
+
+func (self *Client) TakeStreamTimeoutsFrom(source func() req.StreamTimeouts) {
+	self.requests.TakeStreamTimeoutsFrom(source)
 }
 
 func (self *Client) IdleAfter(after time.Duration) {

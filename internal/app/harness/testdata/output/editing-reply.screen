@@ -253,24 +253,6 @@ The second.
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 my own draft
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== ctrl+. with the toggle off ===
-
- which should we do
-
-
-Two options stand out.
-
-• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
-  gap.
-• Drop it.
-
-return nil
-
-Which do you prefer?
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-my own draft
-────────────────────────────────────────────────────────────────────────────────────────────────────
 === no editor can be found ===
 
  which should we do
@@ -315,26 +297,6 @@ Which do you prefer?
 === nothing has been answered yet ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ /reply: No model message has been received yet (prepend a space to send)                       │
-─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
-/reply
-────────────────────────────────────────────────────────────────────────────────────────────────────
-=== the toggle is off ===
-
- which should we do
-
-
-Two options stand out.
-
-• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
-  gap.
-• Drop it.
-
-return nil
-
-Which do you prefer?
-
- ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ Command not found: /reply (prepend a space to send)                                            │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 /reply
 ────────────────────────────────────────────────────────────────────────────────────────────────────

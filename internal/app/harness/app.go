@@ -231,7 +231,6 @@ type App struct {
 	toolOutputLimit      *truncate.Limit
 	saveOverflow         truncate.Saver
 	experimental         *experimental.Toggles
-	isReplyOffered       bool
 	permissions          *permission.Live
 	onFailure            func(failure error)
 	onQuestion           func(question ask.Question) func()
@@ -1779,6 +1778,9 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		self.screen.SetGrouping(result.LiveConfig.Grouping)
 		self.toolOutputLimit.Replace(result.LiveConfig.ToolOutputBytes)
 		self.experimental.Replace(result.LiveConfig.Experimental)
+		if self.tasks != nil {
+			configureTaskManager(self.tasks, self.experimental)
+		}
 		if self.permissions != nil {
 			self.permissions.Replace(result.LiveConfig.Permissions)
 		}

@@ -5,6 +5,7 @@ import (
 	"maps"
 	"slices"
 	"sync/atomic"
+	"time"
 )
 
 type Name string
@@ -17,9 +18,11 @@ const (
 	ForwardHostname        Name = "forward_hostname"
 	MaximumRunningTasks    Name = "maximum_running_tasks"
 	RedrawTimingFeedback   Name = "redraw_timing_feedback"
-	ReplyCommand           Name = "reply_command"
 	SharedHistory          Name = "shared_history"
 	TaskOutputLines        Name = "task_output_lines"
+	UserCommandTimeout     Name = "user_command_timeout"
+	ResponseTimeout        Name = "response_timeout"
+	StreamIdleTimeout      Name = "stream_idle_timeout"
 )
 
 type Kind int
@@ -29,6 +32,7 @@ const (
 	TextKind
 	WholeNumberKind
 	DecimalNumberKind
+	DurationKind
 )
 
 func (self Kind) String() string {
@@ -41,6 +45,8 @@ func (self Kind) String() string {
 		return "a whole number"
 	case DecimalNumberKind:
 		return "a number"
+	case DurationKind:
+		return "a positive duration string, such as 10m"
 	}
 	return "a value"
 }
@@ -53,9 +59,11 @@ var toggleKinds = map[Name]Kind{
 	ForwardHostname:        TextKind,
 	MaximumRunningTasks:    WholeNumberKind,
 	RedrawTimingFeedback:   BooleanKind,
-	ReplyCommand:           BooleanKind,
 	SharedHistory:          BooleanKind,
 	TaskOutputLines:        WholeNumberKind,
+	UserCommandTimeout:     DurationKind,
+	ResponseTimeout:        DurationKind,
+	StreamIdleTimeout:      DurationKind,
 }
 
 type Complaint struct {
@@ -104,6 +112,10 @@ func (self Kind) accepts(value any) bool {
 	case DecimalNumberKind:
 		_, isDecimalNumber := value.(float64)
 		return isDecimalNumber
+	case DurationKind:
+		text, isText := value.(string)
+		duration, err := time.ParseDuration(text)
+		return isText && err == nil && duration > 0
 	}
 	return false
 }
@@ -147,6 +159,18 @@ func (self *Toggles) GetDecimalNumber(name Name, fallback float64) float64 {
 		return value
 	}
 	return fallback
+}
+
+func (self *Toggles) GetDuration(name Name, fallback time.Duration) time.Duration {
+	text, exists := read[string](self, name)
+	if !exists {
+		return fallback
+	}
+	duration, err := time.ParseDuration(text)
+	if err != nil || duration <= 0 {
+		return fallback
+	}
+	return duration
 }
 
 func read[T any](toggles *Toggles, name Name) (T, bool) {

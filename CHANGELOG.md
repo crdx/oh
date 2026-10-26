@@ -2,6 +2,13 @@
 
 ## [Next]
 
+### Changes
+
+- Increase command timeout to 10 minutes
+- Add experimental toggles for timeouts
+- Reload more settings live
+- Promote reply feature
+
 ## [0.26.1] — 2026-10-25
 
 ### Fixes

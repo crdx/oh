@@ -1,0 +1,23 @@
+limit 10m0s, width 120
+$ sleep 60 ✦· 12s/10m                                                                                        esc to stop
+  begun
+
+limit 10m0s, width 45
+$ sleep 60 ✦· 12s/10m             esc to stop
+  begun
+
+limit 10m0s, width 16
+$ sl… ✦· 12s/10m
+  begun
+
+limit 15s, width 120
+$ sleep 60 ✦· 12s/15s                                                                                        esc to stop
+  begun
+
+limit 15s, width 45
+$ sleep 60 ✦· 12s/15s             esc to stop
+  begun
+
+limit 15s, width 16
+$ sl… ✦· 12s/15s
+  begun

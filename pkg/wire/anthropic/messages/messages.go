@@ -32,8 +32,6 @@ const (
 var Efforts = []string{"low", "medium", "high", "xhigh", "max"}
 
 const (
-	responseHeaderTimeout     = 10 * time.Minute
-	streamIdleTimeout         = 10 * time.Minute
 	asideTimeout              = 30 * time.Second
 	toolInputCorrectionFormat = "Your previous response could not be used because the %q tool call did not contain a JSON object. Try again with a JSON object for its input."
 )
@@ -79,7 +77,7 @@ func New(tokens TokenSource, model string, effort string, maxOutputTokens int) (
 		identity:         Identity,
 		thinking:         &thinking{Type: "adaptive", Display: "summarized"},
 		isEffortRequired: true,
-		requests:         req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		requests:         req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 	}
 	client.headerSource = client.subscriptionHeaders
 
@@ -105,7 +103,7 @@ func NewAt(
 		Effort:          effort,
 		MaxOutputTokens: maxOutputTokens,
 		tokens:          noTokens{},
-		requests:        req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		requests:        req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 		headerSource: func(string) http.Header {
 			header := fixedHeader.Clone()
 			if header == nil {
@@ -137,6 +135,10 @@ func (self *Client) SetRequestHeader(name string, value string) {
 	}
 
 	self.extraHeader.Set(name, value)
+}
+
+func (self *Client) TakeStreamTimeoutsFrom(source func() req.StreamTimeouts) {
+	self.requests.TakeStreamTimeoutsFrom(source)
 }
 
 func (self *Client) IdleAfter(after time.Duration) {

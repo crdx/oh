@@ -9,7 +9,6 @@ import (
 
 	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/editor"
-	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/painter"
@@ -138,7 +137,7 @@ func (self *App) replyInEditor(text string) error {
 }
 
 func (self *App) replyToLastAnswer() {
-	if !self.isReplyOffered || self.isEditorAwaited() || self.inputLine == nil {
+	if self.isEditorAwaited() || self.inputLine == nil {
 		return
 	}
 
@@ -170,18 +169,6 @@ func (self *App) replyInEditorAt(text string, cursor int) error {
 	}
 
 	return self.openDraft(text, editor.PositionIn([]rune(text), cursor), painter.WritingAReply)
-}
-
-func replyInEditor(toggles *experimental.Toggles, reply func(string) error) func(string) error {
-	if !isReplyOffered(toggles) {
-		return nil
-	}
-
-	return reply
-}
-
-func isReplyOffered(toggles *experimental.Toggles) bool {
-	return toggles.IsEnabled(experimental.ReplyCommand)
 }
 
 func (self *App) openDraft(text string, position editor.Position, purpose painter.DraftPurpose) error {

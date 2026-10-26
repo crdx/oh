@@ -70,7 +70,7 @@ func stopOnceStarted(t *testing.T, command string) (Result, int) {
 		}
 	}()
 
-	result, err := Run(stopContext, directory, command, &Output{})
+	result, err := Run(stopContext, directory, command, DefaultTimeLimit, &Output{})
 	if err != nil {
 		t.Fatal(err)
 	}

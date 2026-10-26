@@ -18,9 +18,6 @@ import (
 )
 
 const (
-	responseHeaderTimeout = 10 * time.Minute
-	streamIdleTimeout     = 10 * time.Minute
-
 	modelsPath   = "/models/"
 	streamMethod = ":streamGenerateContent?alt=sse"
 )
@@ -60,7 +57,7 @@ func New(
 		Effort:          effort,
 		MaxOutputTokens: maxOutputTokens,
 		requestHeader:   cloneHeader(requestHeader),
-		requests:        req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		requests:        req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 	}
 
 	if err := client.settled(); err != nil {
@@ -80,6 +77,10 @@ func cloneHeader(header http.Header) http.Header {
 
 func (self *Client) SetRequestHeader(name string, value string) {
 	self.requestHeader.Set(name, value)
+}
+
+func (self *Client) TakeStreamTimeoutsFrom(source func() req.StreamTimeouts) {
+	self.requests.TakeStreamTimeoutsFrom(source)
 }
 
 func (self *Client) IdleAfter(after time.Duration) {

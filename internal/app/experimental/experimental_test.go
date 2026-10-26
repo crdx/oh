@@ -3,6 +3,7 @@ package experimental
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestEveryDeclaredToggleNamesItselfInSnakeCase(t *testing.T) {
@@ -202,10 +203,65 @@ func TestEveryKindSaysWhatAToggleOfItHolds(t *testing.T) {
 		TextKind:          "a string",
 		WholeNumberKind:   "a whole number",
 		DecimalNumberKind: "a number",
+		DurationKind:      "a positive duration string, such as 10m",
 		Kind(-1):          "a value",
 	} {
 		if got := kind.String(); got != want {
 			t.Errorf("kind %d says %q, want %q", int(kind), got, want)
 		}
+	}
+}
+
+func TestTimeoutSettingsRequireAPositiveDuration(t *testing.T) {
+	for _, setting := range []Name{UserCommandTimeout, ResponseTimeout, StreamIdleTimeout} {
+		t.Run(string(setting), func(t *testing.T) {
+			for name, value := range map[string]any{
+				"valid":      "10m",
+				"fractional": "250ms",
+				"empty":      "",
+				"zero":       "0s",
+				"negative":   "-1s",
+				"invalid":    "tomorrow",
+				"overflow":   "999999999999999999h",
+				"number":     int64(600),
+				"boolean":    true,
+			} {
+				t.Run(name, func(t *testing.T) {
+					values := map[string]any{string(setting): value}
+					isValid := name == "valid" || name == "fractional"
+					complaints := Check(values)
+					if (len(complaints) == 0) != isValid {
+						t.Errorf("got complaints %v for %v", complaints, value)
+					}
+					want := time.Minute
+					if isValid {
+						var err error
+						text, isText := value.(string)
+						if !isText {
+							t.Fatal("the valid duration is not text")
+						}
+						want, err = time.ParseDuration(text)
+						if err != nil {
+							t.Fatal(err)
+						}
+					}
+					if got := New(values).GetDuration(setting, time.Minute); got != want {
+						t.Errorf("got duration %s, want %s", got, want)
+					}
+				})
+			}
+			var absent *Toggles
+			if got := absent.GetDuration(setting, time.Minute); got != time.Minute {
+				t.Errorf("got absent duration %s", got)
+			}
+			toggles := New(nil)
+			if got := toggles.GetDuration(setting, time.Minute); got != time.Minute {
+				t.Errorf("got missing duration %s", got)
+			}
+			toggles.Replace(map[string]any{string(setting): "2m"})
+			if got := toggles.GetDuration(setting, time.Minute); got != 2*time.Minute {
+				t.Errorf("got replaced duration %s", got)
+			}
+		})
 	}
 }

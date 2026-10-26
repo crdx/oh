@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"crdx.org/oh/internal/transient"
@@ -27,11 +28,15 @@ const (
 )
 
 type Client struct {
-	http       *http.Client
-	idle       time.Duration
-	idleChecks time.Duration
-	now        func() time.Time
-	observer   Observer
+	http                  *http.Client
+	idle                  time.Duration
+	idleChecks            time.Duration
+	now                   func() time.Time
+	observer              Observer
+	streamTimeouts        func() StreamTimeouts
+	streamMutex           sync.Mutex
+	streamHTTP            *http.Client
+	streamResponseTimeout time.Duration
 }
 
 func New(timeout time.Duration) *Client {
@@ -39,19 +44,7 @@ func New(timeout time.Duration) *Client {
 }
 
 func NewStreaming(responseHeaderTimeout time.Duration, idleTimeout time.Duration) *Client {
-	transport, isStandard := http.DefaultTransport.(*http.Transport)
-	if !isStandard {
-		return newClient(&http.Client{}, idleTimeout)
-	}
-
-	streaming := transport.Clone()
-	streaming.ResponseHeaderTimeout = responseHeaderTimeout
-	streaming.HTTP2 = &http.HTTP2Config{
-		SendPingTimeout: healthCheckAfter,
-		PingTimeout:     healthCheckAnswerWithin,
-	}
-
-	return newClient(&http.Client{Transport: streaming}, idleTimeout)
+	return newClient(newStreamingHTTP(responseHeaderTimeout), idleTimeout)
 }
 
 func newClient(client *http.Client, idleTimeout time.Duration) *Client {
@@ -182,10 +175,11 @@ func (self *Client) postJSON(
 }
 
 func (self *Client) do(request *http.Request, requestBody []byte) (io.ReadCloser, http.Header, error) {
+	client, idleTimeout := self.streamSettings()
 	var watchdog *idleWatchdog
-	if self.idle > 0 {
+	if idleTimeout > 0 {
 		ctx, cancel := context.WithCancel(request.Context())
-		watchdog = newIdleWatchdog(self.idle, self.idleChecks, self.now, cancel)
+		watchdog = newIdleWatchdog(idleTimeout, self.idleChecks, self.now, cancel)
 		request = request.WithContext(ctx)
 	}
 
@@ -201,7 +195,7 @@ func (self *Client) do(request *http.Request, requestBody []byte) (io.ReadCloser
 		})
 	}
 
-	response, err := self.http.Do(request)
+	response, err := client.Do(request)
 	if err != nil {
 		if watchdog != nil {
 			err = watchdog.explain(err)

@@ -18,10 +18,11 @@ const hostCommandEndGrace = 5 * time.Second
 var errHostCommandUnderway = errors.New("a command is already running; press escape to stop it")
 
 type hostCommandState struct {
-	run        func(context.Context, string, string, *hostcommand.Output) (hostcommand.Result, error)
+	run        func(context.Context, string, string, time.Duration, *hostcommand.Output) (hostcommand.Result, error)
 	command    string
 	output     *hostcommand.Output
 	startedAt  time.Time
+	timeLimit  time.Duration
 	stop       context.CancelFunc
 	isStopping bool
 	outcomes   chan hostcommand.Outcome
@@ -49,17 +50,19 @@ func (self *App) startHostCommand(directory string, command string) error {
 		run = hostcommand.Run
 	}
 
+	timeLimit := self.experimental.GetDuration(experimental.UserCommandTimeout, hostcommand.DefaultTimeLimit)
 	stopContext, stop := context.WithCancel(context.Background())
 	output := &hostcommand.Output{}
 	self.hostCommand.command = command
 	self.hostCommand.output = output
 	self.hostCommand.startedAt = self.getNow()
+	self.hostCommand.timeLimit = timeLimit
 	self.hostCommand.stop = stop
 	self.hostCommand.isStopping = false
 
 	outcomes := self.hostCommandOutcomes()
 	go func() {
-		result, err := run(stopContext, directory, command, output)
+		result, err := run(stopContext, directory, command, timeLimit, output)
 		outcomes <- hostcommand.Outcome{Result: result, Failure: err}
 	}()
 
@@ -137,7 +140,7 @@ func (self *App) hostCommandRows(columns int) []string {
 	var rows []string
 	if self.isHostCommandUnderway() {
 		elapsedTime := self.getNow().Sub(self.hostCommand.startedAt)
-		rows = painter.RenderHostCommand(self.hostCommand.command, self.hostCommand.output.LatestLine(), elapsedTime, columns)
+		rows = painter.RenderHostCommand(self.hostCommand.command, self.hostCommand.output.LatestLine(), elapsedTime, self.hostCommand.timeLimit, columns)
 	}
 
 	for _, event := range self.currentTurn.heldNotices {

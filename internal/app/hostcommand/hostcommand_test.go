@@ -21,7 +21,7 @@ func TestACommandRunsInTheDirectoryItWasGiven(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	result, err := hostcommand.Run(t.Context(), directory, "ls", &hostcommand.Output{})
+	result, err := hostcommand.Run(t.Context(), directory, "ls", hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func TestACommandRunsInTheDirectoryItWasGiven(t *testing.T) {
 }
 
 func TestACommandReportsItsExitCodeAndItsStandardError(t *testing.T) {
-	result, err := hostcommand.Run(t.Context(), t.TempDir(), "echo out; echo problem >&2; exit 3", &hostcommand.Output{})
+	result, err := hostcommand.Run(t.Context(), t.TempDir(), "echo out; echo problem >&2; exit 3", hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,7 +44,7 @@ func TestACommandReportsItsExitCodeAndItsStandardError(t *testing.T) {
 }
 
 func TestACommandCannotReadTheKeyboard(t *testing.T) {
-	result, err := hostcommand.Run(t.Context(), t.TempDir(), "cat", &hostcommand.Output{})
+	result, err := hostcommand.Run(t.Context(), t.TempDir(), "cat", hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +54,7 @@ func TestACommandCannotReadTheKeyboard(t *testing.T) {
 }
 
 func TestACommandLeadsASessionOfItsOwnBesideATerminalOfItsOwn(t *testing.T) {
-	result, err := hostcommand.Run(t.Context(), t.TempDir(), `read -ra fields < /proc/$$/stat; echo "${fields[0]} ${fields[5]} ${fields[6]} $(stat -L -c '%t %T' /proc/$$/fd/3)"`, &hostcommand.Output{})
+	result, err := hostcommand.Run(t.Context(), t.TempDir(), `read -ra fields < /proc/$$/stat; echo "${fields[0]} ${fields[5]} ${fields[6]} $(stat -L -c '%t %T' /proc/$$/fd/3)"`, hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -94,14 +94,14 @@ func TestStoppingACommandKillsEverythingItStarted(t *testing.T) {
 	}()
 
 	startedAt := time.Now()
-	result, err := hostcommand.Run(stopContext, directory, "sleep 60 & echo $! > child.tmp; mv child.tmp child; wait", &hostcommand.Output{})
+	result, err := hostcommand.Run(stopContext, directory, "sleep 60 & echo $! > child.tmp; mv child.tmp child; wait", hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if took := time.Since(startedAt); took > 5*time.Second {
 		t.Errorf("took %s to stop, want the whole group killed at once", took)
 	}
-	if !result.IsStoppedByUser || result.StoppedAfter >= hostcommand.TimeLimit {
+	if !result.IsStoppedByUser || result.StoppedAfter >= hostcommand.DefaultTimeLimit {
 		t.Errorf("got result %+v, want it stopped by the user", result)
 	}
 
@@ -157,7 +157,7 @@ func TestAnInterruptedCommandTellsTheModelWhatItPrintedBeforeItWasStopped(t *tes
 		}
 	}()
 
-	result, err := hostcommand.Run(stopContext, directory, "echo first; echo second >&2; touch begun; sleep 60; echo never", &hostcommand.Output{})
+	result, err := hostcommand.Run(stopContext, directory, "echo first; echo second >&2; touch begun; sleep 60; echo never", hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -202,11 +202,11 @@ func TestANoticeOpensBySayingWhetherTheCommandFinished(t *testing.T) {
 			want:   "The user started the following command on the host, then interrupted it before it finished or printed anything:",
 		},
 		"killed at its limit": {
-			result: hostcommand.Result{Command: "make", Output: "cc\n", StoppedAfter: hostcommand.TimeLimit},
+			result: hostcommand.Result{Command: "make", Output: "cc\n", StoppedAfter: hostcommand.DefaultTimeLimit},
 			want:   "The user started the following command on the host, which was killed at its time limit before it finished:",
 		},
 		"killed silently at its limit": {
-			result: hostcommand.Result{Command: "sleep 600", StoppedAfter: hostcommand.TimeLimit},
+			result: hostcommand.Result{Command: "sleep 600", StoppedAfter: hostcommand.DefaultTimeLimit},
 			want:   "The user started the following command on the host, which was killed at its time limit before it finished or printed anything:",
 		},
 	}
@@ -374,7 +374,7 @@ func TestOnlyACommandTheUserStoppedIsStoppedByTheUser(t *testing.T) {
 			want:  true,
 		},
 		"stopped at its limit": {
-			event: hostcommand.RanEvent(hostcommand.Result{Command: "sleep 600", StoppedAfter: hostcommand.TimeLimit}),
+			event: hostcommand.RanEvent(hostcommand.Result{Command: "sleep 600", StoppedAfter: hostcommand.DefaultTimeLimit}),
 		},
 		"no state": {event: agent.Event{Kind: hostcommand.Ran}},
 	} {
@@ -410,7 +410,7 @@ func TestWhatACommandPrintsCanBeReadWhileItRuns(t *testing.T) {
 		}
 	}()
 
-	if _, err := hostcommand.Run(stopContext, directory, "echo 'Place your finger on the reader' >&2; sleep 60", output); err != nil {
+	if _, err := hostcommand.Run(stopContext, directory, "echo 'Place your finger on the reader' >&2; sleep 60", hostcommand.DefaultTimeLimit, output); err != nil {
 		t.Fatal(err)
 	}
 	if line := <-seen; line != "Place your finger on the reader" {
@@ -473,11 +473,26 @@ func TestSettledOutputKeepsOnlyWhatEachLineWasLastOverwrittenWith(t *testing.T) 
 }
 
 func TestACommandReportsOnlyTheLastStateOfItsProgress(t *testing.T) {
-	result, err := hostcommand.Run(t.Context(), t.TempDir(), `printf 'Receiving 10%%\rReceiving 90%%\rdone\n'`, &hostcommand.Output{})
+	result, err := hostcommand.Run(t.Context(), t.TempDir(), `printf 'Receiving 10%%\rReceiving 90%%\rdone\n'`, hostcommand.DefaultTimeLimit, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if result.Output != "done\n" {
 		t.Errorf("got output %q", result.Output)
+	}
+}
+
+func TestACommandIsKilledAtItsConfiguredTimeLimit(t *testing.T) {
+	const timeLimit = 100 * time.Millisecond
+	result, err := hostcommand.Run(t.Context(), t.TempDir(), "echo begun; sleep 60; echo never", timeLimit, &hostcommand.Output{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.IsStoppedByUser || result.StoppedAfter != timeLimit || result.Output != "begun\n" {
+		t.Fatalf("got result %+v, want the configured timeout and partial output", result)
+	}
+	notice, isSaid := hostcommand.Notice(hostcommand.RanEvent(result))
+	if !isSaid || !strings.Contains(notice, "Killed at its time limit of 0.1s") {
+		t.Errorf("got notice %q", notice)
 	}
 }

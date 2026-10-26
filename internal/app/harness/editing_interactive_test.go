@@ -27,14 +27,21 @@ printf '\033[?1049l'
 `
 )
 
-func newEditingSession(t *testing.T, arguments ...string) *interactiveSession {
+func writeFakeTerminalEditor(t *testing.T) string {
 	t.Helper()
-
 	editorPath := filepath.Join(t.TempDir(), "vim")
 	//nolint:gosec // the editor has to be executable
 	if err := os.WriteFile(editorPath, []byte(fakeTerminalEdits), 0o755); err != nil {
 		t.Fatal(err)
 	}
+
+	return editorPath
+}
+
+func newEditingSession(t *testing.T, arguments ...string) *interactiveSession {
+	t.Helper()
+
+	editorPath := writeFakeTerminalEditor(t)
 
 	rig := newInteractiveRig(t)
 	rig.environment = append(rig.environment,
@@ -169,4 +176,26 @@ func TestTheConfigOpensInATerminalEditorFromTheOpeningPrompt(t *testing.T) {
 
 	session.typeText(clearInput)
 	session.quit()
+}
+
+func TestReplyCommandAndShortcutNeedNoExperimentalSetting(t *testing.T) {
+	for name, keypress := range map[string]string{
+		"command":  "/reply" + pressEnter,
+		"shortcut": "\x1b[46;5u",
+	} {
+		t.Run(name, func(t *testing.T) {
+			editorPath := writeFakeTerminalEditor(t)
+			rig := newInteractiveRig(t, "An answer to quote.")
+			rig.environment = append(rig.environment, "EDITOR="+editorPath, "VISUAL=", "DISPLAY=", "WAYLAND_DISPLAY=")
+			session := rig.start("--yolo", "-m", "opencode-go/fake", "say something")
+			session.waitFor("An answer to quote.")
+			session.typeText(keypress)
+			session.waitFor(fakeEditorBanner)
+			session.typeText("My inline reply." + pressEnter)
+			session.waitFor("My inline reply.")
+			session.requireHidden(fakeEditorBanner)
+			session.typeText(clearInput)
+			session.quit()
+		})
+	}
 }

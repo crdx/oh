@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
@@ -33,7 +34,7 @@ func holdHostCommands(self *App) *heldHostCommand {
 		finishes: make(chan hostcommand.Result),
 	}
 
-	self.hostCommand.run = func(stopContext context.Context, _ string, command string, output *hostcommand.Output) (hostcommand.Result, error) {
+	self.hostCommand.run = func(stopContext context.Context, _ string, command string, _ time.Duration, output *hostcommand.Output) (hostcommand.Result, error) {
 		held.output = output
 		held.started <- command
 
@@ -269,7 +270,7 @@ func TestAPrintedHostCommandIsAwaitedAndHeldForTheNextLine(t *testing.T) {
 	self := testConversation(t, &screenOutput)
 	self.settleAccess()
 	self.runMode.isPlain = true
-	self.hostCommand.run = func(_ context.Context, _ string, command string, _ *hostcommand.Output) (hostcommand.Result, error) {
+	self.hostCommand.run = func(_ context.Context, _ string, command string, _ time.Duration, _ *hostcommand.Output) (hostcommand.Result, error) {
 		return hostcommand.Result{Command: command}, nil
 	}
 
@@ -367,4 +368,59 @@ func TestGoldenARunningHostCommandStandsAboveTheInput(t *testing.T) {
 
 	compareWithGolden(t, "host-command-running", ".ansi", passes)
 	compareWithGolden(t, "host-command-running", ".screen", shownPasses(t, passes))
+}
+
+func TestReloadingTheHostCommandTimeoutOnlyChangesSubsequentCommands(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "[experimental]\ncommand_starts_turn = false\nuser_command_timeout = \"2s\"\n")
+	self := testConversation(t, &bytes.Buffer{})
+	prepareLiveConfig(t, self, path)
+	directory := t.TempDir()
+	if err := self.startHostCommand(directory, "echo begun; sleep 1; echo finished"); err != nil {
+		t.Fatal(err)
+	}
+	if got := self.hostCommand.timeLimit; got != 2*time.Second {
+		t.Fatalf("got initial limit %s", got)
+	}
+	writeLiveConfig(t, path, "[experimental]\ncommand_starts_turn = false\nuser_command_timeout = \"100ms\"\n")
+	settleLiveConfig(t, self)
+	if got := self.hostCommand.timeLimit; got != 2*time.Second {
+		t.Fatalf("reload changed the running command's limit to %s", got)
+	}
+	select {
+	case outcome := <-self.hostCommandOutcomes():
+		if outcome.Failure != nil || outcome.Result.StoppedAfter != 0 || outcome.Result.Output != "begun\nfinished\n" {
+			t.Fatalf("got first outcome %+v", outcome)
+		}
+		self.hostCommandEnded(outcome)
+	case <-time.After(5 * time.Second):
+		t.Fatal("the first command did not finish")
+	}
+	if err := self.startHostCommand(directory, "echo begun; sleep 60; echo never"); err != nil {
+		t.Fatal(err)
+	}
+	if got := self.hostCommand.timeLimit; got != 100*time.Millisecond {
+		t.Fatalf("got reloaded limit %s", got)
+	}
+	select {
+	case outcome := <-self.hostCommandOutcomes():
+		if outcome.Failure != nil || outcome.Result.IsStoppedByUser || outcome.Result.StoppedAfter != 100*time.Millisecond || outcome.Result.Output != "begun\n" {
+			t.Fatalf("got second outcome %+v", outcome)
+		}
+		self.hostCommandEnded(outcome)
+	case <-time.After(5 * time.Second):
+		t.Fatal("the second command did not time out")
+	}
+	writeLiveConfig(t, path, "[experimental]\ncommand_starts_turn = false\n")
+	settleLiveConfig(t, self)
+	held := holdHostCommands(self)
+	if err := self.startHostCommand(directory, "true"); err != nil {
+		t.Fatal(err)
+	}
+	<-held.started
+	if got := self.hostCommand.timeLimit; got != 10*time.Minute {
+		t.Errorf("got restored default limit %s", got)
+	}
+	self.stopHostCommand()
+	endHeldHostCommand(t, self)
 }

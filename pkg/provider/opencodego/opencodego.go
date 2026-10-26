@@ -35,6 +35,7 @@ type conversation interface {
 	Models(ctx context.Context) ([]agent.Model, error)
 	ObserveHTTP(observer req.Observer)
 	IdleAfter(after time.Duration)
+	TakeStreamTimeoutsFrom(source func() req.StreamTimeouts)
 	SetRequestHeader(name string, value string)
 }
 

@@ -844,7 +844,8 @@ func userCommandSection(data harnessContextTemplateData) string {
 		"- `/!` applies to the entire pasted input, so prefer a readable multi-line command over joining it onto one line",
 		"- `/!` runs bash on the host in the workspace, so do not cd to it",
 		"- You receive the command, output, exit code, and interrupt/kill state",
-		"- It has no terminal and is killed after " + util.CompactDuration(hostcommand.TimeLimit),
+		"- It has no terminal and is killed at the configured `experimental.user_command_timeout` (" + util.CompactDuration(hostcommand.DefaultTimeLimit) + " by default)",
+		"- Changes to that timeout reload live for subsequent commands; a running command keeps its original limit",
 	}, "\n") + "\n\n"
 }
 

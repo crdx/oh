@@ -18,9 +18,7 @@ import (
 var Efforts = []string{"none", "minimal", "low", "medium", "high", "xhigh", "max"}
 
 const (
-	responseHeaderTimeout = 10 * time.Minute
-	streamIdleTimeout     = 10 * time.Minute
-	asideTimeout          = 30 * time.Second
+	asideTimeout = 30 * time.Second
 )
 
 type Client struct {
@@ -51,7 +49,7 @@ func New(
 		Effort:          effort,
 		MaxOutputTokens: maxOutputTokens,
 		requestHeader:   cloneHeader(requestHeader),
-		requests:        req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		requests:        req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 	}
 
 	if err := client.settled(); err != nil {
@@ -76,6 +74,10 @@ func (self *Client) SetRequestHeader(name string, value string) {
 func (self *Client) Configure(instructions string, tools []tool.Definition) {
 	self.instructions = instructions
 	self.tools = describe(tools)
+}
+
+func (self *Client) TakeStreamTimeoutsFrom(source func() req.StreamTimeouts) {
+	self.requests.TakeStreamTimeoutsFrom(source)
 }
 
 func (self *Client) IdleAfter(after time.Duration) {

@@ -84,3 +84,38 @@ func TestAQueuedForegroundCallDetachesAfterTheSetForegroundLimit(t *testing.T) {
 		}
 	})
 }
+
+func TestChangingTheForegroundLimitOnlyChangesSubsequentWaits(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := tasks.New(t.Context())
+		defer manager.Close()
+		manager.SetForegroundLimit(10 * time.Second)
+		snapshot, err := manager.Start(t.Context(), "first", "bash", false, false, holdUntilStopped, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		detached := make(chan time.Duration, 1)
+		started := time.Now()
+		go func() {
+			_, isBackground, failure := manager.WaitOrDetach(t.Context(), snapshot.ID)
+			if failure != nil || !isBackground {
+				t.Errorf("first wait returned %t, %v", isBackground, failure)
+			}
+			detached <- time.Since(started)
+		}()
+		synctest.Wait()
+		manager.SetForegroundLimit(time.Second)
+		if got := <-detached; got != 10*time.Second {
+			t.Errorf("existing wait detached after %s", got)
+		}
+		second, err := manager.Start(t.Context(), "second", "bash", false, false, holdUntilStopped, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		started = time.Now()
+		_, isBackground, err := manager.WaitOrDetach(t.Context(), second.ID)
+		if err != nil || !isBackground || time.Since(started) != time.Second {
+			t.Errorf("new wait returned %t, %v after %s", isBackground, err, time.Since(started))
+		}
+	})
+}

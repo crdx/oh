@@ -20,8 +20,8 @@ import (
 const Ran agent.Kind = "host_command_ran"
 
 const (
-	TimeLimit = 30 * time.Second
-	waitDelay = time.Second
+	DefaultTimeLimit = 10 * time.Minute
+	waitDelay        = time.Second
 
 	stopPrecision = 100 * time.Millisecond
 
@@ -48,9 +48,9 @@ var (
 	abandonDelay = 2 * waitDelay
 )
 
-func Run(stopContext context.Context, directory string, command string, output *Output) (Result, error) {
+func Run(stopContext context.Context, directory string, command string, timeLimit time.Duration, output *Output) (Result, error) {
 	startedAt := time.Now()
-	runContext, cancel := context.WithTimeout(stopContext, TimeLimit)
+	runContext, cancel := context.WithTimeout(stopContext, timeLimit)
 	defer cancel()
 
 	//nolint:gosec // the person at the keyboard typed this command themselves
@@ -72,7 +72,7 @@ func Run(stopContext context.Context, directory string, command string, output *
 
 		return result, nil
 	case errors.Is(runContext.Err(), context.DeadlineExceeded):
-		result.StoppedAfter = TimeLimit
+		result.StoppedAfter = timeLimit
 
 		return result, nil
 	}

@@ -18,8 +18,9 @@ import (
 const EndpointVariable = "OH_ENDPOINT_URL"
 
 type EndpointSettings struct {
-	OverrideURL string
-	OllamaHost  string
+	OverrideURL    string
+	OllamaHost     string
+	StreamTimeouts func() req.StreamTimeouts
 }
 
 const (
@@ -34,6 +35,7 @@ type Client interface {
 	agent.Provider
 	agent.State
 	ObserveHTTP(observer req.Observer)
+	TakeStreamTimeoutsFrom(source func() req.StreamTimeouts)
 }
 
 type Connection struct {
@@ -71,6 +73,8 @@ func Connect(choice model.Choice, selection model.Selection, endpoints EndpointS
 	if err != nil {
 		return nil, err
 	}
+
+	connection.TakeStreamTimeoutsFrom(endpoints.StreamTimeouts)
 
 	if connection.Search == nil {
 		tokens, address := codexCredentials(endpoints.OverrideURL)

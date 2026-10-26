@@ -6,7 +6,6 @@ import (
 
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/dynamic"
-	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/strutil"
@@ -18,8 +17,8 @@ const (
 	hostCommandOutputIndent = "  "
 )
 
-func RenderHostCommand(command string, latestLine string, elapsedTime time.Duration, columns int) []string {
-	rows := []string{runningHostCommand(command, elapsedTime, columns)}
+func RenderHostCommand(command string, latestLine string, elapsedTime time.Duration, timeLimit time.Duration, columns int) []string {
+	rows := []string{runningHostCommand(command, elapsedTime, timeLimit, columns)}
 
 	room := columns - width.Of(hostCommandOutputIndent)
 	if latestLine == "" || room < 1 {
@@ -33,13 +32,13 @@ func RenderQueuedHostCommand(command string, columns int) string {
 	return style.Subtle.Over(width.Elide("⏳ "+hostCommandLabel(command).Render(), columns))
 }
 
-func runningHostCommand(command string, elapsedTime time.Duration, columns int) string {
+func runningHostCommand(command string, elapsedTime time.Duration, timeLimit time.Duration, columns int) string {
 	label := hostCommandLabel(command)
-	line := dynamic.RunningLine(label, elapsedTime, hostcommand.TimeLimit, 0)
+	line := dynamic.RunningLine(label, elapsedTime, timeLimit, 0)
 
 	gap := columns - style.Width(line) - style.Width(hostCommandStopHint)
 	if gap < 1 {
-		return dynamic.RunningLine(label, elapsedTime, hostcommand.TimeLimit, columns)
+		return dynamic.RunningLine(label, elapsedTime, timeLimit, columns)
 	}
 
 	return line + strings.Repeat(" ", gap) + style.Subtle(hostCommandStopHint)

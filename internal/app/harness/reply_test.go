@@ -8,7 +8,6 @@ import (
 
 	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/editor"
-	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/work"
@@ -24,17 +23,15 @@ func (self *editingRig) withReplyCommand() {
 	self.t.Helper()
 
 	self.app.recordedEvents = append(self.app.recordedEvents, agent.Event{Kind: agent.ModelMessageEvent, Text: repliedAnswer})
-	self.withReplyToggle(true)
+	self.withReplyCommands()
 }
 
-func (self *editingRig) withReplyToggle(isEnabled bool) {
+func (self *editingRig) withReplyCommands() {
 	self.t.Helper()
 
-	toggles := experimental.New(map[string]any{string(experimental.ReplyCommand): isEnabled})
-	self.app.isReplyOffered = isReplyOffered(toggles)
 	systemCommands, err := commands.New(commands.Options{
 		Workspace:     work.At(self.t.TempDir()),
-		ReplyInEditor: replyInEditor(toggles, self.app.replyInEditor),
+		ReplyInEditor: self.app.replyInEditor,
 		Session:       commands.Session{GetLastMessage: self.app.getLastMessage},
 	})
 	if err != nil {
@@ -167,20 +164,6 @@ func TestAReplyIsRefusedWhenNoAnswerHasArrived(t *testing.T) {
 	}
 }
 
-func TestReplyIsOfferedOnlyUnderItsExperimentalToggle(t *testing.T) {
-	reply := func(string) error { return nil }
-
-	if replyInEditor(experimental.New(nil), reply) != nil {
-		t.Error("/reply was offered with its toggle absent")
-	}
-	if replyInEditor(experimental.New(map[string]any{string(experimental.ReplyCommand): false}), reply) != nil {
-		t.Error("/reply was offered with its toggle off")
-	}
-	if replyInEditor(experimental.New(map[string]any{string(experimental.ReplyCommand): true}), reply) == nil {
-		t.Error("/reply was withheld with its toggle on")
-	}
-}
-
 const goldenAnswer = "Two options stand out.\n\n" +
 	"- Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long gap.\n" +
 	"- Drop it.\n\n" +
@@ -191,7 +174,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 	replied := func(command editor.Command, columns int, write func(*editingRig, editorStart), failure error) func() string {
 		return func() string {
 			rig := newEditingRigOfWidth(t, command, "", columns)
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.answer()
 			rig.typeText("/reply")
 			rig.press(key.Key{Code: key.Enter})
@@ -211,7 +194,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 	pressed := func(draft string) func() string {
 		return func() string {
 			rig := newEditingRig(t, terminalEditor, draft)
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.answer()
 			rig.press(ctrlDot)
 			start := rig.held.awaitStart(t)
@@ -224,7 +207,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 	awaited := func(columns int) func() string {
 		return func() string {
 			rig := newEditingRigOfWidth(t, graphicalEditor, "", columns)
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.answer()
 			rig.typeText("/reply")
 			rig.press(key.Key{Code: key.Enter})
@@ -246,7 +229,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 		"a graphical editor is awaited on a narrow screen":     awaited(narrowColumns),
 		"a graphical editor is abandoned": func() string {
 			rig := newEditingRig(t, graphicalEditor, "")
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.answer()
 			rig.typeText("/reply")
 			rig.press(key.Key{Code: key.Enter})
@@ -258,7 +241,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 		},
 		"nothing has been answered yet": func() string {
 			rig := newEditingRig(t, terminalEditor, "")
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.typeText("/reply")
 			rig.press(key.Key{Code: key.Enter})
 			return rig.drawn.String()
@@ -270,7 +253,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 			t.Setenv("DISPLAY", "")
 			t.Setenv("WAYLAND_DISPLAY", "")
 			rig := newEditingRig(t, nil, "")
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.answer()
 			rig.typeText("/reply")
 			rig.press(key.Key{Code: key.Enter})
@@ -279,7 +262,7 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 		"no terminal can be handed over": func() string {
 			rig := newEditingRig(t, graphicalEditor, "")
 			rig.handover.isHeld = false
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.answer()
 			rig.typeText("/reply")
 			rig.press(key.Key{Code: key.Enter})
@@ -289,23 +272,8 @@ func TestGoldenReplyingToTheLastAnswer(t *testing.T) {
 		"ctrl+. carries the draft beneath the quote": pressed("my own draft"),
 		"ctrl+. with nothing answered yet": func() string {
 			rig := newEditingRig(t, terminalEditor, "my own draft")
-			rig.withReplyToggle(true)
+			rig.withReplyCommands()
 			rig.press(ctrlDot)
-			return rig.drawn.String()
-		},
-		"ctrl+. with the toggle off": func() string {
-			rig := newEditingRig(t, terminalEditor, "my own draft")
-			rig.withReplyToggle(false)
-			rig.answer()
-			rig.press(ctrlDot)
-			return rig.drawn.String()
-		},
-		"the toggle is off": func() string {
-			rig := newEditingRig(t, terminalEditor, "")
-			rig.withReplyToggle(false)
-			rig.answer()
-			rig.typeText("/reply")
-			rig.press(key.Key{Code: key.Enter})
 			return rig.drawn.String()
 		},
 	}
@@ -371,24 +339,6 @@ func TestControlDotCarriesTheDraftBeneathTheQuoteWithItsCursor(t *testing.T) {
 		t.Errorf("got the input %q, want the cursor where it stood", got)
 	}
 	rig.requireDraftGone(start)
-}
-
-func TestControlDotDoesNothingWithItsToggleOff(t *testing.T) {
-	rig := newEditingRig(t, terminalEditor, "draft")
-	rig.withReplyCommand()
-	rig.withReplyToggle(false)
-
-	rig.press(ctrlDot)
-
-	if rig.app.isEditorAwaited() {
-		t.Error("ctrl+. opened an editor with /reply switched off")
-	}
-	if shown := rig.app.feedback.Render(replayColumns, rig.app.getNow()); len(shown) != 0 {
-		t.Errorf("ctrl+. said %q with /reply switched off", shown)
-	}
-	if got := rig.input.Text(); got != "draft" {
-		t.Errorf("got the input %q, want it untouched", got)
-	}
 }
 
 func TestControlDotSaysWhyItCannotReply(t *testing.T) {

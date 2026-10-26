@@ -1203,7 +1203,8 @@ func TestCommandsForTheUserAreOfferedAsBangBlocksOnlyWhenSomebodyCanTypeThem(t *
 				"`/!` applies to the entire pasted input, so prefer a readable multi-line command over joining it onto one line",
 				"`/!` runs bash on the host in the workspace, so do not cd to it",
 				"You receive the command, output, exit code, and interrupt/kill state",
-				"no terminal and is killed after 30s",
+				"no terminal and is killed at the configured `experimental.user_command_timeout` (10m by default)",
+				"Changes to that timeout reload live for subsequent commands; a running command keeps its original limit",
 			} {
 				if isPresent := strings.Contains(got, rule); isPresent != testCase.isInteractive {
 					t.Errorf("rule %q presence is %t, want %t: %q", rule, isPresent, testCase.isInteractive, got)
