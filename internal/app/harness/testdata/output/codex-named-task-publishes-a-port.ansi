@@ -14,7 +14,7 @@
 \e[48;2;48;58;67m    \e[38;2;150;152;150mserver ready\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\read output for\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m2L\e[0m\r
 \e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mdiscard\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \r
 The named task published its port and was discarded.\e[?25h\e[?2026l\r

@@ -14,7 +14,7 @@ I will check it later.
 
 
 check build
-read output for build 1L
+cat build 1L
 list tasks 1L
 stop build
 restart build
@@ -25,7 +25,7 @@ restart build
     restarted command
 
 
-read output for build 3L
+cat build 3L
 discard build
 prune finished tasks
 

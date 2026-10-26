@@ -154,32 +154,32 @@ add = { name = "open-gangway" }
 remove = { name = "close-gangway", paint = "status_danger" }
 ```
 
-| Tool      | Action         | Default name      | Default paint    | Focus  |
-|-----------|----------------|-------------------|------------------|--------|
-| `read`    | `default`      | `read`            | call default     | accent |
-| `skill`   | `default`      | `load`            | `skill`          | skill  |
-| `ls`      | `default`      | `ls`              | call default     | accent |
-| `find`    | `default`      | `find`            | call default     | accent |
-| `grep`    | `default`      | `grep`            | call default     | accent |
-| `write`   | `default`      | `write`           | call default     | accent |
-| `edit`    | `default`      | `edit`            | call default     | accent |
-| `bash`    | `default`      | `$`               | `status_info`    | accent |
-| `bash`    | `host_network` | `$`               | `status_danger`  | accent |
-| `lookup`  | `default`      | `lookup`          | `status_info`    | accent |
-| `fetch`   | `default`      | `fetch`           | `status_info`    | accent |
-| `title`   | `default`      | `title`           | call default     | accent |
-| `task`    | `default`      | `manage`          | `status_warning` | accent |
-| `task`    | `status`       | `check`           | `normal`         | accent |
-| `task`    | `output`       | `read output for` | `normal`         | accent |
-| `task`    | `restart`      | `restart`         | `status_warning` | accent |
-| `task`    | `discard`      | `discard`         | `status_warning` | accent |
-| `task`    | `stop`         | `stop`            | `status_warning` | accent |
-| `task`    | `list`         | `list`            | `normal`         | accent |
-| `task`    | `prune`        | `prune`           | `status_warning` | accent |
-| `forward` | `default`      | `forward`         | `status_warning` | accent |
-| `forward` | `add`          | `forward`         | `status_warning` | accent |
-| `forward` | `remove`       | `close`           | `status_warning` | accent |
-| `forward` | `list`         | `list`            | `normal`         | accent |
+| Tool      | Action         | Default name | Default paint    | Focus  |
+|-----------|----------------|--------------|------------------|--------|
+| `read`    | `default`      | `read`       | call default     | accent |
+| `skill`   | `default`      | `load`       | `skill`          | skill  |
+| `ls`      | `default`      | `ls`         | call default     | accent |
+| `find`    | `default`      | `find`       | call default     | accent |
+| `grep`    | `default`      | `grep`       | call default     | accent |
+| `write`   | `default`      | `write`      | call default     | accent |
+| `edit`    | `default`      | `edit`       | call default     | accent |
+| `bash`    | `default`      | `$`          | `status_info`    | accent |
+| `bash`    | `host_network` | `$`          | `status_danger`  | accent |
+| `lookup`  | `default`      | `lookup`     | `status_info`    | accent |
+| `fetch`   | `default`      | `fetch`      | `status_info`    | accent |
+| `title`   | `default`      | `title`      | call default     | accent |
+| `task`    | `default`      | `manage`     | `status_warning` | accent |
+| `task`    | `status`       | `check`      | `normal`         | accent |
+| `task`    | `output`       | `cat`        | `normal`         | accent |
+| `task`    | `restart`      | `restart`    | `status_warning` | accent |
+| `task`    | `discard`      | `discard`    | `status_warning` | accent |
+| `task`    | `stop`         | `stop`       | `status_warning` | accent |
+| `task`    | `list`         | `list`       | `normal`         | accent |
+| `task`    | `prune`        | `prune`      | `status_warning` | accent |
+| `forward` | `default`      | `forward`    | `status_warning` | accent |
+| `forward` | `add`          | `forward`    | `status_warning` | accent |
+| `forward` | `remove`       | `close`      | `status_warning` | accent |
+| `forward` | `list`         | `list`       | `normal`         | accent |
 
 The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. A tool's `default` is also the malformed-call fallback for `task` and `forward`; valid calls use their action. An unlisted custom or removed tool keeps its recorded name and uses that same default, and a custom tool is themed the same way, by its own name.
 

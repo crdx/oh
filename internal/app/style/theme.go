@@ -185,7 +185,7 @@ var defaultTheme = Theme{
 			Default: ToolAppearance{Name: "manage", Paint: "status_warning"},
 			Actions: map[string]ToolAppearance{
 				"status":  {Name: "check", Paint: "normal"},
-				"output":  {Name: "read output for", Paint: "normal"},
+				"output":  {Name: "cat", Paint: "normal"},
 				"restart": {Name: "restart"},
 				"discard": {Name: "discard"},
 				"stop":    {Name: "stop"},

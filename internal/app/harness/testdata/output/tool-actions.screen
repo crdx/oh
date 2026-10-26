@@ -11,7 +11,7 @@ forward ✗ action must be add, remove, o…
 restart docs
 restart docs
 check docs
-read output for docs
+cat docs
 stop docs
 list tasks
 discard docs
@@ -140,7 +140,7 @@ forward ✗ action must be add, remove, or list (got "bogus")
 restart docs
 restart docs
 check docs
-read output for docs
+cat docs
 stop docs
 list tasks
 discard docs
@@ -163,7 +163,7 @@ for… ✗ acti…
 restart docs
 restart docs
 check docs
-read output…
+cat docs
 stop docs
 list tasks
 discard docs
@@ -185,7 +185,7 @@ forward ✗ action must be add, remove, or list (got "bogus")
 restart docs
 restart docs
 check docs
-read output for docs
+cat docs
 stop docs
 list tasks
 discard docs

@@ -14,7 +14,7 @@ $ bash backgrounded (named "docs"); end your turn to wait Use http://127.82.233.
     server ready
 
 
-read output for docs 2L
+cat docs 2L
 discard docs
 
 The named task published its port and was discarded.

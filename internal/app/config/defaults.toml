@@ -103,7 +103,7 @@ default = { name = "manage", paint = "status_warning" }
 restart = { name = "restart" }
 discard = { name = "discard" }
 status = { name = "check", paint = "normal" }
-output = { name = "read output for", paint = "normal" }
+output = { name = "cat", paint = "normal" }
 stop = { name = "stop" }
 list = { name = "list", paint = "normal" }
 prune = { name = "prune" }

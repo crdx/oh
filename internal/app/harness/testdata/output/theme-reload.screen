@@ -398,7 +398,7 @@ model answer
 
 restart docs
 scuttle docs
-read output for docs
+cat docs
 forward 8080
 close-gangway 8080
 

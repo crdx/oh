@@ -426,42 +426,42 @@ Pausing for t… –
 
 ── task calls · 120 columns
 check docs
-read output for docs 2L
+cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 80 columns
 check docs
-read output for docs 2L
+cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 60 columns
 check docs
-read output for docs 2L
+cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 44 columns
 check docs
-read output for docs 2L
+cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 30 columns
 check docs
-read output for docs 2L
+cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 16 columns
 check docs
-read output … 2L
+cat docs 2L
 restart docs
 stop docs
 discard docs

@@ -1335,7 +1335,7 @@ func TestAToolDefaultReachesEveryActionThatSetsNothingOfItsOwn(t *testing.T) {
 			t.Errorf("%s is painted %q, want %q", kind, got, want)
 		}
 	}
-	if got := resolved["task_output"].Name; got != "read output for" {
+	if got := resolved["task_output"].Name; got != "cat" {
 		t.Errorf("the output action was renamed %q", got)
 	}
 	if got := resolved["forward_add"].Paint; got != "status_warning" {
@@ -1354,7 +1354,7 @@ func TestAnActionCanBeRestyledAlone(t *testing.T) {
 	if got := resolved["task_restart"]; got.Name != "launch" || got.Paint != "status_warning" {
 		t.Errorf("task_restart resolves to %+v, want the new name and the inherited paint", got)
 	}
-	if got := resolved["task_output"]; got.Name != "read output for" || got.Paint != "dim" {
+	if got := resolved["task_output"]; got.Name != "cat" || got.Paint != "dim" {
 		t.Errorf("task_output resolves to %+v, want the default name and the new paint", got)
 	}
 	if got := resolved["task_stop"]; got.Name != "stop" {
