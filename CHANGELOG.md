@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.27.1] — 2026-10-26
+
 ### Changes
 
 - Refresh the model list daily
