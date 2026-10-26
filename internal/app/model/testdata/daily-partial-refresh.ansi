@@ -1,0 +1,12 @@
+=== daily refresh ===
+\e[38;2;150;152;150mRefreshing the model list...\e[0m
+
+\e[4m\e[38;2;150;152;150mProvider   Model             Change\e[0m\e[0m
+Anthropic  claude-fable-5-1  \e[38;2;76;154;44madded\e[0m
+Anthropic  claude-opus-4-6   \e[38;2;204;102;102mremoved\e[0m
+
+=== choices returned ===
+codex/gpt-5.6-sol
+anthropic/claude-sonnet-4-6
+anthropic/claude-fable-5-1
+ollama/llama-4

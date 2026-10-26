@@ -51,6 +51,7 @@ type startupRun struct {
 	rig              *interactiveRig
 	endpoint         *sim.Endpoint
 	isRefusingModels atomic.Bool
+	registryRequests atomic.Int32
 }
 
 func newStartupRun(t *testing.T, configBody string, answers ...string) *startupRun {
@@ -64,6 +65,9 @@ func newStartupRun(t *testing.T, configBody string, answers ...string) *startupR
 
 	self := &startupRun{endpoint: endpoint}
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if strings.HasSuffix(request.URL.Path, "/models.dev/api.json") {
+			self.registryRequests.Add(1)
+		}
 		if self.isRefusingModels.Load() && !strings.HasSuffix(request.URL.Path, "/chat/completions") {
 			http.Error(writer, "listings are down", http.StatusServiceUnavailable)
 			return
@@ -132,6 +136,17 @@ func (self *startupRun) run(t *testing.T, arguments ...string) string {
 	return scrubStartup(fmt.Sprintf("$ oh %s\n%s[%s]\n", strings.Join(arguments, " "), output, status))
 }
 
+func (self *startupRun) refreshCount(t *testing.T, want int32) string {
+	t.Helper()
+
+	count := self.registryRequests.Load()
+	if count != want {
+		t.Fatalf("got %d model refreshes, want %d", count, want)
+	}
+
+	return fmt.Sprintf("model refreshes: %d\n", count)
+}
+
 func (self *startupRun) sessionModels(t *testing.T) string {
 	t.Helper()
 
@@ -158,7 +173,7 @@ func (self *startupRun) ageModelList(t *testing.T) {
 	t.Helper()
 
 	path := self.statePath("data", "models.json")
-	stale := time.Now().Add(-30 * 24 * time.Hour)
+	stale := time.Now().AddDate(0, 0, -1)
 	data, err := os.ReadFile(path) //nolint:gosec // the test's own state
 	if err != nil {
 		t.Fatal(err)
@@ -218,18 +233,78 @@ func TestGoldenStartupResolvesTheModelToUse(t *testing.T) {
 			resumed := run.run(t, "-p", "-r", name, "-f", "another question")
 			return strings.ReplaceAll(first+refused+resumed, name, "<session>") + run.sessionModels(t)
 		},
-		"a stale model list refreshed before choosing": func() string {
-			run := newStartupRun(t, "", "First answer.", "Refreshed answer.")
-			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question")
+		"yesterday's model list refreshes once today": func() string {
+			run := newStartupRun(t, "", "First answer.", "Refreshed answer.", "Cached answer.")
+			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 1)
 			run.ageModelList(t)
-			return first + run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.sessionModels(t)
+			refreshed := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			cached := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			return first + refreshed + cached + run.sessionModels(t)
 		},
-		"a stale model list that cannot be refreshed": func() string {
-			run := newStartupRun(t, "", "First answer.", "Unrefreshed answer.")
-			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question")
+		"yesterday's model list that cannot be refreshed waits until tomorrow": func() string {
+			run := newStartupRun(t, "", "First answer.", "Unrefreshed answer.", "Cached answer.", "Recovered answer.")
+			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 1)
 			run.ageModelList(t)
 			run.isRefusingModels.Store(true)
-			return first + run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.sessionModels(t)
+			failed := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			cached := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			run.ageModelList(t)
+			run.isRefusingModels.Store(false)
+			recovered := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 3)
+			return first + failed + cached + recovered + run.sessionModels(t)
+		},
+	})
+}
+
+func TestGoldenDailyModelRefreshRecovery(t *testing.T) {
+	compareWithGolden(t, "daily-model-refresh", ".txt", map[string]func() string{
+		"a cold start cannot hide a refresh failure": func() string {
+			run := newStartupRun(t, "", "Recovered answer.")
+			run.isRefusingModels.Store(true)
+			failed := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 1)
+			run.isRefusingModels.Store(false)
+			recovered := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			return failed + recovered + run.sessionModels(t)
+		},
+		"a corrupt cache is replaced even on the same day": func() string {
+			run := newStartupRun(t, "", "First answer.", "Recovered answer.")
+			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 1)
+			if err := os.WriteFile(run.statePath("data", "models.json"), []byte("not JSON"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			recovered := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			return first + recovered + run.sessionModels(t)
+		},
+		"an explicit update forces a refresh and keeps the next launch quiet": func() string {
+			run := newStartupRun(t, "", "Cached answer.")
+			first := run.run(t, "-u") + run.refreshCount(t, 1)
+			forced := run.run(t, "-u") + run.refreshCount(t, 2)
+			cached := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 2)
+			return strings.ReplaceAll(first+forced+cached, run.statePath(), "/state") + run.sessionModels(t)
+		},
+		"resuming refreshes the list and draws added and removed models": func() string {
+			run := newStartupRun(t, "", "First answer.", "Resumed answer.")
+			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question") + run.refreshCount(t, 1)
+			name := run.onlySessionName(t)
+			run.ageModelList(t)
+			root, err := os.OpenRoot(run.statePath("data"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer func() { _ = root.Close() }()
+			data, err := root.ReadFile("models.json")
+			if err != nil {
+				t.Fatal(err)
+			}
+			previous := bytes.ReplaceAll(data, []byte(`"id": "fake"`), []byte(`"id": "previous-model"`))
+			if bytes.Equal(data, previous) {
+				t.Fatal("the model list holds no model to replace")
+			}
+			if err := root.WriteFile("models.json", previous, 0o600); err != nil {
+				t.Fatal(err)
+			}
+			resumed := run.run(t, "-p", "-r", name, "another question") + run.refreshCount(t, 2)
+			return strings.ReplaceAll(first+resumed, name, "<session>") + run.sessionModels(t)
 		},
 	})
 }

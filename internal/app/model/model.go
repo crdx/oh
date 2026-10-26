@@ -30,10 +30,9 @@ import (
 const refreshMessage = "Refreshing the model list..."
 
 const (
-	cacheVersion    = 6
-	updateTimeout   = 90 * time.Second
-	refreshTimeout  = 20 * time.Second
-	maximumCacheAge = 7 * 24 * time.Hour
+	cacheVersion   = 6
+	updateTimeout  = 90 * time.Second
+	refreshTimeout = 20 * time.Second
 )
 
 const (
@@ -573,7 +572,9 @@ func isCacheCurrent(cache modelCache, now time.Time) bool {
 		return false
 	}
 
-	return now.Sub(cache.CheckedAt) < maximumCacheAge
+	checkedAt := cache.CheckedAt.In(now.Location())
+
+	return !checkedAt.After(now) && checkedAt.Year() == now.Year() && checkedAt.YearDay() == now.YearDay()
 }
 
 func Update(

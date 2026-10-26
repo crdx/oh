@@ -6030,6 +6030,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"subagent-provider-pools":  {".txt"},
 		"subagent-conversation":    {".ansi", ".screen"},
 		"startup-model-selection":  {".txt"},
+		"daily-model-refresh":      {".txt"},
 		"startup-deny-workspace":   {".txt"},
 		"default-bar":              {".ansi", ".screen"},
 		"editing-config":           {".ansi", ".screen"},

@@ -501,7 +501,7 @@ func TestGoldenAnUpdateThatRecordsNothingStillNamesWhatItIgnored(t *testing.T) {
 
 func TestGoldenAStartupRefreshThatRecordsNothingShowsWhatItIgnored(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
-	writeCheckedModelCache(t, time.Now().Add(-8*24*time.Hour))
+	writeCheckedModelCache(t, time.Now().AddDate(0, 0, -1))
 
 	var output bytes.Buffer
 	lister := func(ctx context.Context, providerName string) ([]agent.Model, error) {
@@ -531,7 +531,7 @@ func TestGoldenAStartupRefreshNamesWhatChangedAndNothingElse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ageModelCache(t, time.Now().Add(-8*24*time.Hour))
+	ageModelCache(t, time.Now().AddDate(0, 0, -1))
 
 	var output bytes.Buffer
 	if _, err := Ensure(

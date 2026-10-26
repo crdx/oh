@@ -980,9 +980,51 @@ func writeCheckedModelCache(t *testing.T, checked time.Time) {
 	}
 }
 
-func TestACacheCheckedWithinTheWeekIsLeftAlone(t *testing.T) {
+func TestCacheFreshnessUsesTheLocalCalendarDay(t *testing.T) {
+	london, err := time.LoadLocation("Europe/London")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, test := range []struct {
+		name      string
+		checked   string
+		now       string
+		isCurrent bool
+	}{
+		{name: "same day", checked: "2026-10-26T00:00:00Z", now: "2026-10-26T23:59:59Z", isCurrent: true},
+		{name: "midnight", checked: "2026-10-25T23:59:59Z", now: "2026-10-26T00:00:00Z"},
+		{name: "new year", checked: "2025-12-31T23:59:59Z", now: "2026-01-01T00:00:00Z"},
+		{name: "same day number in an older year", checked: "2025-10-26T00:00:00Z", now: "2026-10-26T00:00:00Z"},
+		{name: "same local day across UTC midnight", checked: "2026-06-01T23:00:00Z", now: "2026-06-02T00:01:00Z", isCurrent: true},
+		{name: "local midnight before UTC midnight", checked: "2026-06-01T22:59:59Z", now: "2026-06-01T23:00:00Z"},
+		{name: "short summer time day", checked: "2026-03-29T00:00:00Z", now: "2026-03-29T23:00:00Z"},
+		{name: "long winter time day", checked: "2026-10-24T23:00:00Z", now: "2026-10-25T23:59:59Z", isCurrent: true},
+		{name: "clock moves back", checked: "2026-10-26T12:00:00Z", now: "2026-10-26T11:00:00Z"},
+		{name: "future day", checked: "2026-10-27T12:00:00Z", now: "2026-10-26T12:00:00Z"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			checked, err := time.Parse(time.RFC3339, test.checked)
+			if err != nil {
+				t.Fatal(err)
+			}
+			now, err := time.Parse(time.RFC3339, test.now)
+			if err != nil {
+				t.Fatal(err)
+			}
+			cache := modelCache{
+				CheckedAt: checked,
+				Providers: map[string]cachedModels{codexProvider: {}},
+			}
+			if actual := isCacheCurrent(cache, now.In(london)); actual != test.isCurrent {
+				t.Errorf("current = %t, want %t", actual, test.isCurrent)
+			}
+		})
+	}
+}
+
+func TestACacheCheckedTodayIsLeftAlone(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
-	writeCheckedModelCache(t, time.Now().Add(-6*24*time.Hour))
+	writeCheckedModelCache(t, time.Now())
 
 	var output bytes.Buffer
 	if err := ensureModelsWithoutProviderListings(&output, deadAddress, modelCachePath()); err != nil {
@@ -999,9 +1041,9 @@ func TestACacheCheckedWithinTheWeekIsLeftAlone(t *testing.T) {
 	}
 }
 
-func TestACacheOlderThanAWeekIsRefreshed(t *testing.T) {
+func TestACacheCheckedYesterdayIsRefreshed(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
-	writeCheckedModelCache(t, time.Now().Add(-8*24*time.Hour))
+	writeCheckedModelCache(t, time.Now().AddDate(0, 0, -1))
 
 	var output bytes.Buffer
 	endpoint := serveRegistry(t, oneCodexModel)
@@ -1035,7 +1077,7 @@ func TestARefreshThatFindsTheSameModelsSaysOnlyThatItRefreshed(t *testing.T) {
 
 	endpoint := serveRegistry(t, oneCodexModel)
 
-	checked := time.Now().Add(-8 * 24 * time.Hour)
+	checked := time.Now().AddDate(0, 0, -1)
 	if err := saveModelCache(modelCachePath(), modelCache{
 		CheckedAt: checked,
 		Providers: map[string]cachedModels{
@@ -1097,7 +1139,7 @@ func TestAPriceSurvivesTheCacheAndReachesTheChoice(t *testing.T) {
 
 func TestARefreshThatFailsKeepsWhatIsCachedAndWaitsBeforeAskingAgain(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
-	writeCheckedModelCache(t, time.Now().Add(-8*24*time.Hour))
+	writeCheckedModelCache(t, time.Now().AddDate(0, 0, -1))
 
 	var output bytes.Buffer
 	if err := ensureModelsWithoutProviderListings(&output, deadAddress, modelCachePath()); err != nil {

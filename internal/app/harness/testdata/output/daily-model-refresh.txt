@@ -1,0 +1,129 @@
+=== a cold start cannot hide a refresh failure ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+models.dev: request failed with status 503: listings are down
+Provider      Models  Selectable  Ignored  Source
+Codex              —                       the endpoint lists no models
+OpenCode Go        —                       request failed with status 503: listings are down
+Anthropic          —                       the endpoint lists no models
+Ollama             —                       request failed with status 503: listings are down
+✗ No provider could be described
+[exit 1]
+model refreshes: 1
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Recovered answer.
+
+oh -r <session>
+[exit 0]
+model refreshes: 2
+session model: opencode-go/fake@high
+
+=== a corrupt cache is replaced even on the same day ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+oh -r <session>
+[exit 0]
+model refreshes: 1
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Recovered answer.
+
+oh -r <session>
+[exit 0]
+model refreshes: 2
+session model: opencode-go/fake@high
+session model: opencode-go/fake@high
+
+=== an explicit update forces a refresh and keeps the next launch quiet ===
+$ oh -u
+Provider      Models  Selectable  Ignored  Source
+Codex              1           1           models.dev (the endpoint lists no models)
+OpenCode Go        1           1           endpoint+models.dev
+Anthropic          1           1           models.dev (the endpoint lists no models)
+Ollama             1           1           endpoint
+
+Stored model list in /state/data/models.json
+[exit 0]
+model refreshes: 1
+$ oh -u
+Provider      Models  Selectable  Ignored  Source
+Codex              1           1           models.dev (the endpoint lists no models)
+OpenCode Go        1           1           endpoint+models.dev
+Anthropic          1           1           models.dev (the endpoint lists no models)
+Ollama             1           1           endpoint
+
+Stored model list in /state/data/models.json
+[exit 0]
+model refreshes: 2
+$ oh -p --yolo -m opencode-go/fake a question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Cached answer.
+
+oh -r <session>
+[exit 0]
+model refreshes: 2
+session model: opencode-go/fake@high
+
+=== resuming refreshes the list and draws added and removed models ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+oh -r <session>
+[exit 0]
+model refreshes: 1
+$ oh -p -r <session> another question
+Refreshing the model list...
+
+Provider     Model           Change
+Codex        fake            added
+Codex        previous-model  removed
+OpenCode Go  fake            added
+OpenCode Go  previous-model  removed
+Anthropic    fake            added
+Anthropic    previous-model  removed
+Ollama       fake            added
+Ollama       previous-model  removed
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+
+ another question
+
+Resumed answer.
+
+oh -r <session>
+[exit 0]
+model refreshes: 2
+session model: opencode-go/fake@high
