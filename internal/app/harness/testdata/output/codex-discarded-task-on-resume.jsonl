@@ -11,14 +11,14 @@
 {"kind":"event","event":{"kind":"task_listing","state":[{"id":"task-1","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:10Z","output":"","failure":""}]}}
 {"kind":"event","event":{"kind":"user_message","text":"start another build in the background"}}
 {"kind":"event","event":{"render":"release build","marks_success":true,"kind":"tool_call_request","id":"call-2","name":"bash","arguments":"{\"dish\":\"release build\",\"background\":true}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"scheduled as bash-1","id":"call-2","name":"bash","status":"info","stats":{"kind":"output","lines":1,"bytes":19}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"backgrounded (named \"bash-1\"); end your turn to wait","id":"call-2","name":"bash","status":"info","stats":{"kind":"output","lines":1,"bytes":52}}}
 {"kind":"event","event":{"kind":"task_run_finished","name":"bash-1","state":{"snapshot":{"invocation":{"arguments":"{\"dish\":\"release build\"}"},"id":"bash-1","tool_name":"bash","run":1,"is_respawning":false,"state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"exit(1):\nbroken build","failure":"the command exited with status 1"},"is_final":true}}}
 {"kind":"event","event":{"kind":"task_run_ended","name":"bash-1","state":{"snapshot":{"invocation":{"arguments":"{\"dish\":\"release build\"}"},"id":"bash-1","tool_name":"bash","run":1,"is_respawning":false,"state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"exit(1):\nbroken build","failure":"the command exited with status 1"},"is_final":true}}}
 {"kind":"event","event":{"kind":"task_listing","state":[{"id":"task-1","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:10Z","output":"","failure":""},{"invocation":{"arguments":"{\"dish\":\"release build\"}"},"id":"bash-1","tool_name":"bash","run":1,"is_respawning":false,"state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"exit(1):\nbroken build","failure":"the command exited with status 1"}]}}
 {"kind":"event","event":{"kind":"model_message","text":"The new build used the next unused task ID and reported its failure."}}
 {"kind":"item","payload":{"role":"user","content":"start another build in the background"}}
 {"kind":"item","payload":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"bash","arguments":"{\"dish\":\"release build\",\"background\":true}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"scheduled as bash-1"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"backgrounded (named \"bash-1\"); end your turn to wait"}}
 {"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `bash-1` failed after 0.0s: exited 1\n\n```\nexit(1):\nbroken build\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"The new build used the next unused task ID and reported its failure."}]}}
 {"kind":"turn_completion","turn":{}}

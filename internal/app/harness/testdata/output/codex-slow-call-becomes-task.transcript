@@ -17,7 +17,7 @@ run the slow tests as checks
 ## Tool calls · +0s
 
 ```
-bash: bash [info, 1 line, 44B, call-1]
+bash: bash [info, 1 line, 52B, call-1]
 ```
 
 ## Task run ended · +0s

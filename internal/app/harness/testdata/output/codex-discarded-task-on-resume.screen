@@ -8,7 +8,7 @@ I will remember the task history.
  start another build in the background
 
 
-$ release build ✓ scheduled as bash-1
+$ release build ✓ backgrounded (named "bash-1"); end your turn to wait
 
 
  ⚙️ Task bash-1 failed after 0.0s: exited 1

@@ -45,7 +45,7 @@ func TestBackgroundCallReturnsAReceiptAndKeepsExecuting(t *testing.T) {
 			t.Fatal(err)
 		}
 		acknowledgement, err := call.Exec(t.Context())
-		if err != nil || !acknowledgement.IsPending || acknowledgement.Output != "scheduled as bash-1" {
+		if err != nil || !acknowledgement.IsPending || acknowledgement.Output != "backgrounded (named \"bash-1\"); end your turn to wait" {
 			t.Errorf("got acknowledgement %+v, %v", acknowledgement, err)
 		}
 		close(release)
@@ -196,7 +196,7 @@ func TestAQueuedBackgroundReceiptDoesNotClaimTheTaskIsRunning(t *testing.T) {
 			t.Fatal(err)
 		}
 		receipt, err := call.Exec(t.Context())
-		if err != nil || !strings.Contains(receipt.Output, "scheduled") || strings.Contains(receipt.Output, "is running") {
+		if err != nil || receipt.Output != "backgrounded (named \"bash-1\"); end your turn to wait" || strings.Contains(receipt.Output, "is running") {
 			t.Errorf("queued call claimed to run: %+v, %v", receipt, err)
 		}
 		if snapshot, err := manager.Status("bash-1"); err != nil || snapshot.State != tasks.Queued {
@@ -254,7 +254,7 @@ func TestANamedForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *test
 		if elapsed := time.Since(startedAt); elapsed != 30*time.Second {
 			t.Errorf("handoff took %s, want 30s", elapsed)
 		}
-		if err != nil || !receipt.IsPending || receipt.Output != "backgrounded (build); end your turn to wait" {
+		if err != nil || !receipt.IsPending || receipt.Output != "backgrounded (named \"build\"); end your turn to wait" {
 			t.Errorf("automatic handoff returned %+v, %v", receipt, err)
 		}
 		close(release)
@@ -288,7 +288,7 @@ func TestNamedBackgroundLaunchesPublishTheirPortOnceStarted(t *testing.T) {
 			t.Fatal(err)
 		}
 		receipt, err := call.Exec(t.Context())
-		if err != nil || !strings.Contains(receipt.Output, "scheduled as docs") || !strings.Contains(receipt.Output, "http://127.1.2.3:8000") {
+		if err != nil || !strings.Contains(receipt.Output, "backgrounded (named \"docs\"); end your turn to wait") || !strings.Contains(receipt.Output, "http://127.1.2.3:8000") {
 			t.Errorf("named server receipt is %+v, %v", receipt, err)
 		}
 		synctest.Wait()

@@ -2,7 +2,7 @@
  run the slow tests as checks
 
 
-$ bash backgrounded (checks); end your turn to wait
+$ bash backgrounded (named "checks"); end your turn to wait
 
 
  ⚙️ Task checks finished after 0.0s

@@ -49,7 +49,7 @@ func conversation() []agent.Event {
 		},
 		{Kind: agent.UserMessageEvent, Text: "rebuild whenever it changes"},
 		respawningStart(),
-		{Kind: agent.ToolCallResultEvent, ID: "call-2", Name: "bash", Status: agent.SuccessStatus, Text: "scheduled as watch"},
+		{Kind: agent.ToolCallResultEvent, ID: "call-2", Name: "bash", Status: agent.SuccessStatus, Text: "backgrounded (named \"watch\"); end your turn to wait"},
 		respawnedRun(),
 		{Kind: agent.UserMessageEvent, Text: "have two subagents look at it"},
 		{

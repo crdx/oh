@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m start named background work and publish its port                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbash\e[0m \e[38;2;150;152;150mscheduled as docs Use http://127.82.233.168:8000 for the user; use localhost:8000 inside the…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbash\e[0m \e[38;2;150;152;150mbackgrounded (named "docs"); end your turn to wait Use http://127.82.233.168:8000 for the us…\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8000 is now forwarded to http://127.82.233.168:8000.                                       \e[0m\r

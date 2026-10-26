@@ -25,7 +25,7 @@ start another build in the background
 ## Tool calls · +0s
 
 ```
-bash: release build [info, 1 line, 19B, toolu_2]
+bash: release build [info, 1 line, 52B, toolu_2]
 ```
 
 ## Task run ended · +0s

@@ -262,10 +262,7 @@ func (self scheduledCall) Exec(ctx context.Context) (tool.ToolCallResult, error)
 	if !isBackground {
 		return conclusion.Result, conclusion.Failure
 	}
-	receipt := "scheduled as " + snapshot.ID
-	if !self.options.IsBackground {
-		receipt = "backgrounded (" + snapshot.ID + "); end your turn to wait"
-	}
+	receipt := fmt.Sprintf("backgrounded (named %q); end your turn to wait", snapshot.ID)
 	if port != 0 {
 		publication, state := self.manager.AwaitPublication(ctx, snapshot.ID, tasks.ForegroundLimit)
 		receipt += "\n" + tasks.PublicationReceipt(publication, state, port)

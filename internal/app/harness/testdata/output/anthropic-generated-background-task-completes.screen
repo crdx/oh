@@ -2,7 +2,7 @@
  start the build in the background
 
 
-$ bash scheduled as bash-1
+$ bash backgrounded (named "bash-1"); end your turn to wait
 
 
  ⚙️ Task bash-1 finished after 0.0s

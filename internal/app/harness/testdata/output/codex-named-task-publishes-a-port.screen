@@ -2,7 +2,7 @@
  start named background work and publish its port
 
 
-$ bash scheduled as docs Use http://127.82.233.168:8000 for the user; use localhost:8000 inside the…
+$ bash backgrounded (named "docs"); end your turn to wait Use http://127.82.233.168:8000 for the us…
 
 
  🤖 Port 8000 is now forwarded to http://127.82.233.168:8000.

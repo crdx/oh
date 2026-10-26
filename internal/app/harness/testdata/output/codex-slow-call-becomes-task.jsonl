@@ -3,14 +3,14 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"run the slow tests as checks"}}
 {"kind":"event","event":{"render":"bash","kind":"tool_call_request","id":"call-1","name":"bash","arguments":"{\"task_name\":\"checks\"}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"backgrounded (checks); end your turn to wait","id":"call-1","name":"bash","status":"info","stats":{"kind":"output","lines":1,"bytes":44}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"backgrounded (named \"checks\"); end your turn to wait","id":"call-1","name":"bash","status":"info","stats":{"kind":"output","lines":1,"bytes":52}}}
 {"kind":"event","event":{"kind":"task_run_finished","name":"checks","state":{"snapshot":{"invocation":{"arguments":"{}"},"id":"checks","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"tests passed","failure":""},"is_final":true}}}
 {"kind":"event","event":{"kind":"task_run_ended","name":"checks","state":{"snapshot":{"invocation":{"arguments":"{}"},"id":"checks","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"tests passed","failure":""},"is_final":true}}}
 {"kind":"event","event":{"kind":"task_listing","state":[{"invocation":{"arguments":"{}"},"id":"checks","tool_name":"bash","run":1,"is_respawning":false,"state":"done","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:09Z","output":"tests passed","failure":""}]}}
 {"kind":"event","event":{"kind":"model_message","text":"The slow tests moved to the background and finished."}}
 {"kind":"item","payload":{"role":"user","content":"run the slow tests as checks"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"bash","arguments":"{\"task_name\":\"checks\"}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"backgrounded (checks); end your turn to wait"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"backgrounded (named \"checks\"); end your turn to wait"}}
 {"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `checks` finished after 0.0s\n\n```\ntests passed\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The slow tests moved to the background and finished."}]}}
 {"kind":"turn_completion","turn":{}}
