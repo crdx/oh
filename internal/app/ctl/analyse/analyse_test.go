@@ -678,9 +678,10 @@ func goldenSessions() []SessionStatistics {
 				SessionTime:     42 * time.Minute,
 			},
 			Faults: FaultStatistics{
-				Sessions:      1,
-				Retries:       1,
-				CacheRebuilds: RebuildStatistics{Expiries: 1, WrittenTokens: 15_000},
+				Sessions:              1,
+				Retries:               1,
+				CompressionRejections: 2,
+				CacheRebuilds:         RebuildStatistics{Expiries: 1, WrittenTokens: 15_000},
 			},
 			Tools: []ToolStatistics{
 				{Name: "bash", Calls: 12, Failures: 2, Took: 40 * time.Second},
@@ -748,11 +749,12 @@ func goldenSessions() []SessionStatistics {
 				SessionTime:     95 * time.Minute,
 			},
 			Faults: FaultStatistics{
-				Sessions:       1,
-				Retries:        3,
-				Failures:       1,
-				PrefixRewrites: 2,
-				CacheRebuilds:  RebuildStatistics{Reopenings: 1, Settlements: 2, WrittenTokens: 30_000},
+				Sessions:              1,
+				Retries:               3,
+				CompressionRejections: 1,
+				Failures:              1,
+				PrefixRewrites:        2,
+				CacheRebuilds:         RebuildStatistics{Reopenings: 1, Settlements: 2, WrittenTokens: 30_000},
 			},
 			Tools: []ToolStatistics{
 				{Name: "bash", Calls: 60, Failures: 4, Cancellations: 1, Took: 9 * time.Minute},

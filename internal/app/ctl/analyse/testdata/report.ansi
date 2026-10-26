@@ -37,11 +37,11 @@ Openrouter         1      0        1        0          0           0            
 
 \e[1m\e[38;2;207;173;0mFaults\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider    Retries  Interruptions  Failures  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens\e[0m\e[0m
-Anthropic         1              2         0             1         0         1            15Kt
-Codex             3              0         1             0         2         3            30Kt
-Openrouter        0              0         1             0         0         0              0t
-\e[38;2;129;162;190mTotal             4              2         2             1         2         4            45Kt\e[0m
+\e[4m\e[38;2;150;152;150mProvider    Retries  Interruptions  Failures  Compression Rejections  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens\e[0m\e[0m
+Anthropic         1              2         0                       2             1         0         1            15Kt
+Codex             3              0         1                       1             0         2         3            30Kt
+Openrouter        0              0         1                       0             0         0         0              0t
+\e[38;2;129;162;190mTotal             4              2         2                       3             1         2         4            45Kt\e[0m
 
 \e[1m\e[38;2;207;173;0mTools\e[0m\e[0m
 

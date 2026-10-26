@@ -27,6 +27,10 @@ type Observer interface {
 	Start(request Request) ExchangeObserver
 }
 
+type CompressionObserver interface {
+	CompressionRejected()
+}
+
 type ExchangeObserver interface {
 	Response(response Response)
 	Body(readAt time.Time, body []byte)

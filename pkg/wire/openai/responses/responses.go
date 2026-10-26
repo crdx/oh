@@ -22,6 +22,7 @@ import (
 
 const (
 	Endpoint        = "https://chatgpt.com/backend-api/codex/responses"
+	publicEndpoint  = "https://api.openai.com/v1/responses"
 	Summary         = "auto"
 	fastServiceTier = "priority"
 
@@ -84,6 +85,7 @@ func New(tokens TokenSource, model string, effort string) (*Client, error) {
 	}
 	client.headerSource = client.codexHeaders
 	client.isEffortRequired = true
+	client.requests.CompressWith(req.Zstd)
 
 	if err := client.settled(); err != nil {
 		return nil, err
@@ -124,11 +126,22 @@ func NewAt(
 		},
 	}
 
+	client.requests.CompressWith(supportedRequestCompression(url))
+
 	if err := client.settled(); err != nil {
 		return nil, err
 	}
 
 	return client, nil
+}
+
+func supportedRequestCompression(address string) req.Compression {
+	switch address {
+	case Endpoint, publicEndpoint:
+		return req.Zstd
+	default:
+		return ""
+	}
 }
 
 type noTokens struct{}

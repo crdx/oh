@@ -196,6 +196,7 @@
                 "provider": "anthropic",
                 "sessions": 2,
                 "retries": 1,
+                "compressionRejections": 2,
                 "interruptions": 2,
                 "failures": 0,
                 "silentTurns": 1,
@@ -212,6 +213,7 @@
                 "provider": "codex",
                 "sessions": 1,
                 "retries": 3,
+                "compressionRejections": 1,
                 "interruptions": 0,
                 "failures": 1,
                 "silentTurns": 0,
@@ -228,6 +230,7 @@
                 "provider": "ollama",
                 "sessions": 1,
                 "retries": 0,
+                "compressionRejections": 0,
                 "interruptions": 0,
                 "failures": 0,
                 "silentTurns": 0,
@@ -244,6 +247,7 @@
                 "provider": "openrouter",
                 "sessions": 1,
                 "retries": 0,
+                "compressionRejections": 0,
                 "interruptions": 0,
                 "failures": 1,
                 "silentTurns": 0,
@@ -260,6 +264,7 @@
         "total": {
             "sessions": 5,
             "retries": 4,
+            "compressionRejections": 3,
             "interruptions": 2,
             "failures": 2,
             "silentTurns": 1,
@@ -338,6 +343,7 @@
             "faults": {
                 "sessions": 1,
                 "retries": 1,
+                "compressionRejections": 2,
                 "interruptions": 0,
                 "failures": 0,
                 "silentTurns": 0,
@@ -401,6 +407,7 @@
             "faults": {
                 "sessions": 1,
                 "retries": 0,
+                "compressionRejections": 0,
                 "interruptions": 2,
                 "failures": 0,
                 "silentTurns": 1,
@@ -457,6 +464,7 @@
             "faults": {
                 "sessions": 1,
                 "retries": 3,
+                "compressionRejections": 1,
                 "interruptions": 0,
                 "failures": 1,
                 "silentTurns": 0,
@@ -526,6 +534,7 @@
             "faults": {
                 "sessions": 1,
                 "retries": 0,
+                "compressionRejections": 0,
                 "interruptions": 0,
                 "failures": 1,
                 "silentTurns": 0,
@@ -572,6 +581,7 @@
             "faults": {
                 "sessions": 1,
                 "retries": 0,
+                "compressionRejections": 0,
                 "interruptions": 0,
                 "failures": 0,
                 "silentTurns": 0,

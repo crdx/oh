@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -165,6 +166,8 @@ func (self *journalTally) recordEvent(event agent.Event) {
 		self.recordToolCall(event)
 	case agent.RetryingEvent:
 		self.statistics.Faults.Retries++
+	case metrics.RequestCompressionRejected:
+		self.statistics.Faults.CompressionRejections++
 	case agent.InterruptionEvent:
 		self.statistics.Faults.Interruptions++
 	case agent.FailureEvent:

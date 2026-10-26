@@ -24,6 +24,7 @@ import (
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/pictures"
@@ -154,117 +155,8 @@ func (self *Picasso) DrawDelta(delta agent.Delta) {
 }
 
 func (self *Picasso) DrawEvent(event agent.Event) {
-	self.drawnEvents++
-	IntroduceSubagent(self.introductions, event)
-	if isChildEvent(event) || isRecordOnlyTaskFact(event) {
-		return
-	}
-
-	if self.isTooCheapToNotice(event) {
-		return
-	}
-
-	if !isJoinableNotice(event) {
-		self.screen.SealOpenPanel()
-	}
-
-	switch {
-	case event.Kind == agent.ModelReasoningEvent && self.previousKind == agent.ModelReasoningEvent && self.reasoning.Len() == 0:
-		self.screen.End()
-	case event.Kind == agent.ModelMessageEvent && self.previousKind == agent.ModelMessageEvent && self.answer.Len() == 0:
-		self.screen.Blank()
-	}
-	self.previousKind = event.Kind
-
-	self.settleBeforeEvent(event.Kind)
-
-	switch event.Kind {
-	case agent.UserMessageEvent:
-		self.discardProvisionalReasoning()
-		self.answer.Reset()
-		self.drawSubmitted(submittedMessage{text: event.Text, kind: userSubmission})
-
-	case agent.ModelReasoningEvent:
-		self.answer.Reset()
-		self.resetReasoning()
-		self.reasoning.Write(event.Text)
-		self.drawReasoning(true)
-		self.screen.Seal()
-		self.resetReasoning()
-
-	case agent.ModelMessageEvent:
-		self.discardProvisionalReasoning()
-		self.answer.Reset()
-		self.answer.Write(event.Text)
-		renderedAnswer := markdown.RenderWith(self.answer.Text(), self.answerOptions())
-		if !self.screen.DrawLinkedAnswer(renderedAnswer) {
-			self.isStale = true
-		}
-		self.screen.Seal()
-		self.answer.Reset()
-
-	case agent.ToolCallRequestEvent:
-		if self.toolBlock == nil {
-			self.toolBlock = dynamic.NewBlock(self.screen.Refresh)
-			self.blockOpenedAt = self.drawnEvents - 1
-			if self.isTimingHeld {
-				self.toolBlock.HoldTiming()
-			}
-			self.screen.OpenTool(self.toolBlock)
-			self.rows = map[string]int{}
-			self.labels = map[string]call.Label{}
-		}
-
-		roots := self.linkRoots()
-		label := self.describer.LabelFor(event).WithHostPathAliases(roots)
-		self.introductions.note(label)
-		label.Aside = self.introductions.recall(label.Mentions)
-		if self.screen.IsTerminal() {
-			label.PathRoots = roots
-		}
-		self.rows[event.ID] = self.toolBlock.Add(label, label.TimeLimit)
-		self.labels[event.ID] = label
-
-	case agent.ToolCallResultEvent:
-		self.mark(event)
-
-	case agent.StartupEvent:
-		self.screen.Line(self.render(event))
-
-	case agent.SilentTurnEvent:
-		self.screen.Line(style.StoppedTurn(agent.SilentTurnNotice))
-
-	case agent.PrefixRewriteEvent:
-		self.screen.Line(style.Failure(agent.PrefixRewriteNotice + event.Text))
-
-	case agent.CacheRebuildEvent:
-		self.screen.Line(style.Change(agent.CacheRebuildNotice(event, self.tariff.cacheRebuildCost(event))))
-
-	case portgrant.ForwardChange, hostcommand.Ran, taskrecord.RunEnded, subagentrecord.ReportsDelivered:
-		self.drawNotices(event, self.drawSubmittedPanel)
-
-	case caps.ModeChange, caps.TaskStop, subagentrecord.AccessWithdrawnStop, taskrecord.EndedWithSession,
-		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
-		self.drawNotices(event, self.drawSubmitted)
-
-	case agent.RetryingEvent:
-		self.Close(dynamic.Cancelled)
-		self.screen.Line(style.StoppedTurn(RenderRetry(event)))
-
-	case agent.FailureEvent:
-		self.Close(dynamic.Cancelled)
-		self.screen.Line(style.Failure(RenderFailure(event)))
-		if notice, isSaid := RenderContextExceeded(event, self.forkModelName); isSaid {
-			self.screen.Line(style.StoppedTurn(notice))
-		}
-
-	case agent.InterruptionEvent:
-		if interrupt.IsAnnounced(event) {
-			self.Close(dynamic.Cancelled)
-			self.screen.Line(style.StoppedTurn(interrupt.Notice(event)))
-		}
-
-	case agent.StateChangeEvent:
+	if event.Kind != metrics.RequestCompressionRejected {
+		self.drawConversationEvent(event)
 	}
 }
 
@@ -626,6 +518,121 @@ func IntroduceSubagent(introductions *Introductions, event agent.Event) {
 
 func isChildEvent(event agent.Event) bool {
 	return slices.Contains(childFactKinds, event.Kind)
+}
+
+func (self *Picasso) drawConversationEvent(event agent.Event) {
+	self.drawnEvents++
+	IntroduceSubagent(self.introductions, event)
+	if isChildEvent(event) || isRecordOnlyTaskFact(event) {
+		return
+	}
+
+	if self.isTooCheapToNotice(event) {
+		return
+	}
+
+	if !isJoinableNotice(event) {
+		self.screen.SealOpenPanel()
+	}
+
+	switch {
+	case event.Kind == agent.ModelReasoningEvent && self.previousKind == agent.ModelReasoningEvent && self.reasoning.Len() == 0:
+		self.screen.End()
+	case event.Kind == agent.ModelMessageEvent && self.previousKind == agent.ModelMessageEvent && self.answer.Len() == 0:
+		self.screen.Blank()
+	}
+	self.previousKind = event.Kind
+
+	self.settleBeforeEvent(event.Kind)
+
+	switch event.Kind {
+	case agent.UserMessageEvent:
+		self.discardProvisionalReasoning()
+		self.answer.Reset()
+		self.drawSubmitted(submittedMessage{text: event.Text, kind: userSubmission})
+
+	case agent.ModelReasoningEvent:
+		self.answer.Reset()
+		self.resetReasoning()
+		self.reasoning.Write(event.Text)
+		self.drawReasoning(true)
+		self.screen.Seal()
+		self.resetReasoning()
+
+	case agent.ModelMessageEvent:
+		self.discardProvisionalReasoning()
+		self.answer.Reset()
+		self.answer.Write(event.Text)
+		renderedAnswer := markdown.RenderWith(self.answer.Text(), self.answerOptions())
+		if !self.screen.DrawLinkedAnswer(renderedAnswer) {
+			self.isStale = true
+		}
+		self.screen.Seal()
+		self.answer.Reset()
+
+	case agent.ToolCallRequestEvent:
+		if self.toolBlock == nil {
+			self.toolBlock = dynamic.NewBlock(self.screen.Refresh)
+			self.blockOpenedAt = self.drawnEvents - 1
+			if self.isTimingHeld {
+				self.toolBlock.HoldTiming()
+			}
+			self.screen.OpenTool(self.toolBlock)
+			self.rows = map[string]int{}
+			self.labels = map[string]call.Label{}
+		}
+
+		roots := self.linkRoots()
+		label := self.describer.LabelFor(event).WithHostPathAliases(roots)
+		self.introductions.note(label)
+		label.Aside = self.introductions.recall(label.Mentions)
+		if self.screen.IsTerminal() {
+			label.PathRoots = roots
+		}
+		self.rows[event.ID] = self.toolBlock.Add(label, label.TimeLimit)
+		self.labels[event.ID] = label
+
+	case agent.ToolCallResultEvent:
+		self.mark(event)
+
+	case agent.StartupEvent:
+		self.screen.Line(self.render(event))
+
+	case agent.SilentTurnEvent:
+		self.screen.Line(style.StoppedTurn(agent.SilentTurnNotice))
+
+	case agent.PrefixRewriteEvent:
+		self.screen.Line(style.Failure(agent.PrefixRewriteNotice + event.Text))
+
+	case agent.CacheRebuildEvent:
+		self.screen.Line(style.Change(agent.CacheRebuildNotice(event, self.tariff.cacheRebuildCost(event))))
+
+	case portgrant.ForwardChange, hostcommand.Ran, taskrecord.RunEnded, subagentrecord.ReportsDelivered:
+		self.drawNotices(event, self.drawSubmittedPanel)
+
+	case caps.ModeChange, caps.TaskStop, subagentrecord.AccessWithdrawnStop, taskrecord.EndedWithSession,
+		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
+		self.drawNotices(event, self.drawSubmitted)
+
+	case agent.RetryingEvent:
+		self.Close(dynamic.Cancelled)
+		self.screen.Line(style.StoppedTurn(RenderRetry(event)))
+
+	case agent.FailureEvent:
+		self.Close(dynamic.Cancelled)
+		self.screen.Line(style.Failure(RenderFailure(event)))
+		if notice, isSaid := RenderContextExceeded(event, self.forkModelName); isSaid {
+			self.screen.Line(style.StoppedTurn(notice))
+		}
+
+	case agent.InterruptionEvent:
+		if interrupt.IsAnnounced(event) {
+			self.Close(dynamic.Cancelled)
+			self.screen.Line(style.StoppedTurn(interrupt.Notice(event)))
+		}
+
+	case agent.StateChangeEvent:
+	}
 }
 
 func (self *Picasso) settleBeforeEvent(kind agent.Kind) {

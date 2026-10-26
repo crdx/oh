@@ -48,6 +48,7 @@
         "total": {
             "sessions": 0,
             "retries": 0,
+            "compressionRejections": 0,
             "interruptions": 0,
             "failures": 0,
             "silentTurns": 0,

@@ -41,6 +41,8 @@ func NewSearch(tokens TokenSource, model string) (*SearchClient, error) {
 		requests: req.NewStreaming(searchHeaderTimeout, searchIdleTimeout),
 	}
 
+	client.requests.CompressWith(req.Zstd)
+
 	if client.Model == "" {
 		return nil, errors.New("codex search: Model is empty")
 	}

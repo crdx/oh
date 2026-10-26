@@ -21,7 +21,7 @@ Codex            3      3        3        1          1           0            7s
 
 Faults
 
-Provider  Retries  Interruptions  Failures  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens
-Codex           0              1         1             0         0         0              0t
+Provider  Retries  Interruptions  Failures  Compression Rejections  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens
+Codex           0              1         1                       0             0         0         0              0t
 
 1 of 4 sessions is in a legacy format and was not considered.

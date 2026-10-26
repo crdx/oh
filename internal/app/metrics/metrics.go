@@ -5,6 +5,8 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
+const RequestCompressionRejected agent.Kind = "request_compression_rejected"
+
 type Settings struct {
 	ContextWindowTokens int
 	Prices              *agent.TokenPrices

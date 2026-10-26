@@ -80,6 +80,7 @@ func New(tokens TokenSource, model string, effort string, maxOutputTokens int) (
 		requests:         req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout),
 	}
 	client.headerSource = client.subscriptionHeaders
+	client.requests.CompressWith(req.Gzip)
 
 	if err := client.settled(); err != nil {
 		return nil, err
@@ -116,11 +117,22 @@ func NewAt(
 		},
 	}
 
+	client.requests.CompressWith(supportedRequestCompression(url))
+
 	if err := client.settled(); err != nil {
 		return nil, err
 	}
 
 	return client, nil
+}
+
+func supportedRequestCompression(address string) req.Compression {
+	switch address {
+	case Endpoint:
+		return req.Gzip
+	default:
+		return ""
+	}
 }
 
 type noTokens struct{}

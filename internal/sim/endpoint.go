@@ -139,7 +139,7 @@ func (self *Endpoint) dialectFor(requestPath string) (Dialect, bool) {
 }
 
 func (self *Endpoint) answer(writer http.ResponseWriter, request *http.Request, dialect Dialect) {
-	raw, err := io.ReadAll(request.Body)
+	raw, err := ReadBody(request)
 	if err != nil {
 		refuse(writer, http.StatusBadRequest, "the request could not be read")
 

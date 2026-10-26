@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
@@ -109,7 +109,7 @@ func (self *sessionGoldenChildren) serves(writer http.ResponseWriter, request *h
 	if !isChild {
 		return false
 	}
-	body, err := io.ReadAll(request.Body)
+	body, err := sim.ReadBody(request)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return true

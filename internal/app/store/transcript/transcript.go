@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
+	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/subagentrecord"
@@ -109,7 +110,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		return os.ErrClosed
 	}
 	switch event.Kind {
-	case agent.StateChangeEvent, agent.ModelReasoningEvent, taskrecord.Listing, taskrecord.Finished:
+	case agent.StateChangeEvent, agent.ModelReasoningEvent, taskrecord.Listing, taskrecord.Finished, metrics.RequestCompressionRejected:
 		return nil
 	case conditions.Change, environment.Change:
 		if _, isSaid := harnessNotice(event); !isSaid {

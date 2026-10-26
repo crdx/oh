@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"crdx.org/oh/internal/transient"
@@ -37,6 +38,8 @@ type Client struct {
 	streamMutex           sync.Mutex
 	streamHTTP            *http.Client
 	streamResponseTimeout time.Duration
+	compression           Compression
+	isCompressionRejected atomic.Bool
 }
 
 func New(timeout time.Duration) *Client {
@@ -160,17 +163,43 @@ func (self *Client) postJSON(
 		return nil, nil, fmt.Errorf("encode request: %w", err)
 	}
 
-	request, err := http.NewRequestWithContext(ctx, http.MethodPost, address, bytes.NewReader(encodedBody))
+	requestHeader := header.Clone()
+	if requestHeader == nil {
+		requestHeader = http.Header{}
+	}
+	requestHeader.Set("Content-Type", "application/json")
+	wireBody, err := self.compress(encodedBody, requestHeader)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	if header != nil {
-		request.Header = header.Clone()
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, address, bytes.NewReader(wireBody))
+	if err != nil {
+		return nil, nil, err
+	}
+	request.Header = requestHeader
+
+	responseBody, responseHeader, err := self.do(request, encodedBody)
+	if requestHeader.Get("Content-Encoding") == "" || !compressionWasRejected(err) ||
+		len(wireBody) == len(encodedBody) {
+		return responseBody, responseHeader, err
 	}
 
-	request.Header.Set("Content-Type", "application/json")
+	self.isCompressionRejected.Store(true)
+	if observer, isCounting := self.observer.(CompressionObserver); isCounting {
+		observer.CompressionRejected()
+	}
+	var refusal *StatusError
+	if errors.As(err, &refusal) && refusal.IsFinal || ctx.Err() != nil {
+		return responseBody, responseHeader, err
+	}
 
+	requestHeader.Del("Content-Encoding")
+	request, err = http.NewRequestWithContext(ctx, http.MethodPost, address, bytes.NewReader(encodedBody))
+	if err != nil {
+		return nil, nil, err
+	}
+	request.Header = requestHeader
 	return self.do(request, encodedBody)
 }
 

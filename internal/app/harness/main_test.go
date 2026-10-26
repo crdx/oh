@@ -6147,6 +6147,15 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		claimFixtureName(t, expected, "special replay", name, extensions)
 	}
 
+	for _, name := range []string{
+		"codex-search-compression",
+		"compression-wire-records",
+		"provider-request-compression",
+		"request-compression-policy",
+	} {
+		claimFixtureName(t, expected, "request compression", name, []string{".txt"})
+	}
+
 	claimFixtureName(t, expected, "special replay", "recovered-missing-transcript", []string{".transcript"})
 
 	outputDirectory := filepath.Join("testdata", "output")
@@ -8009,12 +8018,13 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 			var conversationBodies []map[string]any
 			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 				if strings.HasSuffix(request.URL.Path, test.path) {
-					raw, _ := io.ReadAll(request.Body)
+					raw, _ := sim.ReadBody(request)
 					var body map[string]any
 					_ = json.Unmarshal(raw, &body)
 					bodyMutex.Lock()
 					conversationBodies = append(conversationBodies, body)
 					bodyMutex.Unlock()
+					request.Header.Del("Content-Encoding")
 					request.Body = io.NopCloser(bytes.NewReader(raw))
 				}
 				endpoint.ServeHTTP(writer, request)
@@ -20542,7 +20552,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		if children.serves(writer, request) {
 			return
 		}
-		requestBody, err := io.ReadAll(request.Body)
+		requestBody, err := sim.ReadBody(request)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -25896,12 +25906,13 @@ func TestEveryProviderTagsItsNotesTheWayItsOwnHarnessDoes(t *testing.T) {
 			var bodies []string
 			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 				if strings.HasSuffix(request.URL.Path, test.path) {
-					raw, _ := io.ReadAll(request.Body)
+					raw, _ := sim.ReadBody(request)
 					var body any
 					_ = json.Unmarshal(raw, &body)
 					bodyMutex.Lock()
 					bodies = append(bodies, strings.Join(stringsWithin(body), "\n"))
 					bodyMutex.Unlock()
+					request.Header.Del("Content-Encoding")
 					request.Body = io.NopCloser(bytes.NewReader(raw))
 				}
 				endpoint.ServeHTTP(writer, request)
@@ -25987,10 +25998,11 @@ func TestASessionKeepsTheWireChoiceItWasCreatedWith(t *testing.T) {
 			var bodies []string
 			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 				if strings.HasSuffix(request.URL.Path, "/messages") {
-					raw, _ := io.ReadAll(request.Body)
+					raw, _ := sim.ReadBody(request)
 					bodyMutex.Lock()
 					bodies = append(bodies, string(raw))
 					bodyMutex.Unlock()
+					request.Header.Del("Content-Encoding")
 					request.Body = io.NopCloser(bytes.NewReader(raw))
 				}
 				endpoint.ServeHTTP(writer, request)

@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"image"
 	"image/png"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"slices"
@@ -17,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/internal/util/imageutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/anthropic"
@@ -133,7 +133,7 @@ func turns(t *testing.T, scripted ...string) (*httptest.Server, *[]string) {
 
 	server := httptest.NewServer(http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
-			body, _ := io.ReadAll(request.Body)
+			body, _ := sim.ReadBody(request)
 			bodies = append(bodies, string(body))
 
 			if index >= len(scripted) {
@@ -1492,7 +1492,7 @@ func hangingTurns(t *testing.T, scripted ...string) (*httptest.Server, *[]string
 
 	server := httptest.NewServer(http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
-			body, _ := io.ReadAll(request.Body)
+			body, _ := sim.ReadBody(request)
 			bodies = append(bodies, string(body))
 
 			writer.Header().Set("Content-Type", "text/event-stream")

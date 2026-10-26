@@ -4,6 +4,8 @@
 
 ### Changes
 
+- Compress some requests with zstd or gzip
+- Report compression rejections in session analysis
 - Add an open target for the built in defaults
 - Increase command timeout to 10 minutes
 - Add experimental toggles for timeouts

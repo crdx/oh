@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"image"
 	"image/png"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -21,6 +20,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/internal/util/imageutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/codex"
@@ -84,7 +84,7 @@ func recordedTurns(t *testing.T, scripted ...string) (*httptest.Server, *[]strin
 
 	server := httptest.NewServer(http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
-			body, _ := io.ReadAll(request.Body)
+			body, _ := sim.ReadBody(request)
 			bodies = append(bodies, string(body))
 			headers = append(headers, request.Header.Clone())
 

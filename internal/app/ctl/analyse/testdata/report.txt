@@ -37,11 +37,11 @@ Total              5     22       24       21         56         161        1m 3
 
 Faults
 
-Provider    Retries  Interruptions  Failures  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens
-Anthropic         1              2         0             1         0         1            15Kt
-Codex             3              0         1             0         2         3            30Kt
-Openrouter        0              0         1             0         0         0              0t
-Total             4              2         2             1         2         4            45Kt
+Provider    Retries  Interruptions  Failures  Compression Rejections  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens
+Anthropic         1              2         0                       2             1         0         1            15Kt
+Codex             3              0         1                       1             0         2         3            30Kt
+Openrouter        0              0         1                       0             0         0         0              0t
+Total             4              2         2                       3             1         2         4            45Kt
 
 Tools
 

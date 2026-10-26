@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
+	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store/transcript"
 	"crdx.org/oh/internal/app/store/wire"
@@ -496,6 +497,15 @@ func (self writerObserver) Start(request req.Request) req.ExchangeObserver {
 		return nil
 	}
 	return recorder.Start(request)
+}
+
+func (self writerObserver) CompressionRejected() {
+	if !self.writer.IsPersisted() {
+		return
+	}
+	if err := self.writer.Event(agent.Event{Kind: metrics.RequestCompressionRejected}); err != nil {
+		self.writer.queueWarning(fmt.Errorf("request statistics could not be stored: %w", err))
+	}
 }
 
 type Session struct {

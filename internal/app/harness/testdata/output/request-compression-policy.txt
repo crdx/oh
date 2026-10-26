@@ -1,0 +1,837 @@
+=== default client stays plain ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip at threshold ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 4096; wire bytes: 277; content length correct: true
+  decoded SHA-256: 4a0c9bf514a7f1ffc0b70be991db5385b79d669918c1c981abc27bb954fd4268
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip below threshold ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 4095; wire bytes: 4095; content length correct: true
+  decoded SHA-256: 901977a78babc1969c606ebec5b9a297a60452725e0eb945338600cc8c2c677b
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip cancelled request ===
+requests sent: 0
+context cancelled: true
+
+=== gzip explicit identity ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "identity", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip fallback 400 Failed to parse request: could not parse request body as JSON ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 400 The request body is not valid JSON ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 400 invalid content encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 400 invalid content-encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 400 unsupported content encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 400 unsupported content-encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 400 unsupported encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback 415  ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip fallback fails once ===
+call 1: HTTP 415
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip no fallback 400 final false ===
+call 1: HTTP 400
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip no fallback 400 final true ===
+call 1: HTTP 400
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip no fallback 401 final false ===
+call 1: HTTP 401
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 401
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip no fallback 403 final false ===
+call 1: HTTP 403
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 403
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip no fallback 413 final false ===
+call 1: HTTP 413
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 413
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip no fallback 415 final true ===
+call 1: HTTP 415
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== gzip no fallback 429 final false ===
+call 1: HTTP 429
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 429
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip no fallback 500 final false ===
+call 1: HTTP 500
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 500
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== gzip success ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "gzip", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 504; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd at threshold ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 4096; wire bytes: 176; content length correct: true
+  decoded SHA-256: 4a0c9bf514a7f1ffc0b70be991db5385b79d669918c1c981abc27bb954fd4268
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd below threshold ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 4095; wire bytes: 4095; content length correct: true
+  decoded SHA-256: 901977a78babc1969c606ebec5b9a297a60452725e0eb945338600cc8c2c677b
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd cancelled request ===
+requests sent: 0
+context cancelled: true
+
+=== zstd expansion ratio limit ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 100002; wire bytes: 100002; content length correct: true
+  decoded SHA-256: 54df96ab5649109cbf32a70a39f87a3f22dd210e4770cd25a58cee0bfdbfa08f
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd explicit identity ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "identity", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd fallback 400 Failed to parse request: could not parse request body as JSON ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 400 The request body is not valid JSON ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 400 invalid content encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 400 invalid content-encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 400 unsupported content encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 400 unsupported content-encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 400 unsupported encoding: test ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback 415  ===
+call 1: "data: accepted\\n\\n"
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd fallback fails once ===
+call 1: HTTP 415
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 3: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd no fallback 400 final false ===
+call 1: HTTP 400
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd no fallback 400 final true ===
+call 1: HTTP 400
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 400
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd no fallback 401 final false ===
+call 1: HTTP 401
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 401
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd no fallback 403 final false ===
+call 1: HTTP 403
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 403
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd no fallback 413 final false ===
+call 1: HTTP 413
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 413
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd no fallback 415 final true ===
+call 1: HTTP 415
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 415
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 8192; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 1
+
+=== zstd no fallback 429 final false ===
+call 1: HTTP 429
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 429
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd no fallback 500 final false ===
+call 1: HTTP 500
+call 2: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 500
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+attempt 2: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0
+
+=== zstd success ===
+call 1: "data: accepted\\n\\n"
+attempt 1: encoding "zstd", HTTP 200
+  content-type: application/json
+  caller header: kept
+  JSON bytes: 8192; wire bytes: 234; content length correct: true
+  decoded SHA-256: fb6fbd46771c11759c527ed9ee47f88a6bf82390f7f842457cdb9774f4a8f3a4
+  body unchanged: true
+caller header map unchanged: true
+compression rejections: 0

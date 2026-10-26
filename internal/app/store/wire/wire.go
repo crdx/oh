@@ -95,6 +95,9 @@ func (self *Recorder) Start(request req.Request) req.ExchangeObserver {
 	exchange := &exchange{recorder: self, sequence: sequence, startedAt: request.StartedAt}
 	self.write(fmt.Sprintf("# exchange %d start %s\n> %s %s %s\n", sequence, request.StartedAt.UTC().Format(time.RFC3339Nano), request.Method, censorURL(request.URL), request.Protocol))
 	self.writeHeaders(">", request.Header)
+	if contentEncoding := request.Header.Get("Content-Encoding"); contentEncoding != "" && !strings.EqualFold(contentEncoding, "identity") {
+		self.write(fmt.Sprintf("%s%d request body recorded before %s compression\n", exchangeMarker, sequence, contentEncoding))
+	}
 	self.write("\n")
 	self.write(string(censorBody(request.Body, request.Header.Get("Content-Type"))))
 	self.write("\n")

@@ -1,0 +1,5 @@
+=== large search ===
+POST /v1/codex/responses
+content-encoding: zstd
+query unchanged: true
+answer: Search works.

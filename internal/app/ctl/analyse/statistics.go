@@ -48,14 +48,15 @@ type ActivityStatistics struct {
 }
 
 type FaultStatistics struct {
-	Provider       string            `json:"provider,omitempty"`
-	Sessions       int               `json:"sessions"`
-	Retries        int               `json:"retries"`
-	Interruptions  int               `json:"interruptions"`
-	Failures       int               `json:"failures"`
-	SilentTurns    int               `json:"silentTurns"`
-	PrefixRewrites int               `json:"prefixRewrites"`
-	CacheRebuilds  RebuildStatistics `json:"cacheRebuilds"`
+	Provider              string            `json:"provider,omitempty"`
+	Sessions              int               `json:"sessions"`
+	Retries               int               `json:"retries"`
+	CompressionRejections int               `json:"compressionRejections"`
+	Interruptions         int               `json:"interruptions"`
+	Failures              int               `json:"failures"`
+	SilentTurns           int               `json:"silentTurns"`
+	PrefixRewrites        int               `json:"prefixRewrites"`
+	CacheRebuilds         RebuildStatistics `json:"cacheRebuilds"`
 }
 
 type RebuildStatistics struct {
@@ -162,6 +163,7 @@ func (self *ActivityStatistics) add(statisticsToAdd ActivityStatistics) {
 
 func (self *FaultStatistics) IsQuiet() bool {
 	return self.Retries == 0 &&
+		self.CompressionRejections == 0 &&
 		self.Interruptions == 0 &&
 		self.Failures == 0 &&
 		self.SilentTurns == 0 &&
@@ -172,6 +174,7 @@ func (self *FaultStatistics) IsQuiet() bool {
 func (self *FaultStatistics) add(statisticsToAdd FaultStatistics) {
 	self.Sessions += statisticsToAdd.Sessions
 	self.Retries += statisticsToAdd.Retries
+	self.CompressionRejections += statisticsToAdd.CompressionRejections
 	self.Interruptions += statisticsToAdd.Interruptions
 	self.Failures += statisticsToAdd.Failures
 	self.SilentTurns += statisticsToAdd.SilentTurns
