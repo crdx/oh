@@ -133,23 +133,73 @@ func TestGoldenRequestCompressionPolicy(t *testing.T) {
 	}
 	for _, compression := range []req.Compression{req.Gzip, req.Zstd} {
 		passes[string(compression)+" cancelled request"] = func() string {
-			var attempts atomic.Int32
-			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-				attempts.Add(1)
-			}))
-			defer server.Close()
-			client := req.NewStreaming(time.Second, time.Second)
-			client.CompressWith(compression)
-			ctx, cancel := context.WithCancel(t.Context())
-			cancel()
-			_, _, err := client.Stream(ctx, server.URL, compressionGoldenBody(8192), nil)
-			if !errors.Is(err, context.Canceled) || attempts.Load() != 0 {
-				t.Fatalf("got %d attempts and error %v", attempts.Load(), err)
-			}
-			return fmt.Sprintf("requests sent: %d\ncontext cancelled: %t\n", attempts.Load(), errors.Is(err, context.Canceled))
+			return cancelledCompressionReport(t, compression, false)
+		}
+		passes[string(compression)+" cancelled in flight"] = func() string {
+			return cancelledCompressionReport(t, compression, true)
 		}
 	}
 	compareWithGolden(t, "request-compression-policy", ".txt", passes)
+}
+
+func cancelledCompressionReport(t *testing.T, compression req.Compression, isInFlight bool) string {
+	t.Helper()
+
+	var attempts atomic.Int32
+	started := make(chan string, 2)
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		attempts.Add(1)
+		_, _ = io.Copy(io.Discard, request.Body)
+		started <- request.Header.Get("Content-Encoding")
+		<-request.Context().Done()
+	}))
+	defer server.Close()
+	client := req.NewStreaming(req.DefaultStreamTimeout, req.DefaultStreamTimeout)
+	client.CompressWith(compression)
+	counter := &compressionCounter{}
+	client.Observe(counter)
+	ctx, cancel := context.WithCancel(t.Context())
+	defer cancel()
+	request := func() error {
+		body, _, err := client.Stream(ctx, server.URL, compressionGoldenBody(8192), nil)
+		if body != nil {
+			_ = body.Close()
+		}
+		return err
+	}
+	var failure error
+	var contentEncoding string
+	wantAttempts := int32(0)
+	if isInFlight {
+		wantAttempts = 1
+		result := make(chan error, 1)
+		go func() { result <- request() }()
+		select {
+		case contentEncoding = <-started:
+			cancel()
+		case failure = <-result:
+			t.Fatalf("the request stopped before reaching the server: %v", failure)
+		case <-t.Context().Done():
+			t.Fatal("the request did not reach the server")
+		}
+		select {
+		case failure = <-result:
+		case <-t.Context().Done():
+			t.Fatal("the cancelled request did not stop")
+		}
+		if contentEncoding != string(compression) {
+			t.Errorf("got request encoding %q, want %q", contentEncoding, compression)
+		}
+	} else {
+		cancel()
+		failure = request()
+	}
+	if !errors.Is(failure, context.Canceled) || attempts.Load() != wantAttempts || counter.rejections.Load() != 0 {
+		t.Fatalf("got %d attempts, %d rejections and error %v", attempts.Load(), counter.rejections.Load(), failure)
+	}
+	return fmt.Sprintf("requests sent: %d\ncontent-encoding: %q\ncontext cancelled: %t\ncompression rejections: %d\n",
+		attempts.Load(), contentEncoding, errors.Is(failure, context.Canceled), counter.rejections.Load(),
+	)
 }
 
 func compressionPolicyReport(t *testing.T, test compressionPolicyCase) string {

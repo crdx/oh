@@ -31,9 +31,17 @@ attempt 1: encoding "", HTTP 200
 caller header map unchanged: true
 compression rejections: 0
 
+=== gzip cancelled in flight ===
+requests sent: 1
+content-encoding: "gzip"
+context cancelled: true
+compression rejections: 0
+
 === gzip cancelled request ===
 requests sent: 0
+content-encoding: ""
 context cancelled: true
+compression rejections: 0
 
 === gzip explicit identity ===
 call 1: "data: accepted\\n\\n"
@@ -439,9 +447,17 @@ attempt 1: encoding "", HTTP 200
 caller header map unchanged: true
 compression rejections: 0
 
+=== zstd cancelled in flight ===
+requests sent: 1
+content-encoding: "zstd"
+context cancelled: true
+compression rejections: 0
+
 === zstd cancelled request ===
 requests sent: 0
+content-encoding: ""
 context cancelled: true
+compression rejections: 0
 
 === zstd expansion ratio limit ===
 call 1: "data: accepted\\n\\n"
