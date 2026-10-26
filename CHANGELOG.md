@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.27.0] — 2026-10-26
+
 ### Changes
 
 - Compress some requests with zstd or gzip
