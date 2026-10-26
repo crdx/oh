@@ -102,6 +102,7 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/edit ",
 		"/edit sn",
 		"/open ",
+		"/open d",
 		"/open sn",
 		"/sub",
 		"/subs ",

@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Add an open target for the built in defaults
 - Increase command timeout to 10 minutes
 - Add experimental toggles for timeouts
 - Reload more settings live

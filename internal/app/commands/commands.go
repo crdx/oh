@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/column"
+	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/prompt"
@@ -30,7 +31,9 @@ const (
 	sessionJournalName    = "session.jsonl"
 	sessionTranscriptName = "chat.md"
 
-	targetPlaceholder = "<target>"
+	targetPlaceholder       = "<target>"
+	defaultConfigName       = "defaults.toml"
+	defaultConfigTempPrefix = "oh-default-config-"
 )
 
 var (
@@ -327,6 +330,22 @@ func prepareConfigDir(environment commandEnvironment) func() error {
 	}
 }
 
+func defaultConfigTarget() commandTarget {
+	return commandTarget{
+		resolveValues: func() ([]string, error) {
+			directory, err := os.MkdirTemp("", defaultConfigTempPrefix)
+			if err != nil {
+				return nil, fmt.Errorf("could not create default config directory: %w", err)
+			}
+			path := filepath.Join(directory, defaultConfigName)
+			if err := os.WriteFile(path, []byte(config.DefaultContents()), 0o600); err != nil {
+				return nil, fmt.Errorf("could not write default config: %w", err)
+			}
+			return []string{path}, nil
+		},
+	}
+}
+
 func locationTargets(environment commandEnvironment) map[string]commandTarget {
 	prepareDirectory := prepareConfigDir(environment)
 
@@ -334,6 +353,7 @@ func locationTargets(environment commandEnvironment) map[string]commandTarget {
 		"agents-file":        existingTarget("Project context", prompt.ProjectContextPaths(environment.workspace)...),
 		"config-dir":         preparedTarget(prepareDirectory, environment.configDir),
 		"config-file":        preparedTarget(prepareDirectory, environment.configPath),
+		"defaults-file":      defaultConfigTarget(),
 		"system-prompt-file": preparedTarget(prepareDirectory, environment.systemPromptPath),
 		"skills-dir":         existingTarget("Skills directory", environment.skillDirs...),
 		"workspace-dir":      staticTarget(environment.workspace.GetDir()),

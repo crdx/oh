@@ -643,3 +643,68 @@ func TestCompletingAToolLeavesTheListedToolsAlone(t *testing.T) {
 		t.Errorf("the listed tools became %v", toolNames)
 	}
 }
+
+func TestDefaultConfigOpensAFreshTemporaryCopy(t *testing.T) {
+	temporaryDirectory := t.TempDir()
+	t.Setenv("TMPDIR", temporaryDirectory)
+	contents, err := os.ReadFile("../config/defaults.toml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var paths []string
+	commands := newCommandRegistry(t, commandEnvironment{
+		openTarget: func(values []string) error {
+			if len(values) != 1 {
+				t.Fatalf("got paths %v, want one default config", values)
+			}
+			path := values[0]
+			if filepath.Dir(filepath.Dir(path)) != temporaryDirectory || filepath.Base(path) != defaultConfigName {
+				t.Fatalf("got path %q, want defaults.toml in a private temporary directory", path)
+			}
+			copyContents, err := os.ReadFile(path) //nolint:gosec // the command creates this path in the test directory
+			if err != nil {
+				t.Fatal(err)
+			}
+			if string(copyContents) != string(contents) {
+				t.Fatal("temporary copy differs from the embedded defaults")
+			}
+			paths = append(paths, path)
+			return os.WriteFile(path, []byte("edited copy"), 0o600)
+		},
+	})
+	entries, err := os.ReadDir(temporaryDirectory)
+	if err != nil || len(entries) != 0 {
+		t.Fatalf("building commands created temporary files: %v, %v", entries, err)
+	}
+	for range 2 {
+		invocation, isFound := commands.Find("/open defaults-file")
+		if !isFound {
+			t.Fatal("default config command is missing")
+		}
+		if err := invocation.Command.Run(newCommandTestContext(t), invocation.Arguments); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if paths[0] == paths[1] {
+		t.Fatal("opening the default config reused an edited copy")
+	}
+}
+
+func TestDefaultConfigReportsTemporaryDirectoryFailure(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "not-a-directory")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("TMPDIR", path)
+	commands := newCommandRegistry(t, commandEnvironment{
+		openTarget: func([]string) error {
+			t.Fatal("opened a default config after temporary directory failure")
+			return nil
+		},
+	})
+	invocation, _ := commands.Find("/open defaults-file")
+	err := invocation.Command.Run(newCommandTestContext(t), invocation.Arguments)
+	if err == nil || !strings.Contains(err.Error(), "could not create default config directory") {
+		t.Fatalf("got error %v, want temporary directory failure", err)
+	}
+}

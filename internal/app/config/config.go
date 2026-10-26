@@ -34,6 +34,10 @@ import (
 //go:embed defaults.toml
 var defaultsTOML string
 
+func DefaultContents() string {
+	return defaultsTOML
+}
+
 const minimumToolOutputBytes = 1024
 
 const (

@@ -20,6 +20,7 @@
 
 \e[38;2;129;162;190mTargets:\e[0m
   agents-file         config-dir          config-file
-  home-dir            scratch-dir         session-chat-file
-  session-dir         session-log-file    skills-dir
-  snippets-dir        system-prompt-file  workspace-dir
+  defaults-file       home-dir            scratch-dir
+  session-chat-file   session-dir         session-log-file
+  skills-dir          snippets-dir        system-prompt-file
+  workspace-dir

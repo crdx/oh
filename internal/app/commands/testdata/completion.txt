@@ -220,6 +220,7 @@
   agents-file → /copy agents-file
   config-dir → /copy config-dir
   config-file → /copy config-file
+  defaults-file → /copy defaults-file
   home-dir → /copy home-dir
   last-message → /copy last-message
   scratch-dir → /copy scratch-dir
@@ -241,6 +242,7 @@
   agents-file → /edit agents-file
   config-dir → /edit config-dir
   config-file → /edit config-file
+  defaults-file → /edit defaults-file
   home-dir → /edit home-dir
   scratch-dir → /edit scratch-dir
   session-chat-file → /edit session-chat-file
@@ -256,6 +258,7 @@
   agents-file → /open agents-file
   config-dir → /open config-dir
   config-file → /open config-file
+  defaults-file → /open defaults-file
   home-dir → /open home-dir
   scratch-dir → /open scratch-dir
   session-chat-file → /open session-chat-file
@@ -265,6 +268,8 @@
   snippets-dir → /open snippets-dir
   system-prompt-file → /open system-prompt-file
   workspace-dir → /open workspace-dir
+"/open d"
+  defaults-file → /open defaults-file
 "/open sn"
   snippets-dir → /open snippets-dir
 "/sub"
