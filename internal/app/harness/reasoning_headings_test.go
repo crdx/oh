@@ -2,15 +2,12 @@ package harness
 
 import (
 	"path/filepath"
-	"slices"
 	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/output"
-	"crdx.org/oh/internal/app/store"
-	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -106,59 +103,6 @@ func arrivingReasoningHeading(t *testing.T, rendering output.ReasoningRendering,
 	requireSameVisibleScreen(t, "an arriving heading differs from replay", replayed, rig.drawn())
 
 	return passes
-}
-
-func TestReasoningTitlesAreHiddenOnlyOnScreenAndResumeTheSameWay(t *testing.T) {
-	thoughts := []string{
-		"**Title-only reasoning**",
-		"**Title-only reasoning**",
-		"**Title-only reasoning**",
-		"**Title-only reasoning**",
-		"**A hidden title**\n\nI am keeping the conversational reasoning.",
-		"An ordinary thought with **inline bold** stays.",
-	}
-	rig, _ := newEndpointRigOn(t, sim.New(&sim.Scenario{
-		Model: "fake",
-		Turns: []sim.Turn{{Think: thoughts, Say: "Finished thinking."}},
-	}), sim.Responses)
-	runTestBinary(t, rig.binary, rig.workspace, rig.environment, "-u")
-	live := rig.start("--yolo", "-m", "codex/fake", "show title-only and conversational reasoning")
-	live.waitFor("Finished thinking.")
-	liveScreen := live.screen()
-	live.quit()
-	shown := strings.Join(liveScreen, "\n")
-	if !strings.Contains(shown, strings.Repeat("Title-only reasoning\n", 4)) {
-		t.Fatalf("title-only thoughts did not stay on four separate lines:\n%s", shown)
-	}
-	if strings.Contains(shown, "A hidden title") || !strings.Contains(shown, "I am keeping the conversational reasoning.") {
-		t.Fatalf("the conversational reasoning kept its title or lost its body:\n%s", shown)
-	}
-
-	sessions := rig.storedSessions()
-	if len(sessions) != 1 {
-		t.Fatalf("got %d sessions, want one", len(sessions))
-	}
-	stored, err := store.Read(filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions"), sessions[0].Name)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var recorded []string
-	for _, event := range stored.Events {
-		if event.Kind == agent.ModelReasoningEvent {
-			recorded = append(recorded, event.Text)
-		}
-	}
-	if !slices.Equal(recorded, thoughts) {
-		t.Fatalf("recorded reasoning %q, want the original %q", recorded, thoughts)
-	}
-
-	resumed := rig.start("-r", sessions[0].Name)
-	resumed.waitFor("Finished thinking.")
-	resumedScreen := resumed.screen()
-	resumed.quit()
-	if !slices.Equal(visibleRows(liveScreen), visibleRows(resumedScreen)) {
-		t.Fatalf("live reasoning differs from resume:\nlive:\n%s\nresumed:\n%s", shown, strings.Join(resumedScreen, "\n"))
-	}
 }
 
 func TestALongProvisionalReasoningTitleNeverReachesScrollback(t *testing.T) {

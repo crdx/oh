@@ -327,3 +327,42 @@ func TestAQuestionCutShortStillRecordsWhatItTook(t *testing.T) {
 		}
 	})
 }
+
+func TestCancellationWithdrawsAQueuedQuestionBeforeItBecomesCurrent(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		broker := ask.New()
+		closeBroker := broker.Open()
+		defer closeBroker()
+		firstResult := make(chan error, 1)
+		go func() {
+			_, err := broker.Ask(t.Context(), ask.Confirmation{Label: "First?"}.Question())
+			firstResult <- err
+		}()
+		<-broker.Changes()
+		first := broker.Current()
+		if first == nil || first.Question.Label != "First?" {
+			t.Fatalf("the first request is not current: %+v", first)
+		}
+		ctx, cancel := context.WithCancel(t.Context())
+		defer cancel()
+		secondResult := make(chan error, 1)
+		go func() {
+			_, err := broker.Ask(ctx, ask.Confirmation{Label: "Second?"}.Question())
+			secondResult <- err
+		}()
+		<-broker.Changes()
+		synctest.Wait()
+		cancel()
+		synctest.Wait()
+		if err := <-secondResult; !errors.Is(err, context.Canceled) {
+			t.Errorf("queued cancellation returned %v, want context cancelled", err)
+		}
+		if broker.Current() != first {
+			t.Error("cancelling the queued question changed the current question")
+		}
+		first.Choose(0)
+		if err := <-firstResult; err != nil {
+			t.Errorf("the current question failed after queued cancellation: %v", err)
+		}
+	})
+}

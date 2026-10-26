@@ -35,15 +35,49 @@ const (
 )
 
 func TestAnInteractiveSessionAnswersWhatIsTypedAndGivesTheTerminalBack(t *testing.T) {
-	rig := newInteractiveRig(t, "Interactive answer.", "Typed answer.")
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{
+		{Say: "Interactive answer."},
+		{Say: "Typed answer."},
+	}}))
+	writeRigConfig(t, rig, spendBar+"\n[debug]\nwire = true\n")
 
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "first question")
 	before := session.modes()
 
 	session.waitFor("Interactive answer.")
+	session.waitFor("0.0022")
+	session.requireShown("$0.0022")
 	session.typeText("second question" + pressEnter)
 	session.waitFor("Typed answer.")
+	session.typeAndSettle("/ctx")
+	session.typeText(pressEnter)
+	session.waitFor(" tool definitions")
+	session.typeAndSettle(pressEscape)
+	session.typeAndSettle("/grants")
+	session.typeAndSettle(pressEscape)
+	session.typeText(pressEnter)
+	session.waitFor("Paths:")
+	session.requireHidden("Caps:")
+	session.typeAndSettle(pressEscape)
+	stored := rig.storedSessions()
+	if len(stored) != 1 || stored[0].Meta.ShouldSkipWire {
+		t.Fatalf("startup did not preserve the enabled wire recorder: %+v", stored)
+	}
+	session.typeAndSettle("/fork --from ")
+	session.requireShown("› " + stored[0].Name)
+	session.typeAndSettle(pressEscape + clearInput)
+	session.typeAndSettle("/new -m opencode-go/")
+	session.requireShown("› opencode-go/fake@")
+	session.typeAndSettle(pressEscape + clearInput)
+	session.typeAndSettle("/new -t rea")
+	session.requireShown("› read")
+	session.typeAndSettle(pressEscape + clearInput)
 	session.quit()
+	for _, request := range endpoint.Requests() {
+		if strings.Contains(request.Instructions, "wire.http.zst") {
+			t.Error("startup exposed its internal wire transcript in the model prompt")
+		}
+	}
 
 	if after := session.modes(); after.Lflag != before.Lflag || after.Iflag != before.Iflag || after.Oflag != before.Oflag {
 		t.Errorf("the terminal was left in another mode: got %+v, want %+v", after, before)
@@ -395,28 +429,6 @@ func (self *interactiveSession) quit() {
 	self.waitToExit()
 }
 
-func TestCommandsTypedIntoAnInteractiveSessionAreAnsweredInPlace(t *testing.T) {
-	rig := newInteractiveRig(t)
-
-	session := rig.start("--yolo", "-m", "opencode-go/fake")
-	session.waitFor(readyBanner)
-
-	session.typeAndSettle("/ctx")
-	session.typeAndSettle(pressEnter)
-	session.requireShown(" tool definitions")
-	session.typeAndSettle(pressEscape)
-
-	session.typeAndSettle("/grants")
-	session.typeAndSettle(pressEscape)
-	session.typeAndSettle(pressEnter)
-	session.requireShown("Paths:")
-	session.requireHidden("Caps:")
-	session.requireShown("rxw  yolo shell")
-	session.typeAndSettle(pressEscape)
-
-	session.quit()
-}
-
 var terminalQueries = regexp.MustCompile(`\x1b\]11;\?\x1b\\|\x1b_G[^\x1b]*\x1b\\|\x1b\[c|\x1b\[[<>]1?u|\x1b\[\?(1004|2004|5522)[hl]|\x1b\[2[23];0t|\x1b\[\d? q|\x1b\]2;[^\x07\x1b]*(\x07|\x1b\\)`)
 
 func (self *interactiveSession) requireShown(text string) {
@@ -442,47 +454,6 @@ func (self *interactiveSession) screen() []string {
 
 	drawn := terminalQueries.ReplaceAllString(self.String(), "")
 	return playScreenOfSize(self.t, drawn, interactiveColumns, interactiveRows).text()
-}
-
-func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
-	rig := newInteractiveRig(t)
-
-	session := rig.start("--yolo", "-m", "opencode-go/fake")
-	session.waitFor(readyBanner)
-	session.requireHidden("opencode-go/fake")
-
-	session.typeAndSettle("/new -m opencode-go/")
-	session.requireShown("› opencode-go/fake@")
-	session.typeAndSettle("\t")
-	session.requireShown("/new -m opencode-go/fake@")
-	session.requireHidden("› ")
-	session.typeAndSettle(clearInput)
-
-	session.typeAndSettle("/fork -m opencode-go/fa")
-	session.requireShown("› opencode-go/fake@")
-	session.typeAndSettle(pressEscape)
-	session.typeAndSettle(clearInput)
-
-	sessionsDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions")
-	storedAt := time.Now().Format(time.RFC3339)
-	writeStoredSession(t, sessionsDirectory, rig.workspace, "able-dolphin", storedAt)
-	writeStoredSession(t, sessionsDirectory, rig.workspace, "agile-turtle", storedAt)
-
-	session.typeAndSettle("/fork --from ")
-	session.requireShown("› able-dolphin")
-	session.typeAndSettle(clearInput)
-
-	session.typeAndSettle("/fork --from ag")
-	session.requireShown("› agile-turtle")
-	session.typeAndSettle(pressEscape)
-	session.typeAndSettle(clearInput)
-
-	session.typeAndSettle("/!")
-	session.requireHidden("no matching commands")
-	session.requireHidden("› ")
-	session.typeAndSettle(clearInput)
-
-	session.quit()
 }
 
 func TestStartingASessionAsksTheTerminalAboutGraphicsOnce(t *testing.T) {

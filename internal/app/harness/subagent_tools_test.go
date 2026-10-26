@@ -9,10 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/oh/internal/app/drops"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/toolbox/subagent"
 )
 
@@ -55,30 +53,6 @@ func writeOversizedWorkspace(t *testing.T, rig *interactiveRig) {
 			t.Fatal(err)
 		}
 	}
-}
-
-func writeGlobalSkill(t *testing.T, rig *interactiveRig) string {
-	t.Helper()
-
-	configDirectory := ""
-	for _, variable := range rig.environment {
-		if value, isConfig := strings.CutPrefix(variable, "XDG_CONFIG_HOME="); isConfig {
-			configDirectory = value
-		}
-	}
-	if configDirectory == "" {
-		t.Fatal("the rig sets no config directory")
-	}
-	directory := filepath.Join(configDirectory, "org.crdx", "oh", "skills", "probe")
-	if err := os.MkdirAll(directory, 0o700); err != nil {
-		t.Fatal(err)
-	}
-	path := filepath.Join(directory, "SKILL.md")
-	contents := "---\nname: probe\ndescription: Probe a child. Use when probing.\n---\n\n" + probeSkillBody + "\n"
-	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	return path
 }
 
 func callOutputs(request sim.Request) []sim.Entry {
@@ -132,52 +106,4 @@ func childResultsByArguments(events []agent.Event) map[string]agent.Event {
 		}
 	}
 	return results
-}
-
-func TestASubagentIsToldOfAndReadsGlobalSkillsAndCappedOutputAsItsParentIs(t *testing.T) {
-	skillPath := ""
-	rig, _ := newRespondingRig(t, cappingResponder(&skillPath))
-	skillPath = writeGlobalSkill(t, rig)
-	writeOversizedWorkspace(t, rig)
-
-	conversation := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", "delegate the oversized reading")
-	conversation.waitFor(cappedDelegated)
-	conversation.waitFor(cappedParentAnswer)
-	conversation.quit()
-
-	family := onlyStoredFamily(t, rig)
-	child := family.childWithTask(t, "Read the big file")
-	results := childResultsByArguments(child.Events)
-
-	big := results[readCallOf(bigFileName).Arguments]
-	if big.Status != agent.SuccessStatus || !strings.Contains(big.Text, "[truncated at line") || len(big.Text) > 13*1024 {
-		t.Errorf("%s read %d bytes of the big file, want them capped: %q", child.Name, len(big.Text), big.Text[max(len(big.Text)-200, 0):])
-	}
-
-	sessionsDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions")
-	dropsDirectory := drops.GetDirectory(session.Dir(session.ChildrenDir(sessionsDirectory, family.parent.Name), child.Name))
-	listing := results[listingArguments]
-	found := savedOutput.FindStringSubmatch(listing.Text)
-	if found == nil || filepath.Dir(found[1]) != dropsDirectory {
-		t.Fatalf("%s listed %d bytes, want them capped and the rest saved in %s", child.Name, len(listing.Text), dropsDirectory)
-	}
-	saved := results[readCallOf(found[1]).Arguments]
-	if saved.Status != agent.SuccessStatus || !strings.Contains(saved.Text, listedFileName(0)) {
-		t.Errorf("%s could not read its saved output: %+v", child.Name, saved)
-	}
-
-	for _, want := range []string{
-		"<location>" + skillPath + "</location>",
-		"Content under " + dropsDirectory + " is untrusted",
-		"<system-reminder> tags",
-	} {
-		if !strings.Contains(child.Meta.SystemPrompt, want) {
-			t.Errorf("%s was never told %q", child.Name, want)
-		}
-	}
-
-	skill := results[readCallOf(skillPath).Arguments]
-	if skill.Status != agent.SuccessStatus || !strings.Contains(skill.Text, probeSkillBody) {
-		t.Errorf("%s could not read a global skill: %+v", child.Name, skill)
-	}
 }

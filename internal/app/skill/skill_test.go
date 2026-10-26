@@ -201,6 +201,7 @@ func TestASkillIsRecognisedByThePathItLivesAt(t *testing.T) {
 func TestLoadedSkillSourcesIncludeOnlySuccessfulSkillReads(t *testing.T) {
 	one := "/skills/one/SKILL.md"
 	events := []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: "read the skills"},
 		{Kind: agent.ToolCallRequestEvent, ID: "one", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: one}},
 		{Kind: agent.ToolCallResultEvent, ID: "one", Name: readToolName, Status: agent.SuccessStatus, Text: strings.Repeat("a", 2_800)},
 		{Kind: agent.ToolCallRequestEvent, ID: "ordinary", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: "/workspace/main.go"}},

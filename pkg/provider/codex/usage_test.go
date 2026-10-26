@@ -539,3 +539,19 @@ func TestWindowsReportedByATurnAreKeptOverAFreshProbe(t *testing.T) {
 		t.Errorf("expected the turn's own snapshot, got %v", windows)
 	}
 }
+
+func TestTheAccountUsageProbeReportsObservedHTTPFailures(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		http.Error(writer, "usage unavailable", http.StatusServiceUnavailable)
+	}))
+	t.Cleanup(server.Close)
+	client := newUsageClient(t, server.URL+"/backend-api/codex/responses")
+	var addresses []string
+	client.ObserveHTTP(exchangeRecorder{addresses: &addresses})
+	if _, err := client.ProbeUsage(t.Context()); err == nil {
+		t.Fatal("a failed account usage request returned no error")
+	}
+	if want := []string{"GET " + server.URL + "/backend-api/wham/usage"}; !slices.Equal(addresses, want) {
+		t.Errorf("observed requests %q, want %q", addresses, want)
+	}
+}

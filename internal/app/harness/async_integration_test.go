@@ -5,91 +5,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net"
-	"net/http"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"slices"
-	"strconv"
 	"strings"
 	"testing"
 	"testing/synctest"
 	"time"
 
-	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/taskrecord"
-	"crdx.org/oh/internal/sim"
-	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
 )
-
-func TestBackgroundAndForegroundShellCallsKeepTheirResultsAcrossResume(t *testing.T) {
-	gate := filepath.Join(t.TempDir(), "finish")
-	command := fmt.Sprintf("while [ ! -e %q ]; do sleep 0.02; done; printf background-done", gate)
-	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
-		Model: "fake",
-		Turns: []sim.Turn{
-			{Calls: []sim.Call{{Name: "bash", Arguments: fmt.Sprintf(`{"command":%q,"intent":"Running the background shell completion check","background":true}`, command)}}},
-			{Calls: []sim.Call{{Name: "bash", Arguments: `{"command":"printf foreground-done","intent":"Running the foreground shell completion check"}`}}},
-			{Say: "Both paths are ready."},
-			{Say: "The background task completed."},
-			{Calls: []sim.Call{{Name: "task", Arguments: `{"action":"output","name":"task-1"}`}}},
-			{Say: "Stored background output is still available."},
-		},
-	}))
-	writeRigConfig(t, rig, "[experimental]\ntask_output_lines = 3\n")
-	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "compare background and foreground shell execution")
-	session.waitFor("Both paths are ready.")
-	if err := os.WriteFile(gate, []byte("go"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	session.waitFor("The background task completed.")
-	session.requireShown("background-done")
-	session.quit()
-
-	stored := rig.storedSessions()
-	if len(stored) != 1 {
-		t.Fatalf("got %d sessions, want one", len(stored))
-	}
-	for _, definition := range stored[0].Meta.ToolDefinitions {
-		if definition.Name != "task" {
-			continue
-		}
-		if len(definition.Parameters) != 2 {
-			t.Errorf("task offered %d parameters, want action and name", len(definition.Parameters))
-		}
-		for _, parameter := range definition.Parameters {
-			if parameter.Name == "action" && !slices.Equal(parameter.Values, []string{"status", "output", "stop", "list", "prune", "restart", "discard"}) {
-				t.Errorf("task offered unexpected actions: %v", parameter.Values)
-			}
-			if parameter.Name == "seconds" {
-				t.Error("task offered the removed wait duration")
-			}
-		}
-	}
-	listing, wasRecorded := taskrecord.LastRecorded(stored[0].Events)
-	if !wasRecorded || len(listing) != 1 || listing[0].State != tasks.Done || listing[0].Output != "background-done" {
-		t.Fatalf("background result was not persisted: %+v", listing)
-	}
-	requests := endpoint.Requests()
-	if len(requests) != 4 || !slices.Contains(requests[0].Tools, "task") {
-		t.Fatalf("new session tools or completion wake were wrong: %+v", requests)
-	}
-	if !strings.Contains(fmt.Sprint(requests[2].Input), "foreground-done") {
-		t.Errorf("foreground execution lost its result: %+v", requests[2].Input)
-	}
-
-	resumed := rig.start("-r", stored[0].Name, "read the stored task output")
-	resumed.waitFor("Stored background output is still available.")
-	resumed.quit()
-	requests = endpoint.Requests()
-	if len(requests) != 6 || !strings.Contains(fmt.Sprint(requests[5].Input), "background-done") {
-		t.Errorf("resumed task output did not reach the model: %+v", requests)
-	}
-}
 
 func TestABackgroundToolStateIsAppliedAndCanBeRestoredFromItsEvents(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
@@ -145,98 +71,6 @@ func TestABackgroundToolStateIsAppliedAndCanBeRestoredFromItsEvents(t *testing.T
 	})
 }
 
-func TestANamedShellTaskStreamsRestartsAfterResumeAndCanBeDiscarded(t *testing.T) {
-	gate := filepath.Join(t.TempDir(), "finish")
-	ready := filepath.Join(t.TempDir(), "ready")
-	command := fmt.Sprintf("printf 'first phase\\n'; touch %q; while [ ! -e %q ]; do sleep 0.02; done; printf 'complete\\n'", ready, gate)
-	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
-		Model: "fake",
-		Turns: []sim.Turn{
-			{Calls: []sim.Call{{Name: "bash", Arguments: fmt.Sprintf(`{"command":%q,"intent":"Running a named background shell check","background":true,"task_name":"build"}`, command)}}},
-			{Say: "Shell background started."},
-			{Calls: []sim.Call{{Name: "task", Arguments: `{"action":"output","name":"build"}`}}},
-			{Say: "Partial output read."},
-			{Say: "Initial run complete."},
-			{Calls: []sim.Call{{Name: "task", Arguments: `{"action":"restart","name":"build"}`}}},
-			{Say: "Restart requested."},
-			{Calls: []sim.Call{{Name: "task", Arguments: `{"action":"discard","name":"build"}`}}},
-			{Say: "Task discarded."},
-		},
-	}))
-	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "start and inspect a named shell task")
-	session.waitFor("Shell background started.")
-	waitForTaskMarker(t, ready)
-	stored := rig.storedSessions()
-	if len(stored) != 1 {
-		t.Fatalf("got %d sessions", len(stored))
-	}
-	currentResult := waitForCurrentTaskResult(t, rig, toolresult.TaskURL(toolresult.TaskReference{
-		SessionName: stored[0].Name,
-		TaskName:    "build",
-		Run:         1,
-	}))
-	if !strings.HasPrefix(currentResult, "bash\n\n{") || !strings.HasSuffix(currentResult, "}\n\nfirst phase\n") {
-		t.Fatalf("current task result is %q", currentResult)
-	}
-	session.typeText("read its running output" + pressEnter)
-	session.waitFor("Partial output read.")
-	requests := endpoint.Requests()
-	if len(requests) != 4 || !strings.Contains(fmt.Sprint(requests[3].Input), "first phase") || !strings.Contains(fmt.Sprint(requests[3].Input), "build: running") {
-		t.Fatalf("live output did not reach the model: %+v", requests)
-	}
-	if err := os.WriteFile(gate, []byte("go"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	session.waitFor("Initial run complete.")
-	session.quit()
-	stored = rig.storedSessions()
-	if len(stored) != 1 {
-		t.Fatalf("got %d sessions", len(stored))
-	}
-	if err := os.Remove(gate); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.Remove(ready); err != nil {
-		t.Fatal(err)
-	}
-	resumed := rig.start("-r", stored[0].Name, "restart build using its remembered command")
-	resumed.waitFor("Restart requested.")
-	waitForTaskMarker(t, ready)
-	requests = endpoint.Requests()
-	if len(requests) != 7 || !strings.Contains(fmt.Sprint(requests[6].Input), "run 2") {
-		t.Fatalf("restart did not reuse the named invocation: %+v", requests)
-	}
-	resumed.typeText("discard build" + pressEnter)
-	resumed.waitFor("Task discarded.")
-	resumed.quit()
-	listing, isRecorded := taskrecord.LastRecorded(rig.storedSessions()[0].Events)
-	if !isRecorded || len(listing) != 0 {
-		t.Errorf("discarded task remained in the listing: %+v", listing)
-	}
-	if requests := endpoint.Requests(); len(requests) != 9 {
-		t.Errorf("discard caused an unwanted completion wake: %d requests", len(requests))
-	}
-}
-
-func waitForCurrentTaskResult(t *testing.T, rig *interactiveRig, address string) string {
-	t.Helper()
-	deadline := time.Now().Add(interactiveDeadline)
-	var output []byte
-	var err error
-	for time.Now().Before(deadline) {
-		command := exec.CommandContext(t.Context(), rig.binary, "--view", address) //nolint:gosec // running the binary under test
-		command.Env = rig.environment
-		command.Dir = rig.workspace
-		output, err = command.CombinedOutput()
-		if err == nil {
-			return string(output)
-		}
-		time.Sleep(10 * time.Millisecond)
-	}
-	t.Fatalf("current task result was not available: %s: %v", output, err)
-	return ""
-}
-
 func waitForTaskMarker(t *testing.T, path string) {
 	t.Helper()
 	deadline := time.Now().Add(interactiveDeadline)
@@ -247,70 +81,6 @@ func waitForTaskMarker(t *testing.T, path string) {
 		time.Sleep(10 * time.Millisecond)
 	}
 	t.Fatalf("task did not create its ready marker %s", path)
-}
-
-func TestAnUnconfinedBackgroundServerReportsItsReachablePort(t *testing.T) {
-	listenConfig := net.ListenConfig{}
-	listener, err := listenConfig.Listen(t.Context(), "tcp", "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
-	listenerAddress, isTCPAddress := listener.Addr().(*net.TCPAddr)
-	if !isTCPAddress {
-		t.Fatalf("listener returned a non-TCP address: %v", listener.Addr())
-	}
-	port := listenerAddress.Port
-	if port < 1 || port > 65535 {
-		t.Fatalf("listener returned an invalid port: %d", port)
-	}
-	if err := listener.Close(); err != nil {
-		t.Fatal(err)
-	}
-	command := fmt.Sprintf("python3 -B -m http.server %d --bind 127.0.0.1", port)
-	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
-		Model: "fake",
-		Turns: []sim.Turn{
-			{Calls: []sim.Call{{Name: "bash", Arguments: fmt.Sprintf(`{"command":%q,"intent":"Serving the background task port forwarding check","background":true,"task_name":"docs","forward_port":%d}`, command, port)}}},
-			{Say: "Server started."},
-			{Calls: []sim.Call{{Name: "task", Arguments: `{"action":"discard","name":"docs"}`}}},
-			{Say: "Server discarded."},
-		},
-	}))
-	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "bash", "start a background server and publish its port")
-	session.waitFor("Server started.")
-	stored := rig.storedSessions()
-	if len(stored) != 1 {
-		t.Fatalf("got %d sessions", len(stored))
-	}
-	address := "http://" + net.JoinHostPort(portgrant.LocalHost, strconv.Itoa(port))
-	requests := endpoint.Requests()
-	if len(requests) != 2 || !strings.Contains(fmt.Sprint(requests[1].Input), address) {
-		t.Fatalf("the launch did not return a forwarded URL: %+v", requests)
-	}
-	client := &http.Client{Timeout: time.Second}
-	t.Cleanup(client.CloseIdleConnections)
-	request, err := http.NewRequestWithContext(t.Context(), http.MethodGet, address, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	isReachable := false
-	deadline := time.Now().Add(interactiveDeadline)
-	for !isReachable && time.Now().Before(deadline) {
-		response, err := client.Do(request)
-		if err == nil {
-			isReachable = response.StatusCode == http.StatusOK
-			_ = response.Body.Close()
-		}
-		if !isReachable {
-			time.Sleep(10 * time.Millisecond)
-		}
-	}
-	if !isReachable {
-		t.Fatalf("the user address %s did not reach the background server", address)
-	}
-	session.typeText("discard docs" + pressEnter)
-	session.waitFor("Server discarded.")
-	session.quit()
 }
 
 func TestTaskShutdownPersistsStateAndPendingFactsWithoutWaking(t *testing.T) {

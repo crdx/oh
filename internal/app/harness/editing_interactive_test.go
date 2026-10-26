@@ -1,11 +1,13 @@
 package harness
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/config"
 	"golang.org/x/sys/unix"
 
 	"crdx.org/oh/internal/app/width"
@@ -43,7 +45,7 @@ func newEditingSession(t *testing.T, arguments ...string) *interactiveSession {
 
 	editorPath := writeFakeTerminalEditor(t)
 
-	rig := newInteractiveRig(t)
+	rig := newInteractiveRig(t, "An answer to quote.")
 	rig.environment = append(rig.environment,
 		"EDITOR="+editorPath,
 		"VISUAL=",
@@ -69,6 +71,8 @@ func (self *interactiveSession) resize(columns int, rows int) {
 func TestATerminalEditorEditsTheDraftInTheTerminalOhGaveIt(t *testing.T) {
 	session := newEditingSession(t)
 	raw := session.modes()
+	session.typeAndSettle("/fork --from ")
+	session.typeAndSettle(pressEscape + clearInput)
 
 	session.typeAndSettle("a first draft")
 	before := session.screen()
@@ -98,6 +102,24 @@ func TestATerminalEditorEditsTheDraftInTheTerminalOhGaveIt(t *testing.T) {
 	session.typeAndSettle(" and more")
 	session.requireShown("a replaced draft and more")
 
+	session.typeAndSettle(clearInput)
+	editorStarts := session.Count(fakeEditorBanner) + 1
+	session.typeText("/conf" + pressEnter)
+	session.waitForCount(fakeEditorBanner, editorStarts)
+	editorEnds := session.Count(leftTheEditor) + 1
+	session.typeText(fmt.Sprintf("version = %d", config.Format) + pressEnter)
+	session.waitForCount(leftTheEditor, editorEnds)
+	session.requireHidden(fakeEditorBanner)
+	session.typeText("say something" + pressEnter)
+	session.waitFor("An answer to quote.")
+	editorStarts = session.Count(fakeEditorBanner) + 1
+	session.typeText("/reply" + pressEnter)
+	session.waitForCount(fakeEditorBanner, editorStarts)
+	editorEnds = session.Count(leftTheEditor) + 1
+	session.typeText("My inline reply." + pressEnter)
+	session.waitForCount(leftTheEditor, editorEnds)
+	session.waitFor("My inline reply.")
+	session.requireHidden(fakeEditorBanner)
 	session.typeText(clearInput)
 	session.quit()
 }
@@ -143,59 +165,4 @@ func TestAScreenResizedUnderTheEditorIsDrawnAfresh(t *testing.T) {
 
 	session.typeText(clearInput)
 	session.quit()
-}
-
-func TestTheConfigOpensInATerminalEditorOverSSH(t *testing.T) {
-	session := newEditingSession(t)
-
-	session.typeAndSettle("/conf")
-	session.typeText(pressEnter)
-	session.waitFor(fakeEditorBanner)
-	session.typeText("edited" + pressEnter)
-	session.waitFor(leftTheEditor)
-	session.requireHidden(fakeEditorBanner)
-	session.requireShown(readyBanner)
-
-	session.typeAndSettle("typing again")
-	session.requireShown("typing again")
-
-	session.typeText(clearInput)
-	session.quit()
-}
-
-func TestTheConfigOpensInATerminalEditorFromTheOpeningPrompt(t *testing.T) {
-	session := newEditingSession(t, "/conf")
-
-	session.waitFor(fakeEditorBanner)
-	session.typeText("edited" + pressEnter)
-	session.waitFor(leftTheEditor)
-	session.requireHidden(fakeEditorBanner)
-
-	session.typeAndSettle("typing again")
-	session.requireShown("typing again")
-
-	session.typeText(clearInput)
-	session.quit()
-}
-
-func TestReplyCommandAndShortcutNeedNoExperimentalSetting(t *testing.T) {
-	for name, keypress := range map[string]string{
-		"command":  "/reply" + pressEnter,
-		"shortcut": "\x1b[46;5u",
-	} {
-		t.Run(name, func(t *testing.T) {
-			editorPath := writeFakeTerminalEditor(t)
-			rig := newInteractiveRig(t, "An answer to quote.")
-			rig.environment = append(rig.environment, "EDITOR="+editorPath, "VISUAL=", "DISPLAY=", "WAYLAND_DISPLAY=")
-			session := rig.start("--yolo", "-m", "opencode-go/fake", "say something")
-			session.waitFor("An answer to quote.")
-			session.typeText(keypress)
-			session.waitFor(fakeEditorBanner)
-			session.typeText("My inline reply." + pressEnter)
-			session.waitFor("My inline reply.")
-			session.requireHidden(fakeEditorBanner)
-			session.typeText(clearInput)
-			session.quit()
-		})
-	}
 }

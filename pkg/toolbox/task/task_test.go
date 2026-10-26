@@ -135,3 +135,15 @@ func TestStoppingATaskNamesWhoStoppedIt(t *testing.T) {
 		}
 	})
 }
+
+func TestTaskOutputRefusesAnUnknownTask(t *testing.T) {
+	manager := tasks.New(t.Context())
+	defer manager.Close()
+	call, err := task.New(manager).Parse(`{"action":"output","name":"missing-task"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := call.Exec(t.Context()); err == nil || !strings.Contains(err.Error(), "missing-task") {
+		t.Errorf("unknown task output returned %v", err)
+	}
+}

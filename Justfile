@@ -112,6 +112,25 @@ test:
     fi
     exit "$STATUS"
 
+# run the migrated tests with no oh executable available
+test-inprocess race='false':
+    #!/bin/bash
+    set -euo pipefail
+    DIRECTORY=$(mktemp -d -t oh-inprocess.XXXXXX)
+    trap 'rm -rf "$DIRECTORY"' EXIT
+    export OH_TEST_BINARY="$DIRECTORY/must-not-exist"
+    export OH_TEST_BINARY_COVERAGE=
+    go test \
+        ./internal/app/harness \
+        ./internal/app/cli \
+        ./internal/app/config \
+        ./internal/app/ctl/analyse \
+        ./internal/app/toolresult \
+        -race={{ quote(race) }} -count=1 -run '^(TestInProcess|TestGolden.*InProcess$)' -v
+    go test -tags=oh_grep_test ./internal/app/harness \
+        -race={{ quote(race) }} -count=1 \
+        -run '^TestInProcessAYoloSessionSearchesOnTheHostWithNoStandIn$'
+
 # run the suite rounds times, width at once, and report every test that failed
 flakes rounds='3' width='4' *packages:
     ./script/flakes {{ rounds }} {{ width }} {{ packages }}
@@ -240,6 +259,36 @@ cov *args:
     fi
     ./script/coverage "$PROFILE"
 
+# save package and executable coverage in one profile
+covprofile profile:
+    #!/bin/bash
+    set -euo pipefail
+    PROFILE={{ quote(profile) }}
+    BINARY=$(mktemp -d -t oh-cover-binary.XXXXXX)
+    trap 'rm -rf "$BINARY"' EXIT
+    mkdir -p "$(dirname "$PROFILE")"
+    export OH_TEST_BINARY_COVERAGE="$BINARY"
+    go test ./... -coverpkg=./... -coverprofile="$PROFILE" -count=1
+    go test -tags=oh_grep_test ./internal/app/harness \
+        -coverpkg=./... -coverprofile="$BINARY/grep.profile" \
+        -count=1 -run '^TestInProcessAYoloSessionSearchesOnTheHostWithNoStandIn$'
+    tail -n +2 "$BINARY/grep.profile" >> "$PROFILE"
+    go tool covdata textfmt -i="$BINARY" -o "$BINARY/profile"
+    tail -n +2 "$BINARY/profile" >> "$PROFILE"
+    python3 - "$PROFILE" <<'PY'
+    import pathlib
+    import runpy
+    import sys
+    path = pathlib.Path(sys.argv[1])
+    with path.open() as profile:
+        mode = profile.readline()
+    blocks = runpy.run_path('script/coverage')['read_blocks'](path)
+    with path.open('w') as profile:
+        profile.write(mode)
+        for location, (statements, hits) in sorted(blocks.items()):
+            profile.write(f'{location} {statements} {hits}\n')
+    PY
+
 # open the coverage of one package in a browser
 covhtml package:
     #!/bin/bash
@@ -254,7 +303,7 @@ covhtml package:
     go tool cover -html="$PROFILE"
 
 check:
-    steps fmt vet lint1 lint2 lint3 mega test sandbox
+    steps fmt vet lint1 lint2 lint3 mega test test-inprocess sandbox
 
 # download the API references for each wire format
 refs:
