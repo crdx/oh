@@ -1,0 +1,42 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "find"
+
+[[tool]]
+name = "task"
+
+[first]
+prompt = "find Go files in the foreground, then find log files in the background"
+settle-tasks-after-tool-result = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-1","name":"find","arguments":"{\"pattern\":\"*.go\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-2","name":"find","arguments":"{\"pattern\":\"*.log\",\"background\":true,\"task_name\":\"logs\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"The foreground search found main.go. The background search found server.log."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"The foreground search found main.go. The background search found server.log."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Both searches remain complete."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Both searches remain complete."}]}}''',
+    '''{"type":"response.completed"}''',
+]

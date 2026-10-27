@@ -102,7 +102,7 @@ host_network = { name = "$", paint = "status_danger" }
 default = { name = "manage", paint = "status_warning" }
 restart = { name = "restart" }
 discard = { name = "discard" }
-status = { name = "check", paint = "normal" }
+status = { name = "status", paint = "normal" }
 output = { name = "cat", paint = "normal" }
 stop = { name = "stop" }
 list = { name = "list", paint = "normal" }
@@ -129,7 +129,7 @@ list = { paint = "normal" }
 [tool]
 
 [experimental]
-background_after_seconds = 10
+background_after_seconds = 5
 cache_miss_notices = false
 command_starts_turn = true
 enter_interrupts = false

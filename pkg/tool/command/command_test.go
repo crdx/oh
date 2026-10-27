@@ -6,6 +6,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"sync"
@@ -18,6 +19,7 @@ import (
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/async"
+	"crdx.org/oh/pkg/toolbox/bash"
 
 	"golang.org/x/sys/unix"
 )
@@ -1067,5 +1069,101 @@ func TestACustomCommandRunsAtLowerPriority(t *testing.T) {
 	output, err := call(t, subject, `{}`)
 	if want := strconv.Itoa(max(20-own, priority.Niceness)); err != nil || output != want {
 		t.Errorf("got %q, %v, want %q", output, err, want)
+	}
+}
+
+func TestNamedStringParametersUseTheSharedIntentAndShellRendering(t *testing.T) {
+	for _, test := range []struct {
+		name      string
+		subject   string
+		arguments string
+		intent    string
+		command   string
+		detail    string
+	}{
+		{"both", "intent", `{"intent":"reading the requested file","command":"cat foo"}`, "Reading the requested file", "cat foo", ""},
+		{"default subject", "", `{"intent":"reading the requested file","command":"cat foo"}`, "Reading the requested file", "cat foo", ""},
+		{"command subject", "command", `{"command":"cat foo"}`, "", "cat foo", ""},
+		{"intent alone", "intent", `{"intent":"checking the host machine"}`, "Checking the host machine", "", ""},
+		{"command alone", "intent", `{"command":"echo first\necho second"}`, "", "echo first\necho second", ""},
+		{"heredoc", "intent", `{"command":"cat <<'EOF'\nhello\nEOF"}`, "", "cat <<'EOF'\nhello\nEOF", ""},
+		{"invalid shell", "intent", `{"command":"for do done"}`, "", "for do done", ""},
+		{"other subject", "workspace", `{"intent":"reading the requested file","command":"cat foo","workspace":"project"}`, "Reading the requested file", "cat foo", "project"},
+		{"other qualifier", "intent", `{"intent":"reading the requested file","command":"cat foo","workspace":"project"}`, "Reading the requested file", "cat foo", "project"},
+		{"omitted", "intent", `{}`, "", "", ""},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			declaration := command.Declaration{
+				Name: "offload", Description: "report the arguments", Subject: test.subject,
+				Command: []string{writeScript(t, `printf '%s\n' "$@"`)},
+				Parameters: []command.Parameter{
+					{Name: "intent", Kind: command.KindString, Description: "the intent", IsOptional: true},
+					{Name: "command", Kind: command.KindString, Description: "the shell command", IsOptional: true},
+					{Name: "workspace", Kind: command.KindString, Description: "the workspace", IsOptional: true},
+				},
+			}
+			subject, err := command.New(declaration, command.Options{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			parsed, err := subject.Parse(test.arguments)
+			if err != nil {
+				t.Fatal(err)
+			}
+			rendering := parsed.Rendering()
+			if rendering.Intent != test.intent {
+				t.Errorf("intent rendering: %+v", rendering)
+			}
+			if test.command != "" {
+				wanted := bash.DescribeCommand(test.command)
+				if test.detail != "" {
+					wanted.Qualifier = strings.TrimSpace(wanted.Qualifier + " " + test.detail)
+				}
+				if len(rendering.Continuation) != 1 || !reflect.DeepEqual(rendering.Continuation[0], wanted) {
+					t.Fatalf("shell rendering: %+v", rendering)
+				}
+				if rendering.Subject != "" || rendering.Qualifier != "" {
+					t.Errorf("shell arguments repeated in the main row: %+v", rendering)
+				}
+			} else if len(rendering.Continuation) != 0 {
+				t.Errorf("absent command produced a shell row: %+v", rendering)
+			}
+			result, err := parsed.Exec(t.Context())
+			if err != nil {
+				t.Fatal(err)
+			}
+			var arguments map[string]string
+			if err := json.Unmarshal([]byte(test.arguments), &arguments); err != nil {
+				t.Fatal(err)
+			}
+			for name, value := range arguments {
+				if !strings.Contains(result.Output, "--"+name+"\n"+value) {
+					t.Errorf("execution lost %s: %q", name, result.Output)
+				}
+			}
+		})
+	}
+}
+
+func TestNonStringIntentAndCommandParametersKeepTheirOrdinaryRendering(t *testing.T) {
+	declaration := command.Declaration{
+		Name: "inspect", Description: "report the arguments", Subject: "intent",
+		Command: []string{writeScript(t, `printf '%s\n' "$@"`)},
+		Parameters: []command.Parameter{
+			{Name: "intent", Kind: command.KindInteger, Description: "an ordinary number"},
+			{Name: "command", Kind: command.KindBoolean, Description: "an ordinary flag"},
+		},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	parsed, err := subject.Parse(`{"intent":42,"command":true}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rendering := parsed.Rendering()
+	if rendering.Subject != "42" || rendering.Qualifier != "command" || rendering.Intent != "" || len(rendering.Continuation) != 0 {
+		t.Errorf("ordinary rendering changed: %+v", rendering)
 	}
 }

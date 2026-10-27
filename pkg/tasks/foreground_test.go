@@ -14,8 +14,8 @@ func TestARunningForegroundCallDetachesAfterTheSetForegroundLimit(t *testing.T) 
 		limit time.Duration
 		want  time.Duration
 	}{
-		{"default", 0, tasks.ForegroundLimit},
-		{"shorter", 5 * time.Second, 5 * time.Second},
+		{"default", 0, 5 * time.Second},
+		{"shorter", time.Second, time.Second},
 		{"longer", 2 * time.Minute, 2 * time.Minute},
 		{"negative", -time.Second, tasks.ForegroundLimit},
 	} {

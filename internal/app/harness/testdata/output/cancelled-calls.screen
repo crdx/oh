@@ -6,7 +6,7 @@
 
 read one.txt 1L
 read two.txt – the call stopped because…
-check check – the task request stopped …
+status check – the task request stopped…
 
 Turn stopped.
 
@@ -161,7 +161,7 @@ d
 
 read one.txt 1L
 read two.txt – the call stopped because the user pressed escape
-check check – the task request stopped because the user pressed escape
+status check – the task request stopped because the user pressed escape
 
 Turn stopped.
 
@@ -179,7 +179,7 @@ Turn stopped.
 
 read one… 1L
 read – the …
-che… – the …
+sta… – the …
 
 Turn
 stopped.
@@ -195,7 +195,7 @@ stopped.
 
 read one.txt 1L
 read two.txt – the call stopped because the user pressed escape
-check check – the task request stopped because the user pressed escape
+status check – the task request stopped because the user pressed escape
 
 Turn stopped.
 

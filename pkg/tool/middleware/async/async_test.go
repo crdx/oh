@@ -238,7 +238,7 @@ func TestANamedForegroundCallCanFinishWithoutLeavingATask(t *testing.T) {
 	})
 }
 
-func TestANamedForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *testing.T) {
+func TestANamedForegroundCallHandsOffAfterTheForegroundLimitWithoutRestarting(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := tasks.New(t.Context())
 		defer manager.Close()
@@ -251,8 +251,8 @@ func TestANamedForegroundCallHandsOffAfterThirtySecondsWithoutRestarting(t *test
 		}
 		startedAt := time.Now()
 		receipt, err := call.Exec(t.Context())
-		if elapsed := time.Since(startedAt); elapsed != 30*time.Second {
-			t.Errorf("handoff took %s, want 30s", elapsed)
+		if elapsed := time.Since(startedAt); elapsed != tasks.ForegroundLimit {
+			t.Errorf("handoff took %s, want %s", elapsed, tasks.ForegroundLimit)
 		}
 		if err != nil || !receipt.IsPending || receipt.Output != "backgrounded (named \"build\"); end your turn to wait" {
 			t.Errorf("automatic handoff returned %+v, %v", receipt, err)

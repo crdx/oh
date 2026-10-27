@@ -561,7 +561,7 @@ func TestEveryBuiltInToolKindKeepsItsNameAndPaint(t *testing.T) {
 		"bash":              {Name: "$", Paint: "status_info"},
 		"bash_host_network": {Name: "$", Paint: "status_danger"},
 		"task":              {Name: "manage", Paint: "status_warning"},
-		"task_status":       {Name: "check", Paint: "normal"},
+		"task_status":       {Name: "status", Paint: "normal"},
 		"task_output":       {Name: "cat", Paint: "normal"},
 		"task_restart":      {Name: "restart", Paint: "status_warning"},
 		"task_discard":      {Name: "discard", Paint: "status_warning"},

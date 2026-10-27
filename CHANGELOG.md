@@ -2,6 +2,13 @@
 
 ## [Next]
 
+### Changes
+
+- Rename and standardise task labels
+- Render custom tool intents and commands like built-ins
+- Allow find to run in the background
+- Background tool calls after 5 seconds by default
+
 ## [0.27.1] — 2026-10-26
 
 ### Changes

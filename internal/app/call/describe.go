@@ -126,7 +126,7 @@ func labelFrom(name string, rendering agent.FallbackRendering, timeLimit time.Du
 	}, name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
 	label.Intent = rendering.Intent
-	label.IntentLeads = bash.IsRenderingKind(renderingKind)
+	label.IntentLeads = rendering.RenderingKind == "" || bash.IsRenderingKind(renderingKind)
 	label.Introduces = rendering.Introduces
 	label.Mentions = slices.Clone(rendering.Mentions)
 	label.MarksSuccess = rendering.MarksSuccess

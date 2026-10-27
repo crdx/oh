@@ -1,3 +1,183 @@
+── custom tool with intent and command · 120 columns
+Reading the requested file offload $ cat foo ✓ 0.2s 1L 28M
+
+── custom tool with intent and command · 80 columns
+Reading the requested file offload $ cat foo ✓ 0.2s 1L 28M
+
+── custom tool with intent and command · 60 columns
+Reading the requested file offload $ cat foo ✓ 0.2s 1L 28M
+
+── custom tool with intent and command · 44 columns
+Reading the requested file of… ✓ 0.2s 1L 28M
+
+── custom tool with intent and command · 30 columns
+Reading the requested file … ✓
+
+── custom tool with intent and command · 16 columns
+Reading the r… ✓
+
+── custom tool with intent only · 120 columns
+Checking the host machine offload ✓ no output 2M
+
+── custom tool with intent only · 80 columns
+Checking the host machine offload ✓ no output 2M
+
+── custom tool with intent only · 60 columns
+Checking the host machine offload ✓ no output 2M
+
+── custom tool with intent only · 44 columns
+Checking the host machine of… ✓ no output 2M
+
+── custom tool with intent only · 30 columns
+Checking the host machine o… ✓
+
+── custom tool with intent only · 16 columns
+Checking the … ✓
+
+── custom tool with command only · 120 columns
+offload $ echo "hello world" | cat ✓ 0.2s 1L 28M
+
+── custom tool with command only · 80 columns
+offload $ echo "hello world" | cat ✓ 0.2s 1L 28M
+
+── custom tool with command only · 60 columns
+offload $ echo "hello world" | cat ✓ 0.2s 1L 28M
+
+── custom tool with command only · 44 columns
+offload $ echo "hello world"… ✓ 0.2s 1L 28M
+
+── custom tool with command only · 30 columns
+offload $ echo… ✓ 0.2s 1L 28M
+
+── custom tool with command only · 16 columns
+o… ✓ 0.2s 1L 28M
+
+── custom tool with other arguments · 120 columns
+Reading the requested file offload $ cat foo project ✓ 0.2s 1L 28M
+
+── custom tool with other arguments · 80 columns
+Reading the requested file offload $ cat foo project ✓ 0.2s 1L 28M
+
+── custom tool with other arguments · 60 columns
+Reading the requested file offload $ cat foo ✓ 0.2s 1L 28M
+
+── custom tool with other arguments · 44 columns
+Reading the requested file of… ✓ 0.2s 1L 28M
+
+── custom tool with other arguments · 30 columns
+Reading the requested file … ✓
+
+── custom tool with other arguments · 16 columns
+Reading the r… ✓
+
+── custom tool with multiline shell · 120 columns
+Printing each name in turn offload $ for NAME in one two; do echo "$NAME"; done 3L ✓ 0.2s 2L 28M
+
+── custom tool with multiline shell · 80 columns
+Printing each name in turn offload $ for NAME in one two; do ech… ✓ 0.2s 2L 28M
+
+── custom tool with multiline shell · 60 columns
+Printing each name in turn offload $ for NAM… ✓ 0.2s 2L 28M
+
+── custom tool with multiline shell · 44 columns
+Printing each name in turn of… ✓ 0.2s 2L 28M
+
+── custom tool with multiline shell · 30 columns
+Printing each name in turn … ✓
+
+── custom tool with multiline shell · 16 columns
+Printing each… ✓
+
+── custom tool with a heredoc · 120 columns
+Printing the heredoc body unchanged offload $ cat <<'EOF' 3L ✓ 0.2s 1L 28M
+
+── custom tool with a heredoc · 80 columns
+Printing the heredoc body unchanged offload $ cat <<'EOF' 3L ✓ 0.2s 1L 28M
+
+── custom tool with a heredoc · 60 columns
+Printing the heredoc body unchanged offload $ ✓ 0.2s 1L 28M
+
+── custom tool with a heredoc · 44 columns
+Printing the heredoc body unchanged offlo… ✓
+
+── custom tool with a heredoc · 30 columns
+Printing the heredoc body u… ✓
+
+── custom tool with a heredoc · 16 columns
+Printing the … ✓
+
+── custom tool with a long command · 120 columns
+Inspecting the custom tool golden files offload $ git diff --word-diff=plain -- internal/app/painter/te… ✓ no output 2M
+
+── custom tool with a long command · 80 columns
+Inspecting the custom tool golden files offload $ git diff --wo… ✓ no output 2M
+
+── custom tool with a long command · 60 columns
+Inspecting the custom tool golden files offl… ✓ no output 2M
+
+── custom tool with a long command · 44 columns
+Inspecting the custom tool golden files o… ✓
+
+── custom tool with a long command · 30 columns
+Inspecting the custom tool … ✓
+
+── custom tool with a long command · 16 columns
+Inspecting th… ✓
+
+── custom tool with an unsafe intent · 120 columns
+Checking the host works offload $ true ✓ no output 2M
+
+── custom tool with an unsafe intent · 80 columns
+Checking the host works offload $ true ✓ no output 2M
+
+── custom tool with an unsafe intent · 60 columns
+Checking the host works offload $ true ✓ no output 2M
+
+── custom tool with an unsafe intent · 44 columns
+Checking the host works offl… ✓ no output 2M
+
+── custom tool with an unsafe intent · 30 columns
+Checking the host works off… ✓
+
+── custom tool with an unsafe intent · 16 columns
+Checking the … ✓
+
+── custom tool with a failed command · 120 columns
+Checking the failure row rendering offload $ false ✗ 2L 30M exit(1)
+
+── custom tool with a failed command · 80 columns
+Checking the failure row rendering offload $ false ✗ 2L 30M exit(1)
+
+── custom tool with a failed command · 60 columns
+Checking the failure row rendering offload ✗ 2L 30M exit(1)
+
+── custom tool with a failed command · 44 columns
+Checking the failure row rendering of… ✗ ex…
+
+── custom tool with a failed command · 30 columns
+Checking the failure row re… ✗
+
+── custom tool with a failed command · 16 columns
+Checking the … ✗
+
+── custom tool with no promoted arguments · 120 columns
+offload project ✓ no output 2M
+
+── custom tool with no promoted arguments · 80 columns
+offload project ✓ no output 2M
+
+── custom tool with no promoted arguments · 60 columns
+offload project ✓ no output 2M
+
+── custom tool with no promoted arguments · 44 columns
+offload project ✓ no output 2M
+
+── custom tool with no promoted arguments · 30 columns
+offload project ✓ no output 2M
+
+── custom tool with no promoted arguments · 16 columns
+… ✓ no output 2M
+
 ── shell succeeded with output · 120 columns
 Checking the working tree state $ git status --short ✓ 0.2s 2L 28M M internal/app/call/call.go M pkg/toolbox/job/job.go
 
@@ -425,42 +605,42 @@ Vetting every… ✗
 Pausing for t… –
 
 ── task calls · 120 columns
-check docs
+status docs
 cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 80 columns
-check docs
+status docs
 cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 60 columns
-check docs
+status docs
 cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 44 columns
-check docs
+status docs
 cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 30 columns
-check docs
+status docs
 cat docs 2L
 restart docs
 stop docs
 discard docs
 
 ── task calls · 16 columns
-check docs
+status docs
 cat docs 2L
 restart docs
 stop docs

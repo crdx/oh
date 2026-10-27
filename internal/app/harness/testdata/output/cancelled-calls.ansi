@@ -6,7 +6,7 @@
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because…\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped …\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped…\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -164,7 +164,7 @@
 \e[48;2;52;53;65m\e[0m
 read \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m
 read \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m
-check \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m
+status \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m
 
 \e[38;2;207;173;0mTurn stopped.\e[0m
 
@@ -179,7 +179,7 @@ check \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -194,7 +194,7 @@ check \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[70C\e[?25h\e[?2026l\r
+status \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -209,7 +209,7 @@ check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[70C\e[?25h\e[?2026l\r
+status \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -224,7 +224,7 @@ check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[70C\e[?25h\e[?2026l\r
+status \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\e[K\e[1B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -244,7 +244,7 @@ check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone…\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\che…\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\sta…\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
 \r
 \e[38;2;207;173;0mTurn\e[0m\r
 \e[38;2;207;173;0mstopped.\e[0m\r
@@ -261,7 +261,7 @@ check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\
 \e[48;2;52;53;65m\e[0m\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -276,7 +276,7 @@ check \e[38;2;192;128;80mcheck\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call stopped because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe task request stopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r

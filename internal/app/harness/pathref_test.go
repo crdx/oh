@@ -175,12 +175,22 @@ func TestTabDoesNotSwitchScopesAfterTheOrdinaryListingFails(t *testing.T) {
 
 func TestAnIgnoredQueryListsOnlyIgnoredFilesAndInsertsAnOrdinaryReference(t *testing.T) {
 	self, inputLine := pathRefFixture(t)
+	listingArrives := make(chan struct{})
+	ordinary := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return pathRefFixtureFiles, false, nil
+	}, time.Now)
+	ignored := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		<-listingArrives
+		return []string{".env.local", "config/local.env", "private caches/local data.txt"}, false, nil
+	}, time.Now)
+	self.completer = trigger.New(pathref.NewSourceWithIgnored(ordinary, ignored))
 	typeIntoPathRef(t, self, inputLine, "look at @")
 	awaitPathRefListing(t, self, inputLine)
 	typeIntoPathRef(t, self, inputLine, "!localenv")
 	if rows := self.completer.Rows(80, dropdown.MaxRows); len(rows) == 0 || style.Plain(rows[0]) != "  listing ignored files…" {
 		t.Errorf("drew %q before the ignored listing arrived", rows)
 	}
+	close(listingArrives)
 	awaitPathRefListing(t, self, inputLine)
 	if got := selectedPathRef(self); got != "config/local.env" {
 		t.Fatalf("selected %q", got)

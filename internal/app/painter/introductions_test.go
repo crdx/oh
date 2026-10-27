@@ -65,7 +65,7 @@ func TestACallNamingATaskIsRemindedOfItsIntent(t *testing.T) {
 	}
 
 	for _, want := range []string{
-		"check docs (Serving the documentation locally)",
+		"status docs (Serving the documentation locally)",
 		"docs || build (Serving the documentation locally; Building every package)",
 	} {
 		if !strings.Contains(drawn, want) {
@@ -86,7 +86,7 @@ func TestAReminderComesFromTheStartBeforeIt(t *testing.T) {
 	))
 
 	for _, want := range []string{
-		"check docs (Serving the documentation locally)",
+		"status docs (Serving the documentation locally)",
 		"stop docs (Serving the docs on a new port)",
 	} {
 		if !strings.Contains(drawn, want) {
@@ -100,7 +100,7 @@ func TestATaskStartedInAnEarlierTurnIsStillRemembered(t *testing.T) {
 	drawnTaskCalls(t, introductions, taskStart("1", "docs", "Serving the documentation locally"), settledCall("1"))
 
 	drawn := style.Plain(drawnTaskCalls(t, introductions, taskCall("2", "task_status", "docs"), settledCall("2")))
-	if !strings.Contains(drawn, "check docs (Serving the documentation locally)") {
+	if !strings.Contains(drawn, "status docs (Serving the documentation locally)") {
 		t.Errorf("drew %q, want the earlier turn's intent", drawn)
 	}
 

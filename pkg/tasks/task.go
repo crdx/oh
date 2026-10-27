@@ -19,7 +19,8 @@ import (
 const (
 	DefaultMaximumRunning = 16
 	MaxQueued             = 64
-	ForegroundLimit       = 30 * time.Second
+	ForegroundLimit       = 5 * time.Second
+	PublicationLimit      = 30 * time.Second
 	ActivityFlash         = time.Second
 	QuickRunLimit         = 2 * time.Second
 	QuickRunsTolerated    = 3

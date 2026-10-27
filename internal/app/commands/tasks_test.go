@@ -223,7 +223,7 @@ func TestTheTaskCommandReportsOneStatus(t *testing.T) {
 func TestTheTaskCommandShowsWhatATaskPrinted(t *testing.T) {
 	managedTasks, _ := fixtureTasks()
 
-	context, err := invokeTaskCommand(t, managedTasks, "/task output docs")
+	context, err := invokeTaskCommand(t, managedTasks, "/task cat docs")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -239,7 +239,7 @@ func TestATaskThatPrintedNothingSaysSo(t *testing.T) {
 		return tasks.Snapshot{ID: "docs", State: tasks.Running, Output: "   \n"}, nil
 	}
 
-	context, err := invokeTaskCommand(t, managedTasks, "/task output docs")
+	context, err := invokeTaskCommand(t, managedTasks, "/task cat docs")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -341,7 +341,7 @@ func TestAnUnknownTaskIsRefused(t *testing.T) {
 
 	for _, input := range []string{
 		"/task status ghost",
-		"/task output ghost",
+		"/task cat ghost",
 		"/task stop ghost",
 		"/task restart ghost",
 		"/task discard ghost",
@@ -355,7 +355,7 @@ func TestAnUnknownTaskIsRefused(t *testing.T) {
 func TestTheTaskCommandRefusesAnIncompleteInvocation(t *testing.T) {
 	managedTasks, _ := fixtureTasks()
 
-	for _, input := range []string{"/task", "/task status", "/task docs", "/task frobnicate docs", "/task prune docs"} {
+	for _, input := range []string{"/task", "/task status", "/task cat", "/task output docs", "/task docs", "/task frobnicate docs", "/task prune docs"} {
 		if _, err := invokeTaskCommand(t, managedTasks, input); !slash.IsUsageError(err) {
 			t.Errorf("%s gave %v, want the usage to be shown", input, err)
 		}

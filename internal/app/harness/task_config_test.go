@@ -35,7 +35,7 @@ func TestReloadingTheBackgroundDelayChangesTheExistingManager(t *testing.T) {
 	}
 	writeLiveConfig(t, path, "")
 	settleLiveConfig(t, self)
-	if got := self.tasks.ForegroundLimit(); got != 10*time.Second {
+	if got := self.tasks.ForegroundLimit(); got != 5*time.Second {
 		t.Errorf("default delay is %s", got)
 	}
 }

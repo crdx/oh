@@ -1,3 +1,21 @@
+── custom tool running · 120 columns
+Running the whole test suite offload $ just test
+
+── custom tool running · 80 columns
+Running the whole test suite offload $ just test
+
+── custom tool running · 60 columns
+Running the whole test suite offload $ just test
+
+── custom tool running · 44 columns
+Running the whole test suite offload $ jus…
+
+── custom tool running · 30 columns
+Running the whole test suite …
+
+── custom tool running · 16 columns
+Running the who…
+
 ── shell running · 120 columns
 Running the whole test suite $ just test
 

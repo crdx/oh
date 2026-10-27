@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/async"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/read"
@@ -92,6 +93,17 @@ func callRowTools(t *testing.T, isFrozen bool, isBackgroundable bool) func(strin
 			},
 		})
 	}
+	customTool, err := command.New(command.Declaration{
+		Name: "offload", Description: "run a command", Command: []string{"true"}, Subject: "intent",
+		Parameters: []command.Parameter{
+			{Name: "intent", Kind: command.KindString, Description: "the intent", IsOptional: true},
+			{Name: "command", Kind: command.KindString, Description: "the command", IsOptional: true},
+			{Name: "workspace", Kind: command.KindString, Description: "the workspace", IsOptional: true},
+		},
+	}, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
 	taskTool := task.New(manager)
 	rootHandle, err := os.OpenRoot(t.TempDir())
 	if err != nil {
@@ -104,6 +116,8 @@ func callRowTools(t *testing.T, isFrozen bool, isBackgroundable bool) func(strin
 		switch name {
 		case "bash":
 			return shellTool, true
+		case "offload":
+			return customTool, true
 		case "task":
 			return taskTool, true
 		case "read":
@@ -178,7 +192,7 @@ func readAnswered(text string) *callRowOutcome {
 }
 
 func callRowCases() []callRowCase {
-	return []callRowCase{
+	return append(customCallRowCases(), []callRowCase{
 		{title: "shell succeeded with output", calls: []callRowCall{{"bash", `{"command":"git status --short","intent":"Checking the working tree state"}`, shellSucceeded("M internal/app/call/call.go\nM pkg/toolbox/job/job.go", 2)}}},
 		{title: "shell succeeded with no output", calls: []callRowCall{{"bash", `{"command":"touch build.lock","intent":"Creating the build lock file"}`, shellSilent()}}},
 		{title: "shell failed with an exit code", calls: []callRowCall{{"bash", `{"command":"go build ./...","intent":"Building every package once more"}`, shellFailed("exit(1): ./cmd/oh/main.go:12:2: undefined: spinner")}}},
@@ -231,6 +245,21 @@ func callRowCases() []callRowCase {
 			{"task", `{"action":"stop","name":"docs"}`, taskAnswered("docs: stopped")},
 		}},
 		{title: "read with an overflowing range", calls: []callRowCall{{"read", `{"path":"notes.txt","offset":2,"limit":9223372036854775807}`, readAnswered("two\nthree")}}},
+	}...)
+}
+
+func customCallRowCases() []callRowCase {
+	return []callRowCase{
+		{title: "custom tool with intent and command", calls: []callRowCall{{"offload", `{"intent":"reading the requested file","command":"cat foo"}`, shellSucceeded("file contents", 1)}}},
+		{title: "custom tool with intent only", calls: []callRowCall{{"offload", `{"intent":"Checking the host machine"}`, shellSilent()}}},
+		{title: "custom tool with command only", calls: []callRowCall{{"offload", `{"command":"echo \"hello world\" | cat"}`, shellSucceeded("hello world", 1)}}},
+		{title: "custom tool with other arguments", calls: []callRowCall{{"offload", `{"intent":"Reading the requested file","command":"cat foo","workspace":"project"}`, shellSucceeded("file contents", 1)}}},
+		{title: "custom tool with multiline shell", calls: []callRowCall{{"offload", `{"intent":"Printing each name in turn","command":"for NAME in one two; do\n  echo \"$NAME\"\ndone"}`, shellSucceeded("one\ntwo", 2)}}},
+		{title: "custom tool with a heredoc", calls: []callRowCall{{"offload", `{"intent":"Printing the heredoc body unchanged","command":"cat <<'EOF'\nhello\nEOF"}`, shellSucceeded("hello", 1)}}},
+		{title: "custom tool with a long command", calls: []callRowCall{{"offload", `{"intent":"Inspecting the custom tool golden files","command":"git diff --word-diff=plain -- internal/app/painter/testdata/call-rows.ansi internal/app/painter/testdata/call-rows.txt"}`, shellSilent()}}},
+		{title: "custom tool with an unsafe intent", calls: []callRowCall{{"offload", `{"intent":"  Checking\tthe\nhost \u001b[31mworks  ","command":"true"}`, shellSilent()}}},
+		{title: "custom tool with a failed command", calls: []callRowCall{{"offload", `{"intent":"Checking the failure row rendering","command":"false"}`, shellFailed("exit(1)")}}},
+		{title: "custom tool with no promoted arguments", calls: []callRowCall{{"offload", `{"workspace":"project"}`, shellSilent()}}},
 	}
 }
 
@@ -299,6 +328,7 @@ func drawRunningCallRow(t *testing.T, made callRowCall, columns int) string {
 
 func runningCallRows() []callRowCase {
 	return []callRowCase{
+		{title: "custom tool running", calls: []callRowCall{{"offload", `{"command":"just test","intent":"Running the whole test suite"}`, nil}}},
 		{title: "shell running", calls: []callRowCall{{"bash", `{"command":"just test","intent":"Running the whole test suite"}`, nil}}},
 		{title: "shell running on the host network", calls: []callRowCall{{"bash", `{"command":"curl https://example.com/status","intent":"Checking what the status endpoint reports","network":"host"}`, nil}}},
 		{title: "shell running a long command", calls: []callRowCall{{"bash", `{"command":"go test -run 'TestGolden' -count=1 ./internal/app/harness/ ./internal/app/painter/ ./internal/app/call/","intent":"Regenerating the harness golden files"}`, nil}}},

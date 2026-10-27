@@ -38,8 +38,8 @@
 "/grants "
   all → /grants all
 "/task "
+  cat → /task cat
   discard → /task discard
-  output → /task output
   prune → /task prune
   restart → /task restart
   status → /task status
@@ -50,8 +50,8 @@
 "/task stop "
   build → /task stop build
   docs → /task stop docs
-"/task output d"
-  docs → /task output docs
+"/task cat d"
+  docs → /task cat docs
 "/task restart "
   build → /task restart build
   docs → /task restart docs

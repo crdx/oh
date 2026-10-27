@@ -23,7 +23,7 @@ const (
 )
 
 var (
-	backgroundableBuiltins = []string{"bash", "grep", "lookup"}
+	backgroundableBuiltins = []string{"bash", "find", "grep", "lookup"}
 	gatedBuiltins          = []string{"lookup", "fetch"}
 )
 

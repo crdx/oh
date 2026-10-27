@@ -17,7 +17,7 @@ import (
 
 const pruneTaskAction = "prune"
 
-var namedTaskActions = []string{"status", "output", "stop", "restart", "discard"}
+var namedTaskActions = []string{"status", "cat", "stop", "restart", "discard"}
 
 type Tasks struct {
 	List          func() []tasks.Snapshot
@@ -82,7 +82,7 @@ func taskCommand(managedTasks Tasks) slash.Command {
 			return runTaskAction(context, managedTasks, action, name)
 		},
 	}.
-		WithArgumentUsage("{status|output|stop|restart|discard} <name> | prune").
+		WithArgumentUsage("{status|cat|stop|restart|discard} <name> | prune").
 		WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
 			switch {
 			case len(writtenArguments) == 0:
@@ -115,7 +115,7 @@ func runTaskAction(context slash.Context, managedTasks Tasks, action string, nam
 
 		return nil
 
-	case "output":
+	case "cat":
 		snapshot, err := managedTasks.Output(name)
 		if err != nil {
 			return err

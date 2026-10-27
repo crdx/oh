@@ -13,7 +13,7 @@ Commands:
   /grants [all]
   /revoke <target>...
   /tasks
-  /task {status|output|stop|restart|discard} <name> | prune
+  /task {status|cat|stop|restart|discard} <name> | prune
   /subs [all]
   /sub cat <name>
   /fork [-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]

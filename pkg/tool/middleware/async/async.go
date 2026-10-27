@@ -264,7 +264,7 @@ func (self scheduledCall) Exec(ctx context.Context) (tool.ToolCallResult, error)
 	}
 	receipt := fmt.Sprintf("backgrounded (named %q); end your turn to wait", snapshot.ID)
 	if port != 0 {
-		publication, state := self.manager.AwaitPublication(ctx, snapshot.ID, tasks.ForegroundLimit)
+		publication, state := self.manager.AwaitPublication(ctx, snapshot.ID, tasks.PublicationLimit)
 		receipt += "\n" + tasks.PublicationReceipt(publication, state, port)
 	}
 	return tool.ToolCallResult{Output: receipt, IsPending: true}, nil

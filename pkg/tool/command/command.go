@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/bash"
 )
 
 type Kind string
@@ -145,8 +146,7 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 			Schema:      schema,
 		},
 		func(arguments tool.Arguments) tool.CallRendering {
-			callSubject, qualifier := describe(arguments, subject)
-			return tool.CallRendering{Subject: callSubject, Qualifier: qualifier}
+			return describe(arguments, subject)
 		},
 	).
 		Decode(schema.Decode).
@@ -285,10 +285,28 @@ func argv(executable string, command []string, arguments tool.Arguments) []strin
 	return line
 }
 
-func describe(arguments tool.Arguments, subject string) (string, string) {
+func describe(arguments tool.Arguments, subject string) tool.CallRendering {
+	rendering := tool.CallRendering{}
 	var values []string
 
 	for _, parameter := range arguments.Schema() {
+		isIntent := parameter.Name == "intent" && parameter.Type == tool.TypeString
+		isCommand := parameter.Name == "command" && parameter.Type == tool.TypeString
+		if isIntent || isCommand {
+			if subject == parameter.Name {
+				subject = ""
+			}
+			if !arguments.IsPresent(parameter.Name) {
+				continue
+			}
+			text := arguments.GetString(parameter.Name)
+			if isIntent {
+				rendering.Intent = bash.SpokenIntent(text)
+			} else {
+				rendering.Continuation = []tool.CallRendering{bash.DescribeCommand(text)}
+			}
+			continue
+		}
 		if parameter.Name == subject || !arguments.IsPresent(parameter.Name) {
 			continue
 		}
@@ -307,10 +325,22 @@ func describe(arguments tool.Arguments, subject string) (string, string) {
 	}
 
 	if subject == "" {
-		return strings.Join(values, " "), ""
+		rendering.Subject = strutil.FirstLine(strings.Join(values, " "))
+	} else {
+		rendering.Subject = strutil.FirstLine(arguments.GetText(subject))
+		rendering.Qualifier = strutil.FirstLine(strings.Join(values, " "))
 	}
-
-	return strutil.FirstLine(arguments.GetText(subject)), strutil.FirstLine(strings.Join(values, " "))
+	if len(rendering.Continuation) > 0 {
+		for _, text := range []string{rendering.Subject, rendering.Qualifier} {
+			if text != "" {
+				shell := &rendering.Continuation[0]
+				shell.Qualifier = strings.TrimSpace(shell.Qualifier + " " + text)
+			}
+		}
+		rendering.Subject = ""
+		rendering.Qualifier = ""
+	}
+	return rendering
 }
 
 func run(

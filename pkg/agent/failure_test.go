@@ -10,9 +10,9 @@ import (
 
 type describedFailureError struct{}
 
-func (describedFailureError) Error() string { return "rendered prose that should not be stored" }
+func (*describedFailureError) Error() string { return "rendered prose that should not be stored" }
 
-func (describedFailureError) DescribeFailure() agent.Failure {
+func (*describedFailureError) DescribeFailure() agent.Failure {
 	return agent.Failure{
 		Kind:       agent.HTTPStatusFailure,
 		HTTPStatus: 598,
@@ -22,7 +22,7 @@ func (describedFailureError) DescribeFailure() agent.Failure {
 }
 
 func TestFailureFromKeepsStructuredDetailsThroughAWrappedError(t *testing.T) {
-	failure := agent.FailureFrom(fmt.Errorf("provider failed: %w", describedFailureError{}))
+	failure := agent.FailureFrom(fmt.Errorf("provider failed: %w", &describedFailureError{}))
 	if failure == nil {
 		t.Fatal("expected a failure")
 	}

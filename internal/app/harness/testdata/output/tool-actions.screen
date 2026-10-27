@@ -10,7 +10,7 @@ list forwards
 forward ✗ action must be add, remove, o…
 restart docs
 restart docs
-check docs
+status docs
 cat docs
 stop docs
 list tasks
@@ -139,7 +139,7 @@ list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
 restart docs
 restart docs
-check docs
+status docs
 cat docs
 stop docs
 list tasks
@@ -162,7 +162,7 @@ list forwar…
 for… ✗ acti…
 restart docs
 restart docs
-check docs
+status docs
 cat docs
 stop docs
 list tasks
@@ -184,7 +184,7 @@ list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
 restart docs
 restart docs
-check docs
+status docs
 cat docs
 stop docs
 list tasks

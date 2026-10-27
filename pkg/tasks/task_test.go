@@ -35,8 +35,8 @@ func TestAForegroundCallHandsOffWithoutRunningAgain(t *testing.T) {
 		if err != nil || !isBackground {
 			t.Fatalf("handoff returned background %t, failure %v", isBackground, err)
 		}
-		if elapsed := time.Since(startTime); elapsed != 30*time.Second {
-			t.Errorf("handoff took %s, want 30s", elapsed)
+		if elapsed := time.Since(startTime); elapsed != tasks.ForegroundLimit {
+			t.Errorf("handoff took %s, want %s", elapsed, tasks.ForegroundLimit)
 		}
 		close(release)
 		synctest.Wait()

@@ -1,0 +1,20 @@
+
+ find Go files in the foreground, then find log files in the background
+
+
+find *.go 1L
+find *.log backgrounded (named "logs"); end your turn to wait
+
+
+ ⚙️ Task logs finished after 0.0s
+
+    server.log
+
+
+The foreground search found main.go. The background search found server.log.
+
+
+ carry on
+
+
+Both searches remain complete.

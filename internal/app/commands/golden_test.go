@@ -44,7 +44,7 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/task ",
 		"/task st",
 		"/task stop ",
-		"/task output d",
+		"/task cat d",
 		"/task restart ",
 		"/task prune ",
 		"/task stop docs ",
@@ -772,7 +772,7 @@ func TestGoldenTaskOutputMatchesGolden(t *testing.T) {
 	} {
 		managedTasks, _ := fixtureTasks()
 		managedTasks.Output = func(string) (tasks.Snapshot, error) { return test.snapshot, nil }
-		context, err := invokeTaskCommand(t, managedTasks, "/task output build")
+		context, err := invokeTaskCommand(t, managedTasks, "/task cat build")
 		if err != nil {
 			t.Fatal(err)
 		}

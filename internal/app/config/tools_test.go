@@ -611,9 +611,9 @@ func TestBackgroundEligibilityIsExplicitForCustomToolsAndFixedForBuiltins(t *tes
 		command = ["true"]
 	`)
 	for name, want := range map[string]bool{
-		"bash": true, "grep": true, "lookup": true,
+		"bash": true, "find": true, "grep": true, "lookup": true,
 		"offload": true, "commit": false,
-		"read": false, "find": false, "write": false, "edit": false,
+		"read": false, "write": false, "edit": false,
 	} {
 		if got := settings.IsToolBackgroundable(name); got != want {
 			t.Errorf("tool %s backgroundable=%t, want %t", name, got, want)

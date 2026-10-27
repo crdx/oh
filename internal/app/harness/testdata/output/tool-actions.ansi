@@ -10,7 +10,7 @@
 \e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, o…\e[0m\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
-\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
+\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\r
@@ -140,7 +140,7 @@ list \e[38;2;192;128;80mforwards\e[0m
 \e[38;2;207;173;0mforward\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m
 \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m
 \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m
-check \e[38;2;192;128;80mdocs\e[0m
+status \e[38;2;192;128;80mdocs\e[0m
 cat \e[38;2;192;128;80mdocs\e[0m
 \e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m
 list \e[38;2;192;128;80mtasks\e[0m
@@ -161,7 +161,7 @@ Those are every action label.
 \e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
-\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
+\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\r
@@ -182,7 +182,7 @@ Those are every action label.\r
 \r\e[38;2;207;173;0mforward\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m\e[K\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rcheck \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rstatus \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rcat \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rlist \e[38;2;192;128;80mtasks\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -203,7 +203,7 @@ Thos\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThose ar\e[K\r\e[8C\e[?25h\e[?2
 \r\e[38;2;207;173;0mforward\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m\e[K\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rcheck \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rstatus \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rcat \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rlist \e[38;2;192;128;80mtasks\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -224,7 +224,7 @@ Those are every action label.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[29
 \r\e[38;2;207;173;0mforward\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m\e[K\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rcheck \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rstatus \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rcat \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rlist \e[38;2;192;128;80mtasks\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -248,7 +248,7 @@ Thos\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThose ar\e[K\r\e[8C\e[?25h\e[?2
 \e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mfor…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102macti…\e[0m\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
-\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
+\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\r
@@ -270,7 +270,7 @@ label.\r
 \e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
-\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
+\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\r
@@ -291,7 +291,7 @@ Those are every action label.\r
 \e]8;;oh://tool-result?call=forward-malformed&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102maction must be add, remove, or list (got "bogus")\e[0m\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
-\e]8;;oh://tool-result?call=status&session=tame-impala\e\\check\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
+\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \e]8;;oh://tool-result?call=list-tasks&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mtasks\e[0m\r

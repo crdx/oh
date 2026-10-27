@@ -110,7 +110,7 @@ func act(ctx context.Context, manager *tasks.Manager, args Args) (string, error)
 		output := describe(snapshot)
 		if snapshot.Invocation != nil && snapshot.Invocation.ForwardPort != 0 {
 			port := snapshot.Invocation.ForwardPort
-			publication, state := manager.AwaitPublication(ctx, snapshot.ID, tasks.ForegroundLimit)
+			publication, state := manager.AwaitPublication(ctx, snapshot.ID, tasks.PublicationLimit)
 			output += "\n" + tasks.PublicationReceipt(publication, state, port)
 		}
 		return output, nil

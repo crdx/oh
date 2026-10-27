@@ -1,0 +1,20 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m find Go files in the foreground, then find log files in the background                             \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m*.log\e[0m \e[38;2;150;152;150mbackgrounded (named "logs"); end your turn to wait\e[0m\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m ⚙️ Task \e]8;;oh://task-result?ended=1787495529000000000&run=1&session=tame-impala&task=logs\e\\\e[38;2;192;128;80mlogs\e[0m\e[48;2;48;58;67m\e]8;;\e\\ finished after 0.0s                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mserver.log\e[0m\e[48;2;48;58;67m                                                                                      \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+The foreground search found main.go. The background search found server.log.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Both searches remain complete.\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[30C\e[?25h\e[?2026l\r
