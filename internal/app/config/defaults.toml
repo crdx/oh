@@ -129,7 +129,7 @@ list = { paint = "normal" }
 [tool]
 
 [experimental]
-background_after_seconds = 5
+background_after_seconds = 1
 cache_miss_notices = false
 command_starts_turn = true
 enter_interrupts = false

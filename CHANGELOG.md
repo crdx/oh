@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Reduce bg timeout to 1s
+
 ## [0.27.2] — 2026-10-27
 
 ### Changes
