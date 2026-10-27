@@ -667,6 +667,16 @@ func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 			return snapshot
 		}
 
+		liveTask := func(name string, command string) tasks.Snapshot {
+			snapshot := finishedTask(name, command)
+			snapshot.State = tasks.Running
+			snapshot.StartedAt = time.Now()
+			snapshot.EndedAt = time.Time{}
+			return snapshot
+		}
+		stoppingTask := liveTask("stop", "just serve")
+		stoppingTask.State = tasks.Stopping
+
 		var output strings.Builder
 		for _, test := range []struct {
 			label   string
@@ -674,20 +684,24 @@ func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 		}{
 			{label: "no tasks"},
 			{label: "ordinary and multiline commands", listing: []tasks.Snapshot{
-				finishedTask("build", "GOCACHE=/tmp/cache just build && echo done"),
-				failedTask("docs", "python3 -m http.server 8080\n  --bind localhost"),
+				liveTask("build", "GOCACHE=/tmp/cache just build && echo done"),
+				liveTask("docs", "python3 -m http.server 8080\n  --bind localhost"),
 			}},
 			{label: "heredoc command", listing: []tasks.Snapshot{
-				finishedTask("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
+				liveTask("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
 			}},
 			{label: "malformed stored command", listing: []tasks.Snapshot{
-				finishedTask("broken", "echo 'unterminated\necho later"),
+				liveTask("broken", "echo 'unterminated\necho later"),
 			}},
-			{label: "multiline failure", listing: []tasks.Snapshot{
+			{label: "finished tasks only", listing: []tasks.Snapshot{
+				finishedTask("build", "just build"),
+				failedTask("docs", "just docs"),
+				timedOutTask("slow", "just soak"),
 				stoppedTask("witness", "python3 /tmp/model-witness.py"),
 			}},
 			{label: "queued and timed out", listing: []tasks.Snapshot{
 				queuedTask("third", "just check"),
+				stoppingTask,
 				timedOutTask("slow", "just soak"),
 			}},
 			{label: "respawning tasks", listing: []tasks.Snapshot{
@@ -714,8 +728,10 @@ func TestGoldenTaskListingMatchesGolden(t *testing.T) {
 				}, startedAt)
 				rows := shown.Render(columns, startedAt)
 				wantedRows := 1
-				if len(test.listing) > 0 {
-					wantedRows += len(test.listing)
+				for _, snapshot := range test.listing {
+					if isLiveTask(snapshot) {
+						wantedRows++
+					}
 				}
 				if len(rows) != wantedRows {
 					t.Errorf("%s at %d columns drew %d rows, want %d", test.label, columns, len(rows), wantedRows)

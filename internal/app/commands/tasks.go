@@ -45,14 +45,16 @@ func taskCommands(managedTasks Tasks) []slash.Command {
 func tasksCommand(managedTasks Tasks) slash.Command {
 	return slash.Command{
 		Name:        "tasks",
-		Description: "list this session's background tasks",
+		Description: "list this session's active background tasks",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" {
 				return slash.Usage()
 			}
-			listing := managedTasks.List()
+			listing := slices.DeleteFunc(slices.Clone(managedTasks.List()), func(snapshot tasks.Snapshot) bool {
+				return !isLiveTask(snapshot)
+			})
 			if len(listing) == 0 {
-				context.Notice("No background tasks.")
+				context.Notice("No active background tasks.")
 				return nil
 			}
 			context.PlainNoticeListing(formatTasks(listing, managedTasks.DescribeCall))

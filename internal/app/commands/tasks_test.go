@@ -139,37 +139,52 @@ func invokeTaskCommand(t *testing.T, managedTasks Tasks, input string) (*command
 	return context, invocation.Command.Run(context, invocation.Arguments)
 }
 
-func TestTheTasksCommandListsEveryTask(t *testing.T) {
+func TestTheTasksCommandListsOnlyLiveTasks(t *testing.T) {
 	managedTasks, _ := fixtureTasks()
+	listing := []tasks.Snapshot{}
+	for _, state := range []tasks.State{tasks.Done, tasks.Queued, tasks.Failed, tasks.Running, tasks.Stopped, tasks.Stopping, tasks.TimedOut} {
+		listing = append(listing, tasks.Snapshot{
+			ID: string(state), ToolName: "bash", Invocation: bashInvocation("echo " + string(state)), State: state,
+		})
+	}
+	managedTasks.List = func() []tasks.Snapshot { return listing }
 
 	context, err := invokeTaskCommand(t, managedTasks, "/tasks")
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if !context.isListing || !context.hasOwnStyle {
 		t.Error("tasks were not drawn as a listing in their own style")
 	}
-	if !strings.Contains(context.notice, style.Subject("docs")) {
+	if !strings.Contains(context.notice, style.Subject("queued")) {
 		t.Error("task name was not styled as a subject")
 	}
 
 	notice := style.Plain(context.notice)
-	for _, wanted := range []string{"docs", "running", "$ python3 -m http.server 8080", "build", "failed", "exit status 1"} {
+	for _, wanted := range []string{"queued", "running", "stopping", "$ echo queued", "$ echo running", "$ echo stopping"} {
 		if !strings.Contains(notice, wanted) {
 			t.Errorf("got %q, want it to carry %q", notice, wanted)
 		}
 	}
+	for _, unwanted := range []string{"done", "failed", "stopped", "timed_out"} {
+		if strings.Contains(notice, unwanted) {
+			t.Errorf("got %q, want it to omit %q", notice, unwanted)
+		}
+	}
+	for index, state := range []tasks.State{tasks.Done, tasks.Queued, tasks.Failed, tasks.Running, tasks.Stopped, tasks.Stopping, tasks.TimedOut} {
+		if listing[index].State != state {
+			t.Fatal("listing changed the stored tasks")
+		}
+	}
 
 	lines := strings.Split(notice, "\n")
-	if len(lines) != 3 {
-		t.Fatalf("got %d lines, want a heading and two tasks", len(lines))
+	if len(lines) != 4 {
+		t.Fatalf("got %d lines, want a heading and three active tasks", len(lines))
 	}
-	if docsStatusAt, buildStatusAt := strings.Index(lines[1], "running"), strings.Index(lines[2], "failed"); docsStatusAt != buildStatusAt {
-		t.Errorf("status columns start at %d and %d, want them aligned", docsStatusAt, buildStatusAt)
-	}
-	if docsCommandAt, buildCommandAt := strings.Index(lines[1], "$"), strings.Index(lines[2], "$"); docsCommandAt != buildCommandAt {
-		t.Errorf("command columns start at %d and %d, want them aligned", docsCommandAt, buildCommandAt)
+	for _, line := range lines[2:] {
+		if strings.Index(lines[1], "$ ") != strings.Index(line, "$ ") {
+			t.Error("command columns are not aligned")
+		}
 	}
 }
 
@@ -202,8 +217,39 @@ func TestTheTasksCommandSaysSoWhenThereAreNone(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if notice := context.notice; notice != "No background tasks." {
+	if notice := context.notice; notice != "No active background tasks." {
 		t.Errorf("got %q, want it to say there are none", notice)
+	}
+}
+
+func TestTheTasksCommandSaysSoWhenEveryTaskIsFinished(t *testing.T) {
+	managedTasks, _ := fixtureTasks()
+	listing := []tasks.Snapshot{}
+	for _, state := range []tasks.State{tasks.Done, tasks.Failed, tasks.Stopped, tasks.TimedOut} {
+		listing = append(listing, tasks.Snapshot{ID: string(state), State: state})
+	}
+	managedTasks.List = func() []tasks.Snapshot { return listing }
+
+	context, err := invokeTaskCommand(t, managedTasks, "/tasks")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if context.notice != "No active background tasks." || context.isListing {
+		t.Errorf("got %#v, want the empty active-task notice", context)
+	}
+}
+
+func TestTheTaskCommandCanStillInspectAHiddenFinishedTask(t *testing.T) {
+	managedTasks, _ := fixtureTasks()
+	if _, err := invokeTaskCommand(t, managedTasks, "/tasks"); err != nil {
+		t.Fatal(err)
+	}
+	context, err := invokeTaskCommand(t, managedTasks, "/task status build")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(context.notice, "build: failed") {
+		t.Errorf("got %q, want the finished task's status", context.notice)
 	}
 }
 

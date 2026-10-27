@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Hide finished tasks from `/tasks`
 - Rename and standardise task labels
 - Render custom tool intents and commands like built-ins
 - Allow find to run in the background
