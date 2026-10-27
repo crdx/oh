@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.27.2] — 2026-10-27
+
 ### Changes
 
 - Hide finished tasks from `/tasks`
