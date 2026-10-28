@@ -994,3 +994,39 @@ func TestARotationFileNamesOnlyTheAgentSettingWhenItChanges(t *testing.T) {
 		t.Errorf("got %v, want the agent setting alone: %v", applied.Changes[0].Settings, want)
 	}
 }
+
+func TestReloadRecoveryDistinguishesRestorationFromAnUnchangedFailure(t *testing.T) {
+	for name, invalid := range map[string]string{
+		"parse failure":         "<<<<<<< HEAD\n",
+		"live settings failure": "[bar.top]\nleft = [{ segment = \"does-not-exist\" }]\n",
+	} {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			const original = "[ui]\nreasoning = \"plain\"\n"
+			if err := writeConfigFile(path, original); err != nil {
+				t.Fatal(err)
+			}
+			_, observer := observeConfig(t, path)
+			for range 2 {
+				if err := writeConfigFile(path, invalid); err != nil {
+					t.Fatal(err)
+				}
+				if result := observer.Reload(nil, testSegments()); result.Status != ReloadFailed || result.Failure == nil {
+					t.Fatalf("invalid config status=%v failure=%v", result.Status, result.Failure)
+				}
+				if result := observer.Reload(nil, testSegments()); result.Status != ReloadUnchanged {
+					t.Fatalf("unchanged invalid config status=%v", result.Status)
+				}
+				if err := writeConfigFile(path, original); err != nil {
+					t.Fatal(err)
+				}
+				if result := observer.Reload(nil, testSegments()); result.Status != ReloadRecovered || result.Failure != nil || len(result.Changes) != 0 {
+					t.Fatalf("restored config status=%v failure=%v changes=%v", result.Status, result.Failure, result.Changes)
+				}
+				if result := observer.Reload(nil, testSegments()); result.Status != ReloadUnchanged {
+					t.Fatalf("unchanged valid config status=%v", result.Status)
+				}
+			}
+		})
+	}
+}

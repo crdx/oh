@@ -270,7 +270,7 @@ func awaitReload(t *testing.T, observer *Observer) ReloadResult {
 				return result
 			case ReloadFailed:
 				t.Fatal(result.Failure)
-			case ReloadUnchanged:
+			case ReloadUnchanged, ReloadRecovered:
 			}
 		case <-timeout.C:
 			t.Fatal("timed out waiting for a config change")

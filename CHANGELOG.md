@@ -2,6 +2,7 @@
 
 ## [Next]
 
+- Clear stale config reload errors
 - Mandate strict rules for inotifywait watchers
 
 ## [0.27.3] — 2026-10-27

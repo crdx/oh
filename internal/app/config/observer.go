@@ -368,6 +368,7 @@ type Observer struct {
 	sources         []Source
 	handledRevision revision
 	failedRevision  *revision
+	hasFailure      bool
 	watcher         *fileWatcher
 }
 
@@ -428,6 +429,7 @@ type ReloadStatus int
 const (
 	ReloadUnchanged ReloadStatus = iota
 	ReloadApplied
+	ReloadRecovered
 	ReloadFailed
 )
 
@@ -452,16 +454,29 @@ func (self *Observer) Changes() <-chan error {
 }
 
 func (self *Observer) Reload(watchFailure error, registry segment.Registry) ReloadResult {
+	if self == nil {
+		return ReloadResult{Status: ReloadUnchanged}
+	}
+	previous := self.handledRevision
 	settings, changes, err := self.refresh(watchFailure)
 	if err == nil && len(changes) > 0 {
 		var live LiveConfig
 		live, err = settings.BuildLive(registry)
 		if err == nil {
+			self.hasFailure = false
 			return ReloadResult{LiveConfig: live, Changes: changes, Status: ReloadApplied}
 		}
+		failureRevision := self.handledRevision
+		self.failedRevision = &failureRevision
+		self.handledRevision = previous
 	}
 	if err != nil {
+		self.hasFailure = true
 		return ReloadResult{Status: ReloadFailed, Failure: err}
+	}
+	if self.hasFailure && self.failedRevision == nil {
+		self.hasFailure = false
+		return ReloadResult{Status: ReloadRecovered}
 	}
 	return ReloadResult{Status: ReloadUnchanged}
 }
@@ -499,10 +514,10 @@ func (self *Observer) refresh(watchFailure error) (Config, []SourceChange, error
 		self.failedRevision = nil
 		return Config{}, nil, nil
 	}
+	if self.failedRevision != nil && current.equal(*self.failedRevision) {
+		return Config{}, nil, nil
+	}
 	if err != nil {
-		if self.failedRevision != nil && current.equal(*self.failedRevision) {
-			return Config{}, nil, nil
-		}
 		self.failedRevision = &current
 		return Config{}, nil, err
 	}

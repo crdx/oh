@@ -1750,6 +1750,9 @@ func (self *App) reloadConfig(watchFailure error) bool {
 	switch result.Status {
 	case config.ReloadUnchanged:
 		return false
+	case config.ReloadRecovered:
+		self.feedback.Clear(feedback.Config)
+		return true
 	case config.ReloadFailed:
 		self.showFeedback(feedback.Config, feedback.Message{
 			Text:   "The configuration could not be reloaded: " + result.Failure.Error(),
