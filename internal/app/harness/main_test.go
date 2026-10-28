@@ -8952,6 +8952,7 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 			Interactive: !shape.isPrinting,
 		},
 		BackgroundShellGranted: shape.hasBackgroundShell,
+		HasInotifywait:         shape.hasBackgroundShell,
 		TasksGranted:           shape.hasBackgroundShell,
 		NetworkGranted:         currentCaps.Has(caps.Network),
 		Yolo:                   shape.isYolo,

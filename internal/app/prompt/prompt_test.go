@@ -985,6 +985,7 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 		CurrentCaps:            caps.Read | caps.Shell,
 		OfferedTools:           []string{"bash"},
 		BackgroundShellGranted: true,
+		HasInotifywait:         true,
 	})
 
 	for _, rule := range []string{
@@ -1001,10 +1002,8 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 		"hand off only the rest",
 		"fresh scratch copy",
 		"first-to-last",
-		"Applying a patch is filesystem-detectable",
-		"start the mandatory watcher",
-		"before the handoff",
-		"the reverse-apply check above proves the whole handoff is applied",
+		"Start the watcher from \"Waiting for the User\" before the handoff",
+		"stop it once the reverse-apply check passes",
 		"git -C <workspace> apply --check <patch>",
 	} {
 		if !strings.Contains(got, rule) {
@@ -1022,20 +1021,22 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 	if state == -1 || workflow <= state {
 		t.Errorf("read-only workspace workflow is not its own section after state: %q", got)
 	}
-	watcher := strings.Index(got, "Applying a patch is filesystem-detectable")
+	watcher := strings.Index(got, "Start the watcher from")
 	handoff := strings.Index(got, "Tell the user to apply it")
 	if watcher == -1 || handoff <= watcher {
 		t.Errorf("read-only workspace workflow does not start its watcher before handoff: %q", got)
 	}
 }
 
-func TestWaitingForTheUserFollowsBackgroundShellAvailability(t *testing.T) {
+func TestWaitingForTheUserFollowsWatcherAvailability(t *testing.T) {
 	for name, testCase := range map[string]struct {
 		isBackgroundShellGranted bool
+		hasInotifywait           bool
 		expected                 bool
 	}{
-		"available":   {isBackgroundShellGranted: true, expected: true},
-		"unavailable": {isBackgroundShellGranted: false, expected: false},
+		"available":           {isBackgroundShellGranted: true, hasInotifywait: true, expected: true},
+		"no background shell": {isBackgroundShellGranted: false, hasInotifywait: true, expected: false},
+		"no inotifywait":      {isBackgroundShellGranted: true, hasInotifywait: false, expected: false},
 	} {
 		t.Run(name, func(t *testing.T) {
 			got := harnessContext(Config{
@@ -1046,27 +1047,24 @@ func TestWaitingForTheUserFollowsBackgroundShellAvailability(t *testing.T) {
 				CurrentCaps:            caps.Read | caps.Shell,
 				OfferedTools:           []string{"bash"},
 				BackgroundShellGranted: testCase.isBackgroundShellGranted,
+				HasInotifywait:         testCase.hasInotifywait,
 			})
 
 			for _, rule := range []string{
 				"# Waiting for the User",
-				"Before ending your turn, start a watcher as a background bash call",
-				"when completion can be detected through the filesystem",
-				"Note that this will not work with /grant",
-				"it needs to be accessible already to be watchable",
-				"Use a continuous `inotifywait --monitor` if available",
-				"With inotifywait, omit `-q`, and end the turn only after the task output shows \"Watches established\"",
-				"The watcher must exit once the condition holds",
-				"done < <(inotifywait --monitor …); kill \"$!\"",
-				"otherwise poll every 2s",
-				"When the task ends, continue",
+				"When the user's next step changes files, run this with background=true and respawn=true before ending your turn",
+				"`inotifywait --recursive -e close_write,moved_to,create,delete <dir>; sleep 2`",
+				"<dir> is the workspace, or the directory the step changes",
+				"it cannot be a path awaiting /grant",
+				"End the turn once it shows \"Watches established\"; each change then wakes you",
+				"Stop it when you no longer need it",
 			} {
 				present := strings.Contains(got, rule)
 				if present != testCase.expected {
 					t.Errorf("waiting rule presence is %t, want %t: %q", present, testCase.expected, got)
 				}
 			}
-			patchWatcher := strings.Contains(got, "Applying a patch is filesystem-detectable")
+			patchWatcher := strings.Contains(got, "Start the watcher from")
 			if patchWatcher != testCase.expected {
 				t.Errorf("patch watcher presence is %t, want %t: %q", patchWatcher, testCase.expected, got)
 			}

@@ -144,6 +144,7 @@ type harnessContextTemplateData struct {
 	LookupGranted          bool
 	SubagentsGranted       bool
 	BackgroundShellGranted bool
+	WatcherAvailable       bool
 	TasksGranted           bool
 	NetworkGranted         bool
 	CurrentCaps            caps.Set
@@ -184,6 +185,7 @@ type Config struct {
 	Skills                 []skill.Skill
 	Conditions             conditions.Conditions
 	BackgroundShellGranted bool
+	HasInotifywait         bool
 	TasksGranted           bool
 	NetworkGranted         bool
 	ToolGroups             caps.ToolGroups
@@ -275,6 +277,7 @@ func globalContext(file *File) string {
 
 func harnessContext(config Config) string {
 	currentCaps := config.CurrentCaps
+	isBackgroundShellGranted := config.BackgroundShellGranted && toolset.Offers(config.OfferedTools, shellToolName)
 	data := harnessContextTemplateData{
 		WorkspaceDir:           config.Workspace.GetDir(),
 		SessionName:            config.SessionName,
@@ -297,7 +300,8 @@ func harnessContext(config Config) string {
 		IsRepository:           pathutil.Exists(filepath.Join(config.Workspace.GetDir(), ".git")),
 		GitWritable:            currentCaps.Has(caps.Git),
 		ShellGranted:           currentCaps.Has(caps.Shell),
-		BackgroundShellGranted: config.BackgroundShellGranted && toolset.Offers(config.OfferedTools, shellToolName),
+		BackgroundShellGranted: isBackgroundShellGranted,
+		WatcherAvailable:       isBackgroundShellGranted && config.HasInotifywait,
 		TasksGranted:           config.TasksGranted,
 		NetworkGranted:         config.NetworkGranted,
 		CurrentCaps:            currentCaps,
@@ -814,21 +818,18 @@ func scratchRules(data harnessContextTemplateData) string {
 }
 
 func waitingForUserSection(data harnessContextTemplateData) string {
-	if !data.BackgroundShellGranted {
+	if !data.WatcherAvailable {
 		return ""
 	}
 
 	return strings.Join([]string{
 		"# Waiting for the User",
 		"",
-		"- Before ending your turn, start a watcher as a background bash call when completion can be detected through the filesystem.",
-		"- Note that this will not work with /grant, as it needs to be accessible already to be watchable.",
-		"- Use a continuous `inotifywait --monitor` if available; otherwise poll every 2s",
-		"- With inotifywait, omit `-q`, and end the turn only after the task output shows \"Watches established\"",
-		"- The watcher must exit once the condition holds; an `exit` inside `inotifywait … | while read` ends only the loop's subshell, so the task never ends",
-		"- Feed the loop by process substitution instead, break on success, then kill inotifywait:",
-		"    - `while read -r _; do done_yet && break; done < <(inotifywait --monitor …); kill \"$!\"`",
-		"- When the task ends, continue where you stopped",
+		"- When the user's next step changes files, run this with background=true and respawn=true before ending your turn:",
+		"    - `inotifywait --recursive -e close_write,moved_to,create,delete <dir>; sleep 2`",
+		"- <dir> is the workspace, or the directory the step changes; it cannot be a path awaiting /grant",
+		"- End the turn once it shows \"Watches established\"; each change then wakes you",
+		"- Stop it when you no longer need it",
 	}, "\n") + "\n\n"
 }
 
@@ -885,11 +886,10 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 		"    - Verify a standalone patch applies: "+applyCommand(data)+" --check <patch>",
 		"    - Verify a series by applying its remaining patches first-to-last in a fresh scratch copy",
 	)
-	if data.BackgroundShellGranted {
+	if data.WatcherAvailable {
 		lines = append(
 			lines,
-			"    - Applying a patch is filesystem-detectable, so start the mandatory watcher from \"Waiting for the User\" before the handoff",
-			"    - Make the watcher check at once, and exit only when the reverse-apply check above proves the whole handoff is applied",
+			"    - Start the watcher from \"Waiting for the User\" before the handoff; stop it once the reverse-apply check passes",
 		)
 	}
 	lines = append(lines, patchHandoffRule(data))

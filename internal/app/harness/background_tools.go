@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"slices"
 
 	"crdx.org/oh/internal/app/config"
@@ -32,6 +33,11 @@ type backgroundOptions struct {
 
 func canSuperviseTasks(isPrinting bool, keyboard *os.File) bool {
 	return !isPrinting && tty.Is(keyboard) && tty.Is(os.Stdout)
+}
+
+func hasInotifywait() bool {
+	_, err := exec.LookPath("inotifywait")
+	return err == nil
 }
 
 func isOffered(resumedSession *store.Session, requestedNames []string, name string) bool {

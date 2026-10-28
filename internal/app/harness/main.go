@@ -1268,6 +1268,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			Conditions:             currentConditions,
 			TasksGranted:           canSuperviseTasks(args.IsPrinting, keyboard) && taskStartsAvailable(settings, args.Tools),
 			BackgroundShellGranted: canSuperviseTasks(args.IsPrinting, keyboard),
+			HasInotifywait:         hasInotifywait(),
 			NetworkGranted:         args.Caps.Has(caps.Network),
 			ToolGroups:             activeToolGroups,
 			GroupStatus:            mode.Groups(),

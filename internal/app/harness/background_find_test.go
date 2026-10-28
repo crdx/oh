@@ -24,7 +24,7 @@ func TestFindRunsInTheForegroundOrBackground(t *testing.T) {
 	}{
 		{"foreground", `{"pattern":"*.go"}`, 0, 0, false},
 		{"explicit background", `{"pattern":"*.go","background":true}`, time.Second, 0, true},
-		{"automatic background", `{"pattern":"*.go"}`, 6 * time.Second, 5 * time.Second, true},
+		{"automatic background", `{"pattern":"*.go"}`, 2 * time.Second, time.Second, true},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {

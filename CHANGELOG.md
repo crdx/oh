@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Mandate strict rules for inotifywait watchers
+
 ## [0.27.3] — 2026-10-27
 
 - Reduce bg timeout to 1s
