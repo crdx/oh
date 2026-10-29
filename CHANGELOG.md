@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.27.4] — 2026-10-29
+
 - Only generate task name when it gets backgrounded
 - Clear stale config reload errors
 - Mandate strict rules for inotifywait watchers
