@@ -1,0 +1,986 @@
+=== narrow ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask  \e[0m\r
+\e[48;2;52;53;65m again                                  \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate\e[0m\r
+\e[38;2;207;173;0mlimit exceeded\e[0m\r
+\r
+Ready now.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m continue after the rate limit          \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+Resumed.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit            \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m continue after the early reset         \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+Available after the reset.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway       \e[0m\r
+\e[48;2;52;53;65m through the turn                       \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The cache went cold on that request.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m carry on                               \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+Carrying on.\r
+\e[?25h\e[?2026l
+=== one column ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150my\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mw\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mk\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m\r
+8\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mv\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mk\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[38;2;207;173;0m[\e[0m\r
+\e[38;2;207;173;0m#\e[0m\r
+\e[38;2;207;173;0m1\e[0m\r
+\e[38;2;207;173;0m]\e[0m\r
+\e[38;2;207;173;0mR\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mq\e[0m\r
+\e[38;2;207;173;0mu\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0ms\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0mf\e[0m\r
+\e[38;2;207;173;0ma\e[0m\r
+\e[38;2;207;173;0mi\e[0m\r
+\e[38;2;207;173;0ml\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\e[38;2;207;173;0m;\e[0m\r
+\e[38;2;207;173;0mr\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0mr\e[0m\r
+\e[38;2;207;173;0my\e[0m\r
+\e[38;2;207;173;0mi\e[0m\r
+\e[38;2;207;173;0mn\e[0m\r
+\e[38;2;207;173;0mg\e[0m\r
+\e[38;2;207;173;0m:\e[0m\r
+\e[38;2;207;173;0mR\e[0m\r
+\e[38;2;207;173;0ma\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0ml\e[0m\r
+\e[38;2;207;173;0mi\e[0m\r
+\e[38;2;207;173;0mm\e[0m\r
+\e[38;2;207;173;0mi\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mx\e[0m\r
+\e[38;2;207;173;0mc\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\r
+R\r
+e\r
+a\r
+d\r
+y\r
+n\r
+o\r
+w\r
+.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+R\r
+e\r
+s\r
+u\r
+m\r
+e\r
+d\r
+.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mC\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65md\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mx\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[38;2;204;102;102mT\e[0m\r
+\e[38;2;204;102;102mh\e[0m\r
+\e[38;2;204;102;102me\e[0m\r
+\e[38;2;204;102;102mu\e[0m\r
+\e[38;2;204;102;102ms\e[0m\r
+\e[38;2;204;102;102ma\e[0m\r
+\e[38;2;204;102;102mg\e[0m\r
+\e[38;2;204;102;102me\e[0m\r
+\e[38;2;204;102;102ml\e[0m\r
+\e[38;2;204;102;102mi\e[0m\r
+\e[38;2;204;102;102mm\e[0m\r
+\e[38;2;204;102;102mi\e[0m\r
+\e[38;2;204;102;102mt\e[0m\r
+\e[38;2;204;102;102mh\e[0m\r
+\e[38;2;204;102;102ma\e[0m\r
+\e[38;2;204;102;102ms\e[0m\r
+\e[38;2;204;102;102mb\e[0m\r
+\e[38;2;204;102;102me\e[0m\r
+\e[38;2;204;102;102me\e[0m\r
+\e[38;2;204;102;102mn\e[0m\r
+\e[38;2;204;102;102mr\e[0m\r
+\e[38;2;204;102;102me\e[0m\r
+\e[38;2;204;102;102ma\e[0m\r
+\e[38;2;204;102;102mc\e[0m\r
+\e[38;2;204;102;102mh\e[0m\r
+\e[38;2;204;102;102me\e[0m\r
+\e[38;2;204;102;102md\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+A\r
+v\r
+a\r
+i\r
+l\r
+a\r
+b\r
+l\r
+e\r
+a\r
+f\r
+t\r
+e\r
+r\r
+t\r
+h\r
+e\r
+r\r
+e\r
+s\r
+e\r
+t\r
+.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mb\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65md\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mp\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mp\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mw\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\r
+T\r
+h\r
+e\r
+c\r
+a\r
+c\r
+h\r
+e\r
+w\r
+e\r
+n\r
+t\r
+c\r
+o\r
+l\r
+d\r
+o\r
+n\r
+t\r
+h\r
+a\r
+t\r
+r\r
+e\r
+q\r
+u\r
+e\r
+s\r
+t\r
+.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+C\r
+a\r
+r\r
+r\r
+y\r
+i\r
+n\r
+g\r
+o\r
+n\r
+.\r
+\e[?25h\e[?2026l
+=== plain ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m receive a rate limit that says to ask again\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m
+
+Ready now.
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m continue after the rate limit\e[0m
+\e[48;2;52;53;65m\e[0m
+Resumed.
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m reach the Codex usage limit\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m continue after the early reset\e[0m
+\e[48;2;52;53;65m\e[0m
+Available after the reset.
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m
+
+The cache went cold on that request.
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m carry on\e[0m
+\e[48;2;52;53;65m\e[0m
+Carrying on.
+
+=== printed ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask again                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m\r
+\r
+Ready now.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the rate limit                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Resumed.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the early reset                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Available after the reset.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn                                                  \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The cache went cold on that request.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Carrying on.\r
+
+=== streamed asap ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask again                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m\e[?2026h\e[?25l\e[?7l\r
+\r\e[K\r
+Read\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReady no\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReady now.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the rate limit                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Resu\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rResumed.\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the early reset                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Avai\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailabl\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable af\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after the\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after the rese\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after the reset.\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn                                                  \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cach\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache we\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went c\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on t\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on that\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on that requ\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on that request.\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Carr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed line ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask again                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m\e[?2026h\e[?25l\e[?7l\r
+\r\e[K\r
+Ready now.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the rate limit                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Resumed.\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the early reset                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Available after the reset.\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn                                                  \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+The cache went cold on that request.\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Carrying on.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed paced ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask again                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m\e[?2026h\e[?25l\e[?7l\r
+\r\e[K\r
+Read\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReady no\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReady now.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the rate limit                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Resu\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rResumed.\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the early reset                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Avai\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailabl\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable af\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after the\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after the rese\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAvailable after the reset.\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn                                                  \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cach\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache we\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went c\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on t\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on that\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on that requ\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe cache went cold on that request.\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Carr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== tiny ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m000000000000\r
+000000000000\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mwith \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mskills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150msnippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m receive a  \e[0m\r
+\e[48;2;52;53;65m rate limit \e[0m\r
+\e[48;2;52;53;65m that says  \e[0m\r
+\e[48;2;52;53;65m to ask     \e[0m\r
+\e[48;2;52;53;65m again      \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request\e[0m\r
+\e[38;2;207;173;0mfailed;\e[0m\r
+\e[38;2;207;173;0mretrying:\e[0m\r
+\e[38;2;207;173;0mRate limit\e[0m\r
+\e[38;2;207;173;0mexceeded\e[0m\r
+\r
+Ready now.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m continue   \e[0m\r
+\e[48;2;52;53;65m after the  \e[0m\r
+\e[48;2;52;53;65m rate limit \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+Resumed.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m reach the  \e[0m\r
+\e[48;2;52;53;65m Codex      \e[0m\r
+\e[48;2;52;53;65m usage      \e[0m\r
+\e[48;2;52;53;65m limit      \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage\e[0m\r
+\e[38;2;204;102;102mlimit has\e[0m\r
+\e[38;2;204;102;102mbeen reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m continue   \e[0m\r
+\e[48;2;52;53;65m after the  \e[0m\r
+\e[48;2;52;53;65m early      \e[0m\r
+\e[48;2;52;53;65m reset      \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+Available\r
+after the\r
+reset.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m rebuild    \e[0m\r
+\e[48;2;52;53;65m the prompt \e[0m\r
+\e[48;2;52;53;65m cache      \e[0m\r
+\e[48;2;52;53;65m halfway    \e[0m\r
+\e[48;2;52;53;65m through    \e[0m\r
+\e[48;2;52;53;65m the turn   \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The cache\r
+went cold on\r
+that\r
+request.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m carry on   \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+Carrying on.\r
+\e[?25h\e[?2026l
+=== unsized ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask again\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m\r
+\r
+Ready now.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m continue after the rate limit\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Resumed.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m continue after the early reset\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Available after the reset.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The cache went cold on that request.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m carry on\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Carrying on.\r
+\e[?25h\e[?2026l
+=== wide ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m receive a rate limit that says to ask again                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying: Rate limit exceeded\e[0m\r
+\r
+Ready now.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the rate limit                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Resumed.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m reach the Codex usage limit                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;204;102;102mThe usage limit has been reached\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the early reset                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Available after the reset.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m rebuild the prompt cache halfway through the turn                                                  \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The cache went cold on that request.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Carrying on.\r
+\e[?25h\e[?2026l

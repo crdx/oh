@@ -1,0 +1,828 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ use every original tool
+
+
+I must use the original contracts.
+stable stable 1L
+changed changed 1L
+revision revision 1L
+schema schema 1L
+compatible compatible 1L
+missing missing 1L
+
+Every original tool ran.
+
+
+ 🤖 The missing tool is no longer
+    installed and is disabled for this
+    conversation.
+ 🤖 The revision tool changed from
+    version 1 to version 2 and is
+    disabled for the remainder of this
+    conversation.
+
+
+
+ try every tool again
+
+
+stable stable 1L
+changed changed 1L
+revision ✗ the revision tool changed fr…
+schema schema 1L
+compatible compatible 1L
+missing ✗ the missing tool is no longer…
+added {} ✗ there is no tool called "add…
+
+Tools at compatible versions ran with
+their frozen definitions; the changed
+version was refused.
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+u
+
+s
+
+e
+
+e
+
+v
+
+e
+
+r
+
+y
+
+o
+
+r
+
+i
+
+g
+
+i
+
+n
+
+a
+
+l
+
+t
+
+o
+
+o
+
+l
+
+
+I
+m
+u
+s
+t
+u
+s
+e
+t
+h
+e
+o
+r
+i
+g
+i
+n
+a
+l
+c
+o
+n
+t
+r
+a
+c
+t
+s
+.
+…
+…
+…
+…
+…
+…
+
+E
+v
+e
+r
+y
+o
+r
+i
+g
+i
+n
+a
+l
+t
+o
+o
+l
+r
+a
+n
+.
+
+
+
+🤖
+
+T
+
+h
+
+e
+
+m
+
+i
+
+s
+
+s
+
+i
+
+n
+
+g
+
+t
+
+o
+
+o
+
+l
+
+i
+
+s
+
+n
+
+o
+
+l
+
+o
+
+n
+
+g
+
+e
+
+r
+
+i
+
+n
+
+s
+
+t
+
+a
+
+l
+
+l
+
+e
+
+d
+
+a
+
+n
+
+d
+
+i
+
+s
+
+d
+
+i
+
+s
+
+a
+
+b
+
+l
+
+e
+
+d
+
+f
+
+o
+
+r
+
+t
+
+h
+
+i
+
+s
+
+c
+
+o
+
+n
+
+v
+
+e
+
+r
+
+s
+
+a
+
+t
+
+i
+
+o
+
+n
+
+.
+
+🤖
+
+T
+
+h
+
+e
+
+r
+
+e
+
+v
+
+i
+
+s
+
+i
+
+o
+
+n
+
+t
+
+o
+
+o
+
+l
+
+c
+
+h
+
+a
+
+n
+
+g
+
+e
+
+d
+
+f
+
+r
+
+o
+
+m
+
+v
+
+e
+
+r
+
+s
+
+i
+
+o
+
+n
+
+1
+
+t
+
+o
+
+v
+
+e
+
+r
+
+s
+
+i
+
+o
+
+n
+
+2
+
+a
+
+n
+
+d
+
+i
+
+s
+
+d
+
+i
+
+s
+
+a
+
+b
+
+l
+
+e
+
+d
+
+f
+
+o
+
+r
+
+t
+
+h
+
+e
+
+r
+
+e
+
+m
+
+a
+
+i
+
+n
+
+d
+
+e
+
+r
+
+o
+
+f
+
+t
+
+h
+
+i
+
+s
+
+c
+
+o
+
+n
+
+v
+
+e
+
+r
+
+s
+
+a
+
+t
+
+i
+
+o
+
+n
+
+.
+
+
+
+
+t
+
+r
+
+y
+
+e
+
+v
+
+e
+
+r
+
+y
+
+t
+
+o
+
+o
+
+l
+
+a
+
+g
+
+a
+
+i
+
+n
+
+
+…
+…
+✗
+…
+…
+✗
+✗
+
+T
+o
+o
+l
+s
+a
+t
+c
+o
+m
+p
+a
+t
+i
+b
+l
+e
+v
+e
+r
+s
+i
+o
+n
+s
+r
+a
+n
+w
+i
+t
+h
+t
+h
+e
+i
+r
+f
+r
+o
+z
+e
+n
+d
+e
+f
+i
+n
+i
+t
+i
+o
+n
+s
+;
+t
+h
+e
+c
+h
+a
+n
+g
+e
+d
+v
+e
+r
+s
+i
+o
+n
+w
+a
+s
+r
+e
+f
+u
+s
+e
+d
+.
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ use every original tool
+
+
+I must use the original contracts.
+stable stable 1L
+changed changed 1L
+revision revision 1L
+schema schema 1L
+compatible compatible 1L
+missing missing 1L
+
+Every original tool ran.
+
+
+ 🤖 The missing tool is no longer installed and is disabled for this conversation.
+ 🤖 The revision tool changed from version 1 to version 2 and is disabled for the remainder of this
+    conversation.
+
+
+
+ try every tool again
+
+
+stable stable 1L
+changed changed 1L
+revision ✗ the revision tool changed from version 1 to version 2 and is disabled for the remainder …
+schema schema 1L
+compatible compatible 1L
+missing ✗ the missing tool is no longer installed and is disabled for this conversation
+added {} ✗ there is no tool called "added"
+
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ use every
+ original
+ tool
+
+
+I must use
+the original
+contracts.
+stable s… 1L
+changed … 1L
+revision 1L
+schema s… 1L
+compatib… 1L
+missing … 1L
+
+Every
+original
+tool ran.
+
+
+ 🤖 The
+    missing
+    tool is
+    no
+    longer
+    install
+    ed and
+    is
+    disable
+    d for
+    this
+    convers
+    ation.
+ 🤖 The
+    revisio
+    n tool
+    changed
+    from
+    version
+    1 to
+    version
+    2 and
+    is
+    disable
+    d for
+    the
+    remaind
+    er of
+    this
+    convers
+    ation.
+
+
+
+ try every
+ tool again
+
+
+stable s… 1L
+changed … 1L
+rev… ✗ the …
+schema s… 1L
+compatib… 1L
+mis… ✗ the …
+add… ✗ ther…
+
+Tools at
+compatible
+versions ran
+with their
+frozen
+definitions;
+the changed
+version was
+refused.
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ use every original tool
+
+
+I must use the original contracts.
+stable stable 1L
+changed changed 1L
+revision revision 1L
+schema schema 1L
+compatible compatible 1L
+missing missing 1L
+
+Every original tool ran.
+
+
+ 🤖 The missing tool is no longer installed and is disabled for this conversation.
+ 🤖 The revision tool changed from version 1 to version 2 and is disabled for the remainder of this
+    conversation.
+
+
+
+ try every tool again
+
+
+stable stable 1L
+changed changed 1L
+revision ✗ the revision tool changed from version 1 to version 2 and is disabled for the remainder …
+schema schema 1L
+compatible compatible 1L
+missing ✗ the missing tool is no longer installed and is disabled for this conversation
+added {} ✗ there is no tool called "added"
+
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.

@@ -1,7 +1,8 @@
 
- start the build in the background
+ run a quick foreground check, then start the build in the background
 
 
+$ bash 1L
 $ bash backgrounded (named "bash-1"); end your turn to wait
 
 

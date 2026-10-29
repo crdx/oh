@@ -1,0 +1,11 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"hello"}}
+{"event":{"kind":"model_reasoning","text":"Somebody is trying oh out, so I should say what I am."}}
+{"event":{"kind":"model_message","text":"Hello. I'm a simulation. I match what you say against a few basic keywords, and use tools if requested. Nothing here is saved.\n\nI know how to do 3 things:\n\n- **read** a path, like `read main.go`\n- **list** what files, like `what files are here`\n- **search** for stuff, like `grep for wizard`\n\nAnything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966."}}
+{"event":{"kind":"user_message","text":"what files are here"}}
+{"event":{"kind":"model_reasoning","text":"They wanna know what's here. This is a job for ls."}}
+{"event":{"kind":"model_message","text":"Here's what's there."}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"ls","arguments":"{\"path\":\".\"}","emphasis":{"kind":"focus","value":""},"read_only":true}}
+{"event":{"kind":"tool_call_result","status":"success","text":"main.go","id":"call_1","name":"ls","took":0,"stats":{"kind":"output","lines":1,"bytes":7}}}
+{"event":{"kind":"model_reasoning","text":"The tool has answered."}}
+{"event":{"kind":"model_message","text":"That's one entry. Name one and I'll read it."}}

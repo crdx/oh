@@ -1,0 +1,46 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+hello
+
+## Assistant · +3s
+
+Hello. I'm a simulation. I match what you say against a few basic keywords, and use tools if requested. Nothing here is saved.
+
+I know how to do 3 things:
+
+- **read** a path, like `read main.go`
+- **list** what files, like `what files are here`
+- **search** for stuff, like `grep for wizard`
+
+Anything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966.
+
+## User · +4s
+
+what files are here
+
+## Assistant · +6s
+
+Here's what's there.
+
+## Tool calls · +7s
+
+```
+ls [ok, 1 line, 7B, call_1]
+```
+
+## Assistant · +10s
+
+That's one entry. Name one and I'll read it.

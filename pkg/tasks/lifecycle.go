@@ -374,6 +374,41 @@ func (self *Manager) queueSize(replacement *entry) int {
 	return count
 }
 
+func (self *Manager) allocateForegroundID() string {
+	for {
+		self.nextForegroundID++
+		id := fmt.Sprintf("foreground-call-%d", self.nextForegroundID)
+		if self.entries[id] == nil {
+			return id
+		}
+	}
+}
+
+func (self *Manager) background(current *entry) Conclusion {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	return self.backgroundLocked(current)
+}
+
+func (self *Manager) backgroundLocked(current *entry) Conclusion {
+	if current.isUnnamed {
+		previousID := current.snapshot.ID
+		current.snapshot.ID = self.allocateID(current.snapshot.ToolName)
+		current.isUnnamed = false
+		delete(self.entries, previousID)
+		self.entries[current.snapshot.ID] = current
+		for index, id := range self.order {
+			if id == previousID {
+				self.order[index] = current.snapshot.ID
+				break
+			}
+		}
+	}
+	current.isBackground = true
+	self.signalChange()
+	return Conclusion{Snapshot: cloneSnapshot(current.snapshot)}
+}
+
 func (self *Manager) allocateID(toolName string) string {
 	name := generatedName(toolName)
 	if self.nextIDs == nil {

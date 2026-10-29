@@ -1,0 +1,18 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"receive a rate limit that says to ask again"}}
+{"event":{"kind":"request_retry","failure":{"kind":"http_status","message":"rate limit exceeded","http_status":429,"code":"rate_limit_error","media_type":"application/json"},"attempt":1}}
+{"event":{"kind":"model_message","text":"Ready now."}}
+{"event":{"kind":"user_message","text":"continue after the rate limit"}}
+{"event":{"kind":"model_message","text":"Resumed."}}
+{"event":{"kind":"user_message","text":"reach the Codex usage limit"}}
+{"event":{"kind":"turn_failure","failure":{"kind":"http_status","message":"The usage limit has been reached","http_status":429,"code":"usage_limit_reached","media_type":"application/json"}}}
+{"event":{"kind":"user_message","text":"continue after the early reset"}}
+{"event":{"kind":"model_message","text":"Available after the reset."}}
+{"event":{"kind":"user_message","text":"rebuild the prompt cache halfway through the turn"}}
+{"event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}","usage":{"input_tokens":49020,"cache":{"read_tokens":48000,"write_tokens":900}}}}
+{"event":{"kind":"state_change","id":"toolu_1","state":1}}
+{"event":{"kind":"tool_call_result","text":"done","id":"toolu_1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":4}}}
+{"event":{"kind":"model_message","text":"The cache went cold on that request.","usage":{"input_tokens":49140,"cache":{"read_tokens":21000,"write_tokens":28000}}}}
+{"event":{"kind":"cache_rebuild","name":"rebuilt","usage":{"cache":{"read_tokens":21000,"write_tokens":28000}}}}
+{"event":{"kind":"user_message","text":"carry on"}}
+{"event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":49560,"cache":{"read_tokens":49000,"write_tokens":400}}}}

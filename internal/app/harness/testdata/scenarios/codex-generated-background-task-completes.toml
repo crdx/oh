@@ -4,14 +4,23 @@ effort = "medium"
 
 [[tool]]
 name = "bash"
-outputs = ["build finished"]
+outputs = ["foreground check passed", "build finished"]
 
 [[tool]]
 name = "task"
 
 [first]
-prompt = "start the build in the background"
+prompt = "run a quick foreground check, then start the build in the background"
 settle-tasks-after-tool-result = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-0","type":"function_call","call_id":"call-0","name":"bash","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-0","delta":"{}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-0","arguments":"{}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-0","type":"function_call","call_id":"call-0","name":"bash","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
 
 [[first.response]]
 event = [

@@ -300,12 +300,12 @@ func TestAQueuedForegroundCallDetachesAfterTheForegroundLimit(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		_, isBackground, err := manager.WaitOrDetach(t.Context(), snapshot.ID)
+		conclusion, isBackground, err := manager.WaitOrDetach(t.Context(), snapshot.ID)
 		if err != nil || !isBackground {
 			t.Fatalf("a queued foreground call returned background=%t, %v", isBackground, err)
 		}
 		listed := slices.ContainsFunc(manager.List(), func(listed tasks.Snapshot) bool {
-			return listed.ID == snapshot.ID && listed.State == tasks.Queued
+			return listed.ID == conclusion.Snapshot.ID && listed.State == tasks.Queued
 		})
 		if !listed {
 			t.Errorf("the detached call is not a queued background task: %+v", manager.List())

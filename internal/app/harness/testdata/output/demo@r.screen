@@ -1,0 +1,770 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ hello
+
+
+Somebody is trying oh out, so I should
+say what I am.
+
+Hello. I'm a simulation. I match what
+you say against a few basic keywords,
+and use tools if requested. Nothing here
+is saved.
+
+I know how to do 3 things:
+
+• read a path, like read main.go
+• list what files, like what files are
+  here
+• search for stuff, like grep for wizard
+
+Anything else and you'll be answered by
+the DOCTOR script Weizenbaum published
+in 1966.
+
+
+ what files are here
+
+
+They wanna know what's here. This is a
+job for ls.
+
+Here's what's there.
+
+ls 1L
+The tool has answered.
+
+That's one entry. Name one and I'll read
+it.
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+h
+
+e
+
+l
+
+l
+
+o
+
+
+S
+o
+m
+e
+b
+o
+d
+y
+i
+s
+t
+r
+y
+i
+n
+g
+o
+h
+o
+u
+t
+,
+s
+o
+I
+s
+h
+o
+u
+l
+d
+s
+a
+y
+w
+h
+a
+t
+I
+a
+m
+.
+
+H
+e
+l
+l
+o
+.
+I
+'
+m
+a
+s
+i
+m
+u
+l
+a
+t
+i
+o
+n
+.
+I
+m
+a
+t
+c
+h
+w
+h
+a
+t
+y
+o
+u
+s
+a
+y
+a
+g
+a
+i
+n
+s
+t
+a
+f
+e
+w
+b
+a
+s
+i
+c
+k
+e
+y
+w
+o
+r
+d
+s
+,
+a
+n
+d
+u
+s
+e
+t
+o
+o
+l
+s
+i
+f
+r
+e
+q
+u
+e
+s
+t
+e
+d
+.
+N
+o
+t
+h
+i
+n
+g
+h
+e
+r
+e
+i
+s
+s
+a
+v
+e
+d
+.
+
+I
+k
+n
+o
+w
+h
+o
+w
+t
+o
+d
+o
+3
+t
+h
+i
+n
+g
+s
+:
+
+•
+r
+e
+a
+d
+a
+p
+a
+t
+h
+,
+l
+i
+k
+e
+r
+e
+a
+d
+m
+a
+i
+n
+.
+g
+o
+•
+l
+i
+s
+t
+w
+h
+a
+t
+f
+i
+l
+e
+s
+,
+l
+i
+k
+e
+w
+h
+a
+t
+f
+i
+l
+e
+s
+a
+r
+e
+h
+e
+r
+e
+•
+s
+e
+a
+r
+c
+h
+f
+o
+r
+s
+t
+u
+f
+f
+,
+l
+i
+k
+e
+g
+r
+e
+p
+f
+o
+r
+w
+i
+z
+a
+r
+d
+
+A
+n
+y
+t
+h
+i
+n
+g
+e
+l
+s
+e
+a
+n
+d
+y
+o
+u
+'
+l
+l
+b
+e
+a
+n
+s
+w
+e
+r
+e
+d
+b
+y
+t
+h
+e
+D
+O
+C
+T
+O
+R
+s
+c
+r
+i
+p
+t
+W
+e
+i
+z
+e
+n
+b
+a
+u
+m
+p
+u
+b
+l
+i
+s
+h
+e
+d
+i
+n
+1
+9
+6
+6
+.
+
+
+
+w
+
+h
+
+a
+
+t
+
+f
+
+i
+
+l
+
+e
+
+s
+
+a
+
+r
+
+e
+
+h
+
+e
+
+r
+
+e
+
+
+T
+h
+e
+y
+w
+a
+n
+n
+a
+k
+n
+o
+w
+w
+h
+a
+t
+'
+s
+h
+e
+r
+e
+.
+T
+h
+i
+s
+i
+s
+a
+j
+o
+b
+f
+o
+r
+l
+s
+.
+
+H
+e
+r
+e
+'
+s
+w
+h
+a
+t
+'
+s
+t
+h
+e
+r
+e
+.
+
+…
+T
+h
+e
+t
+o
+o
+l
+h
+a
+s
+a
+n
+s
+w
+e
+r
+e
+d
+.
+
+T
+h
+a
+t
+'
+s
+o
+n
+e
+e
+n
+t
+r
+y
+.
+N
+a
+m
+e
+o
+n
+e
+a
+n
+d
+I
+'
+l
+l
+r
+e
+a
+d
+i
+t
+.
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ hello
+
+
+Somebody is trying oh out, so I should say what I am.
+
+Hello. I'm a simulation. I match what you say against a few basic keywords, and use tools if
+requested. Nothing here is saved.
+
+I know how to do 3 things:
+
+• read a path, like read main.go
+• list what files, like what files are here
+• search for stuff, like grep for wizard
+
+Anything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966.
+
+
+ what files are here
+
+
+They wanna know what's here. This is a job for ls.
+
+Here's what's there.
+
+ls 1L
+The tool has answered.
+
+That's one entry. Name one and I'll read it.
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ hello
+
+
+Somebody is
+trying oh
+out, so I
+should say
+what I am.
+
+Hello. I'm a
+simulation.
+I match what
+you say
+against a
+few basic
+keywords,
+and use
+tools if
+requested.
+Nothing here
+is saved.
+
+I know how
+to do 3
+things:
+
+• read a
+  path, like
+  read
+  main.go
+• list what
+  files,
+  like what
+  files are
+  here
+• search for
+  stuff,
+  like grep
+  for wizard
+
+Anything
+else and
+you'll be
+answered by
+the DOCTOR
+script
+Weizenbaum
+published in
+1966.
+
+
+ what files
+ are here
+
+
+They wanna
+know what's
+here. This
+is a job for
+ls.
+
+Here's
+what's
+there.
+
+ls 1L
+The tool has
+answered.
+
+That's one
+entry. Name
+one and I'll
+read it.
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ hello
+
+
+Somebody is trying oh out, so I should say what I am.
+
+Hello. I'm a simulation. I match what you say against a few basic keywords, and use tools if
+requested. Nothing here is saved.
+
+I know how to do 3 things:
+
+• read a path, like read main.go
+• list what files, like what files are here
+• search for stuff, like grep for wizard
+
+Anything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966.
+
+
+ what files are here
+
+
+They wanna know what's here. This is a job for ls.
+
+Here's what's there.
+
+ls 1L
+The tool has answered.
+
+That's one entry. Name one and I'll read it.

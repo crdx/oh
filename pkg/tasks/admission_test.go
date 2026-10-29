@@ -3,6 +3,7 @@ package tasks_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 	"testing"
 	"testing/synctest"
@@ -131,4 +132,55 @@ func TestClosingTheManagerReleasesWaitersAfterLimitChanges(t *testing.T) {
 			t.Errorf("closed manager returned %v", err)
 		}
 	})
+}
+
+func TestRejectedBackgroundCallsDoNotConsumeGeneratedNames(t *testing.T) {
+	for _, reason := range []string{"full queue", "policy refusal", "policy cancellation"} {
+		t.Run(reason, func(t *testing.T) {
+			synctest.Test(t, func(t *testing.T) {
+				manager := tasks.NewWithMaximumRunning(t.Context(), 1)
+				defer manager.Close()
+				if reason == "full queue" {
+					if _, err := manager.Start(t.Context(), "active", "bash", true, false, holdUntilStopped, nil); err != nil {
+						t.Fatal(err)
+					}
+					synctest.Wait()
+					for index := range tasks.MaxQueued {
+						if _, err := manager.Start(t.Context(), fmt.Sprintf("queued-%d", index), "bash", true, false, holdUntilStopped, nil); err != nil {
+							t.Fatal(err)
+						}
+					}
+				}
+				ctx, cancel := context.WithCancel(t.Context())
+				defer cancel()
+				refusal := errors.New("access refused")
+				policy := tasks.PolicySource(func() (any, error) {
+					if reason == "full queue" {
+						t.Error("a full queue evaluated the policy")
+					}
+					if reason == "policy cancellation" {
+						cancel()
+						return "read-only", nil
+					}
+					return nil, refusal
+				})
+				_, err := manager.Start(ctx, "", "bash", true, false, holdUntilStopped, policy)
+				if err == nil {
+					t.Fatal("the background start was not rejected")
+				}
+				if reason == "policy refusal" && !errors.Is(err, refusal) {
+					t.Errorf("policy refusal returned %v", err)
+				}
+				if reason == "policy cancellation" && !errors.Is(err, context.Canceled) {
+					t.Errorf("policy cancellation returned %v", err)
+				}
+				manager.StopWhere(func(string, any) bool { return true }, "clear the queue")
+				synctest.Wait()
+				snapshot, err := manager.Start(t.Context(), "", "bash", true, false, holdUntilStopped, nil)
+				if err != nil || snapshot.ID != "bash-1" {
+					t.Errorf("the first admitted generated task is %+v, %v; want bash-1", snapshot, err)
+				}
+			})
+		})
+	}
 }

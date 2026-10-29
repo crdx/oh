@@ -1,0 +1,28 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+finish the implementation
+
+## Interrupted · +3s
+
+The previous oh process ended unexpectedly.
+
+## User · +4s
+
+carry on
+
+## Assistant · +5s
+
+Carrying on from the transcript.

@@ -114,14 +114,14 @@ func TestAForegroundCallWaitingForAToolSlotDetachesAfterTheForegroundLimit(t *te
 			t.Fatal(err)
 		}
 		started := time.Now()
-		_, isBackground, err := manager.WaitOrDetach(t.Context(), snapshot.ID)
+		conclusion, isBackground, err := manager.WaitOrDetach(t.Context(), snapshot.ID)
 		if err != nil || !isBackground {
 			t.Fatalf("a foreground call waiting for a slot returned background=%t, %v", isBackground, err)
 		}
 		if waited := time.Since(started); waited != tasks.ForegroundLimit {
 			t.Errorf("the call detached after %s, want %s", waited, tasks.ForegroundLimit)
 		}
-		if state := stateOf(t, manager, snapshot.ID); state != tasks.Queued {
+		if state := stateOf(t, manager, conclusion.Snapshot.ID); state != tasks.Queued {
 			t.Errorf("the detached call is %s, want queued", state)
 		}
 	})

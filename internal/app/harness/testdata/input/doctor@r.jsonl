@@ -1,0 +1,10 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"I feel uneasy about my code"}}
+{"event":{"kind":"model_reasoning","text":"No idea what they mean. I'll pass them on to the doctor."}}
+{"event":{"kind":"model_message","text":"Your code."}}
+{"event":{"kind":"user_message","text":"my tests keep failing"}}
+{"event":{"kind":"model_reasoning","text":"No idea what they mean. I'll pass them on to the doctor."}}
+{"event":{"kind":"model_message","text":"Your tests keep failing."}}
+{"event":{"kind":"user_message","text":"you are a computer"}}
+{"event":{"kind":"model_reasoning","text":"No idea what they mean. I'll pass them on to the doctor."}}
+{"event":{"kind":"model_message","text":"Do computers worry you?"}}

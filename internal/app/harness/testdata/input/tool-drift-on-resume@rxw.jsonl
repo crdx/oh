@@ -1,0 +1,43 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"use every original tool"}}
+{"event":{"kind":"model_reasoning","text":"I must use the original contracts."}}
+{"event":{"render":"stable","kind":"tool_call_request","id":"call-1","name":"stable","arguments":"{}"}}
+{"event":{"render":"changed","kind":"tool_call_request","id":"call-2","name":"changed","arguments":"{}"}}
+{"event":{"render":"revision","kind":"tool_call_request","id":"call-3","name":"revision","arguments":"{}"}}
+{"event":{"render":"schema","kind":"tool_call_request","id":"call-4","name":"schema","arguments":"{}"}}
+{"event":{"render":"compatible","kind":"tool_call_request","id":"call-5","name":"compatible","arguments":"{}"}}
+{"event":{"render":"missing","kind":"tool_call_request","id":"call-6","name":"missing","arguments":"{}"}}
+{"event":{"kind":"state_change","id":"call-1","state":1}}
+{"event":{"kind":"tool_call_result","text":"stable output","id":"call-1","name":"stable","status":"success","stats":{"kind":"output","lines":1,"bytes":13}}}
+{"event":{"kind":"state_change","id":"call-2","state":1}}
+{"event":{"kind":"tool_call_result","text":"original changed output","id":"call-2","name":"changed","status":"success","stats":{"kind":"output","lines":1,"bytes":23}}}
+{"event":{"kind":"state_change","id":"call-3","state":1}}
+{"event":{"kind":"tool_call_result","text":"original revision output","id":"call-3","name":"revision","status":"success","stats":{"kind":"output","lines":1,"bytes":24}}}
+{"event":{"kind":"state_change","id":"call-4","state":1}}
+{"event":{"kind":"tool_call_result","text":"original schema output","id":"call-4","name":"schema","status":"success","stats":{"kind":"output","lines":1,"bytes":22}}}
+{"event":{"kind":"state_change","id":"call-5","state":1}}
+{"event":{"kind":"tool_call_result","text":"compatible output","id":"call-5","name":"compatible","status":"success","stats":{"kind":"output","lines":1,"bytes":17}}}
+{"event":{"kind":"state_change","id":"call-6","state":1}}
+{"event":{"kind":"tool_call_result","text":"original missing output","id":"call-6","name":"missing","status":"success","stats":{"kind":"output","lines":1,"bytes":23}}}
+{"event":{"kind":"model_message","text":"Every original tool ran."}}
+{"event":{"kind":"tool_availability_change","state":{"known":{"changed":"available","compatible":"available","missing":"available","revision":"available","schema":"available","stable":"available"},"current":{"changed":"available","compatible":"available","missing":"missing","revision":"changed","schema":"available","stable":"available"},"version_changes":{"revision":{"from":"1","to":"2"}}}}}
+{"event":{"kind":"user_message","text":"try every tool again"}}
+{"event":{"render":"stable","kind":"tool_call_request","id":"call-7","name":"stable","arguments":"{}"}}
+{"event":{"render":"changed","kind":"tool_call_request","id":"call-8","name":"changed","arguments":"{}"}}
+{"event":{"read_only":true,"kind":"tool_call_request","id":"call-9","name":"revision","arguments":"{}"}}
+{"event":{"render":"schema","kind":"tool_call_request","id":"call-10","name":"schema","arguments":"{}"}}
+{"event":{"render":"compatible","kind":"tool_call_request","id":"call-11","name":"compatible","arguments":"{}"}}
+{"event":{"read_only":true,"kind":"tool_call_request","id":"call-12","name":"missing","arguments":"{}"}}
+{"event":{"render":"{}","kind":"tool_call_request","id":"call-13","name":"added","arguments":"{}"}}
+{"event":{"kind":"state_change","id":"call-7","state":1}}
+{"event":{"kind":"tool_call_result","text":"stable output","id":"call-7","name":"stable","status":"success","stats":{"kind":"output","lines":1,"bytes":13}}}
+{"event":{"kind":"state_change","id":"call-8","state":1}}
+{"event":{"kind":"tool_call_result","text":"original changed output","id":"call-8","name":"changed","status":"success","stats":{"kind":"output","lines":1,"bytes":23}}}
+{"event":{"kind":"tool_call_result","text":"the revision tool changed from version 1 to version 2 and is disabled for the remainder of this conversation","id":"call-9","name":"revision","status":"error","stats":{"kind":"output","lines":1,"bytes":108}}}
+{"event":{"kind":"state_change","id":"call-10","state":1}}
+{"event":{"kind":"tool_call_result","text":"original schema output","id":"call-10","name":"schema","status":"success","stats":{"kind":"output","lines":1,"bytes":22}}}
+{"event":{"kind":"state_change","id":"call-11","state":1}}
+{"event":{"kind":"tool_call_result","text":"compatible output","id":"call-11","name":"compatible","status":"success","stats":{"kind":"output","lines":1,"bytes":17}}}
+{"event":{"kind":"tool_call_result","text":"the missing tool is no longer installed and is disabled for this conversation","id":"call-12","name":"missing","status":"error","stats":{"kind":"output","lines":1,"bytes":77}}}
+{"event":{"kind":"tool_call_result","text":"there is no tool called \"added\"","id":"call-13","name":"added","status":"error"}}
+{"event":{"kind":"model_message","text":"Tools at compatible versions ran with their frozen definitions; the changed version was refused."}}

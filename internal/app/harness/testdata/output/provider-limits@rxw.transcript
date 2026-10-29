@@ -1,0 +1,80 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+receive a rate limit that says to ask again
+
+## Retrying · attempt 1 · waited 0s · +2s
+
+```
+rate limit exceeded
+```
+
+## Assistant · +3s
+
+Ready now.
+
+## User · +4s
+
+continue after the rate limit
+
+## Assistant · +5s
+
+Resumed.
+
+## User · +6s
+
+reach the Codex usage limit
+
+## Failure · +7s
+
+```
+The usage limit has been reached
+```
+
+## User · +8s
+
+continue after the early reset
+
+## Assistant · +9s
+
+Available after the reset.
+
+## User · +10s
+
+rebuild the prompt cache halfway through the turn
+
+## Tool calls · +11s
+
+```
+work: work [ok, 1 line, 4B, toolu_1]
+```
+
+## Assistant · +14s
+
+The cache went cold on that request.
+
+## Cache rebuild · +15s
+
+```
+Cache rebuilt: 28Kt sent <1m later.
+```
+
+## User · +16s
+
+carry on
+
+## Assistant · +17s
+
+Carrying on.

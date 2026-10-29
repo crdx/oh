@@ -1,0 +1,656 @@
+=== narrow ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code            \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them\e[0m\r
+\e[3m\e[38;2;150;152;150mon to the doctor.\e[0m\e[0m\r
+\r
+Your code.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m my tests keep failing                  \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them\e[0m\r
+\e[3m\e[38;2;150;152;150mon to the doctor.\e[0m\e[0m\r
+\r
+Your tests keep failing.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m you are a computer                     \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them\e[0m\r
+\e[3m\e[38;2;150;152;150mon to the doctor.\e[0m\e[0m\r
+\r
+Do computers worry you?\r
+\e[?25h\e[?2026l
+=== one column ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150my\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mw\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mk\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m\r
+8\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mI\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mb\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65md\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mN\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\r
+\e[3m\e[38;2;150;152;150mI\e[0m\r
+\e[3m\e[38;2;150;152;150m'\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\r
+Y\r
+o\r
+u\r
+r\r
+c\r
+o\r
+d\r
+e\r
+.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mk\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mp\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mN\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\r
+\e[3m\e[38;2;150;152;150mI\e[0m\r
+\e[3m\e[38;2;150;152;150m'\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\r
+Y\r
+o\r
+u\r
+r\r
+t\r
+e\r
+s\r
+t\r
+s\r
+k\r
+e\r
+e\r
+p\r
+f\r
+a\r
+i\r
+l\r
+i\r
+n\r
+g\r
+.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mp\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mN\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\r
+\e[3m\e[38;2;150;152;150mI\e[0m\r
+\e[3m\e[38;2;150;152;150m'\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\r
+D\r
+o\r
+c\r
+o\r
+m\r
+p\r
+u\r
+t\r
+e\r
+r\r
+s\r
+w\r
+o\r
+r\r
+r\r
+y\r
+y\r
+o\r
+u\r
+?\r
+\e[?25h\e[?2026l
+=== plain ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m I feel uneasy about my code\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m
+
+Your code.
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m my tests keep failing\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m
+
+Your tests keep failing.
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m you are a computer\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m
+
+Do computers worry you?
+
+=== printed ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Your code.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m my tests keep failing                                                                              \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Your tests keep failing.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m you are a computer                                                                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Do computers worry you?\r
+
+=== streamed asap ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo i\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what the\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they me\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pas\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass th\e[0m\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them o\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to\e[0m\e[0m\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doc\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Your\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour cod\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour code.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m my tests keep failing                                                                              \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo i\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what the\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they me\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pas\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass th\e[0m\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them o\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to\e[0m\e[0m\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doc\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Your\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tes\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests k\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests keep\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests keep fail\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests keep failing.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m you are a computer                                                                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo i\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what the\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they me\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pas\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass th\e[0m\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them o\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to\e[0m\e[0m\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doc\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Do c\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo compu\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers wor\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers worry y\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers worry you?\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed line ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Your code.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m my tests keep failing                                                                              \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Your tests keep failing.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m you are a computer                                                                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Do computers worry you?\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed paced ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo i\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what the\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they me\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pas\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass th\e[0m\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them o\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to\e[0m\e[0m\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doc\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Your\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour cod\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour code.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m my tests keep failing                                                                              \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo i\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what the\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they me\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pas\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass th\e[0m\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them o\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to\e[0m\e[0m\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doc\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Your\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tes\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests k\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests keep\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests keep fail\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rYour tests keep failing.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m you are a computer                                                                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[3m\e[38;2;150;152;150mNo i\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what the\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they me\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pas\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass th\e[0m\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them o\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to\e[0m\e[0m\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doc\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Do c\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo compu\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers wor\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers worry y\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDo computers worry you?\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== tiny ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m000000000000\r
+000000000000\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mwith \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mskills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150msnippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m I feel     \e[0m\r
+\e[48;2;52;53;65m uneasy     \e[0m\r
+\e[48;2;52;53;65m about my   \e[0m\r
+\e[48;2;52;53;65m code       \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what\e[0m\r
+\e[3m\e[38;2;150;152;150mthey mean.\e[0m\r
+\e[3m\e[38;2;150;152;150mI'll pass\e[0m\r
+\e[3m\e[38;2;150;152;150mthem on to\e[0m\r
+\e[3m\e[38;2;150;152;150mthe doctor.\e[0m\e[0m\r
+\r
+Your code.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m my tests   \e[0m\r
+\e[48;2;52;53;65m keep       \e[0m\r
+\e[48;2;52;53;65m failing    \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what\e[0m\r
+\e[3m\e[38;2;150;152;150mthey mean.\e[0m\r
+\e[3m\e[38;2;150;152;150mI'll pass\e[0m\r
+\e[3m\e[38;2;150;152;150mthem on to\e[0m\r
+\e[3m\e[38;2;150;152;150mthe doctor.\e[0m\e[0m\r
+\r
+Your tests\r
+keep\r
+failing.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m you are a  \e[0m\r
+\e[48;2;52;53;65m computer   \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what\e[0m\r
+\e[3m\e[38;2;150;152;150mthey mean.\e[0m\r
+\e[3m\e[38;2;150;152;150mI'll pass\e[0m\r
+\e[3m\e[38;2;150;152;150mthem on to\e[0m\r
+\e[3m\e[38;2;150;152;150mthe doctor.\e[0m\e[0m\r
+\r
+Do computers\r
+worry you?\r
+\e[?25h\e[?2026l
+=== unsized ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Your code.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m my tests keep failing\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Your tests keep failing.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m you are a computer\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Do computers worry you?\r
+\e[?25h\e[?2026l
+=== wide ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m I feel uneasy about my code                                                                        \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Your code.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m my tests keep failing                                                                              \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Your tests keep failing.\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m you are a computer                                                                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mNo idea what they mean. I'll pass them on to the doctor.\e[0m\e[0m\r
+\r
+Do computers worry you?\r
+\e[?25h\e[?2026l

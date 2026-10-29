@@ -106,6 +106,7 @@ type entry struct {
 	startSignal       chan struct{}
 	cancel            context.CancelCauseFunc
 	isBackground      bool
+	isUnnamed         bool
 	isRespawning      bool
 	isStopped         bool
 	quickRuns         int
@@ -127,23 +128,24 @@ type entry struct {
 }
 
 type Manager struct {
-	mutex           sync.Mutex
-	entries         map[string]*entry
-	nextIDs         map[string]int
-	order           []string
-	conclusions     []Conclusion
-	changes         chan struct{}
-	activity        chan struct{}
-	slotChanges     chan struct{}
-	runningCount    int
-	maximumRunning  int
-	done            <-chan struct{}
-	cancel          context.CancelFunc
-	workers         sync.WaitGroup
-	isClosed        bool
-	preparations    map[string]Preparation
-	now             func() time.Time
-	foregroundLimit time.Duration
+	mutex            sync.Mutex
+	entries          map[string]*entry
+	nextIDs          map[string]int
+	nextForegroundID uint64
+	order            []string
+	conclusions      []Conclusion
+	changes          chan struct{}
+	activity         chan struct{}
+	slotChanges      chan struct{}
+	runningCount     int
+	maximumRunning   int
+	done             <-chan struct{}
+	cancel           context.CancelFunc
+	workers          sync.WaitGroup
+	isClosed         bool
+	preparations     map[string]Preparation
+	now              func() time.Time
+	foregroundLimit  time.Duration
 }
 
 func New(ctx context.Context) *Manager {
@@ -232,34 +234,33 @@ func (self *Manager) WaitOrDetach(ctx context.Context, id string) (Conclusion, b
 			_ = self.Stop(id, stopReason(ctx))
 			return Conclusion{}, false, err
 		}
-		return self.cancelOrResult(id, err)
+		return self.cancelOrResult(current, err)
 	}
 	if isBackground {
-		return Conclusion{}, true, nil
+		return self.background(current), true, nil
 	}
 	queueTimer := time.NewTimer(foregroundLimit)
 	defer queueTimer.Stop()
 	select {
 	case <-startSignal:
 	case <-over:
-		return self.result(id)
+		return self.result(current)
 	case <-ctx.Done():
-		return self.cancelOrResult(id, ctx.Err())
+		return self.cancelOrResult(current, ctx.Err())
 	case <-queueTimer.C:
 		self.mutex.Lock()
 		if current.snapshot.State == Queued {
-			current.isBackground = true
-			self.signalChange()
+			conclusion := self.backgroundLocked(current)
 			self.mutex.Unlock()
-			return Conclusion{}, true, nil
+			return conclusion, true, nil
 		}
 		self.mutex.Unlock()
 		select {
 		case <-startSignal:
 		case <-over:
-			return self.result(id)
+			return self.result(current)
 		case <-ctx.Done():
-			return self.cancelOrResult(id, ctx.Err())
+			return self.cancelOrResult(current, ctx.Err())
 		}
 	}
 	self.mutex.Lock()
@@ -267,19 +268,18 @@ func (self *Manager) WaitOrDetach(ctx context.Context, id string) (Conclusion, b
 	self.mutex.Unlock()
 	if !activeTimeExpired(ctx, clock, foregroundLimit, over) {
 		if err := ctx.Err(); err != nil {
-			return self.cancelOrResult(id, err)
+			return self.cancelOrResult(current, err)
 		}
-		return self.result(id)
+		return self.result(current)
 	}
 	self.mutex.Lock()
 	if current.snapshot.State == Done || current.snapshot.State == Failed || current.snapshot.State == TimedOut || current.snapshot.State == Stopped {
 		self.mutex.Unlock()
-		return self.result(id)
+		return self.result(current)
 	}
-	current.isBackground = true
-	self.signalChange()
+	conclusion := self.backgroundLocked(current)
 	self.mutex.Unlock()
-	return Conclusion{}, true, nil
+	return conclusion, true, nil
 }
 
 func (self *Manager) Drain() []Conclusion {
@@ -482,6 +482,7 @@ func (self *Manager) startLocked(
 	if err := ctx.Err(); err != nil {
 		return Snapshot{}, err
 	}
+	isUnnamed := id == "" && options.Name == "" && !isBackground
 	if options.Name != "" {
 		if err := ValidateName(options.Name); err != nil {
 			return Snapshot{}, err
@@ -491,8 +492,6 @@ func (self *Manager) startLocked(
 		if err != nil {
 			return Snapshot{}, err
 		}
-	} else if id == "" {
-		id = self.allocateID(toolName)
 	}
 	if found := self.entries[id]; found != nil && found != options.replaces {
 		return Snapshot{}, fmt.Errorf("task %s already exists", id)
@@ -513,6 +512,13 @@ func (self *Manager) startLocked(
 	if err := ctx.Err(); err != nil {
 		return Snapshot{}, err
 	}
+	if id == "" {
+		if isUnnamed {
+			id = self.allocateForegroundID()
+		} else {
+			id = self.allocateID(toolName)
+		}
+	}
 	callContext, cancel := context.WithCancelCause(context.WithoutCancel(ctx))
 	current := &entry{
 		snapshot:          Snapshot{ID: id, ToolName: toolName, State: Queued, Run: 1, IsRespawning: isRespawning, Invocation: cloneInvocation(options.Invocation)},
@@ -520,6 +526,7 @@ func (self *Manager) startLocked(
 		startSignal:       make(chan struct{}),
 		cancel:            cancel,
 		isBackground:      isBackground,
+		isUnnamed:         isUnnamed,
 		isRespawning:      isRespawning,
 		policy:            policy,
 		slotWait:          &slotWait{},
@@ -776,17 +783,15 @@ func (self *Manager) finish(current *entry, err error) {
 	self.signalChange()
 }
 
-func (self *Manager) result(id string) (Conclusion, bool, error) {
+func (self *Manager) result(current *entry) (Conclusion, bool, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
-	current := self.entries[id]
 	return Conclusion{Snapshot: cloneSnapshot(current.snapshot), Result: current.result, Failure: current.failure}, false, nil
 }
 
-func (self *Manager) cancelOrResult(id string, cause error) (Conclusion, bool, error) {
+func (self *Manager) cancelOrResult(current *entry, cause error) (Conclusion, bool, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
-	current := self.entries[id]
 	if current.snapshot.State == Done || current.snapshot.State == Failed ||
 		current.snapshot.State == TimedOut || current.snapshot.State == Stopped {
 		return Conclusion{Snapshot: cloneSnapshot(current.snapshot), Result: current.result, Failure: current.failure}, false, nil

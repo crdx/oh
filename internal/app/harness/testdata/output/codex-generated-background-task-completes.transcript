@@ -12,11 +12,12 @@
 
 ## User · +0s
 
-start the build in the background
+run a quick foreground check, then start the build in the background
 
 ## Tool calls · +0s
 
 ```
+bash: bash [ok, 1 line, 23B, call-0]
 bash: bash [info, 1 line, 52B, call-1]
 ```
 

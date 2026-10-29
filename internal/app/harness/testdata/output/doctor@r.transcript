@@ -1,0 +1,36 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+I feel uneasy about my code
+
+## Assistant · +3s
+
+Your code.
+
+## User · +4s
+
+my tests keep failing
+
+## Assistant · +6s
+
+Your tests keep failing.
+
+## User · +7s
+
+you are a computer
+
+## Assistant · +9s
+
+Do computers worry you?

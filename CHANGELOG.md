@@ -2,6 +2,7 @@
 
 ## [Next]
 
+- Only generate task name when it gets backgrounded
 - Clear stale config reload errors
 - Mandate strict rules for inotifywait watchers
 

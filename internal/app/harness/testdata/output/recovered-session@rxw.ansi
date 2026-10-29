@@ -1,0 +1,405 @@
+=== narrow ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m finish the implementation              \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended\e[0m\r
+\e[38;2;207;173;0munexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m carry on                               \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+Carrying on from the transcript.\r
+\e[?25h\e[?2026l
+=== one column ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150my\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mw\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mk\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m\r
+8\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mf\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mp\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mm\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mC\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mk\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mT\e[0m\r
+\e[38;2;207;173;0mh\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mp\e[0m\r
+\e[38;2;207;173;0mr\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mv\e[0m\r
+\e[38;2;207;173;0mi\e[0m\r
+\e[38;2;207;173;0mo\e[0m\r
+\e[38;2;207;173;0mu\e[0m\r
+\e[38;2;207;173;0ms\e[0m\r
+\e[38;2;207;173;0mo\e[0m\r
+\e[38;2;207;173;0mh\e[0m\r
+\e[38;2;207;173;0mp\e[0m\r
+\e[38;2;207;173;0mr\e[0m\r
+\e[38;2;207;173;0mo\e[0m\r
+\e[38;2;207;173;0mc\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0ms\e[0m\r
+\e[38;2;207;173;0ms\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mn\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\e[38;2;207;173;0mu\e[0m\r
+\e[38;2;207;173;0mn\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mx\e[0m\r
+\e[38;2;207;173;0mp\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mc\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\e[38;2;207;173;0ml\e[0m\r
+\e[38;2;207;173;0my\e[0m\r
+\e[38;2;207;173;0m.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+C\r
+a\r
+r\r
+r\r
+y\r
+i\r
+n\r
+g\r
+o\r
+n\r
+f\r
+r\r
+o\r
+m\r
+t\r
+h\r
+e\r
+t\r
+r\r
+a\r
+n\r
+s\r
+c\r
+r\r
+i\r
+p\r
+t\r
+.\r
+\e[?25h\e[?2026l
+=== plain ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m finish the implementation\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m
+
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m carry on\e[0m
+\e[48;2;52;53;65m\e[0m
+Carrying on from the transcript.
+
+=== printed ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m finish the implementation                                                                          \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Carrying on from the transcript.\r
+
+=== streamed asap ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m finish the implementation                                                                          \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mChec\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the rem\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the remaini\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the remaining t\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Carr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the tra\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the transcr\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the transcript.\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[32C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed line ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m finish the implementation                                                                          \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Carrying on from the transcript.\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[32C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed paced ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m finish the implementation                                                                          \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mChec\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the rem\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the remaini\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the remaining t\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r
+Carr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the tra\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the transcr\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rCarrying on from the transcript.\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[32C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== tiny ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m000000000000\r
+000000000000\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mwith \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mskills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150msnippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m finish the \e[0m\r
+\e[48;2;52;53;65m implementa \e[0m\r
+\e[48;2;52;53;65m tion       \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mChecking the\e[0m\r
+\e[3m\e[38;2;150;152;150mremaining\e[0m\r
+\e[3m\e[38;2;150;152;150mtests\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mThe previous\e[0m\r
+\e[38;2;207;173;0moh process\e[0m\r
+\e[38;2;207;173;0mended\e[0m\r
+\e[38;2;207;173;0munexpectedly\e[0m\r
+\e[38;2;207;173;0m.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m carry on   \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+Carrying on\r
+from the\r
+transcript.\r
+\e[?25h\e[?2026l
+=== unsized ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m finish the implementation\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m carry on\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Carrying on from the transcript.\r
+\e[?25h\e[?2026l
+=== wide ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m finish the implementation                                                                          \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mChecking the remaining tests\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mThe previous oh process ended unexpectedly.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Carrying on from the transcript.\r
+\e[?25h\e[?2026l

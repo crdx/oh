@@ -1,0 +1,778 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ receive a rate limit that says to ask
+ again
+
+
+[#1] Request failed; retrying: Rate
+limit exceeded
+
+Ready now.
+
+
+ continue after the rate limit
+
+
+Resumed.
+
+
+ reach the Codex usage limit
+
+
+The usage limit has been reached
+
+
+ continue after the early reset
+
+
+Available after the reset.
+
+
+ rebuild the prompt cache halfway
+ through the turn
+
+
+work work 1L
+
+The cache went cold on that request.
+
+
+ carry on
+
+
+Carrying on.
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+r
+
+e
+
+c
+
+e
+
+i
+
+v
+
+e
+
+a
+
+r
+
+a
+
+t
+
+e
+
+l
+
+i
+
+m
+
+i
+
+t
+
+t
+
+h
+
+a
+
+t
+
+s
+
+a
+
+y
+
+s
+
+t
+
+o
+
+a
+
+s
+
+k
+
+a
+
+g
+
+a
+
+i
+
+n
+
+
+[
+#
+1
+]
+R
+e
+q
+u
+e
+s
+t
+f
+a
+i
+l
+e
+d
+;
+r
+e
+t
+r
+y
+i
+n
+g
+:
+R
+a
+t
+e
+l
+i
+m
+i
+t
+e
+x
+c
+e
+e
+d
+e
+d
+
+R
+e
+a
+d
+y
+n
+o
+w
+.
+
+
+
+c
+
+o
+
+n
+
+t
+
+i
+
+n
+
+u
+
+e
+
+a
+
+f
+
+t
+
+e
+
+r
+
+t
+
+h
+
+e
+
+r
+
+a
+
+t
+
+e
+
+l
+
+i
+
+m
+
+i
+
+t
+
+
+R
+e
+s
+u
+m
+e
+d
+.
+
+
+
+r
+
+e
+
+a
+
+c
+
+h
+
+t
+
+h
+
+e
+
+C
+
+o
+
+d
+
+e
+
+x
+
+u
+
+s
+
+a
+
+g
+
+e
+
+l
+
+i
+
+m
+
+i
+
+t
+
+
+T
+h
+e
+u
+s
+a
+g
+e
+l
+i
+m
+i
+t
+h
+a
+s
+b
+e
+e
+n
+r
+e
+a
+c
+h
+e
+d
+
+
+
+c
+
+o
+
+n
+
+t
+
+i
+
+n
+
+u
+
+e
+
+a
+
+f
+
+t
+
+e
+
+r
+
+t
+
+h
+
+e
+
+e
+
+a
+
+r
+
+l
+
+y
+
+r
+
+e
+
+s
+
+e
+
+t
+
+
+A
+v
+a
+i
+l
+a
+b
+l
+e
+a
+f
+t
+e
+r
+t
+h
+e
+r
+e
+s
+e
+t
+.
+
+
+
+r
+
+e
+
+b
+
+u
+
+i
+
+l
+
+d
+
+t
+
+h
+
+e
+
+p
+
+r
+
+o
+
+m
+
+p
+
+t
+
+c
+
+a
+
+c
+
+h
+
+e
+
+h
+
+a
+
+l
+
+f
+
+w
+
+a
+
+y
+
+t
+
+h
+
+r
+
+o
+
+u
+
+g
+
+h
+
+t
+
+h
+
+e
+
+t
+
+u
+
+r
+
+n
+
+
+…
+
+T
+h
+e
+c
+a
+c
+h
+e
+w
+e
+n
+t
+c
+o
+l
+d
+o
+n
+t
+h
+a
+t
+r
+e
+q
+u
+e
+s
+t
+.
+
+
+
+c
+
+a
+
+r
+
+r
+
+y
+
+o
+
+n
+
+
+C
+a
+r
+r
+y
+i
+n
+g
+o
+n
+.
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ receive a rate limit that says to ask again
+
+
+[#1] Request failed; retrying: Rate limit exceeded
+
+Ready now.
+
+
+ continue after the rate limit
+
+
+Resumed.
+
+
+ reach the Codex usage limit
+
+
+The usage limit has been reached
+
+
+ continue after the early reset
+
+
+Available after the reset.
+
+
+ rebuild the prompt cache halfway through the turn
+
+
+work work 1L
+
+The cache went cold on that request.
+
+
+ carry on
+
+
+Carrying on.
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ receive a
+ rate limit
+ that says
+ to ask
+ again
+
+
+[#1] Request
+failed;
+retrying:
+Rate limit
+exceeded
+
+Ready now.
+
+
+ continue
+ after the
+ rate limit
+
+
+Resumed.
+
+
+ reach the
+ Codex
+ usage
+ limit
+
+
+The usage
+limit has
+been reached
+
+
+ continue
+ after the
+ early
+ reset
+
+
+Available
+after the
+reset.
+
+
+ rebuild
+ the prompt
+ cache
+ halfway
+ through
+ the turn
+
+
+work work 1L
+
+The cache
+went cold on
+that
+request.
+
+
+ carry on
+
+
+Carrying on.
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ receive a rate limit that says to ask again
+
+
+[#1] Request failed; retrying: Rate limit exceeded
+
+Ready now.
+
+
+ continue after the rate limit
+
+
+Resumed.
+
+
+ reach the Codex usage limit
+
+
+The usage limit has been reached
+
+
+ continue after the early reset
+
+
+Available after the reset.
+
+
+ rebuild the prompt cache halfway through the turn
+
+
+work work 1L
+
+The cache went cold on that request.
+
+
+ carry on
+
+
+Carrying on.

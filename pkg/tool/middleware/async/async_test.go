@@ -533,3 +533,54 @@ func TestAScheduledCallTakesAtMostItsTaskRunLimit(t *testing.T) {
 		})
 	}
 }
+
+func TestForegroundCallsDoNotConsumeGeneratedBackgroundNumbers(t *testing.T) {
+	for _, isBackground := range []bool{false, true} {
+		t.Run(fmt.Sprintf("background=%t", isBackground), func(t *testing.T) {
+			synctest.Test(t, func(t *testing.T) {
+				manager := tasks.New(t.Context())
+				defer manager.Close()
+				quickRelease := make(chan struct{})
+				close(quickRelease)
+				quickRuns := 0
+				quick := async.Tool(heldTool(quickRelease, &quickRuns), manager, async.Options{})
+				for range 216 {
+					call, err := quick.Parse(`{"command":"quick"}`)
+					if err != nil {
+						t.Fatal(err)
+					}
+					result, err := call.Exec(t.Context())
+					if err != nil || result.IsPending || result.Output != "done" {
+						t.Fatalf("foreground result: %+v, %v", result, err)
+					}
+				}
+				release := make(chan struct{})
+				runs := 0
+				slow := async.Tool(heldTool(release, &runs), manager, async.Options{})
+				for number := 1; number <= 2; number++ {
+					call, err := slow.Parse(fmt.Sprintf(`{"command":"slow","background":%t}`, isBackground))
+					if err != nil {
+						t.Fatal(err)
+					}
+					receipt, err := call.Exec(t.Context())
+					want := fmt.Sprintf("backgrounded (named %q); end your turn to wait", fmt.Sprintf("bash-%d", number))
+					if err != nil || !receipt.IsPending || receipt.Output != want {
+						t.Fatalf("background receipt: %+v, %v; want %s", receipt, err, want)
+					}
+					synctest.Wait()
+				}
+				close(release)
+				synctest.Wait()
+				conclusions := manager.Drain()
+				if len(conclusions) != 2 || runs != 2 || quickRuns != 216 {
+					t.Fatalf("got %d conclusions, %d slow runs, %d quick runs", len(conclusions), runs, quickRuns)
+				}
+				for _, conclusion := range conclusions {
+					if conclusion.Snapshot.ID != "bash-1" && conclusion.Snapshot.ID != "bash-2" {
+						t.Errorf("completion has a different name: %+v", conclusion)
+					}
+				}
+			})
+		})
+	}
+}

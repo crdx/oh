@@ -1,0 +1,1010 @@
+=== narrow ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m use every original tool                \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Every original tool ran.\r
+\r
+\e[48;2;48;58;67m                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer       \e[0m\r
+\e[48;2;48;58;67m    installed and is disabled for this  \e[0m\r
+\e[48;2;48;58;67m    conversation.                       \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from      \e[0m\r
+\e[48;2;48;58;67m    version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is       \e[0m\r
+\e[48;2;48;58;67m    disabled for the remainder of this  \e[0m\r
+\e[48;2;48;58;67m    conversation.                       \e[0m\r
+\e[48;2;48;58;67m                                        \e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m try every tool again                   \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed fr…\e[0m\r
+\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer…\e[0m\r
+\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "add…\e[0m\r
+\r
+Tools at compatible versions ran with\r
+their frozen definitions; the changed\r
+version was refused.\r
+\e[?25h\e[?2026l
+=== one column ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150my\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mw\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mk\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m\r
+8\r
+0\r
+0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mu\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mv\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mI\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mu\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mu\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\r
+E\r
+v\r
+e\r
+r\r
+y\r
+o\r
+r\r
+i\r
+g\r
+i\r
+n\r
+a\r
+l\r
+t\r
+o\r
+o\r
+l\r
+r\r
+a\r
+n\r
+.\r
+\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m🤖\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mT\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mm\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mi\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80ms\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80ms\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mi\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mn\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mg\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mg\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mb\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mc\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mv\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m🤖\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mT\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mr\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80me\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mv\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mi\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80ms\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mi\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mo\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mn\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mc\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mg\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mm\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mv\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mv\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mb\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mm\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mc\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mv\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mv\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\r
+T\r
+o\r
+o\r
+l\r
+s\r
+a\r
+t\r
+c\r
+o\r
+m\r
+p\r
+a\r
+t\r
+i\r
+b\r
+l\r
+e\r
+v\r
+e\r
+r\r
+s\r
+i\r
+o\r
+n\r
+s\r
+r\r
+a\r
+n\r
+w\r
+i\r
+t\r
+h\r
+t\r
+h\r
+e\r
+i\r
+r\r
+f\r
+r\r
+o\r
+z\r
+e\r
+n\r
+d\r
+e\r
+f\r
+i\r
+n\r
+i\r
+t\r
+i\r
+o\r
+n\r
+s\r
+;\r
+t\r
+h\r
+e\r
+c\r
+h\r
+a\r
+n\r
+g\r
+e\r
+d\r
+v\r
+e\r
+r\r
+s\r
+i\r
+o\r
+n\r
+w\r
+a\r
+s\r
+r\r
+e\r
+f\r
+u\r
+s\r
+e\r
+d\r
+.\r
+\e[?25h\e[?2026l
+=== plain ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
+
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m use every original tool\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m
+\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mrevision\e[0m \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mmissing\e[0m \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m
+
+Every original tool ran.
+
+\e[48;2;48;58;67m\e[0m
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.\e[0m
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this conversation.\e[0m
+\e[48;2;48;58;67m\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m try every tool again\e[0m
+\e[48;2;52;53;65m\e[0m
+\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m
+revision \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder of this conversation\e[0m
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m
+missing \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m
+\e[38;2;207;173;0madded\e[0m \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m
+
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.
+
+=== printed ===
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m use every original tool                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Every original tool ran.\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                  \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this \e[0m\r
+\e[48;2;48;58;67m    conversation.                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try every tool again                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder …\e[0m\r
+\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\r
+\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\r
+\r
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.\r
+
+=== streamed asap ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m use every original tool                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mI mu\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must u\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use t\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the o\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the origi\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original cont\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original contract\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mrevision\e[0m \e[38;2;192;128;80mrevision\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mmissing\e[0m \e[38;2;192;128;80mmissing\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[1B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Ever\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery or\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery origin\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery original t\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery original tool\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery original tool ran.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this \e[0m\r
+\e[48;2;48;58;67m    conversation.                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try every tool again                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+revision\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+missing\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0madded\e[0m \e[38;2;192;128;80m{}\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[6B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder …\e[0m\e[4B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\e[K\e[1B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\e[K\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Tool\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at com\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compati\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible vers\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran wit\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with th\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their froz\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen d\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen defin\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitio\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions;\e[K\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the\e[K\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the chan\e[K\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed\e[K\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed vers\e[K\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version\e[K\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version was\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version was refu\e[K\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version was refused.\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[96C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed line ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m use every original tool                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mrevision\e[0m \e[38;2;192;128;80mrevision\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mmissing\e[0m \e[38;2;192;128;80mmissing\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[1B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Every original tool ran.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this \e[0m\r
+\e[48;2;48;58;67m    conversation.                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try every tool again                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+revision\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+missing\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0madded\e[0m \e[38;2;192;128;80m{}\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[6B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder …\e[0m\e[4B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\e[K\e[1B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\e[K\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[96C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed paced ===
+\e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m use every original tool                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[3m\e[38;2;150;152;150mI mu\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must u\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use t\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the o\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the origi\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original cont\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original contract\e[0m\e[0m\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mrevision\e[0m \e[38;2;192;128;80mrevision\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mmissing\e[0m \e[38;2;192;128;80mmissing\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[1B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Ever\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery or\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery origin\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery original t\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery original tool\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery original tool ran.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this \e[0m\r
+\e[48;2;48;58;67m    conversation.                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try every tool again                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+revision\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+missing\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0madded\e[0m \e[38;2;192;128;80m{}\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[6B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder …\e[0m\e[4B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\e[K\e[1B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\e[K\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Tool\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at com\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compati\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible vers\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran wit\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with th\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their froz\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen d\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen defin\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitio\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions;\e[K\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the\e[K\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the chan\e[K\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed\e[K\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed vers\e[K\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version\e[K\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version was\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version was refu\e[K\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTools at compatible versions ran with their frozen definitions; the changed version was refused.\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[96C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== tiny ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m000000000000\r
+000000000000\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mwith \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mskills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150msnippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m\e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mcontext.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m use every  \e[0m\r
+\e[48;2;52;53;65m original   \e[0m\r
+\e[48;2;52;53;65m tool       \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mI must use\e[0m\r
+\e[3m\e[38;2;150;152;150mthe original\e[0m\r
+\e[3m\e[38;2;150;152;150mcontracts.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80m…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatib…\e[0m\e]8;;\e\\ \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80m…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Every\r
+original\r
+tool ran.\r
+\r
+\e[48;2;48;58;67m            \e[0m\r
+\e[48;2;48;58;67m 🤖 The     \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m    tool is \e[0m\r
+\e[48;2;48;58;67m    no      \e[0m\r
+\e[48;2;48;58;67m    longer  \e[0m\r
+\e[48;2;48;58;67m    install \e[0m\r
+\e[48;2;48;58;67m    ed and  \e[0m\r
+\e[48;2;48;58;67m    is      \e[0m\r
+\e[48;2;48;58;67m    disable \e[0m\r
+\e[48;2;48;58;67m    d for   \e[0m\r
+\e[48;2;48;58;67m    this    \e[0m\r
+\e[48;2;48;58;67m    convers \e[0m\r
+\e[48;2;48;58;67m    ation.  \e[0m\r
+\e[48;2;48;58;67m 🤖 The     \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80mrevisio\e[0m\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80mn\e[0m\e[48;2;48;58;67m tool  \e[0m\r
+\e[48;2;48;58;67m    changed \e[0m\r
+\e[48;2;48;58;67m    from    \e[0m\r
+\e[48;2;48;58;67m    version \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to    \e[0m\r
+\e[48;2;48;58;67m    version \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and   \e[0m\r
+\e[48;2;48;58;67m    is      \e[0m\r
+\e[48;2;48;58;67m    disable \e[0m\r
+\e[48;2;48;58;67m    d for   \e[0m\r
+\e[48;2;48;58;67m    the     \e[0m\r
+\e[48;2;48;58;67m    remaind \e[0m\r
+\e[48;2;48;58;67m    er of   \e[0m\r
+\e[48;2;48;58;67m    this    \e[0m\r
+\e[48;2;48;58;67m    convers \e[0m\r
+\e[48;2;48;58;67m    ation.  \e[0m\r
+\e[48;2;48;58;67m            \e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m try every  \e[0m\r
+\e[48;2;52;53;65m tool again \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80m…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\rev…\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatib…\e[0m\e]8;;\e\\ \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\mis…\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madd…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mther…\e[0m\r
+\r
+Tools at\r
+compatible\r
+versions ran\r
+with their\r
+frozen\r
+definitions;\r
+the changed\r
+version was\r
+refused.\r
+\e[?25h\e[?2026l
+=== unsized ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m use every original tool\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Every original tool ran.\r
+\r
+\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.\e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this conversation.\e[0m\r
+\e[48;2;48;58;67m\e[0m\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m try every tool again\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder of this conversation\e[0m\r
+\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\r
+\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\r
+\r
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.\r
+\e[?25h\e[?2026l
+=== wide ===
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m use every original tool                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Every original tool ran.\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                  \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this \e[0m\r
+\e[48;2;48;58;67m    conversation.                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try every tool again                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remainder …\e[0m\r
+\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\r
+\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\r
+\r
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.\r
+\e[?25h\e[?2026l

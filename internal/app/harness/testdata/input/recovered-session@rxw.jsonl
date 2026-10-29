@@ -1,0 +1,6 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"finish the implementation"}}
+{"event":{"kind":"model_reasoning","text":"Checking the remaining tests"}}
+{"event":{"kind":"turn_interruption","name":"process_exit"}}
+{"event":{"kind":"user_message","text":"carry on"}}
+{"event":{"kind":"model_message","text":"Carrying on from the transcript."}}

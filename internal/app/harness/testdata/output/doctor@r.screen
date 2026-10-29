@@ -1,0 +1,522 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ I feel uneasy about my code
+
+
+No idea what they mean. I'll pass them
+on to the doctor.
+
+Your code.
+
+
+ my tests keep failing
+
+
+No idea what they mean. I'll pass them
+on to the doctor.
+
+Your tests keep failing.
+
+
+ you are a computer
+
+
+No idea what they mean. I'll pass them
+on to the doctor.
+
+Do computers worry you?
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+I
+
+f
+
+e
+
+e
+
+l
+
+u
+
+n
+
+e
+
+a
+
+s
+
+y
+
+a
+
+b
+
+o
+
+u
+
+t
+
+m
+
+y
+
+c
+
+o
+
+d
+
+e
+
+
+N
+o
+i
+d
+e
+a
+w
+h
+a
+t
+t
+h
+e
+y
+m
+e
+a
+n
+.
+I
+'
+l
+l
+p
+a
+s
+s
+t
+h
+e
+m
+o
+n
+t
+o
+t
+h
+e
+d
+o
+c
+t
+o
+r
+.
+
+Y
+o
+u
+r
+c
+o
+d
+e
+.
+
+
+
+m
+
+y
+
+t
+
+e
+
+s
+
+t
+
+s
+
+k
+
+e
+
+e
+
+p
+
+f
+
+a
+
+i
+
+l
+
+i
+
+n
+
+g
+
+
+N
+o
+i
+d
+e
+a
+w
+h
+a
+t
+t
+h
+e
+y
+m
+e
+a
+n
+.
+I
+'
+l
+l
+p
+a
+s
+s
+t
+h
+e
+m
+o
+n
+t
+o
+t
+h
+e
+d
+o
+c
+t
+o
+r
+.
+
+Y
+o
+u
+r
+t
+e
+s
+t
+s
+k
+e
+e
+p
+f
+a
+i
+l
+i
+n
+g
+.
+
+
+
+y
+
+o
+
+u
+
+a
+
+r
+
+e
+
+a
+
+c
+
+o
+
+m
+
+p
+
+u
+
+t
+
+e
+
+r
+
+
+N
+o
+i
+d
+e
+a
+w
+h
+a
+t
+t
+h
+e
+y
+m
+e
+a
+n
+.
+I
+'
+l
+l
+p
+a
+s
+s
+t
+h
+e
+m
+o
+n
+t
+o
+t
+h
+e
+d
+o
+c
+t
+o
+r
+.
+
+D
+o
+c
+o
+m
+p
+u
+t
+e
+r
+s
+w
+o
+r
+r
+y
+y
+o
+u
+?
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ I feel uneasy about my code
+
+
+No idea what they mean. I'll pass them on to the doctor.
+
+Your code.
+
+
+ my tests keep failing
+
+
+No idea what they mean. I'll pass them on to the doctor.
+
+Your tests keep failing.
+
+
+ you are a computer
+
+
+No idea what they mean. I'll pass them on to the doctor.
+
+Do computers worry you?
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ I feel
+ uneasy
+ about my
+ code
+
+
+No idea what
+they mean.
+I'll pass
+them on to
+the doctor.
+
+Your code.
+
+
+ my tests
+ keep
+ failing
+
+
+No idea what
+they mean.
+I'll pass
+them on to
+the doctor.
+
+Your tests
+keep
+failing.
+
+
+ you are a
+ computer
+
+
+No idea what
+they mean.
+I'll pass
+them on to
+the doctor.
+
+Do computers
+worry you?
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ I feel uneasy about my code
+
+
+No idea what they mean. I'll pass them on to the doctor.
+
+Your code.
+
+
+ my tests keep failing
+
+
+No idea what they mean. I'll pass them on to the doctor.
+
+Your tests keep failing.
+
+
+ you are a computer
+
+
+No idea what they mean. I'll pass them on to the doctor.
+
+Do computers worry you?
