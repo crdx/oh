@@ -6067,6 +6067,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"host-command":             {".ansi", ".screen"},
 		"host-command-running":     {".ansi", ".screen"},
 		"live-task-settings":       {".screen"},
+		"foreground-call-labels":   {".ansi", ".screen"},
 		"host-command-queued":      {".screen"},
 		"inputblock":               {".ansi", ".screen"},
 		"pathrefs":                 {".ansi", ".screen"},

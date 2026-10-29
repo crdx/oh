@@ -1,0 +1,4 @@
+=== foreground calls stopped ===
+
+ 🤖 Task fg-call-1 stopped because the workspace was made read-only.
+ 🤖 Task fg-call-2 stopped because the workspace was made read-only.

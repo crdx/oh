@@ -377,7 +377,7 @@ func (self *Manager) queueSize(replacement *entry) int {
 func (self *Manager) allocateForegroundID() string {
 	for {
 		self.nextForegroundID++
-		id := fmt.Sprintf("foreground-call-%d", self.nextForegroundID)
+		id := fmt.Sprintf("fg-call-%d", self.nextForegroundID)
 		if self.entries[id] == nil {
 			return id
 		}
