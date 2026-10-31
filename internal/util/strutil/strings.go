@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -197,6 +198,43 @@ func VisibleEscapes(stream string) string {
 			fmt.Fprintf(&out, `\x%02X`, character)
 		default:
 			out.WriteRune(character)
+		}
+	}
+
+	return out.String()
+}
+
+func RestoreEscapes(text string) string {
+	var out strings.Builder
+
+	for at := 0; at < len(text); at++ {
+		if text[at] != '\\' || at+1 >= len(text) {
+			out.WriteByte(text[at])
+			continue
+		}
+
+		switch text[at+1] {
+		case '\\':
+			out.WriteByte('\\')
+			at++
+		case 'e':
+			out.WriteByte('\x1b')
+			at++
+		case 'r':
+			out.WriteByte('\r')
+			at++
+		case 't':
+			out.WriteByte('\t')
+			at++
+		case 'x':
+			if value, err := strconv.ParseUint(text[at+2:min(at+4, len(text))], 16, 8); err == nil && at+4 <= len(text) {
+				out.WriteByte(byte(value))
+				at += 3
+				continue
+			}
+			out.WriteByte('\\')
+		default:
+			out.WriteByte('\\')
 		}
 	}
 

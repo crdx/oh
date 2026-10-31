@@ -70,6 +70,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/record"
+	"crdx.org/oh/internal/app/scene"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/sessions"
 	"crdx.org/oh/internal/app/shell"
@@ -277,7 +278,7 @@ func (self terminationSignalError) Error() string {
 
 func Main() {
 	if len(os.Args) > 1 && os.Args[1] == ctl.Flag {
-		os.Exit(ctl.Run(os.Args[2:]))
+		os.Exit(ctl.Run(os.Args[2:], RenderJournal))
 	}
 
 	sandbox.Init()
@@ -1021,7 +1022,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	defer func() { _ = workspace.Close() }()
 
-	if !args.Yolo {
+	isScene := os.Getenv(scene.Variable) != ""
+	if !args.Yolo && !isScene {
 		if err := shell.RequireSandbox(ctx); err != nil {
 			return "", err
 		}
@@ -1190,7 +1192,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		args.Message = startup.JoinPrompt(initialFilesMessage, args.Message)
 	}
 
-	sandboxRunner, keeperProcess, closeKeeper, keeperRefusal := openRunner(ctx, args.Yolo)
+	sandboxRunner, keeperProcess, closeKeeper, keeperRefusal := openRunner(ctx, args.Yolo, isScene)
 	defer closeKeeper()
 
 	if keeperRefusal != nil {
@@ -1864,8 +1866,11 @@ func isSessionLeftToResume(isPersisted bool, isSimulated bool, kind cycle.Transi
 }
 
 func openRunner(
-	ctx context.Context, isYolo bool,
+	ctx context.Context, isYolo bool, isScene bool,
 ) (sandbox.Runner, *keeper.Keeper, func(), error) {
+	if isScene {
+		return sceneRunner{}, nil, func() {}, nil
+	}
 	if isYolo {
 		runner := sandbox.Direct()
 		return runner, nil, func() {}, nil
@@ -1879,6 +1884,18 @@ func openRunner(
 	runner := sandbox.Wrapped(keeperProcess)
 
 	return runner, keeperProcess, func() { _ = keeperProcess.Close() }, nil
+}
+
+var errSceneCommand = errors.New("a scene runs no commands")
+
+type sceneRunner struct{}
+
+func (sceneRunner) Run(context.Context, string, string, sandbox.Policy) (sandbox.Result, error) {
+	return sandbox.Result{}, errSceneCommand
+}
+
+func (sceneRunner) Start(context.Context, string, string, sandbox.Policy, sandbox.Output) (sandbox.Command, error) {
+	return nil, errSceneCommand
 }
 
 func newForwarder(

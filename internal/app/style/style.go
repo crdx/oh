@@ -140,6 +140,16 @@ func Init(screen any) func() {
 	}
 }
 
+func ForceColour() func() {
+	previous := isColorEnabled
+
+	apply(true)
+
+	return func() {
+		apply(previous)
+	}
+}
+
 func apply(isEnabled bool) {
 	isColorEnabled = isEnabled
 

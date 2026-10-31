@@ -5,6 +5,7 @@ gc
 migrate
 models
 regenerate
+render
 sessions
 === commands beginning with a word ===
 sessions

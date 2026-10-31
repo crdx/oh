@@ -518,3 +518,35 @@ Read the next session before deepening the last: breadth across `N` sessions bea
 Digest newest first: a heading per session naming it, its status, and its subject, then what was done or decided and any loose ends. With a query, lead with the cross-session answer, then the per-session detail.
 
 Where catchup precedes another task, carry the context straight into it.
+
+## Drawing oh
+
+`oh --ctl render <file>` draws oh as a settled screen, for documentation. The drawing is styled rows with no cursor motion, so any renderer that appends can show it. The file decides what is drawn:
+
+| File     | Drawn as                                                                       |
+|----------|--------------------------------------------------------------------------------|
+| `.jsonl` | a journal, stored or written by hand, as a resumed session draws it            |
+| `.toml`  | a scene: oh runs in a terminal of its own, and the scene's keys are typed in   |
+| other    | a stream of terminal output, raw or with `\e` escapes, played until it settles |
+
+`--width` sets the columns, 100 by default. A stream needs it, since only the width it was drawn at settles it correctly. `--height` sets a scene's rows, 24 by default. `--pass` takes one pass of a stream that holds several `=== label ===` passes, as oh's golden captures do.
+
+A rendered journal marks each run of rows with the event that drew it, as `ESC ] 7700 ; region=<name> BEL`, closed by `ESC ] 7700 ; BEL`. Names are `banner`, `user`, `answer`, `reasoning`, `tool:<name>`, `failure`, `interruption`, `retry`, or the event's kind. Terminals ignore the marks. Pictures are left out.
+
+A scene resumes a session named `tame-impala` in a directory of its own, against the simulator, so the drawing is the same every time. The scene's oh runs no commands, so it needs no sandbox, and it draws a confined session even on a machine that cannot sandbox:
+
+```toml
+journal = "conversation.jsonl"            # optional, relative to the scene
+model = "claude-opus-5"                   # the model the bar names
+history = ["git status", "run the checks"]
+keys = ["<ctrl+r>", "run"]                # <name> is a key; anything else is typed
+replies = ["Done."]                       # answers to messages the keys send
+config = '''
+[ui.theme]
+appearance = "dark"
+'''
+settle = "400ms"                          # how long the screen must stay still
+yolo = false                              # draw a --yolo session
+```
+
+The named keys are `<enter>`, `<alt+enter>`, `<tab>`, `<shift+tab>`, `<escape>`, `<backspace>`, `<delete>`, `<ctrl+delete>`, the arrows, `<ctrl+left>`, `<ctrl+right>`, `<home>`, `<end>`, `<ctrl+.>`, `<ctrl+shift+s>`, and `<ctrl+>` with any letter.

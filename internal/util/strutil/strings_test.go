@@ -229,3 +229,23 @@ func TestAQueryMatchesTextHoldingEveryWordOfIt(t *testing.T) {
 		}
 	}
 }
+
+func TestRestoreEscapesUndoesVisibleEscapes(t *testing.T) {
+	for _, stream := range []string{
+		"plain",
+		"\x1b[38;2;1;2;3mred\x1b[0m\r\n",
+		"a backslash \\ and \\e written out",
+		"\ttab and \x01 control and \x7f delete",
+		"\x1b]8;;https://example.test\x1b\\link\x1b]8;;\x1b\\",
+	} {
+		if got := strutil.RestoreEscapes(strutil.VisibleEscapes(stream)); got != stream {
+			t.Errorf("restored %q, want %q", got, stream)
+		}
+	}
+}
+
+func TestRestoreEscapesKeepsABackslashItDoesNotKnow(t *testing.T) {
+	if got, want := strutil.RestoreEscapes(`a \q b \x`), `a \q b \x`; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}

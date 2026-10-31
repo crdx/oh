@@ -16,7 +16,6 @@ import (
 	"io"
 	"iter"
 	"maps"
-	"math"
 	"net/http"
 	"net/http/httptest"
 	"net/netip"
@@ -118,6 +117,7 @@ import (
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/usage"
+	"crdx.org/oh/internal/app/vt"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/auth"
@@ -9083,10 +9083,15 @@ func shownWithMarks(t *testing.T, stream string, columns int) string {
 		}
 	}
 
+	marks := map[int]bool{}
+	for _, row := range drawn.marked() {
+		marks[row] = true
+	}
+
 	shownRows := make([]string, 0, len(rows))
 	for at, row := range rows {
 		gutter := strings.Repeat(" ", width.Of(markGutter))
-		if drawn.marks[at] {
+		if marks[at] {
 			gutter = markGutter
 		}
 
@@ -9512,10 +9517,10 @@ func requireNothingDrawnAboveTheScreen(t *testing.T, description string, stream 
 	t.Helper()
 
 	played := playScreenOfSize(t, stream, replayColumns, lines)
-	if played.wasDrawnAboveTheScreen {
+	if played.WasDrawnAboveTheScreen() {
 		t.Errorf("%s moved the cursor above the top of a %d-line screen", description, lines)
 	}
-	if played.wasScreenErasedWhole {
+	if played.WasScreenErasedWhole() {
 		t.Errorf("%s erased a %d-line screen from its top, which a terminal may push into scrollback", description, lines)
 	}
 }
@@ -9927,14 +9932,14 @@ func TestAWindowedSubagentReportKeepsItsBackground(t *testing.T) {
 	var panelStyle, noticeStyle string
 	lastReportRow := -1
 	for index, row := range played.text() {
-		if len(played.rows[index]) == 0 {
+		if len(played.Rows()[index]) == 0 {
 			continue
 		}
 		switch {
 		case strings.Contains(row, "Subagent tame-adder has finished"):
-			panelStyle = played.rows[index][0].styles
+			panelStyle = played.Rows()[index][0].Styles
 		case strings.Contains(row, "more lines"):
-			noticeStyle = played.rows[index][0].styles
+			noticeStyle = played.Rows()[index][0].Styles
 		case strings.Contains(row, "A long subagent report takes the visible area"):
 			lastReportRow = index
 		}
@@ -9943,12 +9948,12 @@ func TestAWindowedSubagentReportKeepsItsBackground(t *testing.T) {
 	if background == "" || !strings.Contains(noticeStyle, background) {
 		t.Errorf("report background %q did not continue through the hidden-rows notice %q", panelStyle, noticeStyle)
 	}
-	if lastReportRow < 0 || lastReportRow+1 >= len(played.rows) {
+	if lastReportRow < 0 || lastReportRow+1 >= len(played.Rows()) {
 		t.Fatal("the report's last line has no row below it")
 	}
-	padding := played.rows[lastReportRow+1]
+	padding := played.Rows()[lastReportRow+1]
 	if len(padding) == 0 || strings.TrimSpace(played.text()[lastReportRow+1]) != "" ||
-		!strings.Contains(padding[0].styles, background) {
+		!strings.Contains(padding[0].Styles, background) {
 		t.Errorf("row after the report has no blue bottom padding: %q", played.text()[lastReportRow+1])
 	}
 }
@@ -11358,7 +11363,7 @@ func TestGoldenTheCursorAtTheEndOfADraftStandsAfterIt(t *testing.T) {
 
 			return fmt.Sprintf(
 				"%s\ncursor row %d column %d",
-				strings.Join(played.text(), "\n"), played.row, played.column,
+				strings.Join(played.text(), "\n"), played.CursorRow(), played.CursorColumn(),
 			)
 		}
 	}
@@ -14080,108 +14085,35 @@ func getEventKinds(events []agent.Event) []agent.Kind {
 }
 
 type screen struct {
-	t           *testing.T
-	rows        [][]cell
-	marks       map[int]bool
-	wraps       map[int]bool
-	sized       []sizedCharacter
-	row, column int
-	columns     int
-	height      int
-	lowestRow   int
-
-	wasDrawnAboveTheScreen bool
-	wasScreenErasedWhole   bool
-	isWrapping             bool
-	style                  graphicStyle
-
-	main *screenContents
-}
-
-type screenContents struct {
-	rows        [][]cell
-	marks       map[int]bool
-	wraps       map[int]bool
-	sized       []sizedCharacter
-	row, column int
-	lowestRow   int
-}
-
-func (self *screen) enterAlternateScreen() {
-	if self.main != nil {
-		return
-	}
-
-	self.main = &screenContents{
-		rows: self.rows, marks: self.marks, wraps: self.wraps, sized: self.sized,
-		row: self.row, column: self.column, lowestRow: self.lowestRow,
-	}
-	self.rows, self.marks, self.wraps, self.sized = nil, nil, nil, nil
-	self.row, self.column, self.lowestRow = 0, 0, 0
-}
-
-func (self *screen) leaveAlternateScreen() {
-	if self.main == nil {
-		return
-	}
-
-	self.rows, self.marks, self.wraps, self.sized = self.main.rows, self.main.marks, self.main.wraps, self.main.sized
-	self.row, self.column, self.lowestRow = self.main.row, self.main.column, self.main.lowestRow
-	self.main = nil
-}
-
-type cell struct {
-	grapheme string
-	styles   string
-}
-
-type sizedCharacter struct {
-	row, column int
-	cells, rows int
-}
-
-func (self sizedCharacter) covers(firstRow int, lastRow int, firstColumn int, lastColumn int) bool {
-	return self.row <= lastRow && firstRow < self.row+self.rows &&
-		self.column <= lastColumn && firstColumn < self.column+self.cells
-}
-
-type graphicStyle struct {
-	foreground  string
-	background  string
-	underline   string
-	decorations []string
+	*vt.Screen
 }
 
 const picturePlaceholder = "\U0010EEEE"
 
-var decorationsOff = map[string][]string{
-	"21": {"1"},
-	"22": {"1", "2"},
-	"23": {"3"},
-	"24": {"4"},
-	"25": {"5", "6"},
-	"27": {"7"},
-	"28": {"8"},
-	"29": {"9"},
-	"55": {"53"},
+func playScreen(t *testing.T, stream string, columns int) *screen {
+	t.Helper()
+
+	return playScreenOfSize(t, stream, columns, 0)
 }
 
-func (self graphicStyle) String() string {
-	parts := slices.Clone(self.decorations)
-	slices.Sort(parts)
+func playScreenOfSize(t *testing.T, stream string, columns int, lines int) *screen {
+	t.Helper()
 
-	for _, colour := range []string{self.foreground, self.background, self.underline} {
-		if colour != "" {
-			parts = append(parts, colour)
-		}
+	played := vt.New(columns, lines)
+	if err := played.Play(stream); err != nil {
+		t.Fatalf("the screen could not draw the stream: %v", err)
 	}
 
-	if len(parts) == 0 {
-		return ""
-	}
-
-	return "\x1b[" + strings.Join(parts, ";") + "m"
+	return &screen{played}
 }
+
+func (self *screen) text() []string              { return self.Text() }
+func (self *screen) styled() []string            { return self.Styled() }
+func (self *screen) marked() []int               { return self.Marked() }
+func (self *screen) softWrapped() []int          { return self.SoftWrapped() }
+func (self *screen) copied() []string            { return self.Copied() }
+func (self *screen) backgroundAt(row int) string { return self.BackgroundAt(row) }
+func (self *screen) onScreen() []string          { return self.OnScreen() }
 
 func TestAScreenTellsTheSameWordsInDifferentColoursApart(t *testing.T) {
 	red := playScreen(t, "\x1b[38;2;204;102;102m$\x1b[0m curl", replayColumns)
@@ -14300,604 +14232,10 @@ func TestAScreenDrawsAroundTheLowerHalfOfASizedCharacter(t *testing.T) {
 	}
 }
 
-func playScreen(t *testing.T, stream string, columns int) *screen {
-	t.Helper()
-
-	return playScreenOfSize(t, stream, columns, 0)
-}
-
-func playScreenOfSize(t *testing.T, stream string, columns int, lines int) *screen {
-	t.Helper()
-
-	self := &screen{t: t, columns: columns, height: lines, isWrapping: true}
-	self.play(stream)
-
-	return self
-}
-
-func (self *screen) topRow() int {
-	if self.height == 0 {
-		return 0
-	}
-
-	return max(0, self.lowestRow-self.height+1)
-}
-
-func (self *screen) moveDown(rows int) {
-	self.row += rows
-	self.lowestRow = max(self.lowestRow, self.row)
-}
-
 func visibleScreen(t *testing.T, stream string, columns int) []string {
 	t.Helper()
 
 	return playScreen(t, stream, columns).text()
-}
-
-func (self *screen) play(stream string) {
-	for at := 0; at < len(stream); {
-		switch stream[at] {
-		case '\x1b':
-			at = self.escape(stream, at)
-		case '\r':
-			self.column = 0
-			at++
-		case '\n':
-			self.moveDown(1)
-			self.column = 0
-			at++
-		default:
-			end := at + 1
-			for end < len(stream) && stream[end] != '\x1b' && stream[end] != '\r' && stream[end] != '\n' {
-				end++
-			}
-
-			for grapheme, cells := range width.Graphemes(stream[at:end]) {
-				self.put(grapheme, cells)
-			}
-			at = end
-		}
-	}
-}
-
-func (self *screen) escape(stream string, at int) int {
-	if at+1 >= len(stream) {
-		return len(stream)
-	}
-
-	switch stream[at+1] {
-	case '[':
-		return self.control(stream, at)
-	case ']':
-		return self.operatingSystemCommand(stream, at)
-	case '_':
-		return self.applicationCommand(stream, at)
-	default:
-		self.t.Fatalf("the screen was sent an escape it does not know: %q", stream[at:min(at+8, len(stream))])
-		return len(stream)
-	}
-}
-
-func (self *screen) applicationCommand(stream string, at int) int {
-	return skipUntilStringTerminator(stream, at)
-}
-
-func (self *screen) operatingSystemCommand(stream string, at int) int {
-	end := skipUntilStringTerminator(stream, at)
-	terminatorWidth := 1
-	if end >= 2 && stream[end-2:end] == "\x1b\\" {
-		terminatorWidth = 2
-	}
-	payload := stream[at+2 : end-terminatorWidth]
-	if strings.HasPrefix(payload, "133;") {
-		self.semanticPrompt(payload)
-		return end
-	}
-
-	if !strings.HasPrefix(payload, "66;") {
-		return end
-	}
-
-	parts := strings.SplitN(payload, ";", 3)
-	if len(parts) != 3 {
-		return end
-	}
-
-	scale := 1
-	declaredWidth := width.Of(parts[2])
-	for option := range strings.SplitSeq(parts[1], ":") {
-		scale = prefixedNumber(option, "s=", scale)
-		declaredWidth = prefixedNumber(option, "w=", declaredWidth)
-	}
-
-	self.putSized(parts[2], scale*declaredWidth, scale)
-
-	return end
-}
-
-const messageMarkPayload = "133;A"
-
-func (self *screen) semanticPrompt(payload string) {
-	if payload != messageMarkPayload {
-		self.t.Fatalf("the screen was sent a semantic prompt it does not know: OSC %s", payload)
-		return
-	}
-
-	if self.marks == nil {
-		self.marks = map[int]bool{}
-	}
-
-	self.marks[self.row] = true
-}
-
-func (self *screen) putSized(grapheme string, cells int, rows int) {
-	drawnCells := min(width.Of(grapheme), cells)
-	self.put(grapheme, drawnCells)
-	placed := sizedCharacter{row: self.row, column: self.column - drawnCells, cells: cells, rows: rows}
-
-	for range cells - drawnCells {
-		self.put(" ", 1)
-	}
-
-	if rows > 1 {
-		self.sized = append(self.sized, placed)
-	}
-}
-
-func (self *screen) pastLowerHalves(column int) int {
-	for _, one := range self.sized {
-		if one.row < self.row && self.row < one.row+one.rows && one.covers(self.row, self.row, column, column) {
-			return self.pastLowerHalves(one.column + one.cells)
-		}
-	}
-
-	return column
-}
-
-func (self *screen) destroySized(firstRow int, lastRow int, firstColumn int, lastColumn int) {
-	self.sized = slices.DeleteFunc(self.sized, func(one sizedCharacter) bool {
-		if !one.covers(firstRow, lastRow, firstColumn, lastColumn) {
-			return false
-		}
-
-		if one.row < len(self.rows) {
-			row := self.rows[one.row]
-			for at := one.column; at < min(one.column+one.cells, len(row)); at++ {
-				row[at] = cell{grapheme: " "}
-			}
-		}
-
-		return true
-	})
-}
-
-func (self *screen) control(stream string, at int) int {
-	end := at + 2
-	for end < len(stream) && (stream[end] < 0x40 || stream[end] > 0x7e) {
-		end++
-	}
-
-	if end >= len(stream) {
-		return len(stream)
-	}
-
-	parameters := stream[at+2 : end]
-	self.apply(stream[end], parameters)
-
-	return end + 1
-}
-
-func (self *screen) apply(command byte, parameters string) {
-	if strings.HasPrefix(parameters, "?") {
-		self.privateMode(command, parameters)
-		return
-	}
-
-	count := max(1, numberOr(parameters, 1))
-
-	switch command {
-	case 'm':
-		self.restyle(parameters)
-	case 'A':
-		if self.row-count < self.topRow() {
-			self.wasDrawnAboveTheScreen = true
-		}
-		self.row = max(self.topRow(), self.row-count)
-	case 'B':
-		self.row += count
-		if self.height > 0 {
-			self.row = min(self.row, self.topRow()+self.height-1)
-		}
-	case 'C':
-		self.column += count
-	case 'D':
-		self.column = max(0, self.column-count)
-	case 'H':
-		self.row, self.column = self.topRow(), 0
-	case 'K':
-		self.eraseInRow(numberOr(parameters, 0))
-	case 'J':
-		self.erase(numberOr(parameters, 0))
-	default:
-		self.t.Fatalf("the screen was sent a control it does not know: ESC [ %s%c", parameters, command)
-	}
-}
-
-func (self *screen) privateMode(command byte, parameters string) {
-	if command != 'h' && command != 'l' {
-		self.t.Fatalf("the screen was sent a private mode it does not know: ESC [ %s%c", parameters, command)
-	}
-
-	switch parameters {
-	case "?7":
-		self.isWrapping = command == 'h'
-	case "?1049":
-		if command == 'h' {
-			self.enterAlternateScreen()
-		} else {
-			self.leaveAlternateScreen()
-		}
-	case "?25", "?2026":
-	default:
-		self.t.Fatalf("the screen was sent a private mode it does not know: ESC [ %s%c", parameters, command)
-	}
-}
-
-func (self *screen) eraseInRow(mode int) {
-	switch mode {
-	case 0:
-		self.destroySized(self.row, self.row, self.column, math.MaxInt)
-	case 1:
-		self.destroySized(self.row, self.row, 0, self.column)
-	case 2:
-		self.destroySized(self.row, self.row, 0, math.MaxInt)
-	}
-
-	if self.row >= len(self.rows) {
-		return
-	}
-
-	row := self.rows[self.row]
-
-	switch mode {
-	case 0:
-		if self.column < len(row) {
-			self.rows[self.row] = row[:self.column]
-		}
-		if self.column < self.columns {
-			delete(self.wraps, self.row)
-		}
-	case 1:
-		for at := range min(self.column+1, len(row)) {
-			row[at] = cell{grapheme: " "}
-		}
-	case 2:
-		self.rows[self.row] = nil
-		delete(self.wraps, self.row)
-	}
-}
-
-func (self *screen) erase(mode int) {
-	switch mode {
-	case 0:
-		if self.height > 0 && self.row == self.topRow() && self.column == 0 {
-			self.wasScreenErasedWhole = true
-		}
-
-		self.eraseInRow(0)
-
-		if self.row+1 < len(self.rows) {
-			self.rows = self.rows[:self.row+1]
-		}
-
-		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row > self.row })
-		maps.DeleteFunc(self.wraps, func(row int, _ bool) bool { return row > self.row })
-		self.destroySized(self.row+1, math.MaxInt, 0, math.MaxInt)
-	case 2, 3:
-		if self.height > 0 {
-			self.eraseScreenOrScrollback(mode)
-			return
-		}
-
-		self.rows = nil
-		self.marks = nil
-		self.wraps = nil
-		self.sized = nil
-	default:
-		self.t.Fatalf("the screen was asked to erase in a way it does not know: ESC [ %dJ", mode)
-	}
-}
-
-func (self *screen) eraseScreenOrScrollback(mode int) {
-	top := self.topRow()
-
-	if mode == 2 {
-		for at := top; at < len(self.rows); at++ {
-			self.rows[at] = nil
-		}
-		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row >= top })
-		maps.DeleteFunc(self.wraps, func(row int, _ bool) bool { return row >= top })
-		self.destroySized(top, math.MaxInt, 0, math.MaxInt)
-
-		return
-	}
-
-	self.rows = self.rows[min(top, len(self.rows)):]
-	self.marks = rowsFrom(self.marks, top)
-	self.wraps = rowsFrom(self.wraps, top)
-	self.sized = slices.DeleteFunc(self.sized, func(one sizedCharacter) bool { return one.row < top })
-	for at := range self.sized {
-		self.sized[at].row -= top
-	}
-	self.row -= top
-	self.lowestRow -= top
-}
-
-func rowsFrom(rows map[int]bool, top int) map[int]bool {
-	kept := map[int]bool{}
-	for row := range rows {
-		if row >= top {
-			kept[row-top] = true
-		}
-	}
-
-	return kept
-}
-
-func (self *screen) put(grapheme string, cells int) {
-	if cells == 0 {
-		for len(self.rows) <= self.row {
-			self.rows = append(self.rows, nil)
-		}
-		if self.column > 0 {
-			self.rows[self.row][self.column-1].grapheme += grapheme
-		}
-		return
-	}
-
-	if self.column+cells > self.columns && self.column > 0 {
-		if !self.isWrapping {
-			return
-		}
-
-		if self.wraps == nil {
-			self.wraps = map[int]bool{}
-		}
-
-		self.wraps[self.row] = true
-		self.moveDown(1)
-		self.column = 0
-	}
-
-	for len(self.rows) <= self.row {
-		self.rows = append(self.rows, nil)
-	}
-
-	self.column = self.pastLowerHalves(self.column)
-	drawnCells := min(cells, max(0, self.columns-self.column))
-	if drawnCells == 0 {
-		return
-	}
-	self.destroySized(self.row, self.row, self.column, self.column+drawnCells-1)
-	row := self.rows[self.row]
-	for len(row) < self.column+drawnCells {
-		row = append(row, cell{grapheme: " "})
-	}
-
-	styles := self.style.String()
-	if strings.HasPrefix(grapheme, picturePlaceholder) {
-		styles = ""
-	}
-
-	row[self.column] = cell{grapheme: grapheme, styles: styles}
-	for i := 1; i < drawnCells; i++ {
-		row[self.column+i] = cell{styles: styles}
-	}
-	self.rows[self.row] = row
-	if self.column+drawnCells == self.columns {
-		delete(self.wraps, self.row)
-	}
-	self.column = min(self.column+cells, self.columns)
-}
-
-func (self *screen) restyle(parameters string) {
-	tokens := strings.Split(parameters, ";")
-
-	for at := 0; at < len(tokens); at++ {
-		switch token := tokens[at]; {
-		case token == "" || token == "0":
-			self.style = graphicStyle{}
-		case token == "38" || token == "48" || token == "58":
-			colour, next := self.readColour(tokens, at)
-			switch token {
-			case "38":
-				self.style.foreground = colour
-			case "48":
-				self.style.background = colour
-			default:
-				self.style.underline = colour
-			}
-			at = next
-		case token == "39":
-			self.style.foreground = ""
-		case token == "49":
-			self.style.background = ""
-		case token == "59":
-			self.style.underline = ""
-		case decorationsOff[token] != nil:
-			self.style.decorations = slices.DeleteFunc(self.style.decorations, func(one string) bool {
-				name, _, _ := strings.Cut(one, ":")
-				return slices.Contains(decorationsOff[token], name)
-			})
-		case isDecoration(token):
-			if !slices.Contains(self.style.decorations, token) {
-				self.style.decorations = append(self.style.decorations, token)
-			}
-		default:
-			self.t.Fatalf("the screen was sent a graphic rendition it does not know: ESC [ %sm", parameters)
-		}
-	}
-}
-
-func (self *screen) readColour(tokens []string, at int) (string, int) {
-	remaining := 0
-	if at+1 < len(tokens) {
-		switch tokens[at+1] {
-		case "2":
-			remaining = 4
-		case "5":
-			remaining = 2
-		}
-	}
-
-	if remaining == 0 || at+remaining >= len(tokens) {
-		self.t.Fatalf("the screen was sent a colour it does not know: %q", strings.Join(tokens[at:], ";"))
-		return "", len(tokens)
-	}
-
-	return strings.Join(tokens[at:at+remaining+1], ";"), at + remaining
-}
-
-func isDecoration(token string) bool {
-	name, _, _ := strings.Cut(token, ":")
-	number, err := strconv.Atoi(name)
-
-	return err == nil && (number >= 1 && number <= 9 || number == 53)
-}
-
-func (self *screen) onScreen() []string {
-	text := self.text()
-	rows := make([]string, self.height)
-	for i := range rows {
-		if at := self.topRow() + i; at < len(text) {
-			rows[i] = text[at]
-		}
-	}
-
-	return rows
-}
-
-func (self *screen) text() []string {
-	return self.lines(func(row []cell) string {
-		var drawn strings.Builder
-		for _, one := range row {
-			drawn.WriteString(one.grapheme)
-		}
-
-		return drawn.String()
-	})
-}
-
-func (self *screen) styled() []string {
-	return self.lines(func(row []cell) string {
-		var drawn strings.Builder
-		styles := ""
-		for _, one := range row {
-			if one.styles != styles {
-				if styles != "" {
-					drawn.WriteString("\x1b[0m")
-				}
-				drawn.WriteString(one.styles)
-				styles = one.styles
-			}
-			drawn.WriteString(one.grapheme)
-		}
-		if styles != "" {
-			drawn.WriteString("\x1b[0m")
-		}
-
-		return drawn.String()
-	})
-}
-
-func (self *screen) marked() []int {
-	return slices.Sorted(maps.Keys(self.marks))
-}
-
-func (self *screen) softWrapped() []int {
-	return slices.Sorted(maps.Keys(self.wraps))
-}
-
-func (self *screen) copied() []string {
-	var lines []string
-
-	for at, row := range self.rows {
-		var drawn strings.Builder
-		for _, one := range row {
-			drawn.WriteString(one.grapheme)
-		}
-
-		text := drawn.String()
-		if !self.wraps[at] {
-			text = strings.TrimRight(text, " ")
-		}
-
-		if at > 0 && self.wraps[at-1] {
-			lines[len(lines)-1] += text
-			continue
-		}
-
-		lines = append(lines, text)
-	}
-
-	return lines
-}
-
-func (self *screen) backgroundAt(row int) string {
-	if row >= len(self.rows) || len(self.rows[row]) == 0 {
-		return ""
-	}
-
-	return self.rows[row][0].styles
-}
-
-func (self *screen) lines(draw func(row []cell) string) []string {
-	lines := make([]string, 0, len(self.rows))
-
-	for _, row := range self.rows {
-		lines = append(lines, strings.TrimRight(draw(row), " "))
-	}
-
-	for len(lines) > 0 && lines[len(lines)-1] == "" {
-		lines = lines[:len(lines)-1]
-	}
-
-	return lines
-}
-
-func skipUntilStringTerminator(stream string, at int) int {
-	for end := at + 2; end < len(stream); end++ {
-		switch {
-		case stream[end] == '\a':
-			return end + 1
-		case stream[end] == '\x1b' && end+1 < len(stream) && stream[end+1] == '\\':
-			return end + 2
-		}
-	}
-
-	return len(stream)
-}
-
-func prefixedNumber(parameter string, prefix string, fallback int) int {
-	value, err := strconv.Atoi(strings.TrimPrefix(parameter, prefix))
-	if err != nil || !strings.HasPrefix(parameter, prefix) {
-		return fallback
-	}
-
-	return value
-}
-
-func numberOr(parameters string, fallback int) int {
-	if parameters == "" {
-		return fallback
-	}
-
-	value, err := strconv.Atoi(strings.Split(parameters, ";")[0])
-	if err != nil {
-		return fallback
-	}
-
-	return value
 }
 
 type goldenSegmentOptions string

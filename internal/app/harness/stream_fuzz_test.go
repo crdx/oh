@@ -274,10 +274,10 @@ func FuzzAStreamedConversationDrawsWhatItsReplayDraws(fuzzer *testing.F) {
 			t.Errorf("%d tasks ended while streaming but %d were recorded", streamed.endedTasks, recordedTasks)
 		}
 		played := playScreenOfSize(t, streamed.drawn, columns, lines)
-		if played.wasDrawnAboveTheScreen {
+		if played.WasDrawnAboveTheScreen() {
 			t.Errorf("streaming moved the cursor above the top of a %d-line screen", lines)
 		}
-		if played.wasScreenErasedWhole {
+		if played.WasScreenErasedWhole() {
 			t.Errorf("streaming erased a %d-line screen from its top, which a terminal may push into scrollback", lines)
 		}
 		requireSameVisibleScreenInColumns(

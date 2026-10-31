@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/migrate"
 	"crdx.org/oh/internal/app/ctl/models"
 	"crdx.org/oh/internal/app/ctl/regenerate"
+	"crdx.org/oh/internal/app/ctl/render"
 	"crdx.org/oh/internal/app/ctl/sessions"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/style"
@@ -29,6 +30,7 @@ Usage:
     oh --ctl migrate [options] [<session>...]
     oh --ctl gc [options]
     oh --ctl models [-I]
+    oh --ctl render [options] <file>
 
 Commands:
     sessions      List or delete stored sessions
@@ -38,18 +40,19 @@ Commands:
     migrate       Bring configuration and stored data up to date
     gc            Remove the caches sessions leave behind
     models        Print the qualified names of usable models
+    render        Draw a journal, scene, or stream
 `
 
 func isCommand(argument string) bool {
 	switch argument {
-	case "sessions", "check", "analyse", "regenerate", "migrate", "gc", "models":
+	case "sessions", "check", "analyse", "regenerate", "migrate", "gc", "models", "render":
 		return true
 	default:
 		return false
 	}
 }
 
-func Run(arguments []string) int {
+func Run(arguments []string, drawJournal render.DrawJournal) int {
 	originalArguments := os.Args
 	os.Args = append([]string{"oh", Flag}, arguments...)
 	defer func() { os.Args = originalArguments }()
@@ -68,7 +71,7 @@ func Run(arguments []string) int {
 		fmt.Print(usage)
 		return 2
 	}
-	if arguments[0] != "migrate" {
+	if arguments[0] != "migrate" && arguments[0] != "render" {
 		if err := location.RequireCurrentDataLayout(); err != nil {
 			fmt.Fprintln(os.Stderr, style.Error(err))
 			return 1
@@ -91,6 +94,8 @@ func Run(arguments []string) int {
 		err = gc.Run()
 	case "models":
 		err = models.Run()
+	case "render":
+		err = render.Run(drawJournal)
 	default:
 		fmt.Print(usage)
 		return 2

@@ -221,7 +221,14 @@ golden:
         ./internal/app/shell \
         ./internal/app/toolresult \
         ./internal/app/usage \
-        ./internal/app/ctl/... \
+        ./internal/app/ctl \
+        ./internal/app/ctl/analyse \
+        ./internal/app/ctl/check \
+        ./internal/app/ctl/complete \
+        ./internal/app/ctl/gc \
+        ./internal/app/ctl/migrate \
+        ./internal/app/ctl/regenerate \
+        ./internal/app/ctl/sessions \
         ./pkg/session \
         ./pkg/tool/command \
         ./pkg/toolbox/bash \

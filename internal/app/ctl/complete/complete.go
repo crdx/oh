@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/migrate"
 	"crdx.org/oh/internal/app/ctl/models"
 	"crdx.org/oh/internal/app/ctl/regenerate"
+	"crdx.org/oh/internal/app/ctl/render"
 	"crdx.org/oh/internal/app/ctl/sessions"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/util/strutil"
@@ -26,7 +27,7 @@ const (
 	kindSession   = "session"
 )
 
-var commands = []string{"analyse", "check", "gc", "migrate", "models", "regenerate", "sessions"}
+var commands = []string{"analyse", "check", "gc", "migrate", "models", "regenerate", "render", "sessions"}
 
 var optionsByCommand = map[string][]string{
 	"analyse":    strutil.OptionNames(analyse.Usage),
@@ -35,6 +36,7 @@ var optionsByCommand = map[string][]string{
 	"migrate":    strutil.OptionNames(migrate.Usage),
 	"models":     strutil.OptionNames(models.Usage),
 	"regenerate": strutil.OptionNames(regenerate.Usage),
+	"render":     strutil.OptionNames(render.Usage),
 	"sessions":   strutil.OptionNames(sessions.Usage),
 }
 

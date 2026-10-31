@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Add `oh --ctl render` for rendering arbitrary ui for e.g. documentation
+
 ## [0.27.4] — 2026-10-29
 
 - Only generate task name when it gets backgrounded

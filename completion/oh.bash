@@ -26,6 +26,9 @@ function _oh {
             KIND=session
         elif [[ $COMMAND == sessions && ( $PREVIOUS == -d || $PREVIOUS == --delete ) ]]; then
             KIND=deletable
+        elif [[ $COMMAND == render ]]; then
+            mapfile -t COMPREPLY < <(compgen -f -- "$WORD")
+            return
         else
             return
         fi

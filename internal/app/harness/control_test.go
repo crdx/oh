@@ -26,6 +26,7 @@ func TestEveryControlCommandRunsThroughTheBinary(t *testing.T) {
 		{"regenerate", name},
 		{"migrate", "--dry-run"},
 		{"gc"},
+		{"render", renderableJournal(t)},
 	} {
 		t.Run(strings.Join(arguments, " "), func(t *testing.T) {
 			output := runTestBinary(t, rig.binary, rig.workspace, rig.environment, append([]string{"--ctl"}, arguments...)...)
@@ -112,4 +113,15 @@ func TestAFailingControlCommandSaysWhyAndFails(t *testing.T) {
 	if !strings.Contains(string(output), "no-such-session") {
 		t.Errorf("the failure did not name the session, in %q", output)
 	}
+}
+
+func renderableJournal(t *testing.T) string {
+	t.Helper()
+
+	path, err := filepath.Abs(filepath.Join("testdata", "input", "demo@r.jsonl"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return path
 }
