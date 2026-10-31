@@ -77,6 +77,18 @@ type Snapshot struct {
 	Failure               string       `json:"failure"`
 }
 
+func (self Snapshot) HasGeneratedToolName() bool {
+	if self.ToolName == "" || generatedName(self.ToolName) != self.ToolName {
+		return false
+	}
+	suffix, hasPrefix := strings.CutPrefix(self.ID, self.ToolName+"-")
+	if !hasPrefix {
+		return false
+	}
+	number, err := strconv.Atoi(suffix)
+	return err == nil && number > 0 && strconv.Itoa(number) == suffix
+}
+
 func RespawnLimitReason() string {
 	return fmt.Sprintf("respawning stopped after %d runs in a row each ended within %s", QuickRunsTolerated, QuickRunLimit)
 }

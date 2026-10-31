@@ -35,7 +35,7 @@ bash [info, 2 lines, 134B, toolu_1]
 ## Task run ended · +0s
 
 ````
-Task `docs` finished after 0.0s
+Task `docs` (`bash`) finished after 0.0s
 
 ```
 server ready

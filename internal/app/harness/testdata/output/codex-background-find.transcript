@@ -24,7 +24,7 @@ find: *.log [info, 1 line, 50B, call-2]
 ## Task run ended · +0s
 
 ````
-Task `logs` finished after 0.0s
+Task `logs` (`find`) finished after 0.0s
 
 ```
 server.log

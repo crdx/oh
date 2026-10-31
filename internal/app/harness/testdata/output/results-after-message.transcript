@@ -27,7 +27,7 @@ grep: spinner [call_2]
 ## Task run ended · +4s
 
 ```
-Task `docs` finished after 12s
+Task `docs` (`bash`) finished after 12s
 ```
 
 ## Tool calls · +5s

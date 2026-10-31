@@ -223,11 +223,27 @@ func submittedContentRows(
 	}
 
 	text := strutil.StripControl(message.text)
+	render := func(text string, columns int) []string {
+		if shouldRenderHyperlinks {
+			return markdown.RenderWithHyperlinksUnder(text, columns, roots)
+		}
+		return markdown.Render(text, columns)
+	}
 	var content []string
-	if shouldRenderHyperlinks {
-		content = markdown.RenderWithHyperlinksUnder(text, contentColumns, roots)
+	if message.toolName == "" {
+		content = render(text, contentColumns)
 	} else {
-		content = markdown.Render(text, contentColumns)
+		header, output, hasOutput := strings.Cut(text, "\n\n")
+		rows := render(header, unwrappedPreviewColumns)
+		toolName := strutil.StripControl(message.toolName)
+		for _, row := range rows {
+			row = strings.Replace(row, "("+style.Code(toolName)+")", "("+style.Warning(toolName)+")", 1)
+			content = append(content, width.Wrap(row, contentColumns)...)
+		}
+		if hasOutput {
+			content = append(content, "")
+			content = append(content, render(output, contentColumns)...)
+		}
 	}
 	if message.kind == userSubmission && strings.TrimSpace(text) != "" && !slices.ContainsFunc(content, func(row string) bool {
 		return strings.TrimSpace(style.Plain(row)) != ""
@@ -671,7 +687,7 @@ func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage))
 	}
 
 	for _, notice := range notices {
-		draw(submittedMessage{text: notice.Text, kind: sentHarnessSubmission, mark: notice.Mark, intent: notice.Intent, link: notice.Link})
+		draw(submittedMessage{text: notice.Text, kind: sentHarnessSubmission, mark: notice.Mark, intent: notice.Intent, toolName: notice.ToolName, link: notice.Link})
 	}
 }
 

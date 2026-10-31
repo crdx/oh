@@ -679,10 +679,10 @@ func TestATaskNoticeEndsItsStatusWithTheIntent(t *testing.T) {
 	if strings.Contains(notices[0].Text, "Building") {
 		t.Errorf("the intent is part of the notice text %q", notices[0].Text)
 	}
-	message := submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, mark: notices[0].Mark, intent: notices[0].Intent}
+	message := submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, mark: notices[0].Mark, intent: notices[0].Intent, toolName: notices[0].ToolName}
 
 	wide := submittedContentRows(message, 80, false, link.Roots{})
-	if want := "Task build failed: exited 1 (Building every package once more)"; !strings.Contains(style.Plain(wide[0]), want) {
+	if want := "Task build (bash) failed: exited 1 (Building every package once more)"; !strings.Contains(style.Plain(wide[0]), want) {
 		t.Errorf("first row is %q, want it to hold %q", style.Plain(wide[0]), want)
 	}
 	if !strings.Contains(wide[0], style.Reasoning("(Building every package once more)")) {
@@ -715,9 +715,9 @@ func TestASuccessfulTaskNoticePutsItsDurationBeforeItsIntent(t *testing.T) {
 		EndedAt:    startedAt.Add(8*time.Minute + 10*time.Second),
 	}, IsFinal: true})
 	notices, _ := DrawnNotices(ended, NoticeDrawing{Introductions: NewIntroductions()})
-	message := submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, mark: notices[0].Mark, intent: notices[0].Intent}
+	message := submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, mark: notices[0].Mark, intent: notices[0].Intent, toolName: notices[0].ToolName}
 	rows := submittedContentRows(message, 100, false, link.Roots{})
-	if got := strings.TrimSpace(style.Plain(rows[0])); got != "⚙️ Task golden-1 finished after 8m 10s (Correcting the golden fixture regeneration)" {
+	if got := strings.TrimSpace(style.Plain(rows[0])); got != "⚙️ Task golden-1 (offload) finished after 8m 10s (Correcting the golden fixture regeneration)" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -731,8 +731,8 @@ func TestATaskNoticeWithoutAnIntentEndsAtItsStatus(t *testing.T) {
 		State:      tasks.Done,
 	}, IsFinal: true})
 	notices, _ := DrawnNotices(ended, NoticeDrawing{Introductions: NewIntroductions()})
-	rows := submittedContentRows(submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, mark: notices[0].Mark, intent: notices[0].Intent}, 80, false, link.Roots{})
-	if got := strings.TrimSpace(style.Plain(rows[0])); got != "⚙️ Task search finished" {
+	rows := submittedContentRows(submittedMessage{text: notices[0].Text, kind: sentHarnessSubmission, mark: notices[0].Mark, intent: notices[0].Intent, toolName: notices[0].ToolName}, 80, false, link.Roots{})
+	if got := strings.TrimSpace(style.Plain(rows[0])); got != "⚙️ Task search (grep) finished" {
 		t.Errorf("got %q", got)
 	}
 }

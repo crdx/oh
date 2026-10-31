@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Show the originating tool for custom task names
+
 ## [0.28.0] — 2026-10-31
 
 - Add `oh --ctl render` for rendering arbitrary ui for e.g. documentation

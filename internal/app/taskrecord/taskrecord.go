@@ -171,6 +171,9 @@ func (self Completion) Reference(sessionName string) toolresult.TaskReference {
 func (self Completion) notice(output string) string {
 	snapshot := self.Snapshot
 	status := "Task " + markdown.CodeSpan(snapshot.ID)
+	if snapshot.ToolName != "" && !snapshot.HasGeneratedToolName() {
+		status += " (" + markdown.CodeSpan(snapshot.ToolName) + ")"
+	}
 	if snapshot.Run > 1 {
 		status += fmt.Sprintf(" run %d", snapshot.Run)
 	}

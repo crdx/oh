@@ -46,11 +46,12 @@ const (
 )
 
 type submittedMessage struct {
-	text   string
-	kind   submissionKind
-	mark   string
-	intent string
-	link   NoticeLink
+	text     string
+	kind     submissionKind
+	mark     string
+	intent   string
+	toolName string
+	link     NoticeLink
 }
 
 func (self submittedMessage) marker() string {
@@ -181,7 +182,7 @@ func (self *PendingMessages) Rows(columns int) []string {
 	for _, message := range self.messages {
 		parts = append(parts, output.StackPart{
 			Rows: submittedContentRows(
-				submittedMessage{text: message.Text, kind: self.kind, mark: message.Mark, intent: message.Intent, link: message.Link},
+				submittedMessage{text: message.Text, kind: self.kind, mark: message.Mark, intent: message.Intent, toolName: message.ToolName, link: message.Link},
 				columns,
 				self.shouldRenderHyperlinks,
 				self.pathRoots,
@@ -241,10 +242,11 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 }
 
 type Notice struct {
-	Text   string
-	Mark   string
-	Intent string
-	Link   NoticeLink
+	Text     string
+	Mark     string
+	Intent   string
+	ToolName string
+	Link     NoticeLink
 }
 
 type NoticeLink struct {
@@ -285,9 +287,13 @@ func DrawnNotices(event agent.Event, drawing NoticeDrawing) ([]Notice, bool) {
 	}
 	if completion, isEnded := taskrecord.CompletionOf(event); isEnded {
 		notice := Notice{
-			Text:   completion.NoticeWithin(drawing.Toggles.GetWholeNumber(experimental.TaskOutputLines, everyTaskOutputLine)),
-			Mark:   taskMark,
-			Intent: completion.Intent(),
+			Text:     completion.NoticeWithin(drawing.Toggles.GetWholeNumber(experimental.TaskOutputLines, everyTaskOutputLine)),
+			Mark:     taskMark,
+			Intent:   completion.Intent(),
+			ToolName: completion.Snapshot.ToolName,
+		}
+		if completion.Snapshot.HasGeneratedToolName() {
+			notice.ToolName = ""
 		}
 		if drawing.SessionName != "" {
 			notice.Link = NoticeLink{

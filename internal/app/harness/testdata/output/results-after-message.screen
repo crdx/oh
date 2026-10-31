@@ -10,7 +10,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- ⚙️ Task docs finished after 12s
+ ⚙️ Task docs (bash) finished after 12s
 
 
 Both still mention the spinner.
@@ -135,6 +135,18 @@ c
 
 s
 
+(
+
+b
+
+a
+
+s
+
+h
+
+)
+
 f
 
 i
@@ -206,7 +218,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- ⚙️ Task docs finished after 12s
+ ⚙️ Task docs (bash) finished after 12s
 
 
 Both still mention the spinner.
@@ -229,6 +241,7 @@ grep spi… 1L
 
  ⚙️ Task
     docs
+    (bash)
     finishe
     d after
     12s
@@ -248,7 +261,7 @@ read screen.go 3L
 grep spinner *.go 1L
 
 
- ⚙️ Task docs finished after 12s
+ ⚙️ Task docs (bash) finished after 12s
 
 
 Both still mention the spinner.

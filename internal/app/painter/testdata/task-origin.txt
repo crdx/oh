@@ -1,0 +1,519 @@
+── "offload" · 120 columns · pending false
+                                                                                                                        
+ ⚙️ Task check-1 (offload) finished after 14s (Rechecking offline command contracts)                                    
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                                        
+
+── "offload" · 120 columns · pending true
+                                                                                                                        
+ ⏳ Task check-1 (offload) finished after 14s (Rechecking offline command contracts)                                    
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                   double-enter to send 
+
+── "offload" · 60 columns · pending false
+                                                            
+ ⚙️ Task check-1 (offload) finished after 14s (Rechecking   
+    offline command contracts)                              
+                                                            
+    offload output stays unchanged                          
+                                                            
+
+── "offload" · 60 columns · pending true
+                                                            
+ ⏳ Task check-1 (offload) finished after 14s (Rechecking   
+    offline command contracts)                              
+                                                            
+    offload output stays unchanged                          
+                                       double-enter to send 
+
+── "offload" · 30 columns · pending false
+                              
+ ⚙️ Task check-1 (offload)    
+    finished after 14s        
+    (Rechecking offline       
+    command contracts)        
+                              
+    offload output stays      
+    unchanged                 
+                              
+
+── "offload" · 30 columns · pending true
+                              
+ ⏳ Task check-1 (offload)    
+    finished after 14s        
+    (Rechecking offline       
+    command contracts)        
+                              
+    offload output stays      
+    unchanged                 
+         double-enter to send 
+
+── "offload" · 16 columns · pending false
+                
+ ⚙️ Task        
+    check-1     
+    (offload)   
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "offload" · 16 columns · pending true
+                
+ ⏳ Task        
+    check-1     
+    (offload)   
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "bash" · 120 columns · pending false
+                                                                                                                        
+ ⚙️ Task check-1 (bash) finished after 14s (Rechecking offline command contracts)                                       
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                                        
+
+── "bash" · 120 columns · pending true
+                                                                                                                        
+ ⏳ Task check-1 (bash) finished after 14s (Rechecking offline command contracts)                                       
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                   double-enter to send 
+
+── "bash" · 60 columns · pending false
+                                                            
+ ⚙️ Task check-1 (bash) finished after 14s (Rechecking      
+    offline command contracts)                              
+                                                            
+    offload output stays unchanged                          
+                                                            
+
+── "bash" · 60 columns · pending true
+                                                            
+ ⏳ Task check-1 (bash) finished after 14s (Rechecking      
+    offline command contracts)                              
+                                                            
+    offload output stays unchanged                          
+                                       double-enter to send 
+
+── "bash" · 30 columns · pending false
+                              
+ ⚙️ Task check-1 (bash)       
+    finished after 14s        
+    (Rechecking offline       
+    command contracts)        
+                              
+    offload output stays      
+    unchanged                 
+                              
+
+── "bash" · 30 columns · pending true
+                              
+ ⏳ Task check-1 (bash)       
+    finished after 14s        
+    (Rechecking offline       
+    command contracts)        
+                              
+    offload output stays      
+    unchanged                 
+         double-enter to send 
+
+── "bash" · 16 columns · pending false
+                
+ ⚙️ Task        
+    check-1     
+    (bash)      
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "bash" · 16 columns · pending true
+                
+ ⏳ Task        
+    check-1     
+    (bash)      
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "find" · 120 columns · pending false
+                                                                                                                        
+ ⚙️ Task check-1 (find) finished after 14s (Rechecking offline command contracts)                                       
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                                        
+
+── "find" · 120 columns · pending true
+                                                                                                                        
+ ⏳ Task check-1 (find) finished after 14s (Rechecking offline command contracts)                                       
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                   double-enter to send 
+
+── "find" · 60 columns · pending false
+                                                            
+ ⚙️ Task check-1 (find) finished after 14s (Rechecking      
+    offline command contracts)                              
+                                                            
+    offload output stays unchanged                          
+                                                            
+
+── "find" · 60 columns · pending true
+                                                            
+ ⏳ Task check-1 (find) finished after 14s (Rechecking      
+    offline command contracts)                              
+                                                            
+    offload output stays unchanged                          
+                                       double-enter to send 
+
+── "find" · 30 columns · pending false
+                              
+ ⚙️ Task check-1 (find)       
+    finished after 14s        
+    (Rechecking offline       
+    command contracts)        
+                              
+    offload output stays      
+    unchanged                 
+                              
+
+── "find" · 30 columns · pending true
+                              
+ ⏳ Task check-1 (find)       
+    finished after 14s        
+    (Rechecking offline       
+    command contracts)        
+                              
+    offload output stays      
+    unchanged                 
+         double-enter to send 
+
+── "find" · 16 columns · pending false
+                
+ ⚙️ Task        
+    check-1     
+    (find)      
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "find" · 16 columns · pending true
+                
+ ⏳ Task        
+    check-1     
+    (find)      
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "" · 120 columns · pending false
+                                                                                                                        
+ ⚙️ Task check-1 finished after 14s (Rechecking offline command contracts)                                              
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                                        
+
+── "" · 120 columns · pending true
+                                                                                                                        
+ ⏳ Task check-1 finished after 14s (Rechecking offline command contracts)                                              
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                   double-enter to send 
+
+── "" · 60 columns · pending false
+                                                            
+ ⚙️ Task check-1 finished after 14s (Rechecking offline     
+    command contracts)                                      
+                                                            
+    offload output stays unchanged                          
+                                                            
+
+── "" · 60 columns · pending true
+                                                            
+ ⏳ Task check-1 finished after 14s (Rechecking offline     
+    command contracts)                                      
+                                                            
+    offload output stays unchanged                          
+                                       double-enter to send 
+
+── "" · 30 columns · pending false
+                              
+ ⚙️ Task check-1 finished     
+    after 14s (Rechecking     
+    offline command           
+    contracts)                
+                              
+    offload output stays      
+    unchanged                 
+                              
+
+── "" · 30 columns · pending true
+                              
+ ⏳ Task check-1 finished     
+    after 14s (Rechecking     
+    offline command           
+    contracts)                
+                              
+    offload output stays      
+    unchanged                 
+         double-enter to send 
+
+── "" · 16 columns · pending false
+                
+ ⚙️ Task        
+    check-1     
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "" · 16 columns · pending true
+                
+ ⏳ Task        
+    check-1     
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "offload-1 / offload" · 120 columns · pending false
+                                                                                                                        
+ ⚙️ Task offload-1 finished after 14s (Rechecking offline command contracts)                                            
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                                        
+
+── "offload-1 / offload" · 120 columns · pending true
+                                                                                                                        
+ ⏳ Task offload-1 finished after 14s (Rechecking offline command contracts)                                            
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                   double-enter to send 
+
+── "offload-1 / offload" · 60 columns · pending false
+                                                            
+ ⚙️ Task offload-1 finished after 14s (Rechecking offline   
+    command contracts)                                      
+                                                            
+    offload output stays unchanged                          
+                                                            
+
+── "offload-1 / offload" · 60 columns · pending true
+                                                            
+ ⏳ Task offload-1 finished after 14s (Rechecking offline   
+    command contracts)                                      
+                                                            
+    offload output stays unchanged                          
+                                       double-enter to send 
+
+── "offload-1 / offload" · 30 columns · pending false
+                              
+ ⚙️ Task offload-1 finished   
+    after 14s (Rechecking     
+    offline command           
+    contracts)                
+                              
+    offload output stays      
+    unchanged                 
+                              
+
+── "offload-1 / offload" · 30 columns · pending true
+                              
+ ⏳ Task offload-1 finished   
+    after 14s (Rechecking     
+    offline command           
+    contracts)                
+                              
+    offload output stays      
+    unchanged                 
+         double-enter to send 
+
+── "offload-1 / offload" · 16 columns · pending false
+                
+ ⚙️ Task        
+    offload-1   
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "offload-1 / offload" · 16 columns · pending true
+                
+ ⏳ Task        
+    offload-1   
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "bash-2 / bash" · 120 columns · pending false
+                                                                                                                        
+ ⚙️ Task bash-2 finished after 14s (Rechecking offline command contracts)                                               
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                                        
+
+── "bash-2 / bash" · 120 columns · pending true
+                                                                                                                        
+ ⏳ Task bash-2 finished after 14s (Rechecking offline command contracts)                                               
+                                                                                                                        
+    offload output stays unchanged                                                                                      
+                                                                                                   double-enter to send 
+
+── "bash-2 / bash" · 60 columns · pending false
+                                                            
+ ⚙️ Task bash-2 finished after 14s (Rechecking offline      
+    command contracts)                                      
+                                                            
+    offload output stays unchanged                          
+                                                            
+
+── "bash-2 / bash" · 60 columns · pending true
+                                                            
+ ⏳ Task bash-2 finished after 14s (Rechecking offline      
+    command contracts)                                      
+                                                            
+    offload output stays unchanged                          
+                                       double-enter to send 
+
+── "bash-2 / bash" · 30 columns · pending false
+                              
+ ⚙️ Task bash-2 finished      
+    after 14s (Rechecking     
+    offline command           
+    contracts)                
+                              
+    offload output stays      
+    unchanged                 
+                              
+
+── "bash-2 / bash" · 30 columns · pending true
+                              
+ ⏳ Task bash-2 finished      
+    after 14s (Rechecking     
+    offline command           
+    contracts)                
+                              
+    offload output stays      
+    unchanged                 
+         double-enter to send 
+
+── "bash-2 / bash" · 16 columns · pending false
+                
+ ⚙️ Task bash-2 
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                
+
+── "bash-2 / bash" · 16 columns · pending true
+                
+ ⏳ Task bash-2 
+    finished    
+    after 14s   
+    (Rechecking 
+    offline     
+    command     
+    contracts)  
+                
+    offload     
+    output      
+    stays       
+    unchanged   
+                

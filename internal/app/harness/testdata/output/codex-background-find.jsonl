@@ -15,7 +15,7 @@
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"main.go"}}
 {"kind":"item","payload":{"type":"function_call","call_id":"call-2","name":"find","arguments":"{\"pattern\":\"*.log\",\"background\":true,\"task_name\":\"logs\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"backgrounded (named \"logs\"); end your turn to wait"}}
-{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `logs` finished after 0.0s\n\n```\nserver.log\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"task\"\u003e\nTask `logs` (`find`) finished after 0.0s\n\n```\nserver.log\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"item","payload":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"The foreground search found main.go. The background search found server.log."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

@@ -52,14 +52,14 @@ func TestAGeneratedTaskIDNamesItsToolAndSkipsRecordedIDs(t *testing.T) {
 	snapshot, err := manager.Start(t.Context(), "", "lookup", true, false, func(context.Context) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{}, nil
 	}, nil)
-	if err != nil || snapshot.ID != "lookup-3" {
+	if err != nil || snapshot.ID != "lookup-3" || !snapshot.HasGeneratedToolName() {
 		t.Errorf("generated %+v, %v; want lookup-3", snapshot, err)
 	}
 
 	fallback, err := manager.Start(t.Context(), "", "weather_forecast", true, false, func(context.Context) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{}, nil
 	}, nil)
-	if err != nil || fallback.ID != "task-1" {
+	if err != nil || fallback.ID != "task-1" || fallback.HasGeneratedToolName() {
 		t.Errorf("fallback generated %+v, %v; want task-1", fallback, err)
 	}
 }
@@ -220,4 +220,33 @@ func TestRestartStopsTheCurrentRunBeforeStartingTheNext(t *testing.T) {
 			t.Errorf("active restart lost either run: %+v, %v", finished, err)
 		}
 	})
+}
+
+func TestOnlyAnExactGeneratedNameIdentifiesTheTool(t *testing.T) {
+	for _, test := range []struct {
+		name     string
+		toolName string
+		want     bool
+	}{
+		{name: "offload-1", toolName: "offload", want: true},
+		{name: "bash-2", toolName: "bash", want: true},
+		{name: "find-42", toolName: "find", want: true},
+		{name: "my-tool-12", toolName: "my-tool", want: true},
+		{name: "splittest-2", toolName: "offload"},
+		{name: "offload-check", toolName: "offload"},
+		{name: "offload-1-extra", toolName: "offload"},
+		{name: "offload-01", toolName: "offload"},
+		{name: "offload-0", toolName: "offload"},
+		{name: "offload-+1", toolName: "offload"},
+		{name: "offload-999999999999999999999999", toolName: "offload"},
+		{name: "bash-2", toolName: "offload"},
+		{name: "offload", toolName: "offload"},
+		{name: "task-1", toolName: "weather_forecast"},
+		{name: "task-1"},
+	} {
+		snapshot := tasks.Snapshot{ID: test.name, ToolName: test.toolName}
+		if got := snapshot.HasGeneratedToolName(); got != test.want {
+			t.Errorf("task %q from %q: generated tool name = %t, want %t", test.name, test.toolName, got, test.want)
+		}
+	}
 }

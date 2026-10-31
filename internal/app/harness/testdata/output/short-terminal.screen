@@ -38,7 +38,7 @@ read –
 read –
 
 
- ⚙️ Task build failed: exited 2
+ ⚙️ Task build (bash) failed: exited 2
 
     undefined: getWidth
     exit status 1

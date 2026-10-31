@@ -390,3 +390,54 @@ func TestAnUnfinishedLinkFallsBackToTheLatestFinishedMatchingRun(t *testing.T) {
 		t.Errorf("latest finished run is %+v, %v", found, err)
 	}
 }
+
+func TestATaskCompletionNamesItsOriginatingTool(t *testing.T) {
+	for _, toolName := range []string{"offload", "bash", "find", "custom`tool", ""} {
+		conclusion := tasks.Conclusion{Snapshot: tasks.Snapshot{
+			ID: "build", ToolName: toolName, Run: 1, State: tasks.Done,
+		}, IsFinal: true}
+		want := "Task `build`"
+		if toolName != "" {
+			if toolName == "custom`tool" {
+				want += " (`` custom`tool ``)"
+			} else {
+				want += " (`" + toolName + "`)"
+			}
+		}
+		want += " finished"
+		event := taskrecord.EndedEvent(conclusion)
+		if notice, isSaid := taskrecord.EndedNotice(event); !isSaid || notice != want {
+			t.Errorf("tool %q said %q (%t), want %q", toolName, notice, isSaid, want)
+		}
+		completion, _ := taskrecord.CompletionOf(event)
+		if got := completion.NoticeWithin(0); got != want {
+			t.Errorf("tool %q drew %q, want %q", toolName, got, want)
+		}
+	}
+}
+
+func TestGeneratedTaskNamesDoNotRepeatTheirTool(t *testing.T) {
+	for _, test := range []struct {
+		name     string
+		toolName string
+		want     string
+	}{
+		{name: "offload-1", toolName: "offload", want: "Task `offload-1` finished"},
+		{name: "bash-2", toolName: "bash", want: "Task `bash-2` finished"},
+		{name: "find-42", toolName: "find", want: "Task `find-42` finished"},
+		{name: "splittest-2", toolName: "offload", want: "Task `splittest-2` (`offload`) finished"},
+		{name: "bash-check", toolName: "bash", want: "Task `bash-check` (`bash`) finished"},
+		{name: "task-1", toolName: "weather_forecast", want: "Task `task-1` (`weather_forecast`) finished"},
+	} {
+		event := taskrecord.EndedEvent(tasks.Conclusion{Snapshot: tasks.Snapshot{
+			ID: test.name, ToolName: test.toolName, State: tasks.Done, Run: 1,
+		}, IsFinal: true})
+		if got, isSaid := taskrecord.EndedNotice(event); !isSaid || got != test.want {
+			t.Errorf("task %q said %q (%t), want %q", test.name, got, isSaid, test.want)
+		}
+		completion, _ := taskrecord.CompletionOf(event)
+		if got := completion.NoticeWithin(0); got != test.want {
+			t.Errorf("task %q drew %q, want %q", test.name, got, test.want)
+		}
+	}
+}

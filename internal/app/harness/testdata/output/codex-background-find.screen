@@ -6,7 +6,7 @@ find *.go 1L
 find *.log backgrounded (named "logs"); end your turn to wait
 
 
- ⚙️ Task logs finished after 0.0s
+ ⚙️ Task logs (find) finished after 0.0s
 
     server.log
 
