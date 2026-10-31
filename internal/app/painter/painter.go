@@ -222,11 +222,17 @@ func submittedContentRows(
 		contentColumns -= markerWidth
 	}
 
+	text := strutil.StripControl(message.text)
 	var content []string
 	if shouldRenderHyperlinks {
-		content = markdown.RenderWithHyperlinksUnder(strutil.StripControl(message.text), contentColumns, roots)
+		content = markdown.RenderWithHyperlinksUnder(text, contentColumns, roots)
 	} else {
-		content = markdown.Render(strutil.StripControl(message.text), contentColumns)
+		content = markdown.Render(text, contentColumns)
+	}
+	if message.kind == userSubmission && strings.TrimSpace(text) != "" && !slices.ContainsFunc(content, func(row string) bool {
+		return strings.TrimSpace(style.Plain(row)) != ""
+	}) {
+		content = width.Wrap(text, contentColumns)
 	}
 	content = withIntent(content, strutil.StripControl(message.intent), contentColumns)
 	if shouldRenderHyperlinks {

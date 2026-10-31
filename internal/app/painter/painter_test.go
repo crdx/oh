@@ -140,6 +140,49 @@ func TestSubmittedBoxesReserveBothSideMarginsWhenTextWraps(t *testing.T) {
 	}
 }
 
+func TestAUserMessageThatMarkdownHidesStaysVisible(t *testing.T) {
+	for _, text := range []string{"1.", "42)", "-", "+", "*", "#", ">", "```", "[reference]: https://example.test"} {
+		for _, columns := range []int{1, 8, 80} {
+			for _, shouldRenderHyperlinks := range []bool{false, true} {
+				t.Run(text+"/"+strconv.Itoa(columns)+"/"+strconv.FormatBool(shouldRenderHyperlinks), func(t *testing.T) {
+					rows := submittedContentRows(submittedMessage{text: text}, columns, shouldRenderHyperlinks, link.Roots{})
+					var visible strings.Builder
+					for _, row := range rows {
+						visible.WriteString(strings.ReplaceAll(strings.TrimSpace(style.Plain(row)), " ", ""))
+					}
+					if got, want := visible.String(), strings.ReplaceAll(text, " ", ""); got != want {
+						t.Errorf("visible text = %q, want %q", got, want)
+					}
+				})
+			}
+		}
+	}
+}
+
+func TestVisibleUserMarkdownKeepsItsRendering(t *testing.T) {
+	for _, text := range []string{"1. first\n2. second", "# heading", "**bold**", "word\n\n1.", "---"} {
+		for _, shouldRenderHyperlinks := range []bool{false, true} {
+			rows := submittedContentRows(submittedMessage{text: text}, 80, shouldRenderHyperlinks, link.Roots{})
+			want := markdown.Render(text, 78)
+			for i := range want {
+				want[i] = " " + want[i]
+			}
+			if !slices.Equal(rows, want) {
+				t.Errorf("%q rendered as %q, want %q", text, rows, want)
+			}
+		}
+	}
+}
+
+func TestOnlyUserMessagesFallBackToPlainText(t *testing.T) {
+	for _, kind := range []submissionKind{pendingHarnessSubmission, sentHarnessSubmission} {
+		rows := submittedContentRows(submittedMessage{kind: kind, text: "1."}, 80, false, link.Roots{})
+		if len(rows) != 0 {
+			t.Errorf("harness submission %d rendered as %q, want no rows", kind, rows)
+		}
+	}
+}
+
 func TestAWrappedMissingPathDoesNotLinkItsExistingPrefix(t *testing.T) {
 	workspace := t.TempDir()
 	parent := filepath.Join(workspace, "parent")

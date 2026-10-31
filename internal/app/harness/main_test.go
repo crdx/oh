@@ -6098,6 +6098,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"port-forward-lifecycle":   {".ansi", ".screen"},
 		"path-message":             {".ansi", ".screen"},
 		"user-path-links":          {".ansi", ".screen"},
+		"user-markdown-fallback":   {".ansi", ".screen"},
 		"workspace-paths":          {".ansi", ".screen"},
 		"wrapped-reasoning-paths":  {".ansi", ".screen"},
 		"wrapping-paths":           {".ansi", ".screen"},
@@ -12973,6 +12974,26 @@ func drawExistingPathMessage(t *testing.T) string {
 	self.show(inputLine)
 
 	return screenOutput.String()
+}
+
+func TestGoldenUserMessagesKeepOtherwiseInvisibleMarkdown(t *testing.T) {
+	passes := map[string]func() string{}
+	for name, columns := range map[string]int{"wide": replayColumns, "narrow": narrowColumns} {
+		passes[name] = func() string {
+			rig := newReplayRig(t, columns)
+			for _, text := range []string{"1.", "-", "#", ">", "1. first\n2. second", "**normal markdown**"} {
+				rig.chat.recordedEvents = append(rig.chat.recordedEvents, agent.Event{Kind: agent.UserMessageEvent, Text: text})
+			}
+			rig.chat.replay()
+			return rig.drawn()
+		}
+	}
+	compareWithGolden(t, "user-markdown-fallback", ".ansi", passes)
+	screenPasses := map[string]func() string{}
+	for name, columns := range map[string]int{"wide": replayColumns, "narrow": narrowColumns} {
+		screenPasses[name] = func() string { return shown(t, passes[name](), columns) }
+	}
+	compareWithGolden(t, "user-markdown-fallback", ".screen", screenPasses)
 }
 
 func TestGoldenUserMessagePathsAreLinkedAtConversationWidths(t *testing.T) {

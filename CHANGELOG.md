@@ -3,6 +3,7 @@
 ## [Next]
 
 - Add `oh --ctl render` for rendering arbitrary ui for e.g. documentation
+- Fix effectively-blank markdown messages by rendering them raw
 
 ## [0.27.4] — 2026-10-29
 
