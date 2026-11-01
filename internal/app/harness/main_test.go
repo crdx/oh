@@ -6139,6 +6139,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"startup-sized":            {".ansi", ".screen"},
 		"startup-sized-output":     {".ansi", ".screen"},
 		"terminal-escape":          {".ansi", ".screen"},
+		"terminal-workspace":       {".txt"},
 		"theme-reload":             {".ansi", ".screen"},
 		"config-reload-recovery":   {".screen"},
 		"tool-availability":        {".ansi", ".screen"},

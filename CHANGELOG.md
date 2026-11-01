@@ -2,6 +2,7 @@
 
 ## [Next]
 
+- Report the workspace to the terminal on startup and resume
 - Show the originating tool for custom task names
 
 ## [0.28.0] — 2026-10-31

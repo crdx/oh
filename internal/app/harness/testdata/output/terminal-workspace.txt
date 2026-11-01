@@ -1,0 +1,4 @@
+=== startup and resume ===
+startup: "\\x1b]7;file://<host>/workspace\\x1b\\\\"
+resume: "\\x1b]7;file://<host>/workspace\\x1b\\\\"
+redirected output: no workspace report

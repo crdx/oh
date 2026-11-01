@@ -429,7 +429,7 @@ func (self *interactiveSession) quit() {
 	self.waitToExit()
 }
 
-var terminalQueries = regexp.MustCompile(`\x1b\]11;\?\x1b\\|\x1b_G[^\x1b]*\x1b\\|\x1b\[c|\x1b\[[<>]1?u|\x1b\[\?(1004|2004|5522)[hl]|\x1b\[2[23];0t|\x1b\[\d? q|\x1b\]2;[^\x07\x1b]*(\x07|\x1b\\)`)
+var terminalQueries = regexp.MustCompile(`\x1b\]11;\?\x1b\\|\x1b_G[^\x1b]*\x1b\\|\x1b\[c|\x1b\[[<>]1?u|\x1b\[\?(1004|2004|5522)[hl]|\x1b\[2[23];0t|\x1b\[\d? q|\x1b\](2|7);[^\x07\x1b]*(\x07|\x1b\\)`)
 
 func (self *interactiveSession) requireShown(text string) {
 	self.t.Helper()
