@@ -234,3 +234,110 @@ func TestInfoLeavesTheStylingOfEveryRealSegmentToTheSegment(t *testing.T) {
 		t.Errorf("got\n%s\nwant\n%s", got, want)
 	}
 }
+
+func TestImportantSegmentsKeepTheirDetailUntilOrdinarySegmentsDisappear(t *testing.T) {
+	for _, importantAt := range []int{0, 1} {
+		instances := []segment.Segment{
+			fittingSegment{"ordinary", "ord", ""},
+			fittingSegment{"ordinary", "ord", ""},
+		}
+		instances[importantAt] = segment.Instance{
+			Segment:  fittingSegment{"important", "imp", ""},
+			Priority: segment.Important,
+		}
+		layout := segment.Layout{segment.TopLeft: instances}
+		for _, test := range []struct {
+			cells int
+			want  string
+		}{
+			{cells: 14, want: "important"},
+			{cells: 9, want: "important"},
+			{cells: 8, want: "imp"},
+			{cells: 2, want: ""},
+		} {
+			if got := style.Plain(RenderWithin(layout, segment.TopLeft, segment.Context{}, test.cells)); got != test.want {
+				t.Errorf("important at %d in %d cells: got %q, want %q", importantAt, test.cells, got, test.want)
+			}
+		}
+	}
+}
+
+func TestImportantSegmentsTakeSpaceAcrossTheWholeRuler(t *testing.T) {
+	positions := [3]segment.Position{segment.TopLeft, segment.TopCenter, segment.TopRight}
+	for _, importantPosition := range positions {
+		layout := segment.Layout{}
+		for _, position := range positions {
+			layout[position] = []segment.Segment{fittingSegment{"ordinary detail", "ord", ""}}
+		}
+		layout[importantPosition] = []segment.Segment{segment.Instance{
+			Segment:  fittingSegment{"important", "imp", ""},
+			Priority: segment.Important,
+		}}
+		for cells := range 101 {
+			ruler := RenderRuler(layout, positions, segment.Context{}, cells)
+			if !ruler.Fits(cells) {
+				t.Fatalf("%s in %d cells does not fit: %+v", importantPosition, cells, ruler)
+			}
+			if cells >= 13 && !strings.Contains(ruler.Left+ruler.Center+ruler.Right, "important") {
+				t.Fatalf("%s lost its detail in %d cells: %+v", importantPosition, cells, ruler)
+			}
+		}
+	}
+}
+
+func TestRulerOverridesDoNotReplaceTheStoredLayout(t *testing.T) {
+	positions := [3]segment.Position{segment.TopLeft, segment.TopCenter, segment.TopRight}
+	configuration := NewConfiguration(nil, segment.Layout{
+		segment.TopCenter: {segment.Text("ordinary")},
+	})
+	overrides := segment.Layout{
+		segment.TopCenter: {segment.Instance{Segment: segment.Text("important"), Priority: segment.Important}},
+	}
+	if got := configuration.RenderRuler(positions, segment.Context{}, 40, overrides).Center; got != "important" {
+		t.Errorf("override drew %q", got)
+	}
+	if got := configuration.RenderRuler(positions, segment.Context{}, 40, nil).Center; got != "ordinary" {
+		t.Errorf("stored centre drew %q", got)
+	}
+}
+
+func TestEqualPriorityPlacementsKeepTheRightBeforeTheLeftAndCentre(t *testing.T) {
+	positions := [3]segment.Position{segment.BottomLeft, segment.BottomCenter, segment.BottomRight}
+	for _, priority := range []segment.Priority{segment.Normal, segment.Important} {
+		layout := segment.Layout{
+			segment.BottomLeft:   {segment.Instance{Segment: segment.Text("left"), Priority: priority}},
+			segment.BottomCenter: {segment.Instance{Segment: segment.Text("centre"), Priority: priority}},
+			segment.BottomRight:  {segment.Instance{Segment: segment.Text("right"), Priority: priority}},
+		}
+		for _, test := range []struct {
+			cells  int
+			left   string
+			center string
+			right  string
+		}{
+			{cells: 27, left: "left", center: "centre", right: "right"},
+			{cells: 18, left: "left", right: "right"},
+			{cells: 17, right: "right"},
+			{cells: 8, left: "left"},
+			{cells: 7},
+		} {
+			ruler := RenderRuler(layout, positions, segment.Context{}, test.cells)
+			if ruler.Left != test.left || ruler.Center != test.center || ruler.Right != test.right {
+				t.Errorf("priority %d in %d cells: %+v", priority, test.cells, ruler)
+			}
+		}
+	}
+}
+
+func TestSegmentsUseTheSpaceThatAnOversizedPlacementCannotUse(t *testing.T) {
+	positions := [3]segment.Position{segment.TopLeft, segment.TopCenter, segment.TopRight}
+	layout := segment.Layout{
+		segment.TopLeft:   {segment.Text("too wide to fit")},
+		segment.TopCenter: {segment.Text("centre")},
+		segment.TopRight:  {segment.Text("too wide to fit")},
+	}
+	ruler := RenderRuler(layout, positions, segment.Context{}, 8)
+	if ruler.Left != "" || ruler.Center != "centre" || ruler.Right != "" {
+		t.Errorf("unused space did not reach the centre: %+v", ruler)
+	}
+}

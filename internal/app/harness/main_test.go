@@ -6111,6 +6111,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"picker-menu":              {".ansi", ".screen"},
 		"plain-input":              {".ansi", ".screen"},
 		"print-arguments":          {".txt"},
+		"priority-approval":        {".ansi", ".screen"},
 		"prompt-arguments":         {".txt"},
 		"queued-messages":          {".ansi", ".screen"},
 		"question-over-call":       {".screen"},
@@ -11186,12 +11187,12 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 				block := input.Block{
 					Top: held.renderRuler(
 						frame, topWidth,
-						segment.TopLeft, segment.TopCenter, segment.TopRight,
+						segment.TopLeft, segment.TopCenter, segment.TopRight, nil,
 					),
 					Input: frame,
 					Bottom: held.renderRuler(
 						frame, width,
-						segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
+						segment.BottomLeft, segment.BottomCenter, segment.BottomRight, nil,
 					),
 					Feedback: pass.status,
 					Rule:     held.ruleStyle(),
@@ -24762,4 +24763,80 @@ func TestAResumedSessionWithoutAnEnvironmentSnapshotIsToldWhenItsWireMoved(t *te
 	if again.IsChanged || again.NeedsBaseline {
 		t.Errorf("a recorded change was offered again: %+v", again)
 	}
+}
+
+func TestGoldenImportantApprovalCountdownTakesSpaceBeforeStatusSegments(t *testing.T) {
+	ansiPasses := map[string]func() string{}
+	screenPasses := map[string]func() string{}
+	for _, columns := range []int{18, 19, 28, 48, 80, 120} {
+		for _, isResolved := range []bool{false, true} {
+			name := fmt.Sprintf("%03d columns resolved=%t", columns, isResolved)
+			ansiPasses[name] = func() string { return priorityApprovalStream(t, columns, isResolved) }
+			screenPasses[name] = func() string { return shown(t, priorityApprovalStream(t, columns, isResolved), columns) }
+		}
+	}
+	compareWithGolden(t, "priority-approval", ".ansi", ansiPasses)
+	compareWithGolden(t, "priority-approval", ".screen", screenPasses)
+}
+
+func priorityApprovalStream(t *testing.T, columns int, isResolved bool) string {
+	t.Helper()
+
+	var screenOutput strings.Builder
+	self := slashCommandFixture(t, caps.Read)
+	self.screen = output.NewTerminalOfSize(&screenOutput, columns, replayLines)
+	self.now = clockAt(time.Now())
+	self.display.bar.ReplaceLayout(segment.Layout{
+		segment.TopLeft: {
+			segment.Text("·✦·"),
+			segment.Text("rxw snlg c"),
+			segment.Text("fallback-1"),
+			segment.Text("r[log]"),
+		},
+		segment.TopCenter: {segment.Text("ordinary centre")},
+		segment.TopRight: {
+			goldenShedSegment(t, activeModel.New(activeModel.Settings{
+				Name: "gpt-astra-6", Effort: "high", EffortLevels: []string{"low", "medium", "high"},
+			})),
+			goldenShedSegment(t, contextUsage.New(func() (int, int) { return 337_000, 922_000 })),
+		},
+	})
+	inputLine := edit.NewInput(nil)
+	self.show(inputLine)
+
+	broker := ask.New()
+	closeBroker := broker.Open()
+	defer closeBroker()
+	questionContext, cancelQuestion := context.WithDeadline(t.Context(), self.getNow().Add(time.Minute))
+	defer cancelQuestion()
+	result := make(chan error, 1)
+	go func() {
+		result <- ask.Confirm(questionContext, broker, ask.Confirmation{
+			Label:    "Run this command in the sandbox with host networking?",
+			Intent:   "Checking a fixed generic browser header",
+			Detail:   "curl -I https://example.com",
+			Language: "bash",
+		})
+	}()
+	<-broker.Changes()
+	self.question.broker = broker
+	self.onQuestionChange()
+	self.show(inputLine)
+	approvalStream := screenOutput.String()
+	approval := shown(t, approvalStream, columns)
+	if columns >= style.Width("auto-denies in 1m")+2 && !strings.Contains(approval, "auto-denies in 1m") {
+		t.Errorf("%d columns lost the approval countdown:\n%s", columns, approval)
+	}
+	self.answerQuestion(key.Key{Code: key.Rune, Value: 'n'})
+	<-result
+	self.onQuestionChange()
+	self.show(inputLine)
+
+	if !isResolved {
+		return approvalStream
+	}
+	if !isResolved {
+		return approvalStream
+	}
+	return screenOutput.String()
 }

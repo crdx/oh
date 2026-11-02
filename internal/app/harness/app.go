@@ -1220,15 +1220,28 @@ func (self *App) show(inputLine *edit.Input) {
 		topWidth = input.FeedbackRuleWidth(columns)
 	}
 
+	var overrides segment.Layout
+	if self.isAwaitingAnswer() {
+		overrides = segment.Layout{
+			segment.TopCenter: {segment.Instance{
+				Segment: segment.Text(painter.QuestionHead(
+					self.question.request.Question,
+					self.remainingAnswerTime(self.getNow()),
+				)),
+				Priority: segment.Important,
+			}},
+		}
+	}
+
 	block := input.Block{
 		Top: self.renderRuler(
 			frame, topWidth,
-			segment.TopLeft, segment.TopCenter, segment.TopRight,
+			segment.TopLeft, segment.TopCenter, segment.TopRight, overrides,
 		),
 		Input: frame,
 		Bottom: self.renderRuler(
 			frame, columns,
-			segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
+			segment.BottomLeft, segment.BottomCenter, segment.BottomRight, nil,
 		),
 		Activity:       append(self.hostCommandRows(columns), self.editingRows(columns)...),
 		QueuedMessages: queue.Rows,
@@ -1239,13 +1252,6 @@ func (self *App) show(inputLine *edit.Input) {
 		Rule:           self.ruleStyle(),
 	}
 	block.Dropdown = self.dropdownRows(block, columns)
-
-	if self.isAwaitingAnswer() {
-		block.Top.Center = painter.QuestionHead(
-			self.question.request.Question,
-			self.remainingAnswerTime(self.getNow()),
-		)
-	}
 
 	rows, cursorRow, cursorColumn := block.Rows(columns)
 
@@ -1353,29 +1359,17 @@ func (self *App) showFeedback(source feedback.Source, message feedback.Message) 
 	self.feedback.Show(source, message, self.getNow())
 }
 
-func (self *App) renderBar(position segment.Position, frame edit.Frame) string {
-	return self.display.bar.Render(position, getBarContext(frame))
-}
-
-func (self *App) renderBarWithin(position segment.Position, frame edit.Frame, cells int) string {
-	return self.display.bar.RenderWithin(position, getBarContext(frame), cells)
-}
-
 func (self *App) renderRuler(
 	frame edit.Frame,
 	width int,
 	left segment.Position,
 	center segment.Position,
 	right segment.Position,
+	overrides segment.Layout,
 ) input.Ruler {
-	rightText := self.renderBar(right, frame)
-	leftText := self.renderBarWithin(left, frame, input.LeftContentWidth(width, rightText))
-
-	return input.Ruler{
-		Left:   leftText,
-		Center: self.renderBarWithin(center, frame, input.CenterContentWidth(width, leftText, rightText)),
-		Right:  rightText,
-	}
+	return self.display.bar.RenderRuler(
+		[3]segment.Position{left, center, right}, getBarContext(frame), width, overrides,
+	)
 }
 
 func getBarContext(frame edit.Frame) segment.Context {

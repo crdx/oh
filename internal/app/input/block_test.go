@@ -659,3 +659,27 @@ func TestAQuestionKeepsTheSearchPromptAway(t *testing.T) {
 		t.Errorf("a question was headed by the search prompt: %q", style.Plain(rows[0]))
 	}
 }
+
+func TestAFittingRulerDrawsEveryLabel(t *testing.T) {
+	for _, left := range []string{"", "left", "日本語"} {
+		for _, center := range []string{"", "centre", "日本語"} {
+			for _, right := range []string{"", "right", "日本語"} {
+				ruler := Ruler{Left: left, Center: center, Right: right}
+				for width := range 61 {
+					if !ruler.Fits(width) {
+						continue
+					}
+					drawn := style.Plain(ruler.render(width, style.Rule))
+					for _, label := range []string{left, center, right} {
+						if !strings.Contains(drawn, label) {
+							t.Errorf("%d columns lost %q: %q", width, label, drawn)
+						}
+					}
+					if style.Width(drawn) != width {
+						t.Errorf("%d columns drew %q", width, drawn)
+					}
+				}
+			}
+		}
+	}
+}

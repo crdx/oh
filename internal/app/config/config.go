@@ -353,11 +353,23 @@ func (self Config) BuildLayout(registry segment.Registry) (segment.Layout, error
 
 		for _, entry := range entries {
 			var namedFields struct {
-				Segment string `toml:"segment"`
+				Segment  string  `toml:"segment"`
+				Priority *string `toml:"priority"`
 			}
 
 			if err := meta.PrimitiveDecode(entry, &namedFields); err != nil {
 				return nil, fmt.Errorf("%s: %w", position, err)
+			}
+
+			priority := segment.Normal
+			if namedFields.Priority != nil {
+				switch *namedFields.Priority {
+				case "normal":
+				case "important":
+					priority = segment.Important
+				default:
+					return nil, fmt.Errorf("%s: %s: priority must be normal or important", position, namedFields.Segment)
+				}
 			}
 
 			options := segmentOptions{meta: meta, entry: entry}
@@ -368,8 +380,9 @@ func (self Config) BuildLayout(registry segment.Registry) (segment.Layout, error
 			}
 
 			layout[position] = append(layout[position], segment.Instance{
-				Name:    namedFields.Segment,
-				Segment: builtSegment,
+				Name:     namedFields.Segment,
+				Segment:  builtSegment,
+				Priority: priority,
 			})
 		}
 	}

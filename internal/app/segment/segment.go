@@ -70,9 +70,23 @@ type Options interface {
 	Read(into any) error
 }
 
+type Priority uint8
+
+const (
+	Normal Priority = iota
+	Important
+)
+
 type Instance struct {
-	Name    string
-	Segment Segment
+	Name     string
+	Segment  Segment
+	Priority Priority
+}
+
+type Text string
+
+func (self Text) Render(Context) string {
+	return string(self)
 }
 
 func (self Instance) Render(context Context) string {

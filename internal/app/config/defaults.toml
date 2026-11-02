@@ -165,7 +165,7 @@ home = []
 
 [bar.top]
 left = [
-    { segment = "activity-spinner" },
+    { segment = "activity-spinner", priority = "normal" },
     { segment = "mode-toggle" },
     { segment = "forwards" },
     { segment = "tasks" },

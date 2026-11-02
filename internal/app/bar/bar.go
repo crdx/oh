@@ -8,6 +8,7 @@ import (
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/cycle"
+	"crdx.org/oh/internal/app/input"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
@@ -166,39 +167,56 @@ func RenderWithin(layout segment.Layout, position segment.Position, context segm
 	return render(layout, position, context, max(cells, 0))
 }
 
-func render(layout segment.Layout, position segment.Position, context segment.Context, cells int) string {
-	instances := layout[position]
-
-	ladders := make([][]string, len(instances))
-	rungs := make([]int, len(instances))
-
-	for at, instance := range instances {
-		ladders[at] = segment.LadderOf(underlying(instance), context)
-	}
-
-	for cells >= 0 && style.Width(join(ladders, rungs)) > cells && stepDown(ladders, rungs) {
-	}
-
-	return fitted(ladders, rungs, cells)
+type fittingPosition struct {
+	ladders    [][]string
+	rungs      []int
+	priorities []segment.Priority
 }
 
-func stepDown(ladders [][]string, rungs []int) bool {
-	for at := range slices.Backward(rungs) {
-		if rungs[at] < lastDrawnRung(ladders[at]) {
-			rungs[at]++
+func newFittingPosition(instances []segment.Segment, context segment.Context) fittingPosition {
+	position := fittingPosition{
+		ladders:    make([][]string, len(instances)),
+		rungs:      make([]int, len(instances)),
+		priorities: make([]segment.Priority, len(instances)),
+	}
+	for at, instance := range instances {
+		position.ladders[at] = segment.LadderOf(underlying(instance), context)
+		if namedInstance, ok := instance.(segment.Instance); ok {
+			position.priorities[at] = namedInstance.Priority
+		}
+	}
+	return position
+}
 
+func render(layout segment.Layout, position segment.Position, context segment.Context, cells int) string {
+	fittingPosition := newFittingPosition(layout[position], context)
+	for _, priority := range []segment.Priority{segment.Normal, segment.Important} {
+		for cells >= 0 && style.Width(fittingPosition.text()) > cells && fittingPosition.stepDown(priority) {
+		}
+	}
+	return fittingPosition.text()
+}
+
+func (self fittingPosition) stepDown(priority segment.Priority) bool {
+	for at := range slices.Backward(self.rungs) {
+		if self.priorities[at] == priority && self.rungs[at] < lastDrawnRung(self.ladders[at]) {
+			self.rungs[at]++
 			return true
 		}
 	}
-
-	for at, ladder := range ladders {
-		if rungs[at] < len(ladder)-1 {
-			rungs[at] = len(ladder) - 1
-
+	for at, ladder := range self.ladders {
+		if self.priorities[at] == priority && ladder[len(ladder)-1] == "" && self.rungs[at] < len(ladder)-1 {
+			self.rungs[at] = len(ladder) - 1
 			return true
 		}
 	}
-
+	for at := range slices.Backward(self.rungs) {
+		ladder := self.ladders[at]
+		if self.priorities[at] == priority && ladder[len(ladder)-1] != "" && self.rungs[at] < len(ladder) {
+			self.rungs[at] = len(ladder)
+			return true
+		}
+	}
 	return false
 }
 
@@ -206,45 +224,46 @@ func lastDrawnRung(ladder []string) int {
 	if last := len(ladder) - 1; last > 0 && ladder[last] == "" {
 		return last - 1
 	}
-
 	return len(ladder) - 1
 }
 
-func join(ladders [][]string, rungs []int) string {
-	return strings.Join(drawnTexts(ladders, rungs), segmentSeparator())
-}
-
-func drawnTexts(ladders [][]string, rungs []int) []string {
-	texts := make([]string, 0, len(ladders))
-
-	for at, ladder := range ladders {
-		if text := ladder[rungs[at]]; style.Width(text) > 0 {
+func (self fittingPosition) text() string {
+	texts := make([]string, 0, len(self.ladders))
+	for at, ladder := range self.ladders {
+		if self.rungs[at] >= len(ladder) {
+			continue
+		}
+		if text := ladder[self.rungs[at]]; style.Width(text) > 0 {
 			texts = append(texts, text)
 		}
 	}
-
-	return texts
+	return strings.Join(texts, segmentSeparator())
 }
 
-func fitted(ladders [][]string, rungs []int, cells int) string {
-	drawnSegments := make([]string, 0, len(ladders))
-	usedCells := 0
-
-	for _, text := range drawnTexts(ladders, rungs) {
-		separatorCells := 0
-		if len(drawnSegments) > 0 {
-			separatorCells = style.Width(segmentSeparator())
-		}
-
-		if cells >= 0 && usedCells+separatorCells+style.Width(text) > cells {
-			break
-		}
-
-		drawnSegments = append(drawnSegments, text)
-		usedCells += separatorCells + style.Width(text)
+func RenderRuler(layout segment.Layout, positions [3]segment.Position, context segment.Context, cells int) input.Ruler {
+	left := newFittingPosition(layout[positions[0]], context)
+	center := newFittingPosition(layout[positions[1]], context)
+	right := newFittingPosition(layout[positions[2]], context)
+	ruler := func() input.Ruler {
+		return input.Ruler{Left: left.text(), Center: center.text(), Right: right.text()}
 	}
-
-	return strings.Join(drawnSegments, segmentSeparator())
+	for _, position := range []fittingPosition{left, center, right} {
+		for at, ladder := range position.ladders {
+			position.rungs[at] = len(ladder)
+		}
+	}
+	for _, priority := range []segment.Priority{segment.Important, segment.Normal} {
+		for _, position := range []fittingPosition{right, left, center} {
+			for at, importance := range position.priorities {
+				if importance == priority {
+					position.rungs[at] = 0
+				}
+			}
+			for !ruler().Fits(cells) && position.stepDown(priority) {
+			}
+		}
+	}
+	return ruler()
 }
 
 func underlying(instance segment.Segment) segment.Segment {
@@ -314,8 +333,16 @@ func (self *Config) Render(position segment.Position, context segment.Context) s
 	return Render(self.layout, position, context)
 }
 
-func (self *Config) RenderWithin(position segment.Position, context segment.Context, cells int) string {
-	return RenderWithin(self.layout, position, context, cells)
+func (self *Config) RenderRuler(positions [3]segment.Position, context segment.Context, cells int, overrides segment.Layout) input.Ruler {
+	layout := make(segment.Layout, len(positions))
+	for _, position := range positions {
+		instances, hasOverride := overrides[position]
+		if !hasOverride {
+			instances = self.layout[position]
+		}
+		layout[position] = instances
+	}
+	return RenderRuler(layout, positions, context, cells)
 }
 
 func (self *Config) NextRefresh(phase segment.Phase) time.Time {

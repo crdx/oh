@@ -623,3 +623,30 @@ func TestASessionIsDrawnInTheWorkspaceTheme(t *testing.T) {
 
 	session.quit()
 }
+
+func TestAnInteractiveApprovalReservesCountdownSpaceAndRestoresTheBar(t *testing.T) {
+	rig := newScriptedRig(t,
+		sim.Turn{Calls: []sim.Call{{Name: "weather", Arguments: `{}`}}},
+		sim.Turn{Say: "The approval has ended."},
+	)
+	writeRigConfig(t, rig, `
+[tool.weather]
+description = "report the weather"
+command = ["true"]
+group = "a"
+permission = { rule = "ask", timeout = "1m" }
+[bar.top]
+left = [{ segment = "local-time", format = "ordinary-left-with-detail-that-can-yield" }]
+center = [{ segment = "local-time", format = "ordinary-centre" }]
+right = [{ segment = "local-time", format = "ordinary-right-with-detail-that-can-yield" }]
+`)
+	session := rig.start("--yolo", "-c", "a", "-m", "opencode-go/fake", "Ask for the weather.")
+	session.waitFor("auto-denies in")
+	session.requireShown("auto-denies in")
+	session.requireHidden("ordinary-left-with-detail-that-can-yield")
+	session.typeText("n")
+	session.waitFor("The approval has ended.")
+	session.requireShown("ordinary-left-with-detail-that-can-yield")
+	session.requireHidden("auto-denies in")
+	session.quit()
+}

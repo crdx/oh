@@ -1,0 +1,96 @@
+=== 018 columns resolved=false ===
+─── GPTA6 ─ 37% ──
+Run this command
+in the sandbox
+with host
+networking?
+Checking a fixed
+generic browser
+header
+
+$ curl -I
+  https://example.
+  com
+
+[Yes]  No
+──────────────────
+=== 018 columns resolved=true ===
+─── GPTA6 ─ 37% ──
+
+──────────────────
+=== 019 columns resolved=false ===
+ auto-denies in 1m
+Run this command in
+the sandbox with
+host networking?
+Checking a fixed
+generic browser
+header
+
+$ curl -I
+  https://example.c
+  om
+
+[Yes]  No
+───────────────────
+=== 019 columns resolved=true ===
+──── GPTA6 ─ 37% ──
+
+───────────────────
+=== 028 columns resolved=false ===
+─ auto-denies in 1m ─ 37% ──
+Run this command in the
+sandbox with host
+networking?
+Checking a fixed generic
+browser header
+
+$ curl -I
+  https://example.com
+
+[Yes]  No
+────────────────────────────
+=== 028 columns resolved=true ===
+ GPT Astra 6 ·▫▫▪·· ─ 37% ──
+
+────────────────────────────
+=== 048 columns resolved=false ===
+ auto-denies in 1m ─ GPT Astra 6 ·▫▫▪·· ─ 37% ──
+Run this command in the sandbox with host
+networking?
+Checking a fixed generic browser header
+
+$ curl -I https://example.com
+
+[Yes]  No
+────────────────────────────────────────────────
+=== 048 columns resolved=true ===
+── ·✦· ─── GPT Astra 6 ·▫▫▪·· ─ 37% 337K/922K ──
+
+────────────────────────────────────────────────
+=== 080 columns resolved=false ===
+── ·✦· ─ rxw snlg c ── auto-denies in 1m ─ GPT Astra 6 ·▫▫▪·· ─ 37% 337K/922K ──
+Run this command in the sandbox with host networking?
+Checking a fixed generic browser header
+
+$ curl -I https://example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────
+=== 080 columns resolved=true ===
+── ·✦· ─ rxw snlg c ─ fallback-1 ───────── GPT Astra 6 ·▫▫▪·· ─ 37% 337K/922K ──
+
+────────────────────────────────────────────────────────────────────────────────
+=== 120 columns resolved=false ===
+── ·✦· ─ rxw snlg c ─ fallback-1 ─ r[log] ──────── auto-denies in 1m ───────────── GPT Astra 6 ·▫▫▪·· ─ 37% 337K/922K ──
+Run this command in the sandbox with host networking?
+Checking a fixed generic browser header
+
+$ curl -I https://example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 120 columns resolved=true ===
+── ·✦· ─ rxw snlg c ─ fallback-1 ─ r[log] ───────── ordinary centre ────────────── GPT Astra 6 ·▫▫▪·· ─ 37% 337K/922K ──
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

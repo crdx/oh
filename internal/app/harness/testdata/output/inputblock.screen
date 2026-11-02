@@ -9,7 +9,7 @@ have a look at @harn
   …/harness/print.go
   …harness/replay.go
   ⋮ 14 more
-── ··✦ ─ 0m 0m ─────
+───── tame-impala ──
 === dropdown at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 have a look at @harn
@@ -117,7 +117,7 @@ have a look at @harn
 ── workspace ───────
 > what is the weathe
 r
-── ··✦ ─ 0m 0m ─────
+───── tame-impala ──
 === one row at 30 columns ===
 ── workspace ─ GPTS5.6 ▫▫▫▪··
 > what is the weather
@@ -149,7 +149,7 @@ r
 === reverse history search at 20 columns ===
 ────────────────────
 git diff
-── ··✦ ─ 0m 0m ─────
+───── tame-impala ──
 === reverse history search at 30 columns ===
 ── reverse-i-search: git ─────
 git diff
@@ -174,7 +174,7 @@ git diff
 ─── GPTS5.6 ─ ↑ 2 ──
 > the third row
 > the fourth row
-── ··✦ ─ 0m 0m ─────
+───── tame-impala ──
 === scrolled both ways at 30 columns ===
 ── workspace ────────── ↑ 2 ──
 > the third row

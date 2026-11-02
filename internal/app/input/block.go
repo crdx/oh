@@ -39,6 +39,17 @@ type Ruler struct {
 	Right  string
 }
 
+func (self Ruler) Fits(width int) bool {
+	leftWidth, rightWidth := keptSides(width, self.Left, self.Right)
+	if leftWidth != getSideWidth(self.Left) || rightWidth != getSideWidth(self.Right) {
+		return false
+	}
+	if leftWidth > 0 && style.Width(self.Left) > LeftContentWidth(width, self.Right) {
+		return false
+	}
+	return style.Width(self.Center) <= CenterContentWidth(width, self.Left, self.Right)
+}
+
 func LeftContentWidth(width int, right string) int {
 	_, rightWidth := keptSides(width, "", right)
 

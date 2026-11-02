@@ -2530,3 +2530,33 @@ func TestProviderTimeoutsDefaultToTenMinutesAndCanBeChanged(t *testing.T) {
 		}
 	}
 }
+
+func TestBarPriorityBelongsToEachPlacement(t *testing.T) {
+	layout := layoutFrom(t, `
+		[bar.top]
+		left = [{ segment = "active-model", priority = "important" }]
+		center = [{ segment = "active-model", priority = "normal" }]
+		right = [{ segment = "active-model" }]
+	`)
+	for _, position := range []segment.Position{segment.TopLeft, segment.TopCenter, segment.TopRight} {
+		want := segment.Normal
+		if position == segment.TopLeft {
+			want = segment.Important
+		}
+		instance, ok := layout[position][0].(segment.Instance)
+		if !ok {
+			t.Fatalf("%s has no placement metadata", position)
+		}
+		if instance.Priority != want {
+			t.Errorf("%s priority = %d, want %d", position, instance.Priority, want)
+		}
+	}
+	for _, priority := range []string{"urgent", "", "IMPORTANT"} {
+		_, err := brokenLayout(t, fmt.Sprintf(`[bar.top]
+left = [{ segment = "active-model", priority = %q }]
+`, priority))
+		if err == nil || !strings.Contains(err.Error(), "priority must be normal or important") {
+			t.Errorf("priority %q: got %v", priority, err)
+		}
+	}
+}

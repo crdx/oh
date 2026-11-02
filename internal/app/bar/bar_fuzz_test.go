@@ -129,3 +129,36 @@ func requireEverySegmentFits(t *testing.T, layout segment.Layout, ladders [][]st
 		t.Fatalf("%d cells hold the whole bar %q, but drew %q", room, whole, drawn)
 	}
 }
+
+func FuzzPriorityRulersKeepEveryRemainingSegmentWithinTheirRoom(fuzzer *testing.F) {
+	for _, written := range []string{
+		"ordinary|ord|\nimportant|imp|\nright|r|",
+		"日本語|日|\n👨‍👩‍👧‍👦|👨|\ne\u0301|e|",
+		"a|aa|aaa|a\nwhole\n|",
+	} {
+		fuzzer.Add(written, byte(30))
+	}
+	fuzzer.Fuzz(func(t *testing.T, written string, cells byte) {
+		if len(written) > fuzzedLadderLength || strings.ContainsRune(written, escape) {
+			t.Skip("not a bar segment")
+		}
+		original, _ := fuzzedLayout(written)
+		positions := [3]segment.Position{segment.TopLeft, segment.TopCenter, segment.TopRight}
+		layout := segment.Layout{}
+		for at, instance := range original[segment.TopLeft] {
+			position := positions[at%len(positions)]
+			priority := segment.Normal
+			if at%2 == 0 {
+				priority = segment.Important
+			}
+			layout[position] = append(layout[position], segment.Instance{Segment: instance, Priority: priority})
+		}
+		ruler := RenderRuler(layout, positions, segment.Context{}, int(cells))
+		if !ruler.Fits(int(cells)) {
+			t.Fatalf("%d cells cannot hold %+v", cells, ruler)
+		}
+		if again := RenderRuler(layout, positions, segment.Context{}, int(cells)); again != ruler {
+			t.Fatalf("drawing again changed %+v to %+v", ruler, again)
+		}
+	})
+}
