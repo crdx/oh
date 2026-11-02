@@ -1,0 +1,56 @@
+=== experimental host command ===
+Turn stopped because the user pressed escape.
+
+
+ ⏳ The user ran the following command on the host:
+
+    $ git status --short
+
+    Output:
+
+     M README.md
+    ?? notes.txt
+
+    Exit code: 0
+                                                                               double-enter to send
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== subagent completion ===
+Turn stopped because the user pressed escape.
+
+
+ ⏳ Subagent tame-adder has finished:
+
+    The tests passed.
+                                                                               double-enter to send
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== subagent message ===
+Turn stopped because the user pressed escape.
+
+
+ ⏳ Subagent tame-adder interjects:
+
+    The tests are running.
+                                                                               double-enter to send
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== task ===
+Turn stopped because the user pressed escape.
+
+
+ ⏳ Task build (bash) failed: exited 2
+
+    undefined: getWidth
+    exit status 1
+                                                                               double-enter to send
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────

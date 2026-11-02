@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -43,6 +44,33 @@ func capturedArguments(t *testing.T, capturePath string) []string {
 	}
 
 	return strings.Split(strings.TrimSuffix(string(captured), "\n"), "\n")
+}
+
+func TestPendingWakeNotificationExplainsHowToResume(t *testing.T) {
+	for _, isFocused := range []bool{false, true} {
+		t.Run(strconv.FormatBool(isFocused), func(t *testing.T) {
+			capturePath := fakeNotifySend(t)
+			if err := notification.SendPendingWake(t.Context(), nil, func() bool { return isFocused }, work.At("/workspace/project")); err != nil {
+				t.Fatal(err)
+			}
+			if isFocused {
+				if _, err := os.Stat(capturePath); !os.IsNotExist(err) {
+					t.Fatalf("a focused terminal sent a notification: %v", err)
+				}
+				return
+			}
+			want := []string{
+				"--icon=dialog-information",
+				"--app-name=oh",
+				"--",
+				"oh — project",
+				"Background results are waiting. The turn remains cancelled. Send a message or double-enter to resume.",
+			}
+			if got := capturedArguments(t, capturePath); !slices.Equal(got, want) {
+				t.Errorf("got arguments %q, want %q", got, want)
+			}
+		})
+	}
 }
 
 func TestTurnErrorNotificationNamesTheWorkspaceAndShowsTheFailure(t *testing.T) {

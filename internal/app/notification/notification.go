@@ -30,6 +30,20 @@ func SendTurnError(
 	return err
 }
 
+func SendPendingWake(
+	ctx context.Context,
+	writeEscape EscapeWriter,
+	isTerminalFocused func() bool,
+	workspace *work.Space,
+) error {
+	_, err := SendIfUnfocused(ctx, writeEscape, isTerminalFocused, Args{
+		Title:   title(workspace),
+		Message: "Background results are waiting. The turn remains cancelled. Send a message or double-enter to resume.",
+		Icon:    "info",
+	}, ExpiresAsUsual)
+	return err
+}
+
 func SendQuestion(
 	ctx context.Context,
 	writeEscape EscapeWriter,

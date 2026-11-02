@@ -233,6 +233,8 @@ type App struct {
 	experimental         *experimental.Toggles
 	permissions          *permission.Live
 	onFailure            func(failure error)
+	onPendingWake        func()
+	hasAnnouncedWake     bool
 	onQuestion           func(question ask.Question) func()
 	savePastedImage      func(mediaType string, data []byte) (string, error)
 	watchStalls          func(work string) func()
@@ -809,9 +811,17 @@ func (self *App) holdNotice(event agent.Event, doesWake bool) bool {
 }
 
 func (self *App) wake() {
-	if !self.currentTurn.Running() {
-		self.startTurn()
+	if self.currentTurn.Running() {
+		return
 	}
+	if self.currentTurn.Cancelled() {
+		if !self.hasAnnouncedWake && !self.terminal.IsFocused() && self.onPendingWake != nil {
+			self.hasAnnouncedWake = true
+			self.onPendingWake()
+		}
+		return
+	}
+	self.startTurn()
 }
 
 func (self *App) queuePathGrantChange(event agent.Event) {
@@ -2204,6 +2214,7 @@ func (self *App) startTurn() {
 }
 
 func (self *App) start(message string) {
+	self.hasAnnouncedWake = false
 	self.queueReadyChildCompletions()
 	userTurnElapsed := self.turnTiming().UserTurn
 	self.settleAccess()
@@ -2679,7 +2690,8 @@ func (self *App) finish() {
 	}
 	if slices.ContainsFunc(self.pendingNotices.items, func(item pendingMessage) bool { return item.doesWake }) {
 		self.wake()
-	} else if !self.currentTurn.Running() && len(self.pendingNotices.items) > 0 {
+	}
+	if !self.currentTurn.Running() && len(self.pendingNotices.items) > 0 {
 		self.refreshPendingMessages()
 	}
 }

@@ -6011,6 +6011,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"authorisation-url":        {".ansi", ".screen"},
 		"banner":                   {".ansi", ".screen"},
 		"banner-relayout":          {".ansi", ".screen"},
+		"cancelled-wake":           {".ansi", ".screen"},
 		"clearing":                 {".ansi", ".screen"},
 		"completion":               {".txt"},
 		"completion-sources":       {".txt"},

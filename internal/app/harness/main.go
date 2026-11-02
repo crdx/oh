@@ -1692,6 +1692,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			context.Background(), screen.WriteEscape, isTerminalFocused, workspace, failure,
 		)
 	}
+	app.onPendingWake = func() {
+		go func() {
+			_ = notification.SendPendingWake(context.Background(), screen.WriteEscape, isTerminalFocused, workspace)
+		}()
+	}
 	questionNotifications := notification.NewQuestions(screen.WriteEscape, isTerminalFocused, workspace)
 	app.onQuestion = questionNotifications.Announce
 	app.savePastedImage = dropKeeper.SaveImage

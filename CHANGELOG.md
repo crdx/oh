@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- After cancelling a turn, don't let an interjection wake it
+
 ## [0.29.0] — 2026-11-02
 
 - Report the workspace to the terminal on startup and resume
