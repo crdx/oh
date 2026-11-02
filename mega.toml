@@ -1,2 +1,17 @@
-[no-comments]
-include = ["."]
+no-comments = true
+
+comment-lines = false
+comment-inlines = false
+double-newlines = false
+gitattributes = false
+skill-bold = false
+todo-order = false
+
+comment-dividers = true
+comment-wrap = true
+docopt-align = true
+final-newline = true
+line-width = true
+markdown = true
+smart-quotes = true
+toml-indent = true
