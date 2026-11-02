@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.29.0] — 2026-11-02
+
 - Report the workspace to the terminal on startup and resume
 - Show the originating tool for custom task names
 
