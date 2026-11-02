@@ -104,7 +104,7 @@ If a state blocks the work and no workflow below covers it, ask the user to chan
 # Waiting for the User
 
 - When the user's next step changes files, run this with background=true and respawn=true before ending your turn:
-    - `inotifywait --recursive -e close_write,moved_to,create,delete <dir>; sleep 2`
+    - `inotifywait --recursive --exclude '(^|/)\.git(/|$)' -e close_write,moved_to,create,delete <dir>; sleep 2`
 - <dir> is the workspace, or the directory the step changes; it cannot be a path awaiting /grant
 - End the turn once it shows "Watches established"; each change then wakes you
 - Stop it when you no longer need it
