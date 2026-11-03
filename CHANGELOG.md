@@ -4,6 +4,7 @@
 
 - After cancelling a turn, don't let an interjection wake it
 - Mark important bar segments to take priority, like the approval countdown
+- Don't break bash when a skill disappears mid-session
 
 ## [0.29.0] — 2026-11-02
 

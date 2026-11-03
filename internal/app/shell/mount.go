@@ -267,6 +267,7 @@ func (self *PathAccess) getPaths() (Paths, []string) {
 	defer self.mutex.RUnlock()
 
 	paths := clonePaths(self.configuredPaths)
+	var optionalPaths []string
 	for _, directory := range self.skillDirectories {
 		if !slices.Contains(paths.Read, directory) {
 			paths.Read = append(paths.Read, directory)
@@ -274,8 +275,10 @@ func (self *PathAccess) getPaths() (Paths, []string) {
 		if !slices.Contains(paths.Exec, directory) {
 			paths.Exec = append(paths.Exec, directory)
 		}
+		if !pathsContain(self.configuredPaths, directory) {
+			optionalPaths = append(optionalPaths, directory)
+		}
 	}
-	var temporaryPaths []string
 	for _, path := range slices.Sorted(maps.Keys(self.temporaryAccess)) {
 		access := self.temporaryAccess[path]
 		switch {
@@ -285,11 +288,11 @@ func (self *PathAccess) getPaths() (Paths, []string) {
 			paths.Read = append(paths.Read, path)
 		}
 		paths.Exec = append(paths.Exec, path)
-		if !pathsContain(self.configuredPaths, path) {
-			temporaryPaths = append(temporaryPaths, path)
+		if !pathsContain(self.configuredPaths, path) && !slices.Contains(optionalPaths, path) {
+			optionalPaths = append(optionalPaths, path)
 		}
 	}
-	return paths, temporaryPaths
+	return paths, optionalPaths
 }
 
 func (self *PathAccess) releaseTemporaryMount(path string) {

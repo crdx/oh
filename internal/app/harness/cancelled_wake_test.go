@@ -169,8 +169,8 @@ func TestACancelledTurnKeepsATaskPendingAndNotifiesThroughTheBinary(t *testing.T
 	}
 	session.typeText(pressEscape)
 	session.waitFor("Turn stopped because the user pressed escape.")
-	session.typeAndSettle("my unfinished message")
-	session.typeText("\x1b[O")
+	session.typeText("\x1b[Omy unfinished message")
+	session.waitFor("my unfinished message")
 	if err := os.WriteFile(filepath.Join(rig.workspace, "release-task"), nil, 0o600); err != nil {
 		t.Fatal(err)
 	}

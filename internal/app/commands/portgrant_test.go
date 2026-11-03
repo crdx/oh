@@ -205,7 +205,7 @@ func TestRevokeClosesWhatItCanAndNamesWhatItCannot(t *testing.T) {
 	*paths = []pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess}}
 
 	context, err := invokeGrantCommand(t, grants, Forwards{}, "/revoke 8080 /reference 9090")
-	if err == nil || err.Error() != "port 8080 is not forwarded; port 9090 is not forwarded" {
+	if err == nil || err.Error() != `no revocable target "8080"; no revocable target "9090"` {
 		t.Errorf("got %v, want both ports named", err)
 	}
 	if len(*paths) != 0 {
@@ -259,12 +259,12 @@ func TestRevokeRefusesAnUnclosedQuote(t *testing.T) {
 	}
 }
 
-func TestRevokeSaysAPortIsNotForwardedWhereThereIsNoSandbox(t *testing.T) {
+func TestRevokeRefusesAnUnknownTargetWhereThereIsNoSandbox(t *testing.T) {
 	grants, _ := fixturePathGrants()
 
 	_, err := invokeGrantCommand(t, grants, Forwards{}, "/revoke 8080")
-	if err == nil || !strings.Contains(err.Error(), "not forwarded") {
-		t.Errorf("got %v, want a refusal saying the port is not forwarded", err)
+	if err == nil || !strings.Contains(err.Error(), `no revocable target "8080"`) {
+		t.Errorf("got %v, want a refusal naming the unknown target", err)
 	}
 }
 
@@ -274,7 +274,7 @@ func TestRevokeOffersEveryPathAndPortItCanClose(t *testing.T) {
 	ports, forwarded := fixturePortGrants()
 	*forwarded = []uint16{8080}
 
-	subjects := revocableSubjects(grants, ports)
+	subjects := revocableSubjects(newRevocations(grants, ports, nil))
 	if !slices.Equal(subjects, []string{"/reference", "8080"}) {
 		t.Errorf("got %v, want the path and the port", subjects)
 	}

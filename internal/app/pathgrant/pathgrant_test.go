@@ -439,3 +439,38 @@ func TestRestoreReopensPresentPathsAndCorrectsMissingOnes(t *testing.T) {
 		t.Errorf("got correction %q", message)
 	}
 }
+
+func TestRevocationResolutionPreservesPathAliasesWithoutChangingAccess(t *testing.T) {
+	grants, files, _ := newTestGrants(t)
+	directory := outsideTmpTestDirectory(t)
+	if _, err := grants.Grant(directory, ReadAccess); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(outsideTmpTestDirectory(t), "alias")
+	if err := os.Symlink(directory, alias); err != nil {
+		t.Fatal(err)
+	}
+	relative, err := filepath.Rel(grants.workspace.GetResolvedDir(), directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("HOME", filepath.Dir(directory))
+	for _, path := range []string{directory, relative, "~/" + filepath.Base(directory), alias} {
+		canonicalPath, err := grants.ResolveRevocation(path)
+		if err != nil || canonicalPath != directory {
+			t.Errorf("resolve %q: got %q, %v", path, canonicalPath, err)
+		}
+	}
+	if len(grants.GetCurrent()) != 1 {
+		t.Fatal("resolution removed a grant")
+	}
+	if _, _, err := files.Resolve(directory); err != nil {
+		t.Fatalf("resolution changed access: %v", err)
+	}
+	if _, err := grants.Revoke(alias); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := grants.ResolveRevocation(alias); err == nil {
+		t.Fatal("a revoked path remained resolvable")
+	}
+}

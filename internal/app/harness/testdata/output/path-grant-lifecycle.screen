@@ -188,8 +188,9 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === revoke without grant rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ /revoke: /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference    │
- │ has no temporary grant (prepend a space to send)                                               │
+ │ /revoke: No revocable target                                                                   │
+ │ "/golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference" (prepend  │
+ │ a space to send)                                                                               │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -250,8 +251,9 @@ Model returned no reply.
                                                                                double-enter to send
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ /revoke: /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing has  │
- │ no temporary grant (prepend a space to send)                                                   │
+ │ /revoke: No revocable target                                                                   │
+ │ "/golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing" (prepend a  │
+ │ space to send)                                                                                 │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

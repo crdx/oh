@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/prompt"
+	"crdx.org/oh/internal/app/revocation"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
@@ -57,6 +58,7 @@ type Options struct {
 	ReplyInEditor     func(text string) error
 	Output            io.Writer
 	PathGrants        PathGrants
+	Revocations       []revocation.Source
 	Forwards          Forwards
 	Tasks             Tasks
 	Subagents         Subagents
@@ -113,6 +115,7 @@ type commandEnvironment struct {
 	copyText          func([]string) error
 	startHostCommand  func(directory string, command string) error
 	pathGrants        PathGrants
+	revocations       []revocation.Source
 	forwards          Forwards
 	tasks             Tasks
 	subagents         Subagents
@@ -162,6 +165,7 @@ func New(options Options) (slash.CommandSet, error) {
 		},
 		startHostCommand:  options.StartHostCommand,
 		pathGrants:        options.PathGrants,
+		revocations:       options.Revocations,
 		forwards:          options.Forwards,
 		tasks:             options.Tasks,
 		subagents:         options.Subagents,
@@ -245,6 +249,13 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 			environment.pathGrants,
 			environment.forwards,
 		)...)
+	}
+	if environment.pathGrants.isConfigured() || environment.forwards.isConfigured() || len(environment.revocations) > 0 {
+		registry := newRevocations(environment.pathGrants, environment.forwards, environment.revocations)
+		if _, err := registry.Targets(); err != nil {
+			return slash.CommandSet{}, err
+		}
+		commands = append(commands, revokeCommand(registry))
 	}
 	if environment.tasks.isConfigured() {
 		commands = append(commands, taskCommands(environment.tasks)...)

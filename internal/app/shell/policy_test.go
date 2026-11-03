@@ -303,6 +303,56 @@ func TestFreshPoliciesFollowTemporaryPathAccess(t *testing.T) {
 	}
 }
 
+func TestASharedSkillRemovedMidSessionDropsOutOfAFreshPolicy(t *testing.T) {
+	mode := caps.NewMode(caps.Read | caps.Shell)
+	files := configuredPathTestRoot(t, mode)
+	configuredDirectory := t.TempDir()
+	access, err := NewPathAccess(files, mode, Paths{Exec: []string{configuredDirectory}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	skillDirectory := filepath.Join(t.TempDir(), "skill")
+	if err := os.Mkdir(skillDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	access.ShareSkills([]string{skillDirectory, configuredDirectory})
+
+	_, optionalPaths := access.getPaths()
+	if !slices.Contains(optionalPaths, skillDirectory) {
+		t.Errorf("shared skill %s is required in %v", skillDirectory, optionalPaths)
+	}
+	if slices.Contains(optionalPaths, configuredDirectory) {
+		t.Errorf("configured directory %s became optional when shared as a skill", configuredDirectory)
+	}
+
+	if err := os.Rename(skillDirectory, skillDirectory+"-renamed"); err != nil {
+		t.Fatal(err)
+	}
+	extraPaths, optionalPaths := access.getPaths()
+	policy, err := createTestPolicyWithOptionalPaths(
+		t,
+		t.TempDir(),
+		t.TempDir(),
+		t.TempDir(),
+		extraPaths,
+		optionalPaths,
+		mode.Current(),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if slices.Contains(policy.Read, skillDirectory) ||
+		slices.Contains(policy.Exec, skillDirectory) ||
+		slices.Contains(policy.OptionalPaths, skillDirectory) {
+		t.Errorf("removed skill survived in %#v", policy)
+	}
+	if !slices.Contains(policy.Exec, configuredDirectory) || slices.Contains(policy.OptionalPaths, configuredDirectory) {
+		t.Errorf("configured directory %s is no longer required in %#v", configuredDirectory, policy)
+	}
+}
+
 func TestGrantingWriteAccessRemovesExactReadOnlyMounts(t *testing.T) {
 	workspace := "/workspace"
 	home := "/home"

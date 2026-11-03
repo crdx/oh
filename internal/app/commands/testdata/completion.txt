@@ -12,7 +12,7 @@
   /new [<options>] → /new …  (start a new session)
   /open <target> → /open …  (open a target with its default application)
   /reply → /reply  (reply inline to the last answer in your editor)
-  /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
+  /revoke <target>... → /revoke …  (revoke a listed target)
   /sub <action> → /sub …  (read a subagent's conversation)
   /subs [all] → /subs …  (list this session's running and latest finished subagents)
   /task <action> → /task …  (inspect, stop, restart, or discard a background task, or prune finished ones)
@@ -210,7 +210,7 @@
   --from → /fork --yolo --from …  (fork a previous session)
 "/r"
   /reply → /reply  (reply inline to the last answer in your editor)
-  /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
+  /revoke <target>... → /revoke …  (revoke a listed target)
 "/revoke "
   /reference → /revoke /reference
   8080 → /revoke 8080

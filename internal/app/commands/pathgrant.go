@@ -6,12 +6,12 @@ import (
 	"maps"
 	"path/filepath"
 	"slices"
-	"strconv"
 	"strings"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/revocation"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
@@ -28,6 +28,7 @@ type PathGrants struct {
 	DenyPatterns   []string
 	Grant          func(path string, access pathgrant.Access) (agent.Event, error)
 	Revoke         func(path string) (agent.Event, error)
+	Resolve        func(path string) (string, error)
 	GetCurrent     func() []pathgrant.Grant
 	GetPermanent   func() []shell.ScopedPathGrant
 	GetCurrentCaps func() caps.Set
@@ -59,7 +60,6 @@ func pathGrantCommands(
 		forwardCommand(forwards),
 		grantCommand(grants),
 		grantsCommand(grants, forwards),
-		revokeCommand(grants, forwards),
 	}
 }
 
@@ -163,26 +163,35 @@ func grantsCommand(grants PathGrants, forwards Forwards) slash.Command {
 		WithArgumentUsage("[all]")
 }
 
-func revokeCommand(grants PathGrants, forwards Forwards) slash.Command {
+func revokeCommand(registry *revocation.Registry) slash.Command {
 	return slash.Command{
 		Name:        "revoke",
-		Description: "revoke temporary path grants or forwarded ports",
+		Description: "revoke a listed target",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text == "" {
 				return slash.Usage()
 			}
-			subjects, isWellFormed := revokedSubjects(grants, forwards, arguments)
+			targets, err := registry.Targets()
+			if err != nil {
+				return err
+			}
+			subjects, isWellFormed := revokedSubjects(targets, arguments)
 			if !isWellFormed {
 				return slash.Usage()
 			}
 			var failures []string
 			for _, subject := range subjects {
-				event, err := revoke(grants, forwards, subject)
+				result, err := registry.Revoke(subject)
 				if err != nil {
 					failures = append(failures, err.Error())
 					continue
 				}
-				context.Emit(event)
+				for _, event := range result.Events {
+					context.Emit(event)
+				}
+				if result.Message != "" {
+					context.Success(result.Message)
+				}
 			}
 			if len(failures) > 0 {
 				return errors.New(strings.Join(failures, "; "))
@@ -190,17 +199,16 @@ func revokeCommand(grants PathGrants, forwards Forwards) slash.Command {
 			return nil
 		},
 	}.
-		WithListedArguments(func() []string { return revocableSubjects(grants, forwards) }).
+		WithListedArguments(func() []string { return revocableSubjects(registry) }).
 		WithManyArguments().
 		WithArgumentUsage("<target>...")
 }
 
 func revokedSubjects(
-	grants PathGrants,
-	forwards Forwards,
+	targets []revocation.Target,
 	arguments slash.Arguments,
 ) ([]string, bool) {
-	if slices.Contains(revocableSubjects(grants, forwards), arguments.Text) {
+	if slices.ContainsFunc(targets, func(target revocation.Target) bool { return target.Key == arguments.Text }) {
 		return []string{arguments.Text}, true
 	}
 
@@ -218,29 +226,15 @@ func distinct(values []string) []string {
 	return distinctValues
 }
 
-func revoke(
-	grants PathGrants,
-	forwards Forwards,
-	subject string,
-) (agent.Event, error) {
-	if port, err := portgrant.ParsePort(subject); err == nil {
-		if forwards.isConfigured() {
-			return forwards.Revoke(port)
-		}
-		return agent.Event{}, fmt.Errorf("port %d is not forwarded", port)
+func revocableSubjects(registry *revocation.Registry) []string {
+	targets, err := registry.Targets()
+	if err != nil {
+		return nil
 	}
-
-	return grants.Revoke(subject)
-}
-
-func revocableSubjects(grants PathGrants, forwards Forwards) []string {
-	subjects := pathGrantPaths(grants.GetCurrent())
-	if forwards.isConfigured() {
-		for _, port := range forwards.GetCurrent() {
-			subjects = append(subjects, strconv.Itoa(int(port)))
-		}
+	subjects := make([]string, 0, len(targets))
+	for _, target := range targets {
+		subjects = append(subjects, target.Key)
 	}
-
 	return subjects
 }
 

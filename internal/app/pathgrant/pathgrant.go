@@ -153,13 +153,32 @@ func (self *Grants) Revoke(path string) (agent.Event, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
+	grant, err := self.revocableGrant(path)
+	if err != nil {
+		return agent.Event{}, err
+	}
+	return self.revoke(self.state.GetCurrent(), grant)
+}
+
+func (self *Grants) ResolveRevocation(path string) (string, error) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	grant, err := self.revocableGrant(path)
+	if err != nil {
+		return "", err
+	}
+	return grant.Path, nil
+}
+
+func (self *Grants) revocableGrant(path string) (Grant, error) {
 	writtenPath := strings.TrimSpace(path)
 	if writtenPath == "" {
-		return agent.Event{}, errors.New("path is empty")
+		return Grant{}, errors.New("path is empty")
 	}
 	expandedPath, err := pathutil.Expand(writtenPath)
 	if err != nil {
-		return agent.Event{}, fmt.Errorf("could not expand %s: %w", writtenPath, err)
+		return Grant{}, fmt.Errorf("could not expand %s: %w", writtenPath, err)
 	}
 	if !filepath.IsAbs(expandedPath) {
 		expandedPath = filepath.Join(self.workspace.GetResolvedDir(), expandedPath)
@@ -168,18 +187,18 @@ func (self *Grants) Revoke(path string) (agent.Event, error) {
 
 	current := self.state.GetCurrent()
 	if matchedGrant, found := findGrant(current, cleanPath); found {
-		return self.revoke(current, matchedGrant)
+		return matchedGrant, nil
 	}
 
 	canonicalPath, err := self.canonicalPath(path, false)
 	if err != nil {
-		return agent.Event{}, err
+		return Grant{}, err
 	}
 	matchedGrant, found := findGrant(current, canonicalPath)
 	if !found {
-		return agent.Event{}, fmt.Errorf("%s has no temporary grant", pathutil.Shorten(canonicalPath))
+		return Grant{}, fmt.Errorf("%s has no temporary grant", pathutil.Shorten(canonicalPath))
 	}
-	return self.revoke(current, matchedGrant)
+	return matchedGrant, nil
 }
 
 func (self *Grants) revoke(current []Grant, matchedGrant Grant) (agent.Event, error) {

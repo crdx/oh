@@ -1545,6 +1545,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		PathGrants: commands.PathGrants{
 			DenyPatterns: settings.Grants.Deny,
 			Grant:        pathGrants.Grant,
+			Resolve:      pathGrants.ResolveRevocation,
 			Revoke: func(path string) (agent.Event, error) {
 				event, err := pathGrants.Revoke(path)
 				if err != nil {
