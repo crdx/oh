@@ -360,6 +360,7 @@ lint2:
 lint3:
     fd -tf -e go -X go run ./internal/lint/receivername
     fd -tf -e go -X go run ./internal/lint/stdstream
+    fd -tf -e go -X go run ./internal/lint/importalias
     fd -tf -e go -X go run ./internal/lint/abbreviation
     fd -tf -e go -X go run ./internal/lint/boolname
     fd -tf -e go -E '*_test.go' -X go run ./internal/lint/adjective
