@@ -11,6 +11,9 @@ LINT_CACHE := env('GOLANGCI_LINT_CACHE', home_directory() / '.cache' / 'golangci
 TEST_CACHE := env('XDG_CACHE_HOME', home_directory() / '.cache') / 'oh' / 'test'
 TEST_BINARY := TEST_CACHE / sha256(justfile_directory()) / 'oh'
 HARNESS_SHARD_COUNT := "8"
+TEST_TIMEOUT := "5m"
+TEST_BUDGET_SECONDS := "60"
+SLOWEST_SHOWN := "10"
 
 export GOLANGCI_LINT_CACHE := LINT_CACHE / sha256(justfile_directory())
 
@@ -40,16 +43,61 @@ test:
     PIDS=()
     LOGS=()
     ALL_LOGS=()
+    ALL_EVENTS=()
     STATUS=0
+
+    function terse_output {
+        jq -js '
+            (
+                map(select(.Action == "fail" and .Test != null) | .Test | split("/")[0])
+                | unique
+            ) as $failed
+            | .[]
+            | select(.Action == "output" or .Action == "build-output")
+            | select(.Test == null or ((.Test | split("/")[0]) as $top | any($failed[]; . == $top)))
+            | select(.Output != "PASS\n")
+            | .Output
+        ' "$1"
+    }
 
     function run_tests {
         local NAME=$1
         shift
         local LOG="$LOG_DIRECTORY/$NAME.log"
-        go test "$@" >"$LOG" 2>&1 &
+        local EVENTS="$LOG_DIRECTORY/$NAME.json"
+        (
+            RESULT=0
+            go test -json -timeout {{ TEST_TIMEOUT }} "$@" >"$EVENTS" 2>"$LOG.stderr" || RESULT=$?
+            terse_output "$EVENTS" >"$LOG"
+            cat "$LOG.stderr" >>"$LOG"
+            exit "$RESULT"
+        ) &
         PIDS+=("$!")
         LOGS+=("$LOG")
         ALL_LOGS+=("$LOG")
+        ALL_EVENTS+=("$EVENTS")
+    }
+
+    function check_test_times {
+        local TIMES
+        TIMES=$(
+            jq -r '
+                select(.Action == "pass" or .Action == "fail")
+                | select(.Test != null and (.Test | contains("/") | not))
+                | "\(.Elapsed)\t\(.Test)"
+            ' "${ALL_EVENTS[@]}" |
+                sort -rn
+        )
+        echo -e "${YELLOW}Slowest tests:${NC}"
+        head -n {{ SLOWEST_SHOWN }} <<<"$TIMES" |
+            awk -F '\t' '{ printf "  %6.1fs  %s\n", $1, $2 }'
+        local OVER
+        OVER=$(awk -F '\t' -v budget={{ TEST_BUDGET_SECONDS }} '$1 > budget' <<<"$TIMES")
+        if [[ -n $OVER ]]; then
+            echo -e "${RED}Tests over the {{ TEST_BUDGET_SECONDS }}s budget:${NC}"
+            awk -F '\t' '{ printf "  %6.1fs  %s\n", $1, $2 }' <<<"$OVER"
+            STATUS=1
+        fi
     }
 
     function wait_for_tests {
@@ -105,6 +153,8 @@ test:
             -session-golden-shard-count "$SHARD_COUNT"
     done
     wait_for_tests
+
+    check_test_times
 
     if [[ $STATUS -ne 0 ]]; then
         echo -e "${RED}Failed:${NC}"
