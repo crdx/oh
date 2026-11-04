@@ -27,6 +27,7 @@ const (
 	interactiveRows     = 30
 	interactiveDeadline = 20 * time.Second
 	interactiveQuiet    = 200 * time.Millisecond
+	interactiveSettle   = time.Second
 	endOfTransmission   = "\x04"
 	pressEnter          = "\r"
 	pressEscape         = "\x1b"
@@ -406,7 +407,7 @@ func (self *interactiveSession) waitForCount(text string, count int) {
 }
 
 func (self *interactiveSession) waitToSettle() {
-	self.WaitToSettle(interactiveQuiet)
+	self.WaitToSettle(interactiveQuiet, interactiveSettle)
 }
 
 func (self *interactiveSession) waitToExit() {

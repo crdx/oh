@@ -104,8 +104,9 @@ func (self *Transcript) WaitForCount(text string, count int, deadline time.Durat
 	return false
 }
 
-func (self *Transcript) WaitToSettle(quiet time.Duration) {
-	for {
+func (self *Transcript) WaitToSettle(quiet time.Duration, limit time.Duration) {
+	giveUpAt := time.Now().Add(limit)
+	for time.Now().Before(giveUpAt) {
 		self.mutex.Lock()
 		lastWriteAt := self.lastWriteAt
 		self.mutex.Unlock()

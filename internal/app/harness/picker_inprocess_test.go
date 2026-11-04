@@ -159,7 +159,7 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 		if !picker.WaitForCount(keyHint, redrawn, interactiveDeadline) {
 			t.Fatalf("picker failed to redraw after confirmation: %s", picker.String())
 		}
-		picker.WaitToSettle(interactiveQuiet)
+		picker.WaitToSettle(interactiveQuiet, interactiveSettle)
 	}
 
 	waitForPTYText(t, picker, workspaceName)
@@ -271,7 +271,7 @@ func (self *inProcessPicker) typeAndSettle(t *testing.T, text string) {
 	if !self.WaitForGrowth(from, interactiveDeadline) {
 		t.Fatalf("typing %q drew nothing; terminal output:\n%s", text, self.String())
 	}
-	self.WaitToSettle(interactiveQuiet)
+	self.WaitToSettle(interactiveQuiet, interactiveSettle)
 }
 
 func pickerScreen(t *testing.T, picker *inProcessPicker) string {
@@ -285,5 +285,5 @@ func waitForPTYText(t *testing.T, picker *inProcessPicker, text string) {
 	if !picker.WaitForCount(text, 1, interactiveDeadline) {
 		t.Fatalf("%q was not drawn; terminal output:\n%s", text, picker.String())
 	}
-	picker.WaitToSettle(interactiveQuiet)
+	picker.WaitToSettle(interactiveQuiet, interactiveSettle)
 }
