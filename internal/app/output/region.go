@@ -245,8 +245,11 @@ func (self *Screen) scrollFooter(input footer, room int) (scrolledFooter, bool) 
 
 	detail := rows[input.pinnedRows:tailStart]
 	bottomStart := len(detail) - detailRoom + 1
-	scroll := min(max(input.scroll, 0), bottomStart)
+	scroll := min(max(input.scroll, 0), bottomStart-1)
 	start := bottomStart - scroll
+	if start == 1 {
+		start = 0
+	}
 
 	window := make([]string, 0, detailRoom)
 	if start > 0 {

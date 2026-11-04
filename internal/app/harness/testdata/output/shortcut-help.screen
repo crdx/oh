@@ -99,6 +99,20 @@ l                   Toggle lookup
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────────────────────────────────────
+=== one step down / 38 columns ===
+──────────────────────────────────────
+Keyboard shortcuts
+
+⋮ 2 more lines
+^D
+  Quit from an empty draft
+^C twice / ^U
+  Clear the draft without stopping
+  work
+⋮ 57 more lines
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────
 === running turn / 70 columns ===
 ──────────────────────────────────────────────────────────────────────
 Keyboard shortcuts

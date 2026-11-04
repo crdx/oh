@@ -99,6 +99,20 @@
 \e[K\r
 \e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?2026l
+=== one step down / 38 columns ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m──────────────────────────────────────\e[0m\r
+\e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
+\e[K\r
+\e[38;2;192;128;80m^/ or ^?\e[0m\e[K\r
+  Show or close this reference\e[K\r
+\e[38;2;192;128;80m^D\e[0m\e[K\r
+  Quit from an empty draft\e[K\r
+\e[38;2;192;128;80m^C twice / ^U\e[0m\e[K\r
+  Clear the draft without stopping\e[K\r
+\e[38;2;150;152;150m⋮ 58 more lines\e[0m\e[K\r
+\e[K\r
+\e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
+\e[38;2;150;152;150m──────────────────────────────────────\e[0m\e[1A\r\e[?2026l\e[?2026h\e[?25l\e[8A\r\e[38;2;150;152;150m⋮ 2 more lines\e[0m\e[K\e[1B\r\e[38;2;192;128;80m^D\e[0m\e[K\e[1B\r  Quit from an empty draft\e[K\e[1B\r\e[38;2;192;128;80m^C twice / ^U\e[0m\e[K\e[1B\r  Clear the draft without stopping\e[K\e[1B\r  work\e[K\e[1B\r\e[38;2;150;152;150m⋮ 57 more lines\e[0m\e[K\e[2B\r\e[?2026l
 === running turn / 70 columns ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\r
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r

@@ -112,6 +112,7 @@ func TestGoldenShortcutHelpFitsAndScrollsWithoutChangingTheDraft(t *testing.T) {
 		{name: "all shortcuts", columns: 100, rows: 70},
 		{name: "short terminal", columns: 38, rows: 14},
 		{name: "scrolled to end", columns: 38, rows: 14, context: "end"},
+		{name: "one step down", columns: 38, rows: 14, context: "down"},
 		{name: "history search", columns: 70, rows: 24, context: "search"},
 		{name: "mode prefix", columns: 70, rows: 24, context: "mode"},
 		{name: "approval", columns: 70, rows: 24, context: "question"},
@@ -140,8 +141,11 @@ func TestGoldenShortcutHelpFitsAndScrollsWithoutChangingTheDraft(t *testing.T) {
 				self.externalEdit.isAwaited = true
 			}
 			self.handleKeypressAndShowInput(inputLine, history, shortcutHelpKey())
-			if scenario.context == "end" {
+			switch scenario.context {
+			case "end":
 				self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.End})
+			case "down":
+				self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Down})
 			}
 			result := drawn.String()
 			if scenario.context == "running" {

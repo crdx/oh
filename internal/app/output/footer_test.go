@@ -318,7 +318,8 @@ func TestAnInertFooterScrollsItsDetailBetweenItsPinnedEnds(t *testing.T) {
 	for scroll, want := range map[int][]string{
 		0:  {"ruler", "label", "", "⋮ 26 more lines", "detail 26", "detail 27", "detail 28", "detail 29", "", "options", "ruler"},
 		1:  {"ruler", "label", "", "⋮ 25 more lines", "detail 25", "detail 26", "detail 27", "⋮ 2 more lines", "", "options", "ruler"},
-		26: {"ruler", "label", "", "detail 0", "detail 1", "detail 2", "detail 3", "⋮ 26 more lines", "", "options", "ruler"},
+		24: {"ruler", "label", "", "⋮ 2 more lines", "detail 2", "detail 3", "detail 4", "⋮ 25 more lines", "", "options", "ruler"},
+		25: {"ruler", "label", "", "detail 0", "detail 1", "detail 2", "detail 3", "⋮ 26 more lines", "", "options", "ruler"},
 	} {
 		got := screen.InertFooter(rows, focus, questionPins, scroll)
 
@@ -338,8 +339,28 @@ func TestAnInertFooterScrollsNoFurtherThanItsTop(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 12)
 	rows := questionFooter(30)
 
-	if got := screen.InertFooter(rows, len(rows)-2, questionPins, 100); got != 26 {
-		t.Errorf("scrolling past the top settled at %d, want 26", got)
+	if got := screen.InertFooter(rows, len(rows)-2, questionPins, 100); got != 25 {
+		t.Errorf("scrolling past the top settled at %d, want 25", got)
+	}
+}
+
+func TestEveryInertFooterScrollStepRevealsARow(t *testing.T) {
+	for _, detailRows := range []int{6, 7, 30} {
+		screen := NewTerminalOfSize(&strings.Builder{}, 40, 12)
+		rows := questionFooter(detailRows)
+		top := screen.InertFooter(rows, len(rows)-2, questionPins, len(rows))
+		var previous []string
+		for scroll := top; scroll >= 0; scroll-- {
+			screen.InertFooter(rows, len(rows)-2, questionPins, scroll)
+			drawn := plainTexts(drawnTexts(screen))
+			if slices.Contains(drawn, "⋮ 1 more line") {
+				t.Errorf("%d rows scrolled by %d hid one row behind a notice: %q", detailRows, scroll, drawn)
+			}
+			if slices.Equal(drawn, previous) {
+				t.Errorf("%d rows scrolled by %d drew the same window as the step before: %q", detailRows, scroll, drawn)
+			}
+			previous = drawn
+		}
 	}
 }
 

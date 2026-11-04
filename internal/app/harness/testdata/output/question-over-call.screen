@@ -743,11 +743,11 @@ $ cat > script.py <<'EOF' 38L ✦·
 ────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
 Run this command in the sandbox with host networking?
 
-⋮ 2 more lines
+⋮ 3 more lines
   print('hello')
   print('hello')
   print('hello')
-⋮ 33 more lines
+⋮ 32 more lines
 
  Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
