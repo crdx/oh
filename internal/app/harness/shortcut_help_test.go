@@ -11,7 +11,7 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 func shortcutHelpKey() key.Key {
@@ -77,11 +77,11 @@ func TestShortcutHelpNamesOnlyTheUndoTargetThatIsAvailable(t *testing.T) {
 
 func TestShortcutHelpDoesNotAnswerTheQuestionBeneathIt(t *testing.T) {
 	self, _, inputLine, history, _ := undoFixture(t)
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 	result := make(chan error, 1)
-	go func() { result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"}) }()
+	go func() { result <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Continue?"}) }()
 	<-broker.Changes()
 	self.question.broker = broker
 	self.onQuestionChange()
@@ -94,7 +94,7 @@ func TestShortcutHelpDoesNotAnswerTheQuestionBeneathIt(t *testing.T) {
 	default:
 	}
 	self.handleKeypressAndShowInput(inputLine, history, undoKey('c'))
-	if err := <-result; !errors.Is(err, ask.ErrDenied) {
+	if err := <-result; !errors.Is(err, question.ErrDenied) {
 		t.Fatalf("the question was not available after closing help: %v", err)
 	}
 	self.finish()
@@ -115,6 +115,7 @@ func TestGoldenShortcutHelpFitsAndScrollsWithoutChangingTheDraft(t *testing.T) {
 		{name: "history search", columns: 70, rows: 24, context: "search"},
 		{name: "mode prefix", columns: 70, rows: 24, context: "mode"},
 		{name: "approval", columns: 70, rows: 24, context: "question"},
+		{name: "gated approval", columns: 70, rows: 24, context: "gate"},
 		{name: "external editor", columns: 70, rows: 24, context: "editor"},
 		{name: "running turn", columns: 70, rows: 24, context: "running"},
 	} {
@@ -132,7 +133,9 @@ func TestGoldenShortcutHelpFitsAndScrollsWithoutChangingTheDraft(t *testing.T) {
 			case "mode":
 				self.handleKeypressAndShowInput(inputLine, history, undoKey('x'))
 			case "question":
-				self.question.request = &ask.Request{Question: ask.Confirmation{Label: "Continue?"}.Question()}
+				self.question.request = &question.Request{Question: question.Confirmation{Label: "Continue?"}.Question()}
+			case "gate":
+				self.question.request = &question.Request{Question: fetchApproval.question("https://example.com")}
 			case "editor":
 				self.externalEdit.isAwaited = true
 			}

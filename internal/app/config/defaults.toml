@@ -170,6 +170,7 @@ left = [
     { segment = "forwards" },
     { segment = "tasks" },
     { segment = "grants", type = "base" },
+    { segment = "approvals" },
 ]
 center = [
 ]

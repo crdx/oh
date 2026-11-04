@@ -1,0 +1,12 @@
+=== active ===
+[38;2;129;162;190mApproved:[0m
+  network:host — Allow for session (until you quit)
+  tool:fetch — Allow for 5 mins (5m remaining)
+revoke: network:host, tool:fetch
+=== expired ===
+[38;2;129;162;190mApproved:[0m
+  network:host — Allow for session (until you quit)
+revoke: network:host
+=== forgotten ===
+No grants or forwarded ports.
+revoke: (none)

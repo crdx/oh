@@ -10,7 +10,7 @@ import (
 
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 const detailWidth = 80
@@ -49,7 +49,7 @@ func SendQuestion(
 	writeEscape EscapeWriter,
 	isTerminalFocused func() bool,
 	workspace *work.Space,
-	question ask.Question,
+	question question.Question,
 ) (Notification, error) {
 	return SendIfUnfocused(ctx, writeEscape, isTerminalFocused, Args{
 		Title:   title(workspace),
@@ -81,7 +81,7 @@ func NewQuestions(
 	}
 }
 
-func (self *Questions) Announce(question ask.Question) func() {
+func (self *Questions) Announce(question question.Question) func() {
 	sentNotification := make(chan Notification, 1)
 	go func() {
 		notice, _ := SendQuestion(context.Background(), self.writeEscape, self.isTerminalFocused, self.workspace, question)
@@ -138,7 +138,7 @@ func title(workspace *work.Space) string {
 	return "oh — " + workspace.GetName()
 }
 
-func questionMessage(question ask.Question) string {
+func questionMessage(question question.Question) string {
 	detail := questionDetail(question)
 	if detail == "" {
 		return question.Label
@@ -147,7 +147,7 @@ func questionMessage(question ask.Question) string {
 	return question.Label + "\n" + detail
 }
 
-func questionDetail(question ask.Question) string {
+func questionDetail(question question.Question) string {
 	if question.Detail != "" {
 		return detailLine(question.Detail)
 	}

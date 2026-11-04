@@ -22,7 +22,7 @@ Run the commit tool?
 
 patch: /tmp/layout.patch
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a question with an extended message and scratch patch, answered ===
 
@@ -51,7 +51,7 @@ Explain the removal.
 
 patch: <s>/split2/02-record-removal-of-imu-posting.patch
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a question with fields, answered ===
 
@@ -78,7 +78,7 @@ Run the commit tool?
 message: Align header controls consistently
 patch: /tmp/layout.patch
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question asked before its call and redrawn, answered ===
 
@@ -104,7 +104,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question asked before its call, answered ===
 
@@ -130,7 +130,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question beside another call, answered ===
 
@@ -170,7 +170,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question beside another call, redrawn, answered ===
 
@@ -198,7 +198,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question beside another call, standing ===
 
@@ -214,7 +214,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question redrawn while it stands, answered ===
 
@@ -240,7 +240,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with a blank intent, answered ===
 
@@ -266,7 +266,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with a long intent, answered ===
 
@@ -295,7 +295,7 @@ one anybody should run with the host network
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent beside another call, answered ===
 
@@ -324,7 +324,7 @@ write a script that greets the world
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent of control characters, answered ===
 
@@ -351,7 +351,7 @@ greet the world
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent, answered ===
 
@@ -389,7 +389,7 @@ write a script that greets the world
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent, redrawn, answered ===
 
@@ -416,7 +416,7 @@ write a script that greets the world
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent, standing ===
 
@@ -432,7 +432,7 @@ write a script that greets the world
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question, answered ===
 
@@ -469,7 +469,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question, standing ===
 
@@ -484,7 +484,7 @@ Run this command in the sandbox with host networking?
 
 $ curl example.com
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question asked before its call and redrawn, answered ===
 
@@ -513,7 +513,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question asked before its call, answered ===
 
@@ -542,7 +542,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, answered ===
 
@@ -584,7 +584,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, its calls redrawn once answered, answered ===
 
@@ -614,7 +614,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, redrawn, answered ===
 
@@ -644,7 +644,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, standing ===
 
@@ -662,7 +662,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question redrawn while it stands, answered ===
 
@@ -691,7 +691,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled past its bottom, answered ===
 
@@ -720,7 +720,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled to its top and back down, answered ===
 
@@ -749,7 +749,7 @@ Run this command in the sandbox with host networking?
   print('hello')
 ⋮ 33 more lines
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled to its top, answered ===
 
@@ -778,7 +778,7 @@ $ cat > script.py <<'EOF'
   print('hello')
 ⋮ 34 more lines
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled up, answered ===
 
@@ -818,7 +818,7 @@ Run this command in the sandbox with host networking?
   print('hello')
 ⋮ 2 more lines
 
- Yes  [No]
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled up, standing ===
 
@@ -836,7 +836,7 @@ Run this command in the sandbox with host networking?
   print('hello')
 ⋮ 4 more lines
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with a long intent scrolled to its top, answered ===
 
@@ -865,7 +865,7 @@ $ cat > script.py <<'EOF'
   print('hello')
 ⋮ 34 more lines
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with a long intent, answered ===
 
@@ -894,7 +894,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent scrolled past its bottom, answered ===
 
@@ -923,7 +923,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent scrolled to its top, answered ===
 
@@ -952,7 +952,7 @@ $ cat > script.py <<'EOF'
   print('hello')
 ⋮ 35 more lines
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent scrolled up, answered ===
 
@@ -981,7 +981,7 @@ write a script that greets the world
   print('hello')
 ⋮ 4 more lines
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, answered ===
 
@@ -1021,7 +1021,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, its call redrawn once answered, answered ===
 
@@ -1050,7 +1050,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, redrawn, answered ===
 
@@ -1079,7 +1079,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, standing ===
 
@@ -1097,7 +1097,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question, answered ===
 
@@ -1137,7 +1137,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question, standing ===
 
@@ -1155,5 +1155,5 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Yes]  No
+[Deny]  Allow once   Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────

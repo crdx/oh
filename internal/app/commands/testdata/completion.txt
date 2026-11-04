@@ -6,7 +6,7 @@
   /fork [<options>] → /fork …  (fork this session)
   /forward <port> → /forward …  (forward a sandbox port to the host)
   /grant <access> <path>... → /grant …  (grant temporary access to a path)
-  /grants [all] → /grants …  (list effective access and forwarded ports)
+  /grants [all] → /grants …  (list effective access, forwarded ports and approvals)
   /help → /help  (list the commands and targets)
   /info → /info  (show every bar segment with its current value)
   /new [<options>] → /new …  (start a new session)
@@ -31,7 +31,7 @@
 "/expose "
 "/g"
   /grant <access> <path>... → /grant …  (grant temporary access to a path)
-  /grants [all] → /grants …  (list effective access and forwarded ports)
+  /grants [all] → /grants …  (list effective access, forwarded ports and approvals)
 "/grant "
   r → /grant r
   rw → /grant rw

@@ -60,7 +60,7 @@ go run crdx.org/oh@latest --demo
 ## Primitives
 
 - `pkg/agent`: conversation loop, with streaming, batching, and cancellation
-- `pkg/ask`: confirmations and choices mediated by an interface
+- `pkg/question`: confirmations and choices mediated by an interface
 - `pkg/tool`: tools, schemas, middleware, and concurrency
 - `pkg/toolbox`: standard tools and workspaces
 - `pkg/sandbox`: command policies, shell and argv runners, and the sandbox

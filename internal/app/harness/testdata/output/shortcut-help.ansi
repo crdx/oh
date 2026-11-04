@@ -3,12 +3,11 @@
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
 \e[K\r
 \e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice            \e[0mQuit the session\e[K\r
-\e[38;2;192;128;80mEscape              \e[0mStop the turn and foreground command\e[K\r
+\e[38;2;192;128;80m^D                  \e[0mQuit from an empty draft\e[K\r
 \e[38;2;192;128;80m^C twice / ^U       \e[0mClear the draft without stopping work\e[K\r
 \e[38;2;192;128;80mShift+Enter / ^J    \e[0mInsert a newline\e[K\r
 \e[38;2;192;128;80mEnter / Alt+Enter   \e[0mSend the draft\e[K\r
-\e[38;2;192;128;80m^Z twice            \e[0mTake back the last turn\e[K\r
+\e[38;2;192;128;80m^Z                  \e[0mTake back the last turn\e[K\r
 \e[38;2;192;128;80mEnter twice         \e[0mContinue or send pending notices\e[K\r
 \e[K\r
 \e[38;2;150;152;150mEditing\e[0m\e[K\r
@@ -28,7 +27,7 @@
 \e[38;2;192;128;80m^.                  \e[0mReply to the last answer in the editor\e[K\r
 \e[K\r
 \e[38;2;150;152;150mAccess: press ^X, then a letter\e[0m\e[K\r
-\e[38;2;192;128;80m^C                  \e[0mCancel the mode prefix\e[K\r
+\e[38;2;192;128;80mEscape / ^C         \e[0mCancel the mode prefix\e[K\r
 \e[38;2;192;128;80mw                   \e[0mToggle workspace writes\e[K\r
 \e[38;2;192;128;80mx                   \e[0mToggle shell execution\e[K\r
 \e[38;2;192;128;80mn                   \e[0mToggle host network\e[K\r
@@ -43,9 +42,7 @@
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
 \e[K\r
 \e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice            \e[0mQuit the session\e[K\r
-\e[38;2;192;128;80mEscape              \e[0mStop the turn and foreground command\e[K\r
-\e[38;2;192;128;80m^C                  \e[0mCancel the question\e[K\r
+\e[38;2;192;128;80mEscape / ^C         \e[0mCancel the question\e[K\r
 \e[38;2;192;128;80mEnter               \e[0mChoose the selected answer\e[K\r
 \e[38;2;192;128;80mLeft / Right / Tab  \e[0mSelect an answer\e[K\r
 \e[38;2;192;128;80mUp / Down           \e[0mScroll question details\e[K\r
@@ -59,19 +56,28 @@
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
 \e[K\r
 \e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice            \e[0mQuit the session\e[K\r
-\e[38;2;192;128;80mEscape              \e[0mStop the turn and foreground command\e[K\r
-\e[38;2;192;128;80m^C                  \e[0mCancel external editing\e[K\r
+\e[38;2;192;128;80mEscape / ^C / ^D    \e[0mCancel external editing\e[K\r
 \e[K\r
 \e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?2026l
+=== gated approval / 70 columns ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;207;173;0m──────────────────────────────────────────────────────────────────────\e[0m\r
+\e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
+\e[K\r
+\e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
+\e[38;2;192;128;80mEscape / ^C         \e[0mCancel the question\e[K\r
+\e[38;2;192;128;80mEnter               \e[0mChoose the selected answer\e[K\r
+\e[38;2;192;128;80mLeft / Right / Tab  \e[0mSelect an answer\e[K\r
+\e[38;2;192;128;80mUp / Down           \e[0mScroll question details\e[K\r
+\e[K\r
+\e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
+\e[38;2;207;173;0m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?2026l
 === history search / 70 columns ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m──\e[0m \e[38;2;150;152;150mreverse-i-search: \e[0m \e[38;2;150;152;150m────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\e[1B\r\e[K\r
 \e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice            \e[0mQuit the session\e[K\r
-\e[38;2;192;128;80mEscape              \e[0mStop the turn and foreground command\e[K\r
+\e[38;2;192;128;80mEscape              \e[0mLeave the search\e[K\r
 \e[38;2;192;128;80m^R                  \e[0mFind the previous match\e[K\r
 \e[38;2;192;128;80m^C twice            \e[0mClear search and draft\e[K\r
 \e[38;2;192;128;80mBackspace           \e[0mShorten the search\e[K\r
@@ -83,9 +89,7 @@
 \e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\e[1B\r\e[K\r
 \e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice            \e[0mQuit the session\e[K\r
-\e[38;2;192;128;80mEscape              \e[0mStop the turn and foreground command\e[K\r
-\e[38;2;192;128;80m^C                  \e[0mCancel the mode prefix\e[K\r
+\e[38;2;192;128;80mEscape / ^C         \e[0mCancel the mode prefix\e[K\r
 \e[38;2;192;128;80mw                   \e[0mToggle workspace writes\e[K\r
 \e[38;2;192;128;80mx                   \e[0mToggle shell execution\e[K\r
 \e[38;2;192;128;80mn                   \e[0mToggle host network\e[K\r
@@ -95,18 +99,17 @@
 \e[K\r
 \e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?2026l
-=== quit offer / 70 columns ===
+=== running turn / 70 columns ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\r
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
 \e[K\r
 \e[38;2;192;128;80m^/ or ^?            \e[0mShow or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice            \e[0mQuit the session\e[K\r
-\e[38;2;192;128;80mEscape              \e[0mStop the turn and foreground command\e[K\r
+\e[38;2;192;128;80mEscape / ^D         \e[0mStop the foreground command, then the turn\e[K\r
 \e[38;2;192;128;80m^C twice / ^U       \e[0mClear the draft without stopping work\e[K\r
 \e[38;2;192;128;80mShift+Enter / ^J    \e[0mInsert a newline\e[K\r
-\e[38;2;192;128;80mEnter / Alt+Enter   \e[0mSend the draft\e[K\r
-\e[38;2;192;128;80m^Z twice            \e[0mTake back the last turn\e[K\r
-\e[38;2;192;128;80mEnter twice         \e[0mContinue or send pending notices\e[K\r
+\e[38;2;192;128;80mEnter               \e[0mQueue the draft\e[K\r
+\e[38;2;192;128;80mAlt+Enter           \e[0mStop the turn and send the draft\e[K\r
+\e[38;2;192;128;80m^Z                  \e[0mTake back the last turn\e[K\r
 \e[K\r
 \e[38;2;150;152;150mEditing\e[0m\e[K\r
 \e[38;2;192;128;80mTab                 \e[0mComplete a word or choose a suggestion\e[K\r
@@ -115,35 +118,36 @@
 \e[38;2;192;128;80mHome / ^A           \e[0mMove to the start of the line\e[K\r
 \e[38;2;192;128;80mEnd / ^E            \e[0mMove to the end of the line\e[K\r
 \e[38;2;192;128;80m^Left / ^Right      \e[0mMove by word\e[K\r
-\e[38;2;150;152;150m⋮ 17 more lines\e[0m\e[K\r
+\e[38;2;192;128;80m^Backspace / ^W     \e[0mDelete the previous word\e[K\r
+\e[38;2;150;152;150m⋮ 16 more lines\e[0m\e[K\r
 \e[K\r
 \e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
-\e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?2026l\e[?2026h\e[?25l\e[20A\r\e[38;2;207;173;0mpress ^D again to quit\e[0m\e[K\e[2B\r\e[38;2;192;128;80m^D                  \e[0mConfirm quitting\e[K\e[1B\r\e[38;2;192;128;80m^C                  \e[0mCancel the quit offer\e[K\e[1B\r\e[38;2;192;128;80mEscape              \e[0mCancel the offer and stop the turn\e[K\e[1B\r\e[38;2;192;128;80m^/ or ^?            \e[0mClose this reference and cancel the offer\e[K\e[1B\r\e[K\e[1B\r\e[38;2;150;152;150m^C cancels quitting · ^D quits\e[0m\e[K\e[1B\r\e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[14A\r\e[?2026l
+\e[38;2;150;152;150m──────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?2026l
 === scrolled to end / 38 columns ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m──────────────────────────────────────\e[0m\r
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
 \e[K\r
 \e[38;2;192;128;80m^/ or ^?\e[0m\e[K\r
   Show or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice\e[0m\e[K\r
-  Quit the session\e[K\r
-\e[38;2;192;128;80mEscape\e[0m\e[K\r
-  Stop the turn and foreground command\r
-\e[38;2;150;152;150m⋮ 60 more lines\e[0m\e[K\r
+\e[38;2;192;128;80m^D\e[0m\e[K\r
+  Quit from an empty draft\e[K\r
+\e[38;2;192;128;80m^C twice / ^U\e[0m\e[K\r
+  Clear the draft without stopping\e[K\r
+\e[38;2;150;152;150m⋮ 58 more lines\e[0m\e[K\r
 \e[K\r
 \e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
-\e[38;2;150;152;150m──────────────────────────────────────\e[0m\e[1A\r\e[?2026l\e[?2026h\e[?25l\e[8A\r\e[38;2;150;152;150m⋮ 60 more lines\e[0m\e[K\e[1B\r\e[38;2;192;128;80mg\e[0m\e[K\e[1B\r  Toggle repository history\e[K\e[1B\r\e[38;2;192;128;80ms\e[0m\e[K\e[1B\r  Toggle subagents\e[K\e[1B\r\e[38;2;192;128;80ml\e[0m\e[K\e[1B\r  Toggle lookup\e[K\e[2B\r\e[?2026l
+\e[38;2;150;152;150m──────────────────────────────────────\e[0m\e[1A\r\e[?2026l\e[?2026h\e[?25l\e[8A\r\e[38;2;150;152;150m⋮ 58 more lines\e[0m\e[K\e[1B\r\e[38;2;192;128;80mg\e[0m\e[K\e[1B\r  Toggle repository history\e[K\e[1B\r\e[38;2;192;128;80ms\e[0m\e[K\e[1B\r  Toggle subagents\e[K\e[1B\r\e[38;2;192;128;80ml\e[0m\e[K\e[1B\r  Toggle lookup\e[K\e[2B\r\e[?2026l
 === short terminal / 38 columns ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m──────────────────────────────────────\e[0m\r
 \e[38;2;207;173;0mKeyboard shortcuts\e[0m\e[K\r
 \e[K\r
 \e[38;2;192;128;80m^/ or ^?\e[0m\e[K\r
   Show or close this reference\e[K\r
-\e[38;2;192;128;80m^D twice\e[0m\e[K\r
-  Quit the session\e[K\r
-\e[38;2;192;128;80mEscape\e[0m\e[K\r
-  Stop the turn and foreground command\r
-\e[38;2;150;152;150m⋮ 60 more lines\e[0m\e[K\r
+\e[38;2;192;128;80m^D\e[0m\e[K\r
+  Quit from an empty draft\e[K\r
+\e[38;2;192;128;80m^C twice / ^U\e[0m\e[K\r
+  Clear the draft without stopping\e[K\r
+\e[38;2;150;152;150m⋮ 58 more lines\e[0m\e[K\r
 \e[K\r
 \e[38;2;150;152;150m^/ or ^C closes · ↑/↓ scrolls\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────\e[0m\e[1A\r\e[?2026l

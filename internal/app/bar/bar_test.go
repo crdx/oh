@@ -14,11 +14,13 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/approvals"
 	"crdx.org/oh/internal/app/segment/localTime"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/question"
 )
 
 type fixedSegment string
@@ -216,9 +218,14 @@ func TestInfoLeavesTheStylingOfEveryRealSegmentToTheSegment(t *testing.T) {
 			GetTurnCount:       func() int { return 6 },
 		},
 	})
-	registry[localTimeSegment] = localTime.New(func() time.Time {
-		return time.Date(2026, time.October, 8, 10, 8, 0, 0, time.Local)
-	})
+	drawnAt := time.Date(2026, time.October, 8, 10, 8, 0, 0, time.Local)
+	registry[localTimeSegment] = localTime.New(func() time.Time { return drawnAt })
+	registry[approvalsSegment] = approvals.New(func() []question.RememberedAnswer {
+		return []question.RememberedAnswer{
+			{Key: "network:host", Option: question.Option{Label: "Allow for session", RememberForSession: true}},
+			{Key: "tool:fetch", Option: question.Option{Label: "Allow for 5 mins"}, ExpiresAt: drawnAt.Add(4 * time.Minute)},
+		}
+	}, func() time.Time { return drawnAt })
 	configuration := NewConfiguration(registry, segment.Layout{})
 
 	info, err := configuration.RenderInfo(segment.Context{})

@@ -70,6 +70,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/record"
+	"crdx.org/oh/internal/app/revocation"
 	"crdx.org/oh/internal/app/scene"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/sessions"
@@ -88,7 +89,7 @@ import (
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 const (
@@ -97,7 +98,17 @@ const (
 	sessionNameStaleAfter       = 5 * time.Second
 )
 
+const (
+	denyApprovalIndex = iota
+	onceApprovalIndex
+	timedApprovalIndex
+	sessionApprovalIndex
+)
+
+const approvalRememberFor = 5 * time.Minute
+
 type approval struct {
+	key      string
 	label    string
 	language string
 	action   string
@@ -106,17 +117,20 @@ type approval struct {
 
 var (
 	hostNetworkApproval = approval{
+		key:      "network:host",
 		label:    "Run this command in the sandbox with host networking?",
 		language: "bash",
 		action:   "host-network access",
 		outcome:  "command did not run",
 	}
 	lookupApproval = approval{
+		key:     "tool:lookup",
 		label:   "Look this up on the web?",
 		action:  "lookup",
 		outcome: "lookup did not run",
 	}
 	fetchApproval = approval{
+		key:     "tool:fetch",
 		label:   "Fetch this page?",
 		action:  "fetch",
 		outcome: "fetch did not run",
@@ -125,6 +139,7 @@ var (
 
 func customToolApproval(name string) approval {
 	return approval{
+		key:     "tool:" + name,
 		label:   "Run the " + name + " tool?",
 		action:  name,
 		outcome: name + " did not run",
@@ -133,43 +148,52 @@ func customToolApproval(name string) approval {
 
 func (self approval) ask(
 	ctx context.Context,
-	broker *ask.Broker,
+	broker *question.Broker,
 	setting permission.Setting,
 	subject string,
 ) error {
-	return self.askFor(ctx, broker, setting, self.confirmation(subject))
+	return self.askFor(ctx, broker, setting, self.question(subject))
 }
 
 func (self approval) askFor(
 	ctx context.Context,
-	broker *ask.Broker,
+	broker *question.Broker,
 	setting permission.Setting,
-	confirmation ask.Confirmation,
+	prompt question.Question,
 ) error {
 	if setting.IsAllowed() {
 		return nil
 	}
 
-	return self.confirmWith(ctx, broker, confirmation, setting.TimeoutOr(approvalLimit))
+	return self.confirmWith(ctx, broker, prompt, setting.TimeoutOr(approvalLimit))
 }
 
-func (self approval) confirmation(subject string) ask.Confirmation {
-	return ask.Confirmation{
+func (self approval) question(subject string) question.Question {
+	return question.Question{
+		Key:      self.key,
 		Label:    self.label,
 		Detail:   subject,
 		Language: self.language,
+		Lapse:    "auto-denies",
+		Default:  denyApprovalIndex,
+		Options: []question.Option{
+			{Label: "Deny"},
+			{Label: "Allow once"},
+			{Label: "Allow for 5 mins", RememberFor: approvalRememberFor},
+			{Label: "Allow for session", RememberForSession: true},
+		},
 	}
 }
 
 func (self approval) confirmArguments(
 	ctx context.Context,
-	broker *ask.Broker,
+	broker *question.Broker,
 	subject string,
 	arguments tool.Arguments,
 	timeout time.Duration,
 ) error {
 	schema := arguments.Schema()
-	fields := make([]ask.Field, 0, len(schema))
+	fields := make([]question.Field, 0, len(schema))
 	if parameter := schema.Find(subject); parameter != nil && arguments.IsPresent(subject) {
 		fields = append(fields, argumentField(arguments, *parameter, true))
 	}
@@ -181,33 +205,36 @@ func (self approval) confirmArguments(
 		fields = append(fields, argumentField(arguments, parameter, false))
 	}
 
-	return self.confirmWith(ctx, broker, ask.Confirmation{Label: self.label, Fields: fields}, timeout)
+	prompt := self.question("")
+	prompt.Fields = fields
+	return self.confirmWith(ctx, broker, prompt, timeout)
 }
 
-func argumentField(arguments tool.Arguments, parameter tool.Parameter, isSubject bool) ask.Field {
+func argumentField(arguments tool.Arguments, parameter tool.Parameter, isSubject bool) question.Field {
 	value := arguments.GetText(parameter.Name)
 	if parameter.Type == tool.TypeArray {
 		value = strings.Join(arguments.GetStrings(parameter.Name), ", ")
 	}
-	return ask.Field{Name: parameter.Name, Value: value, IsSubject: isSubject}
+	return question.Field{Name: parameter.Name, Value: value, IsSubject: isSubject}
 }
 
 func (self approval) confirmWith(
 	ctx context.Context,
-	broker *ask.Broker,
-	confirmation ask.Confirmation,
+	broker *question.Broker,
+	prompt question.Question,
 	timeout time.Duration,
 ) error {
-	err := ask.ConfirmWithin(ctx, broker, confirmation, timeout)
+	index, err := broker.AskWithTimeout(ctx, prompt, timeout)
+	isAllowed := index == onceApprovalIndex || index == timedApprovalIndex || index == sessionApprovalIndex
 
 	switch {
-	case errors.Is(err, ask.ErrDenied):
+	case errors.Is(err, question.ErrCancelled) || err == nil && !isAllowed:
 		return errors.New(self.action + " refused; " + self.outcome)
 	case errors.Is(err, context.DeadlineExceeded):
 		return errors.New(
 			"approval timed out after " + util.CompactDuration(timeout) + "; " + self.outcome,
 		)
-	case errors.Is(err, ask.ErrUnavailable):
+	case errors.Is(err, question.ErrUnavailable):
 		return errors.New("approval unavailable; " + self.outcome)
 	}
 
@@ -216,14 +243,14 @@ func (self approval) confirmWith(
 
 func approveHostNetwork(
 	ctx context.Context,
-	broker *ask.Broker,
+	broker *question.Broker,
 	setting permission.Setting,
 	command string,
 	intent string,
 ) error {
-	confirmation := hostNetworkApproval.confirmation(strings.Join(bash.Steps(command), "\n"))
-	confirmation.Intent = intent
-	return hostNetworkApproval.askFor(ctx, broker, setting, confirmation)
+	prompt := hostNetworkApproval.question(strings.Join(bash.Steps(command), "\n"))
+	prompt.Intent = intent
+	return hostNetworkApproval.askFor(ctx, broker, setting, prompt)
 }
 
 var completableToolNames = []string{
@@ -1351,14 +1378,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if childManager != nil {
 		toolsBeforeShell = append(toolsBeforeShell, subagent.New(childManager, func() bool { return mode.Current().Has(caps.Subagents) }))
 	}
-	askBroker := ask.New()
+	questionBroker := question.NewBroker()
 	permissionSet, err := settings.BuildPermissions()
 	if err != nil {
 		return "", err
 	}
 	permissions := permission.New(permissionSet)
 	approveNetwork := func(ctx context.Context, command string, intent string) error {
-		return approveHostNetwork(ctx, askBroker, permissions.Network(), command, intent)
+		return approveHostNetwork(ctx, questionBroker, permissions.Network(), command, intent)
 	}
 	shellTool := state.shell(approveNetwork, sandboxRunner)
 
@@ -1387,14 +1414,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		lookup.New(
 			func() bool { return mode.Current().Has(caps.Lookup) },
 			func(ctx context.Context, query string) error {
-				return lookupApproval.ask(ctx, askBroker, permissions.Lookup(), query)
+				return lookupApproval.ask(ctx, questionBroker, permissions.Lookup(), query)
 			},
 			client.Search,
 		),
 		fetch.New(
 			func() bool { return mode.Current().Has(caps.Network) },
 			func(ctx context.Context, address string) error {
-				return fetchApproval.ask(ctx, askBroker, permissions.Fetch(), address)
+				return fetchApproval.ask(ctx, questionBroker, permissions.Fetch(), address)
 			},
 			dropKeeper.SaveHTML,
 		),
@@ -1412,7 +1439,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			arguments tool.Arguments,
 			timeout time.Duration,
 		) error {
-			return customToolApproval(name).confirmArguments(ctx, askBroker, subject, arguments, timeout)
+			return customToolApproval(name).confirmArguments(ctx, questionBroker, subject, arguments, timeout)
 		},
 	})
 	if err != nil {
@@ -1528,6 +1555,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return sessionNames
 	}
 	systemCommands, err := commands.New(commands.Options{
+		Questions:        questionBroker,
+		Revocations:      []revocation.Source{commands.AnswerRevocations{Broker: questionBroker}},
 		ConfigDir:        location.GetConfigDir(),
 		ConfigFile:       configPath,
 		SystemPromptFile: location.GetGlobalContextPath(),
@@ -1661,7 +1690,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		tasksDoWake:      doesWake,
 		configObserver:   configObserver,
 		runMode:          runMode{isPrinting: args.IsPrinting, isYolo: args.Yolo, isSimulated: isSimulated},
-		question:         questionState{broker: askBroker},
+		question:         questionState{broker: questionBroker},
 		completer: trigger.New(
 			pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames)),
 			slash.NewSource(func() slash.Registry { return app.commands }),

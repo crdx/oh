@@ -15,18 +15,19 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 const (
-	detailGutter  = "❯"
-	optionGap     = " "
-	lapseFallback = "auto-cancels"
-	shellLanguage = "bash"
+	detailGutter         = "❯"
+	optionGap            = " "
+	optionNavigationHint = " ←/→"
+	lapseFallback        = "auto-cancels"
+	shellLanguage        = "bash"
 )
 
 func RenderQuestion(
-	question ask.Question,
+	question question.Question,
 	cursor int,
 	columns int,
 	shouldRenderHyperlinks bool,
@@ -44,7 +45,7 @@ func RenderQuestion(
 	return append(rows, "", renderOptions(question, cursor, columns))
 }
 
-func QuestionPinnedRows(question ask.Question, columns int) int {
+func QuestionPinnedRows(question question.Question, columns int) int {
 	headRows := len(renderQuestionHead(question, columns))
 	if question.Detail == "" && len(question.Fields) == 0 {
 		return headRows
@@ -53,13 +54,14 @@ func QuestionPinnedRows(question ask.Question, columns int) int {
 	return headRows + 1
 }
 
-func QuestionYieldingRows(question ask.Question, columns int) (int, int) {
+func QuestionYieldingRows(question question.Question, columns int) (int, int) {
 	return len(renderQuestionLabel(question.Label, columns)), len(renderQuestionIntent(question.Intent, columns))
 }
 
-func renderQuestionHead(question ask.Question, columns int) []string {
+func renderQuestionHead(question question.Question, columns int) []string {
 	rows := renderQuestionLabel(question.Label, columns)
-	return append(rows, renderQuestionIntent(question.Intent, columns)...)
+	rows = append(rows, renderQuestionIntent(question.Intent, columns)...)
+	return rows
 }
 
 func renderQuestionIntent(intent string, columns int) []string {
@@ -71,7 +73,7 @@ func renderQuestionIntent(intent string, columns int) []string {
 	return width.Wrap(intent, columns)
 }
 
-func QuestionHead(question ask.Question, remainingTime time.Duration) string {
+func QuestionHead(question question.Question, remainingTime time.Duration) string {
 	return renderCountdown(question.Lapse, remainingTime)
 }
 
@@ -86,7 +88,7 @@ func renderQuestionLabel(label string, columns int) []string {
 	return rows
 }
 
-func renderQuestionDetail(question ask.Question, columns int) []string {
+func renderQuestionDetail(question question.Question, columns int) []string {
 	if question.Detail == "" {
 		return nil
 	}
@@ -110,7 +112,7 @@ func renderQuestionDetail(question ask.Question, columns int) []string {
 }
 
 func renderQuestionFields(
-	fields []ask.Field,
+	fields []question.Field,
 	columns int,
 	shouldRenderHyperlinks bool,
 	pathRoots link.Roots,
@@ -147,7 +149,7 @@ func renderQuestionFields(
 	return rows
 }
 
-func highlightedDetail(question ask.Question) string {
+func highlightedDetail(question question.Question) string {
 	switch question.Language {
 	case "":
 		return question.Detail
@@ -166,17 +168,22 @@ func detailMark(language string) (string, style.Style) {
 	return detailGutter, style.Subject
 }
 
-func renderOptions(question ask.Question, cursor int, columns int) string {
+func renderOptions(question question.Question, cursor int, columns int) string {
 	labels := make([]string, 0, len(question.Options))
 
 	for index, option := range question.Options {
 		labels = append(labels, renderOption(option, index == cursor))
 	}
 
-	return width.Elide(strings.Join(labels, optionGap), columns)
+	options := strings.Join(labels, optionGap)
+	if style.Width(options) > columns && cursor >= 0 && cursor < len(labels) {
+		hint := optionNavigationHint
+		return width.Elide(labels[cursor], max(columns-style.Width(hint), 1)) + width.Elide(style.Subtle(hint), max(columns-1, 0))
+	}
+	return width.Elide(options, columns)
 }
 
-func renderOption(option ask.Option, isChosen bool) string {
+func renderOption(option question.Option, isChosen bool) string {
 	label := labelledOption(option)
 
 	if isChosen {
@@ -186,7 +193,7 @@ func renderOption(option ask.Option, isChosen bool) string {
 	return style.Subtle(" " + label + " ")
 }
 
-func labelledOption(option ask.Option) string {
+func labelledOption(option question.Option) string {
 	if option.Key == 0 || isKeyLeading(option) {
 		return option.Label
 	}
@@ -194,7 +201,7 @@ func labelledOption(option ask.Option) string {
 	return string(option.Key) + " " + option.Label
 }
 
-func isKeyLeading(option ask.Option) bool {
+func isKeyLeading(option question.Option) bool {
 	letters := []rune(option.Label)
 
 	return len(letters) > 0 && unicode.ToLower(letters[0]) == unicode.ToLower(option.Key)

@@ -2,6 +2,7 @@
 
 ## [Next]
 
+- Remember approvals once, for 5 mins, or for the session
 - Undo the last tool-free turn with ctrl+z
 - Show keybinding docs with ctrl+?
 - After cancelling a turn, don't let an interjection wake it

@@ -1,4 +1,4 @@
-package ask_test
+package question_test
 
 import (
 	"context"
@@ -9,33 +9,33 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/waiting"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 func TestAQuestionIsUnavailableOutsideInteractiveMode(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 
-	if _, err := broker.Ask(t.Context(), ask.Question{}); !errors.Is(err, ask.ErrUnavailable) {
+	if _, err := broker.Ask(t.Context(), question.Question{}); !errors.Is(err, question.ErrUnavailable) {
 		t.Errorf("got %v, want somebody to be required", err)
 	}
 }
 
 func TestAnAnswerSettlesOneRequest(t *testing.T) {
 	for name, test := range map[string]struct {
-		answer    func(request *ask.Request)
+		answer    func(request *question.Request)
 		wantIndex int
 		wantErr   error
 	}{
-		"first option":  {answer: func(request *ask.Request) { request.Choose(0) }},
-		"second option": {answer: func(request *ask.Request) { request.Choose(1) }, wantIndex: 1},
-		"cancelled":     {answer: (*ask.Request).Cancel, wantIndex: -1, wantErr: ask.ErrCancelled},
+		"first option":  {answer: func(request *question.Request) { request.Choose(0) }},
+		"second option": {answer: func(request *question.Request) { request.Choose(1) }, wantIndex: 1},
+		"cancelled":     {answer: (*question.Request).Cancel, wantIndex: -1, wantErr: question.ErrCancelled},
 	} {
 		t.Run(name, func(t *testing.T) {
-			broker := ask.New()
+			broker := question.NewBroker()
 			closeBroker := broker.Open()
 			defer closeBroker()
 
-			question := ask.Confirmation{
+			question := question.Confirmation{
 				Label:    "Run this command?",
 				Detail:   "curl example.com",
 				Language: "bash",
@@ -73,11 +73,11 @@ func TestAnAnswerSettlesOneRequest(t *testing.T) {
 }
 
 func TestAnOptionNobodyWasOfferedIsIgnored(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
-	go func() { _, _ = broker.Ask(t.Context(), ask.Confirmation{Label: "Continue?"}.Question()) }()
+	go func() { _, _ = broker.Ask(t.Context(), question.Confirmation{Label: "Continue?"}.Question()) }()
 	<-broker.Changes()
 
 	request := broker.Current()
@@ -89,20 +89,20 @@ func TestAnOptionNobodyWasOfferedIsIgnored(t *testing.T) {
 }
 
 func TestConcurrentRequestsReachTheAnswererInOrder(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	firstResult := make(chan error, 1)
 	go func() {
-		_, err := broker.Ask(t.Context(), ask.Confirmation{Label: "First?"}.Question())
+		_, err := broker.Ask(t.Context(), question.Confirmation{Label: "First?"}.Question())
 		firstResult <- err
 	}()
 	<-broker.Changes()
 
 	secondResult := make(chan error, 1)
 	go func() {
-		_, err := broker.Ask(t.Context(), ask.Confirmation{Label: "Second?"}.Question())
+		_, err := broker.Ask(t.Context(), question.Confirmation{Label: "Second?"}.Question())
 		secondResult <- err
 	}()
 	<-broker.Changes()
@@ -121,7 +121,7 @@ func TestConcurrentRequestsReachTheAnswererInOrder(t *testing.T) {
 		t.Fatalf("got second request %+v", second)
 	}
 	second.Cancel()
-	if err := <-secondResult; !errors.Is(err, ask.ErrCancelled) {
+	if err := <-secondResult; !errors.Is(err, question.ErrCancelled) {
 		t.Errorf("got %v, want the second request to be cancelled", err)
 	}
 }
@@ -133,13 +133,13 @@ func TestConcurrentTimedRequestsEachGetTheirWholeLapse(t *testing.T) {
 			firstStood = 45 * time.Second
 		)
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 
 		firstResult := make(chan error, 1)
 		go func() {
-			_, err := broker.AskWithin(t.Context(), ask.Confirmation{Label: "First?"}.Question(), lapse)
+			_, err := broker.AskWithTimeout(t.Context(), question.Confirmation{Label: "First?"}.Question(), lapse)
 			firstResult <- err
 		}()
 		<-broker.Changes()
@@ -153,7 +153,7 @@ func TestConcurrentTimedRequestsEachGetTheirWholeLapse(t *testing.T) {
 		secondContext, secondWaitedTime := waiting.Track(t.Context())
 		secondResult := make(chan error, 1)
 		go func() {
-			_, err := broker.AskWithin(secondContext, ask.Confirmation{Label: "Second?"}.Question(), lapse)
+			_, err := broker.AskWithTimeout(secondContext, question.Confirmation{Label: "Second?"}.Question(), lapse)
 			secondResult <- err
 		}()
 		<-broker.Changes()
@@ -194,14 +194,14 @@ func TestConcurrentTimedRequestsEachGetTheirWholeLapse(t *testing.T) {
 }
 
 func TestCancellationWithdrawsARequest(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	ctx, cancel := context.WithCancel(t.Context())
 	result := make(chan error, 1)
 	go func() {
-		_, err := broker.Ask(ctx, ask.Confirmation{Label: "Continue?"}.Question())
+		_, err := broker.Ask(ctx, question.Confirmation{Label: "Continue?"}.Question())
 		result <- err
 	}()
 	<-broker.Changes()
@@ -216,14 +216,14 @@ func TestCancellationWithdrawsARequest(t *testing.T) {
 }
 
 func TestARequestCarriesTheDeadlineItWasAskedUnder(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	ctx, cancel := context.WithTimeout(t.Context(), time.Minute)
 	defer cancel()
 
-	go func() { _, _ = broker.Ask(ctx, ask.Confirmation{Label: "Continue?"}.Question()) }()
+	go func() { _, _ = broker.Ask(ctx, question.Confirmation{Label: "Continue?"}.Question()) }()
 	<-broker.Changes()
 
 	wanted, _ := ctx.Deadline()
@@ -234,11 +234,11 @@ func TestARequestCarriesTheDeadlineItWasAskedUnder(t *testing.T) {
 }
 
 func TestARequestWithoutADeadlineReportsNone(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
-	go func() { _, _ = broker.Ask(t.Context(), ask.Confirmation{Label: "Continue?"}.Question()) }()
+	go func() { _, _ = broker.Ask(t.Context(), question.Confirmation{Label: "Continue?"}.Question()) }()
 	<-broker.Changes()
 
 	if _, hasDeadline := broker.Current().Deadline(); hasDeadline {
@@ -250,7 +250,7 @@ func TestAQuestionRecordsHowLongItStoodAgainstWhoeverAskedIt(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		const stood = time.Minute
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 
@@ -259,7 +259,7 @@ func TestAQuestionRecordsHowLongItStoodAgainstWhoeverAskedIt(t *testing.T) {
 		answered := make(chan struct{})
 		go func() {
 			defer close(answered)
-			_, _ = broker.Ask(ctx, ask.Confirmation{Label: "Continue?"}.Question())
+			_, _ = broker.Ask(ctx, question.Confirmation{Label: "Continue?"}.Question())
 		}()
 		<-broker.Changes()
 
@@ -274,14 +274,14 @@ func TestAQuestionRecordsHowLongItStoodAgainstWhoeverAskedIt(t *testing.T) {
 }
 
 func TestAQuestionNobodyIsTimingIsAnsweredAllTheSame(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	answer := make(chan int, 1)
 	failure := make(chan error, 1)
 	go func() {
-		index, err := broker.Ask(t.Context(), ask.Confirmation{Label: "Continue?"}.Question())
+		index, err := broker.Ask(t.Context(), question.Confirmation{Label: "Continue?"}.Question())
 		answer <- index
 		failure <- err
 	}()
@@ -301,7 +301,7 @@ func TestAQuestionCutShortStillRecordsWhatItTook(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		const stood = 30 * time.Second
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 
@@ -311,7 +311,7 @@ func TestAQuestionCutShortStillRecordsWhatItTook(t *testing.T) {
 
 		refused := make(chan error, 1)
 		go func() {
-			_, err := broker.Ask(ctx, ask.Confirmation{Label: "Continue?"}.Question())
+			_, err := broker.Ask(ctx, question.Confirmation{Label: "Continue?"}.Question())
 			refused <- err
 		}()
 		<-broker.Changes()
@@ -330,12 +330,12 @@ func TestAQuestionCutShortStillRecordsWhatItTook(t *testing.T) {
 
 func TestCancellationWithdrawsAQueuedQuestionBeforeItBecomesCurrent(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 		firstResult := make(chan error, 1)
 		go func() {
-			_, err := broker.Ask(t.Context(), ask.Confirmation{Label: "First?"}.Question())
+			_, err := broker.Ask(t.Context(), question.Confirmation{Label: "First?"}.Question())
 			firstResult <- err
 		}()
 		<-broker.Changes()
@@ -347,7 +347,7 @@ func TestCancellationWithdrawsAQueuedQuestionBeforeItBecomesCurrent(t *testing.T
 		defer cancel()
 		secondResult := make(chan error, 1)
 		go func() {
-			_, err := broker.Ask(ctx, ask.Confirmation{Label: "Second?"}.Question())
+			_, err := broker.Ask(ctx, question.Confirmation{Label: "Second?"}.Question())
 			secondResult <- err
 		}()
 		<-broker.Changes()

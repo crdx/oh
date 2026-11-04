@@ -1,4 +1,4 @@
-package ask
+package question
 
 import (
 	"context"
@@ -16,8 +16,10 @@ const (
 )
 
 type Option struct {
-	Key   rune
-	Label string
+	Key                rune
+	Label              string
+	RememberFor        time.Duration
+	RememberForSession bool
 }
 
 type Field struct {
@@ -27,6 +29,7 @@ type Field struct {
 }
 
 type Question struct {
+	Key      string
 	Label    string
 	Intent   string
 	Lapse    string
@@ -35,6 +38,10 @@ type Question struct {
 	Fields   []Field
 	Options  []Option
 	Default  int
+}
+
+func (self Question) HasRememberableAnswers() bool {
+	return slices.ContainsFunc(self.Options, func(option Option) bool { return option.RememberFor > 0 || option.RememberForSession })
 }
 
 func (self Question) DefaultIndex() int {
@@ -46,6 +53,9 @@ func (self Question) DefaultIndex() int {
 }
 
 func (self Question) IndexForKey(key rune) int {
+	if key == 0 {
+		return noChoice
+	}
 	for index, option := range self.Options {
 		if option.Key == key {
 			return index
@@ -88,13 +98,13 @@ func Confirm(ctx context.Context, broker *Broker, confirmation Confirmation) err
 	return confirmationResult(index, err)
 }
 
-func ConfirmWithin(
+func ConfirmWithTimeout(
 	ctx context.Context,
 	broker *Broker,
 	confirmation Confirmation,
 	lapseAfter time.Duration,
 ) error {
-	index, err := broker.AskWithin(ctx, confirmation.Question(), lapseAfter)
+	index, err := broker.AskWithTimeout(ctx, confirmation.Question(), lapseAfter)
 	return confirmationResult(index, err)
 }
 

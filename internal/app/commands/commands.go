@@ -25,6 +25,7 @@ import (
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/question"
 )
 
 const (
@@ -58,6 +59,7 @@ type Options struct {
 	ReplyInEditor     func(text string) error
 	Output            io.Writer
 	PathGrants        PathGrants
+	Questions         *question.Broker
 	Revocations       []revocation.Source
 	Forwards          Forwards
 	Tasks             Tasks
@@ -115,6 +117,7 @@ type commandEnvironment struct {
 	copyText          func([]string) error
 	startHostCommand  func(directory string, command string) error
 	pathGrants        PathGrants
+	questionBroker    *question.Broker
 	revocations       []revocation.Source
 	forwards          Forwards
 	tasks             Tasks
@@ -165,6 +168,7 @@ func New(options Options) (slash.CommandSet, error) {
 		},
 		startHostCommand:  options.StartHostCommand,
 		pathGrants:        options.PathGrants,
+		questionBroker:    options.Questions,
 		revocations:       options.Revocations,
 		forwards:          options.Forwards,
 		tasks:             options.Tasks,
@@ -248,6 +252,7 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 		commands = append(commands, pathGrantCommands(
 			environment.pathGrants,
 			environment.forwards,
+			environment.questionBroker,
 		)...)
 	}
 	if environment.pathGrants.isConfigured() || environment.forwards.isConfigured() || len(environment.revocations) > 0 {

@@ -3,12 +3,11 @@
 Keyboard shortcuts
 
 ^/ or ^?            Show or close this reference
-^D twice            Quit the session
-Escape              Stop the turn and foreground command
+^D                  Quit from an empty draft
 ^C twice / ^U       Clear the draft without stopping work
 Shift+Enter / ^J    Insert a newline
 Enter / Alt+Enter   Send the draft
-^Z twice            Take back the last turn
+^Z                  Take back the last turn
 Enter twice         Continue or send pending notices
 
 Editing
@@ -28,7 +27,7 @@ End / ^E            Move to the end of the line
 ^.                  Reply to the last answer in the editor
 
 Access: press ^X, then a letter
-^C                  Cancel the mode prefix
+Escape / ^C         Cancel the mode prefix
 w                   Toggle workspace writes
 x                   Toggle shell execution
 n                   Toggle host network
@@ -43,9 +42,7 @@ l                   Toggle lookup
 Keyboard shortcuts
 
 ^/ or ^?            Show or close this reference
-^D twice            Quit the session
-Escape              Stop the turn and foreground command
-^C                  Cancel the question
+Escape / ^C         Cancel the question
 Enter               Choose the selected answer
 Left / Right / Tab  Select an answer
 Up / Down           Scroll question details
@@ -59,9 +56,19 @@ n                   No
 Keyboard shortcuts
 
 ^/ or ^?            Show or close this reference
-^D twice            Quit the session
-Escape              Stop the turn and foreground command
-^C                  Cancel external editing
+Escape / ^C / ^D    Cancel external editing
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────────────────────────────────────
+=== gated approval / 70 columns ===
+──────────────────────────────────────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?            Show or close this reference
+Escape / ^C         Cancel the question
+Enter               Choose the selected answer
+Left / Right / Tab  Select an answer
+Up / Down           Scroll question details
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────────────────────────────────────
@@ -70,8 +77,7 @@ Escape              Stop the turn and foreground command
 Keyboard shortcuts
 
 ^/ or ^?            Show or close this reference
-^D twice            Quit the session
-Escape              Stop the turn and foreground command
+Escape              Leave the search
 ^R                  Find the previous match
 ^C twice            Clear search and draft
 Backspace           Shorten the search
@@ -83,9 +89,7 @@ Backspace           Shorten the search
 Keyboard shortcuts
 
 ^/ or ^?            Show or close this reference
-^D twice            Quit the session
-Escape              Stop the turn and foreground command
-^C                  Cancel the mode prefix
+Escape / ^C         Cancel the mode prefix
 w                   Toggle workspace writes
 x                   Toggle shell execution
 n                   Toggle host network
@@ -95,22 +99,35 @@ l                   Toggle lookup
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────────────────────────────────────
-=== quit offer / 70 columns ===
+=== running turn / 70 columns ===
 ──────────────────────────────────────────────────────────────────────
-press ^D again to quit
+Keyboard shortcuts
 
-^D                  Confirm quitting
-^C                  Cancel the quit offer
-Escape              Cancel the offer and stop the turn
-^/ or ^?            Close this reference and cancel the offer
+^/ or ^?            Show or close this reference
+Escape / ^D         Stop the foreground command, then the turn
+^C twice / ^U       Clear the draft without stopping work
+Shift+Enter / ^J    Insert a newline
+Enter               Queue the draft
+Alt+Enter           Stop the turn and send the draft
+^Z                  Take back the last turn
 
-^C cancels quitting · ^D quits
+Editing
+Tab                 Complete a word or choose a suggestion
+Up / Down           Move by line or recall history
+^R                  Search input history
+Home / ^A           Move to the start of the line
+End / ^E            Move to the end of the line
+^Left / ^Right      Move by word
+^Backspace / ^W     Delete the previous word
+⋮ 16 more lines
+
+^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────────────────────────────────────
 === scrolled to end / 38 columns ===
 ──────────────────────────────────────
 Keyboard shortcuts
 
-⋮ 60 more lines
+⋮ 58 more lines
 g
   Toggle repository history
 s
@@ -126,11 +143,11 @@ Keyboard shortcuts
 
 ^/ or ^?
   Show or close this reference
-^D twice
-  Quit the session
-Escape
-  Stop the turn and foreground command
-⋮ 60 more lines
+^D
+  Quit from an empty draft
+^C twice / ^U
+  Clear the draft without stopping
+⋮ 58 more lines
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────

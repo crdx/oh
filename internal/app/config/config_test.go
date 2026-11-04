@@ -1186,6 +1186,7 @@ func testSegments() segment.Registry {
 		"mode-toggle":        inertFactory,
 		"grants":             inertFactory,
 		"forwards":           inertFactory,
+		"approvals":          inertFactory,
 		"workspace-dir":      workspaceDir.New(work.At("/tmp/somewhere")),
 		"active-model":       inertFactory,
 		"scroll-overflow":    scrollOverflow.New,

@@ -12,7 +12,7 @@ import (
 
 	"crdx.org/oh/internal/app/notification"
 	"crdx.org/oh/internal/app/work"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 func neverFocused() bool { return false }
@@ -102,7 +102,7 @@ func TestTurnErrorNotificationNamesTheWorkspaceAndShowsTheFailure(t *testing.T) 
 func TestQuestionNotificationNamesTheWorkspaceAndAsksTheQuestion(t *testing.T) {
 	capturePath := fakeNotifySend(t)
 
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:  "Run this command in the sandbox with host networking?",
 		Detail: "curl example.com",
 	}.Question()
@@ -135,9 +135,9 @@ func TestQuestionNotificationNamesTheWorkspaceAndAsksTheQuestion(t *testing.T) {
 
 func TestQuestionNotificationShowsTheFirstNamedField(t *testing.T) {
 	capturePath := fakeNotifySend(t)
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label: "Run the commit tool?",
-		Fields: []ask.Field{
+		Fields: []question.Field{
 			{Name: "patch", Value: "/tmp/layout.patch"},
 			{Name: "message", Value: "Align header controls consistently"},
 		},
@@ -173,7 +173,7 @@ func TestQuestionNotificationShortensWhatItCannotShow(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			capturePath := fakeNotifySend(t)
 
-			question := ask.Confirmation{Label: "Continue?", Detail: test.detail}.Question()
+			question := question.Confirmation{Label: "Continue?", Detail: test.detail}.Question()
 			if _, err := notification.SendQuestion(
 				t.Context(),
 				nil,
@@ -231,8 +231,8 @@ func closedNotifications(t *testing.T, closedPath string) []string {
 	return strings.Split(strings.TrimSuffix(string(closed), "\n"), "\n")
 }
 
-func standingQuestion() ask.Question {
-	return ask.Confirmation{Label: "Continue?"}.Question()
+func standingQuestion() question.Question {
+	return question.Confirmation{Label: "Continue?"}.Question()
 }
 
 func TestEveryStandingQuestionIsWithdrawnAtTheEnd(t *testing.T) {

@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/question"
 	"crdx.org/oh/pkg/tasks"
 )
 
@@ -170,6 +171,11 @@ func drawsOverSpan(instance segment.Segment, isRunning bool) (int, bool) {
 }
 
 func refreshRegistry(workspaceDir string, world refreshWorld) segment.Registry {
+	approvals := []question.RememberedAnswer{
+		{Key: "network:host", Option: question.Option{Label: "Allow for session", RememberForSession: true}},
+		{Key: "tool:fetch", Option: question.Option{Label: "Allow for 5 mins"}, ExpiresAt: time.Now().Add(refreshSpan / 2)},
+	}
+
 	return NewRegistry(Options{
 		Workspace: work.At(workspaceDir),
 		Session:   cycle.Session{Name: "tame-impala", Model: "claude-haiku-5-5", Effort: "high"},
@@ -183,6 +189,7 @@ func refreshRegistry(workspaceDir string, world refreshWorld) segment.Registry {
 			GetGroupStatus:     func() caps.GroupStatus { return caps.GroupStatus{} },
 			GetPathGrants:      func() []pathgrant.Grant { return nil },
 			GetForwardedRoutes: func() []portgrant.Route { return nil },
+			GetApprovals:       func() []question.RememberedAnswer { return approvals },
 			IsPrefixPending:    func() bool { return false },
 			GetTurnTiming:      func() turn.Timing { return turn.Timing{UserTurn: time.Minute, ModelTurn: time.Second} },
 			GetTurnCount:       func() int { return 6 },

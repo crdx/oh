@@ -1,0 +1,64 @@
+=== 100 columns with choice "Allow for 5 mins" ===
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Fetch this page?
+
+❯ https://example.com
+
+ Deny   Allow once  [Allow for 5 mins]  Allow for session
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 100 columns with choice "Allow for session" ===
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Fetch this page?
+
+❯ https://example.com
+
+ Deny   Allow once   Allow for 5 mins  [Allow for session]
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 100 columns with choice "Allow once" ===
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Fetch this page?
+
+❯ https://example.com
+
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 100 columns with choice "Deny" ===
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Fetch this page?
+
+❯ https://example.com
+
+[Deny]  Allow once   Allow for 5 mins   Allow for session
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 30 columns with choice "Allow for 5 mins" ===
+───── auto-denies in 5m ──────
+Fetch this page?
+
+❯ https://example.com
+
+[Allow for 5 mins] ←/→
+──────────────────────────────
+=== 30 columns with choice "Allow for session" ===
+───── auto-denies in 5m ──────
+Fetch this page?
+
+❯ https://example.com
+
+[Allow for session] ←/→
+──────────────────────────────
+=== 30 columns with choice "Allow once" ===
+───── auto-denies in 5m ──────
+Fetch this page?
+
+❯ https://example.com
+
+[Allow once] ←/→
+──────────────────────────────
+=== 30 columns with choice "Deny" ===
+───── auto-denies in 5m ──────
+Fetch this page?
+
+❯ https://example.com
+
+[Deny] ←/→
+──────────────────────────────

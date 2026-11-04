@@ -114,7 +114,9 @@ func (self *App) keyboardShortcuts(inputLine *edit.Input) []keyboardShortcut {
 			keyboardShortcut{keys: "Up / Down", action: "Scroll question details"},
 		)
 		for _, option := range self.question.request.Question.Options {
-			shortcuts = append(shortcuts, keyboardShortcut{keys: string(option.Key), action: option.Label})
+			if option.Key != 0 {
+				shortcuts = append(shortcuts, keyboardShortcut{keys: string(option.Key), action: option.Label})
+			}
 		}
 		return shortcuts
 	}

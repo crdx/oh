@@ -63,7 +63,7 @@ import (
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
@@ -190,8 +190,8 @@ type terminationState struct {
 }
 
 type questionState struct {
-	broker      *ask.Broker
-	request     *ask.Request
+	broker      *question.Broker
+	request     *question.Request
 	cursor      int
 	scroll      int
 	isAnnounced bool
@@ -236,7 +236,7 @@ type App struct {
 	onFailure            func(failure error)
 	onPendingWake        func()
 	hasAnnouncedWake     bool
-	onQuestion           func(question ask.Question) func()
+	onQuestion           func(question question.Question) func()
 	savePastedImage      func(mediaType string, data []byte) (string, error)
 	watchStalls          func(work string) func()
 	pasteExchange        paste.Exchange
@@ -1309,12 +1309,14 @@ func (self *App) questionRows(columns int) []string {
 		return nil
 	}
 
+	question := self.question.request.Question
+
 	if self.screen == nil {
-		return painter.RenderQuestion(request.Question, self.question.cursor, columns, false, link.Roots{})
+		return painter.RenderQuestion(question, self.question.cursor, columns, false, link.Roots{})
 	}
 
 	return painter.RenderQuestion(
-		request.Question,
+		question,
 		self.question.cursor,
 		columns,
 		self.screen.IsTerminal(),
@@ -1413,6 +1415,7 @@ func (self *App) getBarSources() bar.Sources {
 		GetGroupStatus:     self.mode.Groups,
 		GetPathGrants:      self.getPathGrants,
 		GetForwardedRoutes: self.getForwardsRoutes,
+		GetApprovals:       self.getApprovals,
 		IsPrefixPending:    self.isPrefixPending,
 		GetTurnTiming:      self.turnTiming,
 		GetTurnCount:       self.turnCount,
@@ -1948,6 +1951,13 @@ func (self *App) getPathGrants() []pathgrant.Grant {
 		return nil
 	}
 	return self.pathGrants.GetCurrent()
+}
+
+func (self *App) getApprovals() []question.RememberedAnswer {
+	if self.question.broker == nil {
+		return nil
+	}
+	return self.question.broker.RememberedAnswers()
 }
 
 func (self *App) getForwardsRoutes() []portgrant.Route {

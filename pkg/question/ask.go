@@ -1,8 +1,9 @@
-package ask
+package question
 
 import (
 	"context"
 	"errors"
+	"slices"
 	"sync"
 	"time"
 
@@ -16,14 +17,22 @@ var (
 
 const noChoice = -1
 
+type answer struct {
+	index        int
+	until        time.Time
+	isForSession bool
+}
+
 type Request struct {
 	Question      Question
+	options       []Option
+	cancellation  <-chan struct{}
 	deadline      time.Time
 	lapsesAt      time.Time
 	lapseAfter    time.Duration
 	hasLapse      bool
 	currentSignal chan struct{}
-	answer        chan int
+	answer        chan answer
 	answerOnce    sync.Once
 	startOnce     sync.Once
 	finishOnce    sync.Once
@@ -35,7 +44,7 @@ func (self *Request) Deadline() (time.Time, bool) {
 }
 
 func (self *Request) Choose(index int) {
-	if index < 0 || index >= len(self.Question.Options) {
+	if index < 0 || index >= len(self.options) {
 		return
 	}
 
@@ -60,7 +69,24 @@ func (self *Request) start(at time.Time) {
 
 func (self *Request) settle(index int) {
 	self.answerOnce.Do(func() {
-		self.answer <- index
+		result := answer{index: index}
+		if index != noChoice {
+			select {
+			case <-self.cancellation:
+				return
+			default:
+			}
+			at := time.Now()
+			if !self.deadline.IsZero() && !at.Before(self.deadline) {
+				return
+			}
+			option := self.options[index]
+			result.isForSession = option.RememberForSession
+			if option.RememberFor > 0 {
+				result.until = at.Add(option.RememberFor)
+			}
+		}
+		self.answer <- result
 		self.finishRequest()
 	})
 }
@@ -74,9 +100,10 @@ type Broker struct {
 	requests      []*Request
 	changes       chan struct{}
 	isInteractive bool
+	memories      map[string]*memoryGate
 }
 
-func New() *Broker {
+func NewBroker() *Broker {
 	return &Broker{changes: make(chan struct{}, 1)}
 }
 
@@ -108,30 +135,36 @@ func (self *Broker) Current() *Request {
 }
 
 func (self *Broker) Ask(ctx context.Context, question Question) (int, error) {
-	return self.ask(ctx, question, 0, false)
+	result, err := self.ask(ctx, question, 0, false)
+	return result.index, err
 }
 
-func (self *Broker) AskWithin(
+func (self *Broker) AskWithTimeout(
 	ctx context.Context,
 	question Question,
 	lapseAfter time.Duration,
 ) (int, error) {
-	return self.ask(ctx, question, lapseAfter, true)
+	result, err := self.ask(ctx, question, lapseAfter, true)
+	return result.index, err
 }
 
-func (self *Broker) ask(
+func (self *Broker) enqueue(
 	ctx context.Context,
 	question Question,
 	lapseAfter time.Duration,
 	hasLapse bool,
-) (int, error) {
+) (answer, error) {
 	request := &Request{
 		Question:      question,
+		options:       question.Options,
+		cancellation:  ctx.Done(),
 		lapseAfter:    lapseAfter,
 		hasLapse:      hasLapse,
 		currentSignal: make(chan struct{}),
-		answer:        make(chan int, 1),
+		answer:        make(chan answer, 1),
 	}
+	request.Question.Options = slices.Clone(question.Options)
+	request.Question.Fields = slices.Clone(question.Fields)
 	request.finish = func() { self.finish(request) }
 	if deadline, hasDeadline := ctx.Deadline(); hasDeadline {
 		request.deadline = deadline
@@ -140,7 +173,7 @@ func (self *Broker) ask(
 	self.mutex.Lock()
 	if !self.isInteractive {
 		self.mutex.Unlock()
-		return noChoice, ErrUnavailable
+		return answer{index: noChoice}, ErrUnavailable
 	}
 	self.requests = append(self.requests, request)
 	if len(self.requests) == 1 {
@@ -157,11 +190,11 @@ func (self *Broker) ask(
 	case <-request.currentSignal:
 		return request.waitForAnswer(ctx)
 	case <-ctx.Done():
-		return noChoice, ctx.Err()
+		return answer{index: noChoice}, ctx.Err()
 	}
 }
 
-func (self *Request) waitForAnswer(ctx context.Context) (int, error) {
+func (self *Request) waitForAnswer(ctx context.Context) (answer, error) {
 	var lapse <-chan time.Time
 	var timer *time.Timer
 	if self.hasLapse {
@@ -171,15 +204,15 @@ func (self *Request) waitForAnswer(ctx context.Context) (int, error) {
 	}
 
 	select {
-	case index := <-self.answer:
-		if index == noChoice {
-			return noChoice, ErrCancelled
+	case result := <-self.answer:
+		if result.index == noChoice {
+			return result, ErrCancelled
 		}
-		return index, nil
+		return result, nil
 	case <-lapse:
-		return noChoice, context.DeadlineExceeded
+		return answer{index: noChoice}, context.DeadlineExceeded
 	case <-ctx.Done():
-		return noChoice, ctx.Err()
+		return answer{index: noChoice}, ctx.Err()
 	}
 }
 

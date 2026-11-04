@@ -15,7 +15,7 @@ import (
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 var controlL = key.Key{Code: key.Rune, Value: 'l', Mod: key.Ctrl}
@@ -61,7 +61,7 @@ func askBeneathTwoCalls(t *testing.T, redraw func(*App)) string {
 		self := frameEdgeConversation(t, &screenOutput, replayLines)
 		requestTwoCalls(self)
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 		self.question.broker = broker
 

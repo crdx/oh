@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/question"
 )
 
 const (
@@ -55,11 +56,12 @@ func (self PathGrants) getCurrentCaps() caps.Set {
 func pathGrantCommands(
 	grants PathGrants,
 	forwards Forwards,
+	broker *question.Broker,
 ) []slash.Command {
 	return []slash.Command{
 		forwardCommand(forwards),
 		grantCommand(grants),
-		grantsCommand(grants, forwards),
+		grantsCommand(grants, forwards, broker),
 	}
 }
 
@@ -142,15 +144,15 @@ func grantFlagChoices() []string {
 	return flags
 }
 
-func grantsCommand(grants PathGrants, forwards Forwards) slash.Command {
+func grantsCommand(grants PathGrants, forwards Forwards, broker *question.Broker) slash.Command {
 	return slash.Command{
 		Name:        "grants",
-		Description: "list effective access and forwarded ports",
+		Description: "list effective access, forwarded ports and approvals",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" && arguments.Text != grantsAllArgument {
 				return slash.Usage()
 			}
-			listing := formatGrants(grants, forwards)
+			listing := formatGrants(grants, forwards, broker)
 			if arguments.Text == grantsAllArgument {
 				context.PlainNoticeIndented(listing, pathGrantContinuationIndent)
 			} else {
@@ -249,6 +251,7 @@ func pathGrantPaths(grants []pathgrant.Grant) []string {
 func formatGrants(
 	grants PathGrants,
 	forwards Forwards,
+	broker *question.Broker,
 ) string {
 	effective := effectivePathGrants(grants)
 	sections := make([]string, 0, 3)
@@ -259,6 +262,9 @@ func formatGrants(
 		sections = append(sections, listing)
 	}
 	if listing := formatForwards(forwards); listing != "" {
+		sections = append(sections, listing)
+	}
+	if listing := formatRememberedAnswers(broker); listing != "" {
 		sections = append(sections, listing)
 	}
 	if len(sections) == 0 {

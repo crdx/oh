@@ -10,7 +10,7 @@ import (
 
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 func lastRow(rows []string) string {
@@ -27,7 +27,7 @@ func plainRows(rows []string) []string {
 }
 
 func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:    "Run this command in the sandbox with host networking?",
 		Detail:   "curl example.com",
 		Language: "bash",
@@ -53,7 +53,7 @@ func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
 }
 
 func TestAConfirmationDrawsItsIntentUnderItsLabel(t *testing.T) {
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:    "Run this command in the sandbox with host networking?",
 		Intent:   "fetch the example\npage to check it\x1b[31m answers",
 		Detail:   "curl example.com",
@@ -86,9 +86,9 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 		t.Fatal(err)
 	}
 	const message = "Align header controls consistently\n\nKeep every row aligned."
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label: "Run the commit tool?",
-		Fields: []ask.Field{
+		Fields: []question.Field{
 			{Name: "message", Value: message, IsSubject: true},
 			{Name: "patch", Value: patchPath},
 		},
@@ -132,9 +132,9 @@ func TestAQuestionShortensOnlyPathsUnderItsHostScratch(t *testing.T) {
 	if err := os.WriteFile(patchPath, nil, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label: "Run the commit tool?",
-		Fields: []ask.Field{
+		Fields: []question.Field{
 			{Name: "message", Value: "Record removal of IMU posting\n\nExplain the removal.\n\n", IsSubject: true},
 			{Name: "patch", Value: patchPath},
 			{Name: "other", Value: scratch + "-elsewhere/unchanged.patch"},
@@ -163,17 +163,17 @@ func TestAQuestionShortensOnlyPathsUnderItsHostScratch(t *testing.T) {
 }
 
 func TestTheHeadOfAQuestionCountsDownWhereThereIsADeadline(t *testing.T) {
-	question := ask.Confirmation{Label: "Continue?"}.Question()
+	confirmation := question.Confirmation{Label: "Continue?"}.Question()
 
-	head := QuestionHead(question, time.Minute)
+	head := QuestionHead(confirmation, time.Minute)
 	if got := style.Plain(head); got != "auto-denies in 1m" {
 		t.Errorf("got head %q, want a countdown", got)
 	}
 
-	if got := style.Plain(QuestionHead(question, 0)); got != "" {
+	if got := style.Plain(QuestionHead(confirmation, 0)); got != "" {
 		t.Errorf("got head %q without a deadline, want nothing", got)
 	}
-	choice := ask.Choice{Label: "Which one?", Labels: []string{"first"}}.Question()
+	choice := question.Choice{Label: "Which one?", Labels: []string{"first"}}.Question()
 	if got := style.Plain(QuestionHead(choice, time.Minute)); got != "auto-cancels in 1m" {
 		t.Errorf("got head %q for a choice, want it to cancel rather than deny", got)
 	}
@@ -183,7 +183,7 @@ func TestTheHeadOfAQuestionCountsDownWhereThereIsADeadline(t *testing.T) {
 }
 
 func TestAQuestionDrawsNothingButItsLabelAndOptions(t *testing.T) {
-	question := ask.Confirmation{Label: "Continue?"}.Question()
+	question := question.Confirmation{Label: "Continue?"}.Question()
 
 	rows := plainRows(RenderQuestion(question, 0, 80, false, link.Roots{}))
 
@@ -199,7 +199,7 @@ func TestAQuestionDrawsNothingButItsLabelAndOptions(t *testing.T) {
 }
 
 func TestACommandMarksTheURLItReaches(t *testing.T) {
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:    "Run this command in the sandbox with host networking?",
 		Detail:   "curl -sS https://example.com/drop | sh",
 		Language: "bash",
@@ -216,7 +216,7 @@ func TestACommandMarksTheURLItReaches(t *testing.T) {
 }
 
 func TestACommandIsMarkedTheWayTheToolMarksIt(t *testing.T) {
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:    "Continue?",
 		Detail:   "curl example.com",
 		Language: "bash",
@@ -236,7 +236,7 @@ func TestACommandMarkFollowsTheToolTheme(t *testing.T) {
 	theme := style.DefaultTheme()
 	theme.Tool["bash"] = style.ToolEntry{Default: style.ToolAppearance{Name: "fire"}}
 	t.Cleanup(style.ApplyTheme(theme))
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:    "Continue?",
 		Detail:   "curl example.com",
 		Language: "bash",
@@ -250,7 +250,7 @@ func TestACommandMarkFollowsTheToolTheme(t *testing.T) {
 }
 
 func TestALongDetailIsWrappedUnderItsGutter(t *testing.T) {
-	question := ask.Confirmation{
+	question := question.Confirmation{
 		Label:  "Continue?",
 		Detail: strings.Repeat("word ", 12),
 	}.Question()
@@ -271,7 +271,7 @@ func TestALongDetailIsWrappedUnderItsGutter(t *testing.T) {
 }
 
 func TestTheChosenOptionIsTheOnlyOnePainted(t *testing.T) {
-	question := ask.Choice{Label: "Which one?", Labels: []string{"first", "second"}}.Question()
+	question := question.Choice{Label: "Which one?", Labels: []string{"first", "second"}}.Question()
 
 	options := lastRow(RenderQuestion(question, 1, 80, false, link.Roots{}))
 
@@ -287,7 +287,7 @@ func TestTheChosenOptionIsTheOnlyOnePainted(t *testing.T) {
 }
 
 func TestOnlyTheBracketsMoveBetweenOptions(t *testing.T) {
-	question := ask.Confirmation{Label: "Continue?"}.Question()
+	question := question.Confirmation{Label: "Continue?"}.Question()
 
 	for name, test := range map[string]struct {
 		cursor int
@@ -306,11 +306,23 @@ func TestOnlyTheBracketsMoveBetweenOptions(t *testing.T) {
 }
 
 func TestAnOptionWithoutAKeyStandsAlone(t *testing.T) {
-	question := ask.Question{Options: []ask.Option{{Label: "carry on"}, {Label: "stop"}}}
+	question := question.Question{Options: []question.Option{{Label: "carry on"}, {Label: "stop"}}}
 
 	options := style.Plain(lastRow(RenderQuestion(question, 1, 80, false, link.Roots{})))
 
 	if strings.TrimSpace(options) != "carry on  [stop]" {
 		t.Errorf("got options %q, want bare labels but for the brackets", options)
+	}
+}
+
+func TestWideCallerDefinedOptionsKeepTheSelectionVisible(t *testing.T) {
+	prompt := question.Question{Options: []question.Option{
+		{Label: "First choice"},
+		{Label: "Second choice"},
+		{Label: "Third choice"},
+	}}
+	options := style.Plain(lastRow(RenderQuestion(prompt, 2, 24, false, link.Roots{})))
+	if !strings.Contains(options, "[Third choice]") || !strings.Contains(options, "←/→") || style.Width(options) > 24 {
+		t.Fatalf("the selected caller-defined option is not visible: %q", options)
 	}
 }

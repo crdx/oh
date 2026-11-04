@@ -135,11 +135,11 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/internal/waiting"
 	"crdx.org/oh/pkg/agent"
-	"crdx.org/oh/pkg/ask"
 	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/provider/codex"
 	"crdx.org/oh/pkg/provider/ollama"
 	"crdx.org/oh/pkg/provider/opencodego"
+	"crdx.org/oh/pkg/question"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/tool"
@@ -596,19 +596,19 @@ func TestAConfirmationAcceptsYesAndEnterAndDeniesNoEscapeOrControlC(t *testing.T
 	}{
 		"yes":         {keypress: key.Key{Code: key.Rune, Value: 'y'}},
 		"capital yes": {keypress: key.Key{Code: key.Rune, Value: 'Y'}},
-		"no":          {keypress: key.Key{Code: key.Rune, Value: 'n'}, wantErr: ask.ErrDenied},
+		"no":          {keypress: key.Key{Code: key.Rune, Value: 'n'}, wantErr: question.ErrDenied},
 		"enter":       {keypress: key.Key{Code: key.Enter}},
-		"escape":      {keypress: key.Key{Code: key.Escape}, wantErr: ask.ErrDenied},
-		"ctrl+c":      {keypress: key.Key{Code: key.Rune, Value: 'c', Mod: key.Ctrl}, wantErr: ask.ErrDenied},
+		"escape":      {keypress: key.Key{Code: key.Escape}, wantErr: question.ErrDenied},
+		"ctrl+c":      {keypress: key.Key{Code: key.Rune, Value: 'c', Mod: key.Ctrl}, wantErr: question.ErrDenied},
 	} {
 		t.Run(name, func(t *testing.T) {
-			broker := ask.New()
+			broker := question.NewBroker()
 			closeBroker := broker.Open()
 			defer closeBroker()
 
 			result := make(chan error, 1)
 			go func() {
-				result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"})
+				result <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Continue?"})
 			}()
 			<-broker.Changes()
 
@@ -630,12 +630,12 @@ func TestAQuestionIgnoresOtherKeys(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 	defer cancel()
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	result := make(chan error, 1)
-	go func() { result <- ask.Confirm(ctx, broker, ask.Confirmation{Label: "Continue?"}) }()
+	go func() { result <- question.Confirm(ctx, broker, question.Confirmation{Label: "Continue?"}) }()
 	<-broker.Changes()
 
 	self := &App{question: questionState{broker: broker}}
@@ -653,12 +653,12 @@ func TestAQuestionIgnoresOtherKeys(t *testing.T) {
 }
 
 func TestFocusChangesAreTrackedWhileAQuestionStands(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	result := make(chan error, 1)
-	go func() { result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"}) }()
+	go func() { result <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Continue?"}) }()
 	<-broker.Changes()
 
 	trackedTerminal := terminal.New(io.Discard, work.At("/workspace"))
@@ -683,24 +683,26 @@ func TestFocusChangesAreTrackedWhileAQuestionStands(t *testing.T) {
 }
 
 func TestEveryQuestionSendsOneDesktopNotification(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	var notified []string
 	self := &App{question: questionState{broker: broker}}
-	self.onQuestion = func(question ask.Question) func() {
+	self.onQuestion = func(question question.Question) func() {
 		notified = append(notified, question.Label)
 		return nil
 	}
 
 	first := make(chan error, 1)
-	go func() { first <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"}) }()
+	go func() { first <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Continue?"}) }()
 	<-broker.Changes()
 	self.onQuestionChange()
 
 	second := make(chan error, 1)
-	go func() { second <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Fetch this page?"}) }()
+	go func() {
+		second <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Fetch this page?"})
+	}()
 	<-broker.Changes()
 	self.onQuestionChange()
 
@@ -725,27 +727,29 @@ func TestEveryQuestionSendsOneDesktopNotification(t *testing.T) {
 func standingQuestionWithFocus(t *testing.T, notified *[]string) *App {
 	t.Helper()
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	t.Cleanup(broker.Open())
 
 	trackedTerminal := terminal.New(io.Discard, work.At("/workspace"))
 	t.Cleanup(trackedTerminal.Begin(caps.Read))
 
 	self := &App{question: questionState{broker: broker}, terminal: trackedTerminal}
-	self.onQuestion = func(question ask.Question) func() {
+	self.onQuestion = func(question question.Question) func() {
 		*notified = append(*notified, question.Label)
 		return nil
 	}
 
 	result := make(chan error, 1)
-	go func() { result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Fetch this page?"}) }()
+	go func() {
+		result <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Fetch this page?"})
+	}()
 	<-broker.Changes()
 	self.onQuestionChange()
 	t.Cleanup(func() {
 		if self.question.request != nil {
 			self.answerQuestion(key.Key{Code: key.Rune, Value: 'n'})
 		}
-		if err := <-result; err != nil && !errors.Is(err, ask.ErrDenied) && !errors.Is(err, context.Canceled) {
+		if err := <-result; err != nil && !errors.Is(err, question.ErrDenied) && !errors.Is(err, context.Canceled) {
 			t.Errorf("question ended with %v", err)
 		}
 	})
@@ -886,7 +890,7 @@ type questionNotificationRig struct {
 	t            *testing.T
 	app          *App
 	inputLine    *edit.Input
-	broker       *ask.Broker
+	broker       *question.Broker
 	screenOutput *strings.Builder
 	startedAt    time.Time
 	current      time.Time
@@ -898,7 +902,7 @@ func newQuestionNotificationRig(t *testing.T) *questionNotificationRig {
 
 	fakeKitten(t)
 
-	rig := &questionNotificationRig{t: t, screenOutput: &strings.Builder{}, broker: ask.New()}
+	rig := &questionNotificationRig{t: t, screenOutput: &strings.Builder{}, broker: question.NewBroker()}
 	rig.startedAt = time.Now().Truncate(time.Second)
 	rig.current = rig.startedAt
 	closeBroker := rig.broker.Open()
@@ -912,7 +916,7 @@ func newQuestionNotificationRig(t *testing.T) *questionNotificationRig {
 	self.terminal = terminal.New(io.Discard, workspace)
 	t.Cleanup(self.terminal.Begin(caps.Read))
 	self.question.broker = rig.broker
-	self.onQuestion = func(question ask.Question) func() {
+	self.onQuestion = func(question question.Question) func() {
 		notice, err := notification.SendQuestion(
 			t.Context(), self.screen.WriteEscape, self.terminal.IsFocused, workspace, question,
 		)
@@ -986,7 +990,7 @@ func (self *questionNotificationRig) ask(label string, detail string) (func(), <
 
 	result := make(chan error, 1)
 	go func() {
-		result <- ask.Confirm(questionContext, self.broker, ask.Confirmation{Label: label, Detail: detail})
+		result <- question.Confirm(questionContext, self.broker, question.Confirmation{Label: label, Detail: detail})
 	}()
 	<-self.broker.Changes()
 
@@ -1132,7 +1136,7 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
 		inputLine := edit.NewInput(nil)
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 		self.question.broker = broker
 
@@ -1148,7 +1152,6 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		go func() {
 			secondResult <- fetchApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "second page")
 		}()
-		<-broker.Changes()
 		synctest.Wait()
 
 		switch firstOutcome {
@@ -1170,18 +1173,19 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		case firstApprovalAnswer:
 			time.Sleep(45 * time.Second)
 			self.show(inputLine)
-			self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+			allowApprovalOnce(self)
 			if err := <-firstResult; err != nil {
 				t.Fatalf("the first approval failed: %v", err)
 			}
 		}
 
+		synctest.Wait()
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(inputLine)
 		stream = screenOutput.String()
 
-		self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+		allowApprovalOnce(self)
 		if err := <-secondResult; err != nil {
 			t.Fatalf("the second approval failed: %v", err)
 		}
@@ -1216,15 +1220,12 @@ func TestACallIsNotTimedWhileItsQuestionStands(t *testing.T) {
 			Text: `{"command":"curl example.com"}`,
 		})
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 
 		result := make(chan error, 1)
 		go func() {
-			result <- ask.Confirm(t.Context(), broker, ask.Confirmation{
-				Label:  "Run this command in the sandbox with host networking?",
-				Detail: "curl example.com",
-			})
+			result <- approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "")
 		}()
 		<-broker.Changes()
 
@@ -1235,7 +1236,7 @@ func TestACallIsNotTimedWhileItsQuestionStands(t *testing.T) {
 		synctest.Wait()
 		whileStanding := style.Plain(rig.drawn())
 
-		rig.chat.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+		allowApprovalOnce(rig.chat)
 		if err := <-result; err != nil {
 			t.Fatalf("the question was answered with %v", err)
 		}
@@ -1263,7 +1264,7 @@ const questionLines = 12
 type questionOverCall struct {
 	command               string
 	intent                string
-	fields                []ask.Field
+	fields                []question.Field
 	approvalTimeout       time.Duration
 	scratch               string
 	isAskedFirst          bool
@@ -1348,7 +1349,7 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 			record(request)
 		}
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 		chat.question.broker = broker
 
@@ -1359,10 +1360,10 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 				if timeout == 0 {
 					timeout = approvalLimit
 				}
-				result <- ask.ConfirmWithin(t.Context(), broker, ask.Confirmation{
-					Label:  "Run the commit tool?",
-					Fields: scene.fields,
-				}, timeout)
+				approval := customToolApproval("commit")
+				prompt := approval.question("")
+				prompt.Fields = scene.fields
+				result <- approval.confirmWith(t.Context(), broker, prompt, timeout)
 				return
 			}
 			result <- approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, scene.command, scene.intent)
@@ -1394,7 +1395,7 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 		drawn.standing = written.String()
 
 		chat.screen.Sync(func() {
-			chat.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+			allowApprovalOnce(chat)
 			chat.show(chat.inputLine)
 		})
 		if err := <-result; err != nil {
@@ -1423,7 +1424,7 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 	scenes := map[string]questionOverCall{
 		"a question with fields": {
 			command: "curl example.com",
-			fields: []ask.Field{
+			fields: []question.Field{
 				{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 				{Name: "patch", Value: "/tmp/layout.patch"},
 			},
@@ -1431,14 +1432,14 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 		"a question with an extended message and scratch patch": {
 			command: "curl example.com",
 			scratch: "/state/farm/tame-impala",
-			fields: []ask.Field{
+			fields: []question.Field{
 				{Name: "message", Value: "Record removal of IMU posting\n\nExplain the removal.", IsSubject: true},
 				{Name: "patch", Value: "/state/farm/tame-impala/split2/02-record-removal-of-imu-posting.patch"},
 			},
 		},
 		"a question with a configured timeout": {
 			command:         "curl example.com",
-			fields:          []ask.Field{{Name: "patch", Value: "/tmp/layout.patch"}},
+			fields:          []question.Field{{Name: "patch", Value: "/tmp/layout.patch"}},
 			approvalTimeout: 5 * time.Minute,
 		},
 		"a short question":                                                     {command: "curl example.com"},
@@ -1933,7 +1934,7 @@ func drawQuestionOnATinyTerminal(t *testing.T, lines int, intent string) string 
 		self := frameEdgeConversation(t, &screenOutput, lines)
 		requestTwoCalls(self)
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 		self.question.broker = broker
 
@@ -2050,11 +2051,11 @@ func TestAQuestionMovesItsCursorAndAnswersWhereItRests(t *testing.T) {
 	}{
 		"left from the approving option": {
 			keypresses: []key.Key{{Code: key.Left}, {Code: key.Enter}},
-			wantErr:    ask.ErrDenied,
+			wantErr:    question.ErrDenied,
 		},
 		"tab from the approving option": {
 			keypresses: []key.Key{{Code: key.Rune, Value: '\t'}, {Code: key.Enter}},
-			wantErr:    ask.ErrDenied,
+			wantErr:    question.ErrDenied,
 		},
 		"right and back again": {
 			keypresses: []key.Key{{Code: key.Right}, {Code: key.Left}, {Code: key.Enter}},
@@ -2064,13 +2065,13 @@ func TestAQuestionMovesItsCursorAndAnswersWhereItRests(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			broker := ask.New()
+			broker := question.NewBroker()
 			closeBroker := broker.Open()
 			defer closeBroker()
 
 			result := make(chan error, 1)
 			go func() {
-				result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"})
+				result <- question.Confirm(t.Context(), broker, question.Confirmation{Label: "Continue?"})
 			}()
 			<-broker.Changes()
 
@@ -2089,11 +2090,11 @@ func TestAQuestionMovesItsCursorAndAnswersWhereItRests(t *testing.T) {
 
 func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 	for name, test := range map[string]struct {
-		prepare func(t *testing.T, broker *ask.Broker) context.Context
+		prepare func(t *testing.T, broker *question.Broker) context.Context
 		want    string
 	}{
 		"denied": {
-			prepare: func(t *testing.T, broker *ask.Broker) context.Context {
+			prepare: func(t *testing.T, broker *question.Broker) context.Context {
 				t.Helper()
 				t.Cleanup(broker.Open())
 				go func() {
@@ -2106,7 +2107,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 			want: "refused",
 		},
 		"unanswered": {
-			prepare: func(t *testing.T, broker *ask.Broker) context.Context {
+			prepare: func(t *testing.T, broker *question.Broker) context.Context {
 				t.Helper()
 				t.Cleanup(broker.Open())
 				ctx, cancel := context.WithDeadline(t.Context(), time.Now().Add(-time.Second))
@@ -2117,7 +2118,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 			want: "approval timed out after 5m",
 		},
 		"nobody to ask": {
-			prepare: func(t *testing.T, _ *ask.Broker) context.Context {
+			prepare: func(t *testing.T, _ *question.Broker) context.Context {
 				t.Helper()
 
 				return t.Context()
@@ -2126,7 +2127,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			broker := ask.New()
+			broker := question.NewBroker()
 			ctx := test.prepare(t, broker)
 
 			err := approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "")
@@ -2146,7 +2147,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 func TestACustomToolApprovalCarriesNamedArgumentsAndItsTimeout(t *testing.T) {
 	const approvalTimeout = 5 * time.Minute
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	t.Cleanup(broker.Open())
 	arguments, err := (tool.Schema{
 		tool.String("patch", ""),
@@ -2188,29 +2189,29 @@ func TestACustomToolApprovalCarriesNamedArgumentsAndItsTimeout(t *testing.T) {
 	if !hasDeadline || deadline.Before(startedAt.Add(approvalTimeout)) || deadline.After(reachedAt.Add(approvalTimeout)) {
 		t.Errorf("got deadline %v", deadline)
 	}
-	question := request.Question
-	if question.Label != "Run the commit tool?" || !slices.Equal(question.Fields, []ask.Field{
+	asked := request.Question
+	if asked.Label != "Run the commit tool?" || !slices.Equal(asked.Fields, []question.Field{
 		{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 		{Name: "patch", Value: "/tmp/layout.patch"},
 		{Name: "labels", Value: "one, two words"},
 		{Name: "force", Value: "false"},
 		{Name: "retries", Value: "2"},
 	}) {
-		t.Errorf("got question %+v", question)
+		t.Errorf("got question %+v", asked)
 	}
-	request.Choose(0)
+	request.Choose(onceApprovalIndex)
 	if err := <-result; err != nil {
 		t.Errorf("the approved tool was refused: %v", err)
 	}
 }
 
 func TestAnApprovedHostNetworkRunsTheCommand(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	t.Cleanup(broker.Open())
 
 	go func() {
 		<-broker.Changes()
-		broker.Current().Choose(0)
+		broker.Current().Choose(onceApprovalIndex)
 	}()
 
 	if err := approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", ""); err != nil {
@@ -2219,14 +2220,14 @@ func TestAnApprovedHostNetworkRunsTheCommand(t *testing.T) {
 }
 
 func TestAHostNetworkQuestionCarriesTheIntent(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	t.Cleanup(broker.Open())
 
-	asked := make(chan ask.Question, 1)
+	asked := make(chan question.Question, 1)
 	go func() {
 		<-broker.Changes()
 		asked <- broker.Current().Question
-		broker.Current().Choose(0)
+		broker.Current().Choose(onceApprovalIndex)
 	}()
 
 	if err := approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "fetch the page"); err != nil {
@@ -2242,7 +2243,7 @@ func TestAnApprovalChargesTheTimeItStoodToTheCallThatAskedForIt(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		const deliberated = 30 * time.Second
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 
 		ctx, waitedTime := waiting.Track(t.Context())
@@ -2250,7 +2251,7 @@ func TestAnApprovalChargesTheTimeItStoodToTheCallThatAskedForIt(t *testing.T) {
 		go func() {
 			<-broker.Changes()
 			time.Sleep(deliberated)
-			broker.Current().Choose(0)
+			broker.Current().Choose(onceApprovalIndex)
 		}()
 
 		if err := approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, "curl example.com", ""); err != nil {
@@ -2264,7 +2265,7 @@ func TestAnApprovalChargesTheTimeItStoodToTheCallThatAskedForIt(t *testing.T) {
 }
 
 func TestAQuestionCountsDownToItsDeadline(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
@@ -2273,7 +2274,7 @@ func TestAQuestionCountsDownToItsDeadline(t *testing.T) {
 	ctx, cancel := context.WithDeadline(t.Context(), deadline)
 	defer cancel()
 
-	go func() { _ = ask.Confirm(ctx, broker, ask.Confirmation{Label: "Continue?"}) }()
+	go func() { _ = question.Confirm(ctx, broker, question.Confirmation{Label: "Continue?"}) }()
 	<-broker.Changes()
 
 	self := &App{question: questionState{broker: broker}, now: func() time.Time { return askedAt }}
@@ -6123,6 +6124,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"terminal-escape":          {".ansi", ".screen"},
 		"terminal-workspace":       {".txt"},
 		"theme-reload":             {".ansi", ".screen"},
+		"timed-approvals":          {".ansi", ".screen"},
 		"config-reload-recovery":   {".screen"},
 		"tool-availability":        {".ansi", ".screen"},
 		"usage":                    {".json"},
@@ -10602,13 +10604,13 @@ func replayAfterAQuestion(t *testing.T, entries []replayEntry) string {
 		time.Sleep(revealAndSomeFrames)
 		synctest.Wait()
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 
 		result := make(chan error, 1)
 		go func() {
-			result <- ask.Confirm(t.Context(), broker, ask.Confirmation{
+			result <- question.Confirm(t.Context(), broker, question.Confirmation{
 				Label:    "Run this command in the sandbox with host networking?",
 				Detail:   "grep prompt *.go",
 				Language: "bash",
@@ -13391,7 +13393,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		currentTime = queuedAt.Add(queuedNoticeDelay)
 		self.show(inputLine)
 	case feedbackChainedApproval, feedbackHeredocApproval:
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 		command := "cd /tmp && curl -sS https://example.com/a/long/path | jq -r .name && rm -rf build || echo failed"
@@ -13399,7 +13401,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 			command = "cat <<EOF > /tmp/note.txt\n  keep every word\nEOF"
 		}
 		go func() {
-			_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
+			_ = question.Confirm(t.Context(), broker, question.Confirmation{
 				Label:    "Run this command in the sandbox with host networking?",
 				Detail:   strings.Join(bash.Steps(command), "\n"),
 				Language: "bash",
@@ -13410,13 +13412,13 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.onQuestionChange()
 		self.show(inputLine)
 	case feedbackNetworkApproval:
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 		questionContext, cancelQuestion := context.WithDeadline(t.Context(), self.getNow().Add(time.Minute))
 		defer cancelQuestion()
 		go func() {
-			_ = ask.Confirm(questionContext, broker, ask.Confirmation{
+			_ = question.Confirm(questionContext, broker, question.Confirmation{
 				Label:    "Run this command in the sandbox with host networking?",
 				Intent:   "Checking what the status endpoint reports",
 				Detail:   "curl https://example.com/status",
@@ -13428,20 +13430,20 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.onQuestionChange()
 		self.show(inputLine)
 	case feedbackConcurrentApproval:
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 
 		firstResult := make(chan error, 1)
 		go func() {
-			firstResult <- ask.Confirm(t.Context(), broker, ask.Confirmation{
+			firstResult <- question.Confirm(t.Context(), broker, question.Confirmation{
 				Label:  "Approve the first operation?",
 				Detail: "first operation",
 			})
 		}()
 		<-broker.Changes()
 		go func() {
-			_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
+			_ = question.Confirm(t.Context(), broker, question.Confirmation{
 				Label:  "Approve the second operation?",
 				Detail: "second operation",
 			})
@@ -13496,12 +13498,12 @@ func typedForFeedback(scenario feedbackScenario) string {
 func showDeclaredToolApproval(t *testing.T, self *App, inputLine *edit.Input) {
 	t.Helper()
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	go func() {
-		_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
+		_ = question.Confirm(t.Context(), broker, question.Confirmation{
 			Label:    "Run the note tool?",
 			Detail:   "/opt/toolbox/notes.py --action add --text 'the toolbox works' --tag oh --tag test",
 			Language: "bash",
@@ -13529,12 +13531,12 @@ func drawApprovalTallerThanTheTerminal(
 
 	self.screen.Line("the conversation this question stands over")
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
 	go func() {
-		_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
+		_ = question.Confirm(t.Context(), broker, question.Confirmation{
 			Label:    "Run this command in the sandbox with host networking?",
 			Detail:   strings.Join(bash.Steps(command), "\n"),
 			Language: "bash",
@@ -13582,13 +13584,13 @@ func drawApprovalDuringACall(
 		time.Sleep(revealAndSomeFrames)
 		synctest.Wait()
 
-		broker := ask.New()
+		broker := question.NewBroker()
 		closeBroker := broker.Open()
 		defer closeBroker()
 
 		result := make(chan error, 1)
 		go func() {
-			result <- ask.Confirm(t.Context(), broker, ask.Confirmation{
+			result <- question.Confirm(t.Context(), broker, question.Confirmation{
 				Label:    "Run this command in the sandbox with host networking?",
 				Detail:   "curl https://example.com/status",
 				Language: "bash",
@@ -18577,7 +18579,7 @@ func newSessionGoldenTools(
 		}
 
 		if specification.ShouldRefuseLookup {
-			broker := newRefusingAskBroker(t)
+			broker := newRefusingQuestionBroker(t)
 			tools = append(tools, lookup.New(
 				func() bool { return true },
 				func(ctx context.Context, query string) error {
@@ -19038,16 +19040,16 @@ func saveTestHTML([]byte) (string, error) {
 	return "/state/sessions/tame-impala/drops/fetch-test.html", nil
 }
 
-func newRefusingAskBroker(t *testing.T) *ask.Broker {
+func newRefusingQuestionBroker(t *testing.T) *question.Broker {
 	t.Helper()
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	t.Cleanup(broker.Open())
 
 	go func() {
 		for range broker.Changes() {
 			if request := broker.Current(); request != nil {
-				request.Choose(1)
+				request.Cancel()
 			}
 		}
 	}()
@@ -19058,7 +19060,7 @@ func newRefusingAskBroker(t *testing.T) *ask.Broker {
 func newSessionGoldenRefusingShell(t *testing.T) tool.Tool {
 	t.Helper()
 
-	broker := newRefusingAskBroker(t)
+	broker := newRefusingQuestionBroker(t)
 
 	workspace := t.TempDir()
 	workspaceRoot, err := os.OpenRoot(workspace)
@@ -24293,7 +24295,7 @@ func TestGoldenAPictureIsDrawnUnderTheCallThatReadIt(t *testing.T) {
 }
 
 func TestAnAllowedPermissionAsksNobody(t *testing.T) {
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 
@@ -24323,36 +24325,36 @@ func TestAnAllowedPermissionAsksNobody(t *testing.T) {
 
 func TestEveryPermissionRefusesInWordsOfItsOwn(t *testing.T) {
 	for name, test := range map[string]struct {
-		ask  func(broker *ask.Broker) error
+		ask  func(broker *question.Broker) error
 		want string
 	}{
 		"network": {
-			ask: func(broker *ask.Broker) error {
+			ask: func(broker *question.Broker) error {
 				return approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "")
 			},
 			want: "command did not run",
 		},
 		"lookup": {
-			ask: func(broker *ask.Broker) error {
+			ask: func(broker *question.Broker) error {
 				return lookupApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "weather")
 			},
 			want: "lookup did not run",
 		},
 		"fetch": {
-			ask: func(broker *ask.Broker) error {
+			ask: func(broker *question.Broker) error {
 				return fetchApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "https://example.com")
 			},
 			want: "fetch did not run",
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			broker := ask.New()
+			broker := question.NewBroker()
 			closeBroker := broker.Open()
 			defer closeBroker()
 
 			go func() {
 				<-broker.Changes()
-				broker.Current().Choose(1)
+				broker.Current().Choose(denyApprovalIndex)
 			}()
 
 			err := test.ask(broker)
@@ -24669,7 +24671,7 @@ func stringsWithin(value any) []string {
 
 func TestAGatedActionWaitsAsLongAsItsPermissionSays(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
-		broker := ask.New()
+		broker := question.NewBroker()
 		t.Cleanup(broker.Open())
 
 		started := time.Now()
@@ -24784,14 +24786,14 @@ func priorityApprovalStream(t *testing.T, columns int, isResolved bool) string {
 	inputLine := edit.NewInput(nil)
 	self.show(inputLine)
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	defer closeBroker()
 	questionContext, cancelQuestion := context.WithDeadline(t.Context(), self.getNow().Add(time.Minute))
 	defer cancelQuestion()
 	result := make(chan error, 1)
 	go func() {
-		result <- ask.Confirm(questionContext, broker, ask.Confirmation{
+		result <- question.Confirm(questionContext, broker, question.Confirmation{
 			Label:    "Run this command in the sandbox with host networking?",
 			Intent:   "Checking a fixed generic browser header",
 			Detail:   "curl -I https://example.com",

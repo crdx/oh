@@ -644,7 +644,7 @@ right = [{ segment = "local-time", format = "ordinary-right-with-detail-that-can
 	session.waitFor("auto-denies in")
 	session.requireShown("auto-denies in")
 	session.requireHidden("ordinary-left-with-detail-that-can-yield")
-	session.typeText("n")
+	session.typeText(pressEnter)
 	session.waitFor("The approval has ended.")
 	session.requireShown("ordinary-left-with-detail-that-can-yield")
 	session.requireHidden("auto-denies in")

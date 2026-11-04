@@ -20,7 +20,7 @@ import (
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/trigger"
-	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/question"
 )
 
 var pathRefFixtureFiles = []string{
@@ -1106,11 +1106,13 @@ func longPathRefListing() []string {
 func askPathRefQuestion(t *testing.T, rig *pathRefRig) {
 	t.Helper()
 
-	broker := ask.New()
+	broker := question.NewBroker()
 	closeBroker := broker.Open()
 	t.Cleanup(closeBroker)
 
-	go func() { _ = ask.Confirm(context.Background(), broker, ask.Confirmation{Label: "Continue?"}) }()
+	go func() {
+		_ = question.Confirm(context.Background(), broker, question.Confirmation{Label: "Continue?"})
+	}()
 	<-broker.Changes()
 
 	rig.app.question.broker = broker

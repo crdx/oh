@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/activeModel"
 	"crdx.org/oh/internal/app/segment/activitySpinner"
+	"crdx.org/oh/internal/app/segment/approvals"
 	"crdx.org/oh/internal/app/segment/cacheUsage"
 	"crdx.org/oh/internal/app/segment/contextUsage"
 	"crdx.org/oh/internal/app/segment/fastMode"
@@ -42,6 +43,7 @@ import (
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/question"
 	"crdx.org/oh/pkg/tasks"
 )
 
@@ -52,6 +54,7 @@ const (
 	modeToggleSegment      = "mode-toggle"
 	grantsSegment          = "grants"
 	forwardsSegment        = "forwards"
+	approvalsSegment       = "approvals"
 	workspaceDirSegment    = "workspace-dir"
 	activeModelSegment     = "active-model"
 	fastModeSegment        = "fast-mode"
@@ -97,6 +100,7 @@ type Sources struct {
 	GetGroupStatus     func() caps.GroupStatus
 	GetPathGrants      func() []pathgrant.Grant
 	GetForwardedRoutes func() []portgrant.Route
+	GetApprovals       func() []question.RememberedAnswer
 	IsPrefixPending    func() bool
 	GetTurnTiming      func() turn.Timing
 	GetTurnCount       func() int
@@ -118,6 +122,7 @@ func NewRegistry(options Options) segment.Registry {
 			GetTasks:  options.Sources.GetTasks,
 			Hostname:  options.SandboxHostname,
 		}),
+		approvalsSegment:    approvals.New(options.Sources.GetApprovals, time.Now),
 		workspaceDirSegment: workspaceDir.New(options.Workspace),
 		activeModelSegment: activeModel.New(activeModel.Settings{
 			Name:         options.Session.Model,
