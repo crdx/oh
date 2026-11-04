@@ -1,6 +1,7 @@
 package harness
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -70,6 +71,22 @@ func TestRepeatedUndoCollectsTheQueueAndTurnWithoutLosingTheDraft(t *testing.T) 
 	if self.undoHint(replayColumns) != "nothing to undo" {
 		t.Fatalf("unexpected empty undo status: %q", self.undoHint(replayColumns))
 	}
+}
+
+func TestShortcutHelpOffersTurnUndoWithADraft(t *testing.T) {
+	self, _, inputLine, history, _ := undoFixture(t)
+	inputLine.SetText("existing draft")
+	self.handleKeypressAndShowInput(inputLine, history, shortcutHelpKey())
+	isOffered := false
+	for _, shortcut := range self.keyboardShortcuts(inputLine) {
+		if shortcut.keys == "^Z" && strings.Contains(shortcut.action, "last turn") {
+			isOffered = true
+		}
+	}
+	if !isOffered {
+		t.Fatal("help hid turn undo because there was a draft")
+	}
+	self.finish()
 }
 
 func TestTurnUndoWithADraftThroughTheBinaryKeepsItUnsent(t *testing.T) {

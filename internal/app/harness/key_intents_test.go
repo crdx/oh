@@ -48,7 +48,23 @@ func TestControlCDoesNotStopAHostCommand(t *testing.T) {
 	endHeldHostCommand(t, self)
 }
 
-func TestEscapeStopsBothTheTurnAndAConcurrentHostCommand(t *testing.T) {
+func TestEscapeClosesHelpBeforeTakingBackTheQueue(t *testing.T) {
+	self, _, inputLine, history, _ := undoFixture(t)
+	self.currentTurn.Interject("queued message")
+	inputLine.SetText("unfinished draft")
+	self.handleKeypressAndShowInput(inputLine, history, shortcutHelpKey())
+	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
+	if self.shortcutHelp.isOpen || self.currentTurn.Cancelled() || inputLine.Text() != "unfinished draft" {
+		t.Fatal("the first escape did more than close help")
+	}
+	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
+	if self.currentTurn.Cancelled() || inputLine.Text() != "queued message\n\nunfinished draft" {
+		t.Fatalf("the second escape did not take back the queue: %q", inputLine.Text())
+	}
+	self.finish()
+}
+
+func TestEscapeStopsTheForegroundCommandBeforeTheTurn(t *testing.T) {
 	self, _, inputLine, history, _ := undoFixture(t)
 	held := holdHostCommands(self)
 	if err := self.startHostCommand(t.TempDir(), "held command"); err != nil {
@@ -56,9 +72,13 @@ func TestEscapeStopsBothTheTurnAndAConcurrentHostCommand(t *testing.T) {
 	}
 	<-held.started
 	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
-	if !self.currentTurn.Cancelled() || !self.hostCommand.isStopping {
-		t.Fatal("escape left either the turn or the host command running")
+	if self.currentTurn.Cancelled() || !self.hostCommand.isStopping {
+		t.Fatal("the first escape did not stop only the host command")
 	}
 	endHeldHostCommand(t, self)
+	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
+	if !self.currentTurn.Cancelled() {
+		t.Fatal("the second escape did not stop the turn")
+	}
 	self.finish()
 }

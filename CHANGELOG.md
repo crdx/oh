@@ -3,6 +3,7 @@
 ## [Next]
 
 - Undo the last tool-free turn with ctrl+z
+- Show keybinding docs with ctrl+?
 - After cancelling a turn, don't let an interjection wake it
 - Mark important bar segments to take priority, like the approval countdown
 - Don't break bash when a skill disappears mid-session

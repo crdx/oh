@@ -226,6 +226,7 @@ type App struct {
 	settledCaps          caps.Set
 	pendingNotices       pendingNotices
 	feedback             feedback.State
+	shortcutHelp         shortcutHelpState
 	terminal             terminal.Terminal
 	metrics              metrics.Tracker
 	toolOutputLimit      *truncate.Limit
@@ -437,6 +438,11 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 			})
 			self.show(inputLine)
 		}
+		return true
+	}
+
+	if self.handleShortcutHelp(inputLine, keypress) {
+		self.screen.Sync(func() { self.show(inputLine) })
 		return true
 	}
 
@@ -1207,6 +1213,10 @@ func (self *App) show(inputLine *edit.Input) {
 	}
 
 	self.feedback.ClearExpired(self.getNow())
+	if self.shortcutHelp.isOpen {
+		self.showShortcutHelp(inputLine)
+		return
+	}
 	self.syncCompleter(inputLine)
 
 	columns := self.screen.Columns()

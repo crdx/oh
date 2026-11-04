@@ -1,0 +1,136 @@
+=== all shortcuts / 100 columns ===
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?            Show or close this reference
+^D twice            Quit the session
+Escape              Stop the turn and foreground command
+^C twice / ^U       Clear the draft without stopping work
+Shift+Enter / ^J    Insert a newline
+Enter / Alt+Enter   Send the draft
+^Z twice            Take back the last turn
+Enter twice         Continue or send pending notices
+
+Editing
+Tab                 Complete a word or choose a suggestion
+Up / Down           Move by line or recall history
+^R                  Search input history
+Home / ^A           Move to the start of the line
+End / ^E            Move to the end of the line
+^Left / ^Right      Move by word
+^Backspace / ^W     Delete the previous word
+^Delete             Delete the next word
+^K                  Delete to the end of the line
+^G                  Edit the draft externally
+^S                  Stash the draft or restore the latest stash
+^Shift+S            Swap the draft with the latest stash
+^L                  Redraw the conversation
+^.                  Reply to the last answer in the editor
+
+Access: press ^X, then a letter
+^C                  Cancel the mode prefix
+w                   Toggle workspace writes
+x                   Toggle shell execution
+n                   Toggle host network
+g                   Toggle repository history
+s                   Toggle subagents
+l                   Toggle lookup
+
+^/ or ^C closes · ↑/↓ scrolls
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== approval / 70 columns ===
+──────────────────────────────────────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?            Show or close this reference
+^D twice            Quit the session
+Escape              Stop the turn and foreground command
+^C                  Cancel the question
+Enter               Choose the selected answer
+Left / Right / Tab  Select an answer
+Up / Down           Scroll question details
+y                   Yes
+n                   No
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────────────────────────────────────
+=== external editor / 70 columns ===
+──────────────────────────────────────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?            Show or close this reference
+^D twice            Quit the session
+Escape              Stop the turn and foreground command
+^C                  Cancel external editing
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────────────────────────────────────
+=== history search / 70 columns ===
+──────────────────────────────────────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?            Show or close this reference
+^D twice            Quit the session
+Escape              Stop the turn and foreground command
+^R                  Find the previous match
+^C twice            Clear search and draft
+Backspace           Shorten the search
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────────────────────────────────────
+=== mode prefix / 70 columns ===
+──────────────────────────────────────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?            Show or close this reference
+^D twice            Quit the session
+Escape              Stop the turn and foreground command
+^C                  Cancel the mode prefix
+w                   Toggle workspace writes
+x                   Toggle shell execution
+n                   Toggle host network
+g                   Toggle repository history
+s                   Toggle subagents
+l                   Toggle lookup
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────────────────────────────────────
+=== quit offer / 70 columns ===
+──────────────────────────────────────────────────────────────────────
+press ^D again to quit
+
+^D                  Confirm quitting
+^C                  Cancel the quit offer
+Escape              Cancel the offer and stop the turn
+^/ or ^?            Close this reference and cancel the offer
+
+^C cancels quitting · ^D quits
+──────────────────────────────────────────────────────────────────────
+=== scrolled to end / 38 columns ===
+──────────────────────────────────────
+Keyboard shortcuts
+
+⋮ 60 more lines
+g
+  Toggle repository history
+s
+  Toggle subagents
+l
+  Toggle lookup
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────
+=== short terminal / 38 columns ===
+──────────────────────────────────────
+Keyboard shortcuts
+
+^/ or ^?
+  Show or close this reference
+^D twice
+  Quit the session
+Escape
+  Stop the turn and foreground command
+⋮ 60 more lines
+
+^/ or ^C closes · ↑/↓ scrolls
+──────────────────────────────────────

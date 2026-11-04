@@ -6115,7 +6115,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"startup-local-config":     {".ansi", ".screen"},
 		"startup-sized":            {".ansi", ".screen"},
 		"startup-sized-output":     {".ansi", ".screen"},
-		"quit-keys":                {".ansi", ".screen"},
+		"shortcut-help":            {".ansi", ".screen"},
 		"queued-undo":              {".ansi", ".screen"},
 		"undo-failure":             {".ansi", ".screen"},
 		"undo-draft":               {".ansi", ".screen"},

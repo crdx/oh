@@ -79,6 +79,7 @@ const (
 	escapeByte            = '\x1b'
 	bellByte              = '\x07'
 	delByte               = '\x7f'
+	controlSlashByte      = '\x1f'
 	escapeSequenceTimeout = 100 * time.Millisecond
 )
 
@@ -147,6 +148,8 @@ func plain(value rune) Key {
 		return Key{Code: Rune, Value: '\t'}
 	case value == '\b' || value == delByte:
 		return Key{Code: Backspace}
+	case value == controlSlashByte:
+		return Key{Code: Rune, Value: '/', Mod: Ctrl}
 	case value >= 1 && value <= 26:
 		return Key{Code: Rune, Value: value + 'a' - 1, Mod: Ctrl}
 	case value < ' ':

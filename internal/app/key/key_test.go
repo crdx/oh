@@ -451,3 +451,25 @@ func TestAPageOfMovementArrivesAsAKey(t *testing.T) {
 		}
 	}
 }
+
+func TestControlSlashUsesTheControlSeparatorByte(t *testing.T) {
+	for _, sequence := range []string{"\x1f", "\x1b[47;5u"} {
+		keys := decode(t, sequence)
+		want := Key{Code: Rune, Value: '/', Mod: Ctrl}
+		if len(keys) != 1 || keys[0] != want {
+			t.Fatalf("%q decoded as %+v, want %+v", sequence, keys, want)
+		}
+	}
+}
+
+func TestQuestionMarkAndShiftedSlashKeepTheirControlModifiers(t *testing.T) {
+	for sequence, want := range map[string]Key{
+		"\x1b[63;5u": {Code: Rune, Value: '?', Mod: Ctrl},
+		"\x1b[47;6u": {Code: Rune, Value: '/', Mod: Ctrl | Shift},
+	} {
+		keys := decode(t, sequence)
+		if len(keys) != 1 || keys[0] != want {
+			t.Fatalf("%q decoded as %+v, want %+v", sequence, keys, want)
+		}
+	}
+}
