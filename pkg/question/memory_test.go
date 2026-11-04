@@ -94,7 +94,9 @@ func TestTimedApprovalsStayWithinTheirScopeAndBroker(t *testing.T) {
 			t.Fatal("a new broker inherited the approval")
 		}
 		fresh.Current().Cancel()
-		<-again
+		if err := <-again; !errors.Is(err, question.ErrDenied) {
+			t.Fatal(err)
+		}
 	})
 }
 
@@ -113,14 +115,18 @@ func TestOrdinaryAndInvalidAnswersNeverCreateTimedApprovals(t *testing.T) {
 					t.Fatal("an invalid index answered the question")
 				}
 				request.Choose(index)
-				<-first
+				if err := <-first; (err == nil) != (index == 0) {
+					t.Fatal(err)
+				}
 				second := startApproval(t.Context(), broker, "fetch")
 				synctest.Wait()
 				if broker.Current() == nil {
 					t.Fatal("an ordinary answer created a timed approval")
 				}
 				broker.Current().Cancel()
-				<-second
+				if err := <-second; !errors.Is(err, question.ErrDenied) {
+					t.Fatal(err)
+				}
 			})
 		})
 	}
@@ -140,7 +146,9 @@ func TestApprovalGateWaitCanBeCancelled(t *testing.T) {
 			t.Fatalf("got %v, want cancellation", err)
 		}
 		broker.Current().Cancel()
-		<-first
+		if err := <-first; !errors.Is(err, question.ErrDenied) {
+			t.Fatal(err)
+		}
 	})
 }
 
@@ -173,7 +181,9 @@ func TestExpiredOrCancelledQuestionsCannotGrantTime(t *testing.T) {
 				t.Fatal("a stale question created a timed approval")
 			}
 			broker.Current().Cancel()
-			<-second
+			if err := <-second; !errors.Is(err, question.ErrDenied) {
+				t.Fatal(err)
+			}
 		})
 	}
 }
@@ -252,7 +262,9 @@ func TestRememberedAnswersExpireAndRespectCancellationAndInteractivity(t *testin
 		first := startApproval(t.Context(), broker, "fetch")
 		synctest.Wait()
 		broker.Current().Choose(2)
-		<-first
+		if err := <-first; err != nil {
+			t.Fatal(err)
+		}
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
 		if err := <-startApproval(ctx, broker, "fetch"); !errors.Is(err, context.Canceled) {
@@ -400,7 +412,9 @@ func TestChangingAnOptionsLifetimeInvalidatesTheRememberedAnswer(t *testing.T) {
 				t.Fatal("a changed lifetime reused the old answer")
 			}
 			broker.Current().Cancel()
-			<-result
+			if err := <-result; !errors.Is(err, question.ErrCancelled) {
+				t.Fatal(err)
+			}
 		})
 	}
 }

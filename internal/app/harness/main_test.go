@@ -24810,7 +24810,9 @@ func priorityApprovalStream(t *testing.T, columns int, isResolved bool) string {
 		t.Errorf("%d columns lost the approval countdown:\n%s", columns, approval)
 	}
 	self.answerQuestion(key.Key{Code: key.Rune, Value: 'n'})
-	<-result
+	if err := <-result; !errors.Is(err, question.ErrDenied) {
+		t.Fatal(err)
+	}
 	self.onQuestionChange()
 	self.show(inputLine)
 

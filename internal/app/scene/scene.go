@@ -144,8 +144,11 @@ func run(ctx context.Context, scene Scene, events []agent.Event, keys []string, 
 		return "", err
 	}
 	_ = terminal.Close()
-	exit := make(chan error, 1)
-	go func() { exit <- command.Wait() }()
+	exit := make(chan struct{})
+	go func() {
+		_ = command.Wait()
+		close(exit)
+	}()
 	defer func() {
 		_ = command.Process.Signal(syscall.SIGTERM)
 		select {

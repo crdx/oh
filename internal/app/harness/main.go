@@ -175,7 +175,7 @@ func (self approval) question(subject string) question.Question {
 		Detail:   subject,
 		Language: self.language,
 		Lapse:    "auto-denies",
-		Default:  denyApprovalIndex,
+		Default:  onceApprovalIndex,
 		Options: []question.Option{
 			{Label: "Deny"},
 			{Label: "Allow once"},

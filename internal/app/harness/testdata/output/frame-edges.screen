@@ -310,7 +310,7 @@ prose off the screen. And a fifth rounds it off, which is where a redraw is aske
 $ sleep 61
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 === a tall question on a terminal of 5 lines ===
 
  run them
@@ -319,7 +319,7 @@ $ sleep 61
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
 ⋮ 40 more lines
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 === a tall question on a terminal of 6 lines ===
 
  run them
@@ -328,7 +328,7 @@ $ sleep 61
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
 ⋮ 40 more lines
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 04 lines ===
 
@@ -337,7 +337,7 @@ Run this command in the sandbox with host networking?
 $ sleep 61
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 === a tall question with an intent on a terminal of 05 lines ===
 
  run them
@@ -346,7 +346,7 @@ $ sleep 61
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
 ⋮ 40 more lines
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 === a tall question with an intent on a terminal of 06 lines ===
 
  run them
@@ -355,7 +355,7 @@ $ sleep 61
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
 ⋮ 40 more lines
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 07 lines ===
 
@@ -366,7 +366,7 @@ $ sleep 61
 Run this command in the sandbox with host networking?
 
 ⋮ 39 more lines
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 08 lines ===
 
@@ -378,7 +378,7 @@ Run this command in the sandbox with host networking?
 
 ⋮ 38 more lines
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 09 lines ===
 
@@ -391,7 +391,7 @@ Run this command in the sandbox with host networking?
 ⋮ 37 more lines
   EOF
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 10 lines ===
 
@@ -405,7 +405,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent on a terminal of 11 lines ===
 
@@ -420,7 +420,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent on a terminal of 12 lines ===
 
@@ -436,7 +436,7 @@ write a script that greets the world
   print('hello')
   EOF
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a thought whose diagram arrived at 24 lines, sealed ===
 

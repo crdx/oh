@@ -4,7 +4,7 @@ Fetch this page?
 
 ❯ second page
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === after the first is cancelled with ^C ===
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
@@ -12,7 +12,7 @@ Fetch this page?
 
 ❯ second page
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === after the first lapses ===
 ──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
@@ -20,5 +20,5 @@ Fetch this page?
 
 ❯ second page
 
-[Deny]  Allow once   Allow for 5 mins   Allow for session
+ Deny  [Allow once]  Allow for 5 mins   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────

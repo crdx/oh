@@ -44,6 +44,7 @@ func TestGoldenApprovalsDrawCallerDefinedLifetimes(t *testing.T) {
 					}()
 					synctest.Wait()
 					chat.onQuestionChange()
+					chat.answerQuestion(key.Key{Code: key.Left})
 					for range index {
 						chat.answerQuestion(key.Key{Code: key.Right})
 					}
@@ -96,10 +97,11 @@ parameters = [{ name = "city", kind = "string", description = "the city" }]
 	writeRigConfig(t, rig, configuration.String())
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "check the weather twice, then the forecast")
 	session.waitFor("Run the weather tool?")
-	session.typeAndSettle("\t\t")
+	session.typeAndSettle("\t")
 	session.requireShown("Allow for 5 mins")
 	session.typeText(pressEnter)
 	session.waitFor("Run the forecast tool?")
+	session.typeAndSettle(pressLeft)
 	session.typeText(pressEnter)
 	session.waitFor("Timed approvals finished.")
 	session.typeText("/grants" + pressEnter)
@@ -114,7 +116,7 @@ parameters = [{ name = "city", kind = "string", description = "the city" }]
 	questionCount := session.Count("Run the weather tool?")
 	session.typeText("check again" + pressEnter)
 	session.waitForCount("Run the weather tool?", questionCount+1)
-	session.typeAndSettle("\t\t\t")
+	session.typeAndSettle("\t\t")
 	session.requireShown("Allow for session")
 	session.typeText(pressEnter)
 	session.waitFor("Session approvals finished.")
@@ -128,12 +130,12 @@ parameters = [{ name = "city", kind = "string", description = "the city" }]
 	questionCount = session.Count("Run the weather tool?")
 	session.typeText("check after revocation" + pressEnter)
 	session.waitForCount("Run the weather tool?", questionCount+1)
-	session.typeAndSettle("\t")
 	session.requireShown("Allow once")
 	questionCount = session.Count("Run the weather tool?")
 	session.typeText(pressEnter)
 	session.waitForCount("Run the weather tool?", questionCount+1)
 	session.requireShown("Truro")
+	session.typeAndSettle(pressLeft)
 	session.typeText(pressEnter)
 	session.waitFor("Revocation finished.")
 	session.quit()
@@ -206,10 +208,9 @@ func TestApprovalChoicesHaveNoEditorOrLetterShortcuts(t *testing.T) {
 			{Label: "Allow for 5 mins", RememberFor: 5 * time.Minute},
 			{Label: "Allow for session", RememberForSession: true},
 		}
-		if chat.question.cursor != denyApprovalIndex || !slices.Equal(broker.Current().Question.Options, want) {
+		if chat.question.cursor != onceApprovalIndex || !slices.Equal(broker.Current().Question.Options, want) {
 			t.Fatalf("unexpected default or options: %+v", broker.Current().Question)
 		}
-		chat.answerQuestion(key.Key{Code: key.Right})
 		chat.answerQuestion(key.Key{Code: key.Right})
 		for _, letter := range "tsyn15" {
 			chat.answerQuestion(key.Key{Code: key.Rune, Value: letter})
