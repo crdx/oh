@@ -6,7 +6,6 @@ import (
 	"crdx.org/col"
 
 	"github.com/yuin/goldmark/ast"
-	extensionast "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/util"
 
 	"crdx.org/oh/internal/app/link"
@@ -43,9 +42,6 @@ func (self *renderer) renderInlineNode(node ast.Node) string {
 
 		return over(col.Italic, self.inline(node))
 
-	case *extensionast.Strikethrough:
-		return over(col.Strikethrough, self.inline(node))
-
 	case *ast.Link:
 		address := string(node.Destination)
 		label := self.hyperlink(style.Link(self.inline(node)), address)
@@ -70,16 +66,23 @@ func (self *renderer) renderInlineNode(node ast.Node) string {
 
 	case *ast.RawHTML:
 		return style.Subtle(self.raw(node))
+	}
 
-	case *extensionast.TaskCheckBox:
-		if node.IsChecked {
-			return style.Success("[x] ")
-		}
-
-		return style.Subtle("[ ] ")
+	if styledText, isExtension := self.extensionInline(node); isExtension {
+		return styledText
 	}
 
 	return self.inline(node)
+}
+
+func (self *renderer) cellsOf(row ast.Node) []string {
+	var cells []string
+
+	for cell := row.FirstChild(); cell != nil; cell = cell.NextSibling() {
+		cells = append(cells, self.linkPaths(self.inline(cell)))
+	}
+
+	return cells
 }
 
 func (self *renderer) hyperlink(text string, address string) string {

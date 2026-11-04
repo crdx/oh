@@ -9,7 +9,6 @@ import (
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
-	extensionast "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 
@@ -61,9 +60,7 @@ func EndsWithTable(markdown string) bool {
 	source := []byte(strings.ReplaceAll(markdown, "\t", tab))
 	document := markdownParser.Parse(text.NewReader(source))
 
-	_, isTable := document.LastChild().(*extensionast.Table)
-
-	return isTable
+	return isTable(document.LastChild())
 }
 
 type StreamRenderer struct {
@@ -252,9 +249,6 @@ func (self *renderer) block(node ast.Node) {
 	case *ast.List:
 		self.list(node)
 
-	case *extensionast.Table:
-		self.add(self.table(node)...)
-
 	case *ast.LinkReferenceDefinition:
 
 	case *ast.Paragraph, *ast.TextBlock:
@@ -265,6 +259,10 @@ func (self *renderer) block(node ast.Node) {
 		self.appendWrapped(self.inline(node))
 
 	default:
+		if self.extensionBlock(node) {
+			return
+		}
+
 		self.appendWrapped(self.inline(node))
 	}
 }

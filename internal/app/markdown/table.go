@@ -6,8 +6,7 @@ import (
 
 	"crdx.org/col"
 
-	"github.com/yuin/goldmark/ast"
-	extensionast "github.com/yuin/goldmark/extension/ast"
+	"github.com/yuin/goldmark/extension/ast"
 
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
@@ -15,14 +14,14 @@ import (
 
 const widest = 30
 
-func (self *renderer) table(node *extensionast.Table) []string {
+func (self *renderer) table(node *ast.Table) []string {
 	var head []string
 	var body [][]string
 
 	for row := node.FirstChild(); row != nil; row = row.NextSibling() {
 		cells := self.cellsOf(row)
 
-		if _, is := row.(*extensionast.TableHeader); is {
+		if _, is := row.(*ast.TableHeader); is {
 			head = cells
 			continue
 		}
@@ -56,16 +55,6 @@ func (self *renderer) table(node *extensionast.Table) []string {
 	}
 
 	return append(rows, border(widths, "└", "┴", "┘"))
-}
-
-func (self *renderer) cellsOf(row ast.Node) []string {
-	var cells []string
-
-	for cell := row.FirstChild(); cell != nil; cell = cell.NextSibling() {
-		cells = append(cells, self.linkPaths(self.inline(cell)))
-	}
-
-	return cells
 }
 
 func (self *renderer) plainTableRows(head []string, body [][]string) []string {
@@ -141,7 +130,7 @@ func border(widths []int, left string, between string, right string) string {
 	return style.Border(left + strings.Join(parts, between) + right)
 }
 
-func tableRows(cells []string, aligns []extensionast.Alignment, widths []int, isHeading bool) []string {
+func tableRows(cells []string, aligns []ast.Alignment, widths []int, isHeading bool) []string {
 	wrappedCells := make([][]string, len(widths))
 	height := 1
 
@@ -185,26 +174,26 @@ func tableRows(cells []string, aligns []extensionast.Alignment, widths []int, is
 	return rows
 }
 
-func alignment(aligns []extensionast.Alignment, at int) extensionast.Alignment {
+func alignment(aligns []ast.Alignment, at int) ast.Alignment {
 	if at < len(aligns) {
 		return aligns[at]
 	}
 
-	return extensionast.AlignNone
+	return ast.AlignNone
 }
 
-func pad(text string, cells int, align extensionast.Alignment) string {
+func pad(text string, cells int, align ast.Alignment) string {
 	spare := cells - style.Width(text)
 	if spare <= 0 {
 		return text
 	}
 
 	switch align {
-	case extensionast.AlignRight:
+	case ast.AlignRight:
 		return strings.Repeat(" ", spare) + text
-	case extensionast.AlignCenter:
+	case ast.AlignCenter:
 		return strings.Repeat(" ", spare/2) + text + strings.Repeat(" ", spare-spare/2)
-	case extensionast.AlignLeft, extensionast.AlignNone:
+	case ast.AlignLeft, ast.AlignNone:
 	}
 
 	return text + strings.Repeat(" ", spare)
