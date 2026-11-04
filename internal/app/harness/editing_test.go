@@ -333,6 +333,7 @@ func TestAGraphicalEditorIsAwaitedWithoutTakingTheTerminal(t *testing.T) {
 func TestAStopKeyAbandonsAGraphicalEdit(t *testing.T) {
 	for name, keypress := range map[string]key.Key{
 		"escape": {Code: key.Escape},
+		"ctrl+c": {Code: key.Rune, Value: 'c', Mod: key.Ctrl},
 		"ctrl+d": {Code: key.Rune, Value: 'd', Mod: key.Ctrl},
 	} {
 		t.Run(name, func(t *testing.T) {

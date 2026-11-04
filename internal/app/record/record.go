@@ -66,3 +66,24 @@ func (self *Recorder) CompleteTurn(summary session.TurnSummary) error {
 func (self *Recorder) TakeWarnings() []error {
 	return self.session.TakeWarnings()
 }
+
+func (self *Recorder) Checkpoint() (func() error, error) {
+	writer, canCheckpoint := self.session.(interface {
+		Checkpoint() (func() error, error)
+	})
+	if !canCheckpoint {
+		return nil, errors.New("the session store has no checkpoints")
+	}
+	restore, err := writer.Checkpoint()
+	if err != nil {
+		return nil, err
+	}
+	boundary := self.flushBoundary
+	return func() error {
+		if err := restore(); err != nil {
+			return err
+		}
+		self.flushBoundary = boundary
+		return nil
+	}, nil
+}

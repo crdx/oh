@@ -3214,7 +3214,7 @@ func TestAMessageTypedWhileTheStoppingTurnLingersJoinsTheFlushedOne(t *testing.T
 	}
 }
 
-func TestAStopKeyTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.T) {
+func TestUndoTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.T) {
 	self := &App{
 		currentTurn: Turn{
 			Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true}),
@@ -3226,7 +3226,7 @@ func TestAStopKeyTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.
 	typeMessage(t, self, inputLine, history, "look at this instead")
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
-	self.apply(inputLine, history, key.Key{Code: key.Escape})
+	self.apply(inputLine, history, undoKey('z'))
 
 	if inputLine.Text() != "look at this instead" {
 		t.Errorf("got input %q, want the flushed message handed back", inputLine.Text())
@@ -3287,7 +3287,7 @@ func TestADoubleEnterWithNothingQueuedNeverSendsTheNudgeDuringATurn(t *testing.T
 	}
 }
 
-func TestAStopKeyTakesTheLastQueuedMessageBackIntoTheInputLine(t *testing.T) {
+func TestUndoTakesTheLastQueuedMessageBackIntoTheInputLine(t *testing.T) {
 	cancellations := 0
 	self := &App{
 		currentTurn: Turn{
@@ -3301,7 +3301,7 @@ func TestAStopKeyTakesTheLastQueuedMessageBackIntoTheInputLine(t *testing.T) {
 		typeMessage(t, self, inputLine, history, message)
 	}
 
-	self.apply(inputLine, history, key.Key{Code: key.Escape})
+	self.apply(inputLine, history, undoKey('z'))
 
 	if inputLine.Text() != "second message" {
 		t.Errorf("took back %q, want the second message", inputLine.Text())
@@ -3329,7 +3329,7 @@ func TestPeelingWhileTypingKeepsWhatIsBeingTypedAtTheEnd(t *testing.T) {
 		self.apply(inputLine, history, key.Key{Code: key.Rune, Value: value})
 	}
 
-	self.apply(inputLine, history, key.Key{Code: key.Escape})
+	self.apply(inputLine, history, undoKey('z'))
 
 	if inputLine.Text() != "queued\n\nhalf typed" {
 		t.Errorf("input reads %q, want the taken-back message before what was being typed", inputLine.Text())
@@ -3362,7 +3362,7 @@ func TestPeelingEveryQueuedMessageRebuildsWhatWouldHaveBeenSent(t *testing.T) {
 	peeled := &App{}
 	inputLine, history := queueMessages(peeled)
 	for range messages {
-		peeled.apply(inputLine, history, key.Key{Code: key.Escape})
+		peeled.apply(inputLine, history, undoKey('z'))
 	}
 
 	if inputLine.Text() != wouldHaveBeenSent {
@@ -3403,31 +3403,6 @@ func TestAStopKeyStopsTheTurnOnceTheQueueIsEmpty(t *testing.T) {
 				t.Errorf("the second press cancelled %d times, want 1", cancellations)
 			}
 		})
-	}
-}
-
-func TestControlDTakesAQueuedMessageBackJustAsEscapeDoes(t *testing.T) {
-	cancellations := 0
-	self := &App{
-		currentTurn: Turn{
-			Stream: testTurnStream(nil, func(error) { cancellations++ }, turn.State{Running: true}),
-		},
-	}
-	history := edit.NewHistory("", historyLimit)
-	inputLine := edit.NewInput(history)
-
-	typeMessage(t, self, inputLine, history, "queued")
-
-	self.apply(inputLine, history, key.Key{Code: key.Rune, Value: 'd', Mod: key.Ctrl})
-
-	if inputLine.Text() != "queued" {
-		t.Errorf("input reads %q, want the message back", inputLine.Text())
-	}
-	if cancellations != 0 {
-		t.Errorf("cancelled %d times, want none", cancellations)
-	}
-	if queued := self.currentTurn.GetInterjections(); len(queued) != 0 {
-		t.Errorf("left %q queued, want nothing", queued)
 	}
 }
 
@@ -3688,7 +3663,7 @@ func TestAStoppedTurnIsStoredAsAnInterruption(t *testing.T) {
 	t.Error("expected the interruption to be stored in the session log")
 }
 
-func TestEscapeTakesBackAQueuedMessageWithoutAnnouncingAnInterruption(t *testing.T) {
+func TestUndoTakesBackAQueuedMessageWithoutAnnouncingAnInterruption(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	history := edit.NewHistory("", historyLimit)
@@ -3698,7 +3673,7 @@ func TestEscapeTakesBackAQueuedMessageWithoutAnnouncingAnInterruption(t *testing
 	turnEvents := self.currentTurn.Events()
 
 	typeMessage(t, self, inputLine, history, "follow up")
-	self.apply(inputLine, history, key.Key{Code: key.Escape})
+	self.apply(inputLine, history, undoKey('z'))
 
 	for report := range turnEvents {
 		self.takeTurn(report)
@@ -6140,6 +6115,11 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"startup-local-config":     {".ansi", ".screen"},
 		"startup-sized":            {".ansi", ".screen"},
 		"startup-sized-output":     {".ansi", ".screen"},
+		"quit-keys":                {".ansi", ".screen"},
+		"queued-undo":              {".ansi", ".screen"},
+		"undo-failure":             {".ansi", ".screen"},
+		"undo-draft":               {".ansi", ".screen"},
+		"take-back-turn":           {".ansi", ".screen"},
 		"terminal-escape":          {".ansi", ".screen"},
 		"terminal-workspace":       {".txt"},
 		"theme-reload":             {".ansi", ".screen"},

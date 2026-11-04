@@ -252,6 +252,7 @@ type App struct {
 	queuedTurn           turn.Queue
 	queueRevealAt        time.Time
 	currentTurn          Turn
+	undo                 undoState
 	startedAt            time.Time
 	keyboard             *os.File
 	termination          terminationState
@@ -516,6 +517,10 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		return true
 	}
 
+	if self.applyUndo(inputLine, keypress) {
+		return true
+	}
+
 	previousText := inputLine.Text()
 	if self.speedDial.Apply(inputLine, keypress) || self.applyToCompleter(inputLine, keypress) {
 		if inputLine.Text() != previousText {
@@ -543,7 +548,7 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		if self.stopHostCommand() {
 			break
 		}
-		if !self.takeBackInterjection(inputLine) {
+		if !self.takeBackQueuedMessage(inputLine) {
 			self.cancelTurn(stopKeyCause(keypress))
 		}
 
@@ -863,8 +868,21 @@ func (self *App) takeBackPathGrantChange(index int, path string) {
 }
 
 func (self *App) sendCommandPrompt(message string) {
+	self.submitMessage(message)
+}
+
+func (self *App) submitMessage(message string) {
 	if self.currentTurn.Interject(message) {
+		if self.currentTurn.Cancelled() {
+			self.queuedTurn.Replace("")
+		}
 		return
+	}
+	if queuedMessage, hasQueued := self.currentTurn.TakeInterjections(); hasQueued {
+		if message != "" {
+			queuedMessage += agent.InterjectionSeparator + message
+		}
+		message = queuedMessage
 	}
 	self.start(message)
 }
@@ -917,9 +935,7 @@ func (self *App) submitInput(inputLine *edit.Input, history *edit.History, messa
 		return
 	}
 
-	if !self.currentTurn.Interject(message) {
-		self.start(message)
-	}
+	self.submitMessage(message)
 }
 
 func (self *App) sendInput(inputLine *edit.Input, history *edit.History, message string) {
@@ -935,7 +951,11 @@ func (self *App) sendInput(inputLine *edit.Input, history *edit.History, message
 
 func (self *App) continueOrFlush(inputLine *edit.Input, history *edit.History) {
 	if self.currentTurn.HasInterjections() {
-		self.interruptTurn(interrupt.Replacement)
+		if self.currentTurn.Running() {
+			self.interruptTurn(interrupt.Replacement)
+		} else if message, hasQueued := self.currentTurn.TakeInterjections(); hasQueued {
+			self.start(message)
+		}
 		return
 	}
 
@@ -953,25 +973,6 @@ func (self *App) continueOrFlush(inputLine *edit.Input, history *edit.History) {
 
 func (self *App) hasUntoldPendingNotices() bool {
 	return len(self.pendingNotices.items) > 0
-}
-
-func (self *App) takeBackInterjection(inputLine *edit.Input) bool {
-	if inputLine == nil {
-		return false
-	}
-
-	message, isQueued := self.currentTurn.TakeLastInterjection()
-	if !isQueued {
-		return false
-	}
-
-	if typedText := inputLine.Text(); typedText != "" {
-		message += agent.InterjectionSeparator + typedText
-	}
-
-	inputLine.SetText(message)
-
-	return true
 }
 
 func (self *App) toggleCap(whichCaps caps.Set) {
@@ -1184,6 +1185,10 @@ func stopKeyCause(keypress key.Key) interrupt.Cause {
 	return interrupt.ControlD
 }
 
+func (self *App) holdsStoppedQueue() bool {
+	return self.currentTurn.Cancelled() && self.interruptionCause() == interrupt.ControlZ && !self.queuedTurn.Peek().Replacement
+}
+
 func (self *App) cancelTurn(cause interrupt.Cause) {
 	if self.currentTurn.Cancelled() {
 		self.queuedTurn.Drop()
@@ -1228,6 +1233,13 @@ func (self *App) show(inputLine *edit.Input) {
 					self.question.request.Question,
 					self.remainingAnswerTime(self.getNow()),
 				)),
+				Priority: segment.Important,
+			}},
+		}
+	} else if hint := self.undoHint(columns); hint != "" {
+		overrides = segment.Layout{
+			segment.TopCenter: {segment.Instance{
+				Segment:  segment.Text(style.Change(hint)),
 				Priority: segment.Important,
 			}},
 		}
@@ -1332,14 +1344,15 @@ func (self *App) queue(columns int) painter.Queue {
 	}
 
 	messages := self.currentTurn.GetInterjections()
-	if self.currentTurn.Cancelled() && !self.queueRevealAt.IsZero() && self.getNow().Before(self.queueRevealAt) {
+	isSending := self.currentTurn.Running() && self.currentTurn.Cancelled() && !self.holdsStoppedQueue()
+	if isSending && !self.queueRevealAt.IsZero() && self.getNow().Before(self.queueRevealAt) {
 		messages = nil
 	}
 
 	return painter.RenderQueue(
 		messages,
 		notices,
-		!self.currentTurn.Cancelled(),
+		!isSending,
 		columns,
 		self.screen.IsTerminal(),
 		self.screen.LinkRoots().WithoutScratch(),
@@ -2208,10 +2221,13 @@ func (self *App) startTurn() {
 }
 
 func (self *App) start(message string) {
+	self.clearUndoFailure()
 	self.hasAnnouncedWake = false
 	self.queueReadyChildCompletions()
 	userTurnElapsed := self.turnTiming().UserTurn
+	wereNoticesPending := self.hasUntoldPendingNotices()
 	self.settleAccess()
+	self.checkpointTurn(message, wereNoticesPending)
 	self.metrics.BeginTurn()
 
 	self.agent.AddNotes(self.prelude())
@@ -2620,6 +2636,11 @@ func (self *App) wasPoked() bool {
 }
 
 func (self *App) finish() {
+	if self.undo.isPending {
+		release := self.screen.Hold()
+		defer release()
+	}
+
 	self.drainForwardChanges()
 	self.currentTurn.MarkFinished(time.Now())
 	self.screen.ReportProgress(self.children.isBusy())
@@ -2651,11 +2672,23 @@ func (self *App) finish() {
 
 	self.currentTurn.Finish()
 
+	if self.undo.isPending && self.inputLine != nil {
+		if !self.takeBackTurn(self.inputLine) {
+			self.refreshPendingMessages()
+		}
+		return
+	}
+
 	if turnError != nil && self.onFailure != nil {
 		self.onFailure(turnError)
 	}
 
 	if self.isTransitionRequested() {
+		return
+	}
+
+	if self.holdsStoppedQueue() {
+		self.refreshPendingMessages()
 		return
 	}
 

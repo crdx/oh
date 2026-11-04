@@ -112,10 +112,6 @@ func (self *Stream) TakeInterjections() (string, bool) {
 	return self.Interjections().Take()
 }
 
-func (self *Stream) TakeLastInterjection() (string, bool) {
-	return self.Interjections().TakeLast()
-}
-
 func (self *Stream) Error() error {
 	if self == nil {
 		return nil

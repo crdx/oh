@@ -12,6 +12,7 @@ type Cause string
 const (
 	Escape          Cause = "escape"
 	ControlD        Cause = "ctrl_d"
+	ControlZ        Cause = "ctrl_z"
 	Replacement     Cause = "replacement"
 	AccessChange    Cause = "access_change"
 	SessionClose    Cause = "session_close"
@@ -22,6 +23,7 @@ const (
 var sentences = map[Cause]string{
 	Escape:          "the user pressed escape",
 	ControlD:        "the user pressed ctrl+d",
+	ControlZ:        "the user pressed ctrl+z",
 	Replacement:     "the user sent another message",
 	AccessChange:    "access changed",
 	SessionClose:    "the session closed",
@@ -77,7 +79,7 @@ func Reason(event agent.Event) string {
 
 func IsAnnounced(event agent.Event) bool {
 	switch Cause(event.Name) {
-	case Replacement, AccessChange, SessionClose:
+	case Replacement, AccessChange, SessionClose, ControlZ:
 		return false
 	case Escape, ControlD, SignalInterrupt, ProcessExit:
 		return true

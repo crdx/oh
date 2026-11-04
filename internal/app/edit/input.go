@@ -80,6 +80,11 @@ func (self *Input) Reset() {
 	}
 }
 
+func (self *Input) BreakKeySequence() {
+	self.isEnterPending = false
+	self.isClearPending = false
+}
+
 func (self *Input) Text() string {
 	return self.buffer.String()
 }

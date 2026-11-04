@@ -79,6 +79,21 @@ func (self *Agent) Load(items []json.RawMessage) error {
 	return nil
 }
 
+func (self *Agent) Checkpoint() (func() error, error) {
+	items, err := self.Dump()
+	if err != nil {
+		return nil, err
+	}
+	cache := self.cache
+	return func() error {
+		if err := self.Load(items); err != nil {
+			return err
+		}
+		self.cache = cache
+		return nil
+	}, nil
+}
+
 func cloneState(items []json.RawMessage) []json.RawMessage {
 	clonedItems := make([]json.RawMessage, len(items))
 	for i, item := range items {

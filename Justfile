@@ -112,6 +112,11 @@ test:
     fi
     exit "$STATUS"
 
+# exercise clearing, stopping, undo and quit
+test-shortcuts rounds='1':
+    go test ./internal/app/harness -count={{ rounds }} \
+        -run '^Test(TakingBack|TurnUndo|Control[CD]|EscapeThrough)'
+
 # run the migrated tests with no oh executable available
 test-inprocess race='false':
     #!/bin/bash

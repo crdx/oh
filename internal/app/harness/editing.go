@@ -397,6 +397,5 @@ func (self *App) applyWhileEditing(keypress key.Key) {
 }
 
 func isStopKey(keypress key.Key) bool {
-	return keypress.Code == key.Escape ||
-		keypress.Code == key.Rune && keypress.Value == 'd' && keypress.Mod == key.Ctrl
+	return keypress.Code == key.Escape || isControlKey(keypress, 'c') || isControlKey(keypress, 'd')
 }

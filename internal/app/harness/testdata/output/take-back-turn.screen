@@ -1,0 +1,58 @@
+=== 100 columns / 1 stopped ===
+
+ a mistaken message
+
+
+Said it.
+
+Turn stopped because the user pressed escape.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 100 columns / 2 restored ===
+────────────────────────────────────────────────────────────────────────────────────────────────────
+a mistaken message
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 100 columns / 3 refused ===
+
+ a mistaken message
+
+
+Said it.
+
+Turn stopped because the user pressed escape.
+
+──────────────────────────── cannot undo: the turn reached a tool call ─────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 38 columns / 1 stopped ===
+
+ a mistaken message
+
+
+Said it.
+
+Turn stopped because the user pressed
+escape.
+
+──────────────────────────────────────
+
+──────────────────────────────────────
+=== 38 columns / 2 restored ===
+──────────────────────────────────────
+a mistaken message
+──────────────────────────────────────
+=== 38 columns / 3 refused ===
+
+ a mistaken message
+
+
+Said it.
+
+Turn stopped because the user pressed
+escape.
+
+ cannot undo: the turn reached a too…
+
+──────────────────────────────────────
