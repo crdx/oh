@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.30.0] — 2026-11-05
+
 - Reveal new rows with every scroll step
 - Remember approvals once, for 5 mins, or for the session
 - Select allow by default in approvals
