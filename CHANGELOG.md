@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Tell the model the relevant line numbers on truncate
+
 ## [0.31.0] — 2026-11-06
 
 - Default to interruption as the risk is now low due to async

@@ -182,7 +182,7 @@ func TestTheLimitItIsGivenIsTheOneItCutsAt(t *testing.T) {
 
 	output := truncate.Output(whole, truncate.NewLimit(2*1024), temporarySaver(t))
 
-	if !strings.Contains(output, "[truncated: kept the first 539B and the last 1.07K of 58.6K;") {
+	if !strings.Contains(output, "[truncated: kept the first 509B and the last 1.01K of 58.6K;") {
 		t.Errorf("expected the cut at the limit it was given, got %q", output)
 	}
 }
@@ -209,7 +209,7 @@ func TestOutputTooBigIsCutAndSaved(t *testing.T) {
 		t.Fatalf("expected the whole of it saved once, got %v and %v", saved, err)
 	}
 
-	if !strings.Contains(output, "[truncated: kept the first 3.87K and the last 7.73K of 58.6K;") {
+	if !strings.Contains(output, "[truncated: kept the first 3.84K and the last 7.68K of 58.6K;") {
 		t.Errorf("expected compact byte sizes in the notice, got %q", output)
 	}
 	if !strings.Contains(output, saved[0]) {
@@ -223,6 +223,50 @@ func TestOutputTooBigIsCutAndSaved(t *testing.T) {
 
 	if string(savedOutput) != whole {
 		t.Errorf("expected the whole output to be saved, got %d of %d bytes", len(savedOutput), len(whole))
+	}
+}
+
+func TestOutputTooBigNamesTheOmittedLines(t *testing.T) {
+	directory := t.TempDir()
+	var whole strings.Builder
+	for number := 1; number <= 4000; number++ {
+		fmt.Fprintf(&whole, "line %d\n", number)
+	}
+
+	output := truncate.Output(whole.String(), truncate.NewLimit(limitBytes), newSaver(t, directory))
+
+	shown, rest, isCut := strings.Cut(output, "\n\n[")
+	if !isCut {
+		t.Fatalf("expected the output to be cut, got %d bytes", len(output))
+	}
+	notice, tail, isCut := strings.Cut(rest, "]\n\n")
+	if !isCut {
+		t.Fatalf("expected the notice to close, got %q", rest)
+	}
+	_, lines, isCut := strings.Cut(notice, ".txt; ")
+	if !isCut {
+		t.Fatalf("expected the notice to name the lines after the file, got %q", notice)
+	}
+	var first, last, total, offset int
+	if _, err := fmt.Sscanf(lines, "lines %d-%d of %d are omitted, so read them with the read tool from offset %d", &first, &last, &total, &offset); err != nil {
+		t.Fatalf("expected the notice to name the omitted lines, got %q: %v", lines, err)
+	}
+	if !strings.HasSuffix(shown, fmt.Sprintf("\nline %d", first-1)) {
+		t.Errorf("expected line %d to be the last shown before the cut, got %q", first-1, shown[max(len(shown)-20, 0):])
+	}
+	if !strings.HasPrefix(tail, fmt.Sprintf("line %d\n", last+1)) {
+		t.Errorf("expected line %d to be the first shown after the cut, got %q", last+1, tail[:20])
+	}
+	if total != 4000 || offset != first {
+		t.Errorf("got lines %d-%d of %d from offset %d", first, last, total, offset)
+	}
+}
+
+func TestOutputCutWithinALineNamesNoLines(t *testing.T) {
+	output := truncate.Output(strings.Repeat("x", 3*limitBytes), truncate.NewLimit(limitBytes), temporarySaver(t))
+
+	if !strings.Contains(output, "; full output in ") || strings.Contains(output, "omitted") {
+		t.Errorf("expected the notice to name the file and no lines, got %q", output[limitBytes/4:limitBytes/4+400])
 	}
 }
 
@@ -514,7 +558,7 @@ func TestAnOutputTooBigKeepsBothEnds(t *testing.T) {
 	if err != nil || len(saved) != 1 {
 		t.Fatalf("expected the output saved once, got %v and %v", saved, err)
 	}
-	if !strings.Contains(output, "\n\n[truncated: kept the first 3.86K and the last 7.74K of 256K; full output in "+saved[0]+"]\n\n") {
+	if !strings.Contains(output, "\n\n[truncated: kept the first 3.83K and the last 7.68K of 256K; full output in "+saved[0]+"; lines 558-36332 of 37453 are omitted, so read them with the read tool from offset 558]\n\n") {
 		t.Errorf("got %q, want one note between the ends", output)
 	}
 }

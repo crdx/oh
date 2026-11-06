@@ -134,7 +134,11 @@ func outputWithSizes(output string, limit int, save Saver, lines tool.FileLines)
 	if save != nil {
 		path, saveErr = save(output)
 	}
-	note := func(headBytes int, tailBytes int) string {
+	totalLines := strings.Count(output, "\n")
+	if !strings.HasSuffix(output, "\n") {
+		totalLines++
+	}
+	note := func(headBytes int, tailBytes int, firstOmitted int, lastOmitted int) string {
 		sizes := fmt.Sprintf(
 			"truncated: kept the first %s and the last %s of %s",
 			util.FormatBytes(headBytes, 3), util.FormatBytes(tailBytes, 3), util.FormatBytes(len(output), 3),
@@ -144,12 +148,17 @@ func outputWithSizes(output string, limit int, save Saver, lines tool.FileLines)
 			return "\n\n[" + sizes + "]\n\n"
 		case saveErr != nil:
 			return fmt.Sprintf("\n\n[%s; the rest could not be saved: %v]\n\n", sizes, saveErr)
+		case firstOmitted > 0:
+			return fmt.Sprintf(
+				"\n\n[%s; full output in %s; lines %d-%d of %d are omitted, so read them with the read tool from offset %d]\n\n",
+				sizes, path, firstOmitted, lastOmitted, totalLines, firstOmitted,
+			)
 		default:
 			return "\n\n[" + sizes + "; full output in " + path + "]\n\n"
 		}
 	}
 
-	room := max(limit-len(note(limit, limit))-min(cutSlack, limit/8), limit/2)
+	room := max(limit-len(note(limit, limit, totalLines, totalLines))-min(cutSlack, limit/8), limit/2)
 	headEnd := room / headShare
 	if newline := strings.LastIndexByte(output[:headEnd], '\n'); newline > 0 {
 		headEnd = newline + 1
@@ -167,6 +176,12 @@ func outputWithSizes(output string, limit int, save Saver, lines tool.FileLines)
 		}
 	}
 
+	firstOmitted, lastOmitted := 0, 0
+	if headEnd > 0 && output[headEnd-1] == '\n' && output[tailStart-1] == '\n' {
+		firstOmitted = strings.Count(output[:headEnd], "\n") + 1
+		lastOmitted = strings.Count(output[:tailStart], "\n")
+	}
+
 	head, tail := strings.TrimRight(output[:headEnd], "\n"), output[tailStart:]
-	return head + note(len(head), len(tail)) + tail, len(head) + len(tail), len(output)
+	return head + note(len(head), len(tail), firstOmitted, lastOmitted) + tail, len(head) + len(tail), len(output)
 }

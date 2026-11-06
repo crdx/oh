@@ -26,7 +26,7 @@ const (
 )
 
 var (
-	savedOutput      = regexp.MustCompile(`full output in (\S+)\]`)
+	savedOutput      = regexp.MustCompile(`full output in ([^\s;\]]+)`)
 	listingArguments = encodedArguments(map[string]string{"pattern": "*.txt", "path": listedDirectory})
 )
 
