@@ -2,6 +2,9 @@
 
 ## [Next]
 
+- Default to interruption as the risk is now low due to async
+- Improve performance when rendering sessions with lots of images
+
 ## [0.30.0] — 2026-11-05
 
 - Reveal new rows with every scroll step
