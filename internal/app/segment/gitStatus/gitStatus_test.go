@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/gitrepo"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/sandbox/testexec"
 	"github.com/BurntSushi/toml"
@@ -306,7 +307,7 @@ func TestTheSegmentSaysWhenGitFails(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got := settle(t, build(t, workspaceDir, "")); got != failureLabel {
+	if got := settle(t, build(t, workspaceDir, "")); got != tr.GitStatusFailure {
 		t.Errorf("expected the failure to be drawn, got %q", got)
 	}
 }

@@ -4,6 +4,8 @@ import (
 	"path/filepath"
 	"slices"
 	"testing"
+
+	"crdx.org/oh/internal/app/tr"
 )
 
 func TestCompressionRejectionsAreCountedBeforeCompletionAndInvalidateTheCache(t *testing.T) {
@@ -56,7 +58,7 @@ func TestCompressionRejectionsIncludeChildSessionsAndShowACompressionOnlyFault(t
 		t.Errorf("provider totals differ: %+v", analysis.Faults.Providers)
 	}
 	section := faultSection(analysis.Faults)
-	column := slices.Index(section.header, "Compression Rejections")
+	column := slices.Index(section.header, tr.CompressionRejectionsColumn)
 	if column < 0 || len(section.rows) != 3 || section.rows[2].cells[column] != "6" {
 		t.Fatalf("the compression-only fault is not visible: %+v", section)
 	}

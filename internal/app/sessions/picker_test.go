@@ -12,6 +12,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 
@@ -335,7 +336,7 @@ func TestNoStoredConversationAnywhereSaysSo(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected the empty store to be reported")
 	}
-	if err.Error() != "there are no stored conversations" {
+	if err.Error() != tr.NoStoredConversations {
 		t.Errorf("unexpected empty-store error: %v", err)
 	}
 	if screen.String() != "" {
@@ -383,7 +384,7 @@ func TestAListingInAnOlderFormatIsWrittenAgainRatherThanRefused(t *testing.T) {
 	if err := RefreshListings(directory, &said); err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(said.String(), "writing the session listing again") {
+	if !strings.Contains(said.String(), tr.RebuildingSessionListing) {
 		t.Errorf("expected the rebuild to be reported, got %q", said.String())
 	}
 
@@ -451,7 +452,7 @@ func TestGoldenAnOlderRunningSessionDoesNotKeepTriggeringListingRebuilds(t *test
 	if err := RefreshListings(directory, &stoppedOutput); err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(stoppedOutput.String(), "writing the session listing again") {
+	if !strings.Contains(stoppedOutput.String(), tr.RebuildingSessionListing) {
 		t.Errorf("expected the stopped session to be rebuilt, got %q", stoppedOutput.String())
 	}
 	if _, err := session.ReadMeta(directory, name); err != nil {

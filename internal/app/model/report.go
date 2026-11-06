@@ -8,6 +8,8 @@ import (
 
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
+	"crdx.org/oh/internal/app/width"
 )
 
 const (
@@ -36,27 +38,27 @@ func (self providerReport) hasRecorded() bool {
 
 func updateTable() *table.Table {
 	return table.New(
-		table.Column{Title: "Provider", Width: providerColumn},
-		table.Column{Title: "Models", Width: listedColumn, Align: table.Right},
-		table.Column{Title: "Selectable", Width: selectableColumn, Align: table.Right},
-		table.Column{Title: "Ignored", Width: ignoredColumn, Align: table.Right},
-		table.Column{Title: "Source"},
+		table.Column{Title: tr.ProviderColumn, Width: titled(tr.ProviderColumn, providerColumn)},
+		table.Column{Title: tr.ModelsColumn, Width: titled(tr.ModelsColumn, listedColumn), Align: table.Right},
+		table.Column{Title: tr.SelectableColumn, Width: titled(tr.SelectableColumn, selectableColumn), Align: table.Right},
+		table.Column{Title: tr.IgnoredColumn, Width: titled(tr.IgnoredColumn, ignoredColumn), Align: table.Right},
+		table.Column{Title: tr.SourceColumn},
 	)
 }
 
 func ignoredTable(rows [][]string) *table.Table {
 	return table.New(
-		table.Column{Title: "Provider"},
-		table.Column{Title: "Model"},
-		table.Column{Title: "Reason", Style: style.Subtle},
+		table.Column{Title: tr.ProviderColumn},
+		table.Column{Title: tr.ModelColumn},
+		table.Column{Title: tr.ReasonColumn, Style: style.Subtle},
 	).Fit(rows)
 }
 
 func changeTable(rows [][]string) *table.Table {
 	return table.New(
-		table.Column{Title: "Provider"},
-		table.Column{Title: "Model"},
-		table.Column{Title: "Change"},
+		table.Column{Title: tr.ProviderColumn},
+		table.Column{Title: tr.ModelColumn},
+		table.Column{Title: tr.ChangeColumn},
 	).Fit(rows)
 }
 
@@ -123,7 +125,7 @@ func changeCell(change modelChange) string {
 
 	cell := style.InsertedText(change.Change)
 	if change.Reason != "" {
-		cell += style.Subtle(" (") + style.Change("ignored") + style.Subtle(": "+change.Reason+")")
+		cell += style.Subtle(" (") + style.Change(tr.IgnoredChange) + style.Subtle(": "+change.Reason+")")
 	}
 
 	return cell
@@ -200,15 +202,19 @@ func writeIgnoredHint(output io.Writer, reports []providerReport) {
 		return
 	}
 
-	_, _ = fmt.Fprintln(output, style.Subtle("Run ")+
+	_, _ = fmt.Fprintln(output, style.Subtle(tr.IgnoredHintLead)+
 		style.Accent(ignoredHintCommand)+
-		style.Subtle(" to see "+ignoredSubject(count)+"."))
+		style.Subtle(ignoredHintEnd(count)))
 }
 
-func ignoredSubject(count int) string {
+func ignoredHintEnd(count int) string {
 	if count == 1 {
-		return "the model that was ignored"
+		return tr.IgnoredHintEnd
 	}
 
-	return fmt.Sprintf("the %d models that were ignored", count)
+	return fmt.Sprintf(tr.IgnoredHintEndCount, count)
+}
+
+func titled(title string, minimum int) int {
+	return max(minimum, width.Of(title))
 }

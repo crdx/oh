@@ -3,6 +3,7 @@ package commands
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -11,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/tasks"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
@@ -217,7 +219,7 @@ func TestTheTasksCommandSaysSoWhenThereAreNone(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if notice := context.notice; notice != "No active background tasks." {
+	if notice := context.notice; notice != tr.NoActiveTasks {
 		t.Errorf("got %q, want it to say there are none", notice)
 	}
 }
@@ -234,7 +236,7 @@ func TestTheTasksCommandSaysSoWhenEveryTaskIsFinished(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if context.notice != "No active background tasks." || context.isListing {
+	if context.notice != tr.NoActiveTasks || context.isListing {
 		t.Errorf("got %#v, want the empty active-task notice", context)
 	}
 }
@@ -290,7 +292,7 @@ func TestATaskThatPrintedNothingSaysSo(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if notice := context.notice; notice != "docs: running with no output" {
+	if notice := context.notice; notice != "docs: "+fmt.Sprintf(tr.SilentTask, "running") {
 		t.Errorf("got %q, want the no-output marker on the status line", notice)
 	}
 }
@@ -342,7 +344,7 @@ func TestATaskCanBeRestartedFromTheKeyboard(t *testing.T) {
 	if len(actions.restarted) != 1 || actions.restarted[0] != "build" {
 		t.Errorf("got restarted %v, want the named task alone", actions.restarted)
 	}
-	if context.success != "Restarted build as run 2." {
+	if context.success != fmt.Sprintf(tr.TaskRestarted, "build", 2) {
 		t.Errorf("got %q, want the restart confirmed with its run", context.success)
 	}
 }
@@ -361,7 +363,7 @@ func TestDiscardingALiveTaskTellsTheModelItStopped(t *testing.T) {
 	if len(context.events) != 1 || context.events[0].Kind != caps.TaskStop {
 		t.Errorf("got events %#v, want the stop recorded", context.events)
 	}
-	if context.success != "Discarded docs: stopped." {
+	if context.success != fmt.Sprintf(tr.TaskDiscarded, "docs: stopped") {
 		t.Errorf("got %q, want the discard confirmed", context.success)
 	}
 }

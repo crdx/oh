@@ -1,1 +1,1 @@
-this conversation is sandboxed; resume it without --yolo
+this session is sandboxed; resume it without --yolo

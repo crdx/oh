@@ -1,4 +1,4 @@
-no-comments = true
+no-comments.exclude = ["internal/app/tr/tr.go"]
 
 comment-lines = false
 comment-inlines = false

@@ -2,6 +2,7 @@ package harness
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -10,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/pkg/agent"
 )
@@ -348,11 +350,11 @@ func TestControlDotSaysWhyItCannotReply(t *testing.T) {
 	}{
 		"nothing answered": {
 			prepare: func(rig *editingRig) { rig.app.recordedEvents = nil },
-			want:    "The reply could not be written: no model message has been received yet",
+			want:    fmt.Sprintf(tr.ReplyFailure, "no model message has been received yet"),
 		},
 		"no terminal": {
 			prepare: func(rig *editingRig) { rig.handover.isHeld = false },
-			want:    "The reply could not be written: replying needs the interactive terminal",
+			want:    fmt.Sprintf(tr.ReplyFailure, "replying needs the interactive terminal"),
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

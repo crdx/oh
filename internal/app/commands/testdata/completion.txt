@@ -1,8 +1,8 @@
 "/"
   /conf → /conf  (edit the config and system prompt)
   /copy <target> → /copy …  (copy a target to the clipboard)
-  /ctx → /ctx  (list sources contributing to model context)
-  /edit <target> → /edit …  (open a target in your editor)
+  /ctx → /ctx  (list the sources of the model context)
+  /edit <target> → /edit …  (open a target in the editor)
   /fork [<options>] → /fork …  (fork this session)
   /forward <port> → /forward …  (forward a sandbox port to the host)
   /grant <access> <path>... → /grant …  (grant temporary access to a path)
@@ -11,18 +11,18 @@
   /info → /info  (show every bar segment with its current value)
   /new [<options>] → /new …  (start a new session)
   /open <target> → /open …  (open a target with its default application)
-  /reply → /reply  (reply inline to the last answer in your editor)
+  /reply → /reply  (reply inline to the last answer in the editor)
   /revoke <target>... → /revoke …  (revoke a listed target)
   /sub <action> → /sub …  (read a subagent's conversation)
   /subs [all] → /subs …  (list this session's running and latest finished subagents)
-  /task <action> → /task …  (inspect, stop, restart, or discard a background task, or prune finished ones)
+  /task <action> → /task …  (inspect, stop, restart or discard a background task, or prune finished ones)
   /tasks → /tasks  (list this session's active background tasks)
 "/c"
   /conf → /conf  (edit the config and system prompt)
   /copy <target> → /copy …  (copy a target to the clipboard)
-  /ctx → /ctx  (list sources contributing to model context)
+  /ctx → /ctx  (list the sources of the model context)
 "/e"
-  /edit <target> → /edit …  (open a target in your editor)
+  /edit <target> → /edit …  (open a target in the editor)
 "/f"
   /fork [<options>] → /fork …  (fork this session)
   /forward <port> → /forward …  (forward a sandbox port to the host)
@@ -209,7 +209,7 @@
   -t → /fork --yolo -t …  (replace current toolbox)
   --from → /fork --yolo --from …  (fork a previous session)
 "/r"
-  /reply → /reply  (reply inline to the last answer in your editor)
+  /reply → /reply  (reply inline to the last answer in the editor)
   /revoke <target>... → /revoke …  (revoke a listed target)
 "/revoke "
   /reference → /revoke /reference

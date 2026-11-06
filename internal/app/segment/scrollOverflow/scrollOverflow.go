@@ -5,6 +5,7 @@ import (
 
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 )
 
 const (
@@ -32,7 +33,7 @@ func New(options segment.Options) (segment.Segment, error) {
 	case down:
 		return state{arrow: "↓"}, nil
 	default:
-		return nil, fmt.Errorf("direction must be %s or %s (got %q)", up, down, args.Direction)
+		return nil, fmt.Errorf(tr.DirectionChoice, up, down, args.Direction)
 	}
 }
 

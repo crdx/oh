@@ -12,15 +12,15 @@
       +2s  00:00:02
       +3s  00:00:03
 === confirmation feedback ticks down to its dismissal ===
-      +1s  Configuration reloaded automatically (dismissing in 9s)
-      +2s  Configuration reloaded automatically (dismissing in 8s)
-      +3s  Configuration reloaded automatically (dismissing in 7s)
-      +4s  Configuration reloaded automatically (dismissing in 6s)
-      +5s  Configuration reloaded automatically (dismissing in 5s)
-      +6s  Configuration reloaded automatically (dismissing in 4s)
-      +7s  Configuration reloaded automatically (dismissing in 3s)
-      +8s  Configuration reloaded automatically (dismissing in 2s)
-      +9s  Configuration reloaded automatically (dismissing in 1s)
+      +1s  Reloaded the config: (dismissing in 9s)
+      +2s  Reloaded the config: (dismissing in 8s)
+      +3s  Reloaded the config: (dismissing in 7s)
+      +4s  Reloaded the config: (dismissing in 6s)
+      +5s  Reloaded the config: (dismissing in 5s)
+      +6s  Reloaded the config: (dismissing in 4s)
+      +7s  Reloaded the config: (dismissing in 3s)
+      +8s  Reloaded the config: (dismissing in 2s)
+      +9s  Reloaded the config: (dismissing in 1s)
      +10s
 === default bar between turns outside a repository ===
       +0s  ·✦· ─ rxw snlg │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a

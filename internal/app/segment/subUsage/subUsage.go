@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/spinner"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
@@ -122,7 +123,7 @@ func New(settings Settings) segment.Factory {
 		}
 
 		if args.Rate < 0 {
-			return nil, fmt.Errorf("rate must not be negative (got %s)", args.Rate)
+			return nil, fmt.Errorf(tr.RateNegative, args.Rate)
 		}
 
 		if args.Rate == 0 {
@@ -280,7 +281,7 @@ func (self *state) draw(current snapshot) []string {
 
 	if len(rows) == 0 {
 		if status == "" {
-			return []string{style.Dim("usage unavailable")}
+			return []string{style.Dim(tr.UsageUnavailable)}
 		}
 
 		return []string{appendUsageStatus("", "usage", status)}

@@ -2,6 +2,7 @@ package harness
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
@@ -175,7 +177,7 @@ func TestACancelledTurnKeepsATaskPendingAndNotifiesThroughTheBinary(t *testing.T
 		t.Fatal(err)
 	}
 	session.waitFor("Background results are waiting. The turn remains cancelled.")
-	session.requireShown("double-enter to send")
+	session.requireShown(fmt.Sprintf(tr.SendHint, "double-enter"))
 	session.requireShown("my unfinished message")
 	if got := len(endpoint.Requests()); got != 2 {
 		t.Fatalf("got %d provider requests before resuming, want two", got)

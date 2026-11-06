@@ -23,6 +23,7 @@ import (
 	"crdx.org/oh/internal/app/segment/workspaceDir"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 )
 
@@ -124,7 +125,7 @@ func TestRoundRobinModelFileMustContainASelectionBesideComments(t *testing.T) {
 	}
 
 	_, err := Load(configPath)
-	if err == nil || !strings.Contains(err.Error(), "file contains no model selections") {
+	if err == nil || !strings.Contains(err.Error(), tr.RoundRobinFileEmpty) {
 		t.Errorf("got error %v", err)
 	}
 }
@@ -163,7 +164,7 @@ func TestConfiguredOllamaHostCannotBeEmpty(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "provider.ollama.host is empty") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.SettingEmpty, "provider.ollama.host")) {
 		t.Fatalf("got error %v", err)
 	}
 }
@@ -200,7 +201,7 @@ func TestConfiguredHostnameNeedsExactlyOneSessionPlaceholder(t *testing.T) {
 			}
 
 			_, err := Load(path)
-			if err == nil || !strings.Contains(err.Error(), "experimental.forward_hostname must contain {session} exactly once") {
+			if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.HostnamePlaceholder, "experimental.forward_hostname", "{session}")) {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -443,7 +444,7 @@ func TestAWorkspaceMayNotSetWhatOnlyTheUserShould(t *testing.T) {
 			if err == nil {
 				t.Fatal("the workspace was allowed to set it")
 			}
-			for _, want := range []string{"oh.toml", "cannot be overridden in oh.toml"} {
+			for _, want := range []string{"oh.toml", fmt.Sprintf(strings.TrimPrefix(tr.WorkspaceOverride, "%s "), "oh.toml")} {
 				if !strings.Contains(err.Error(), want) {
 					t.Errorf("got %v, want it to mention %q", err, want)
 				}
@@ -573,7 +574,7 @@ func TestAConfigFromANewerOhIsRefused(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "upgrade oh") {
+	if err == nil || !strings.Contains(err.Error(), strings.TrimPrefix(tr.ConfigTooNew, "config %w: ")) {
 		t.Fatalf("expected the newer format to be refused, got %v", err)
 	}
 }
@@ -586,7 +587,7 @@ func TestAConfigFromANewerOhIsRefusedBeforeItsShapeIsRead(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "upgrade oh") {
+	if err == nil || !strings.Contains(err.Error(), strings.TrimPrefix(tr.ConfigTooNew, "config %w: ")) {
 		t.Fatalf("expected the newer format to be refused, got %v", err)
 	}
 	if strings.Contains(err.Error(), "incompatible types") {
@@ -616,7 +617,7 @@ func TestThePluralSkillTableIsReported(t *testing.T) {
 		t.Fatal(err)
 	}
 	reports := config.UnknownSettings()
-	want := []string{path + ": unknown: skills"}
+	want := []string{path + ": " + fmt.Sprintf(tr.UnknownSettingNames, "skills")}
 	if !slices.Equal(reports, want) {
 		t.Errorf("got reports %q, want %q", reports, want)
 	}
@@ -642,7 +643,7 @@ mystery_more = true
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{path + ": unknown: debugger, debugger_extra, ui.mystery, ui.mystery_more"}
+	want := []string{path + ": " + fmt.Sprintf(tr.UnknownSettingNames, "debugger, debugger_extra, ui.mystery, ui.mystery_more")}
 	if reports := config.UnknownSettings(); !slices.Equal(reports, want) {
 		t.Errorf("got reports %q, want %q", reports, want)
 	}
@@ -1696,13 +1697,13 @@ func TestSubagentConcurrencyDefaultsToFiveAndCanBeOverridden(t *testing.T) {
 }
 
 func TestASubagentConcurrencyBelowOneIsRefused(t *testing.T) {
-	for _, value := range []string{"0", "-1"} {
+	for _, value := range []int{0, -1} {
 		path := filepath.Join(t.TempDir(), "config.toml")
-		if err := writeConfigFile(path, "[subagent]\nconcurrency = "+value+"\n"); err != nil {
+		if err := writeConfigFile(path, "[subagent]\nconcurrency = "+strconv.Itoa(value)+"\n"); err != nil {
 			t.Fatal(err)
 		}
-		if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "subagent.concurrency must be at least 1") {
-			t.Errorf("concurrency %s: got %v, want a complaint about subagent.concurrency", value, err)
+		if _, err := Load(path); err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.SettingMinimum, "subagent.concurrency", 1, value)) {
+			t.Errorf("concurrency %d: got %v, want a complaint about subagent.concurrency", value, err)
 		}
 	}
 }
@@ -1714,7 +1715,7 @@ func TestAToolOutputLimitTooSmallToSayAnythingWithIsRefused(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "default.tool_output is too small") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.ToolOutputTooSmall, "default.tool_output", minimumToolOutputBytes)) {
 		t.Errorf("got %v, want a complaint about default.tool_output", err)
 	}
 }
@@ -1726,7 +1727,7 @@ func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "is not a size") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.SizeShape, "a bit")) {
 		t.Errorf("got %v, want a complaint about the size", err)
 	}
 }
@@ -1930,7 +1931,7 @@ func TestMaximumRunningTasksMustBePositive(t *testing.T) {
 	if err := writeConfigFile(path, "[experimental]\nmaximum_running_tasks = 0\n"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "experimental.maximum_running_tasks must be at least 1") {
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.SettingMinimum, "experimental.maximum_running_tasks", 1, 0)) {
 		t.Errorf("got %v", err)
 	}
 }
@@ -1955,7 +1956,7 @@ func TestTaskOutputLinesMustNotBeNegative(t *testing.T) {
 	if err := writeConfigFile(path, "[experimental]\ntask_output_lines = -1\n"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "experimental.task_output_lines must be at least 0, got -1") {
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.SettingMinimum, "experimental.task_output_lines", 0, -1)) {
 		t.Errorf("got %v", err)
 	}
 }
@@ -2155,7 +2156,7 @@ func TestAConfigThatIsNotAnOrdinaryFileIsRefusedWithoutWaiting(t *testing.T) {
 		if err == nil {
 			t.Fatal("a named pipe was read as a config")
 		}
-		if !strings.Contains(err.Error(), "named pipe") {
+		if !strings.Contains(err.Error(), fmt.Sprintf(tr.NotNormalFile, tr.NamedPipeKind)) {
 			t.Errorf("got %q, want it to say what the file is", err)
 		}
 	case <-time.After(10 * time.Second):
@@ -2363,7 +2364,7 @@ func TestAnAgentModelBesideARotationIsRefused(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "agent.model and agent.round_robin cannot both be set") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.SettingsInConflict, "agent.model", "agent.round_robin")) {
 		t.Fatalf("got %v, want both settings refused", err)
 	}
 }
@@ -2429,7 +2430,7 @@ func TestARotationLeftInTheModelTableIsReportedAsUnknown(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := strings.Join(settings.UnknownSettings(), "\n"); !strings.Contains(got, "unknown: model") {
+	if got := strings.Join(settings.UnknownSettings(), "\n"); !strings.Contains(got, fmt.Sprintf(tr.UnknownSettingNames, "model")) {
 		t.Errorf("got unknown settings %q, want model.round_robin among them", got)
 	}
 	if got := settings.Agent.Rotation(); len(got) != 0 {
@@ -2556,7 +2557,7 @@ func TestBarPriorityBelongsToEachPlacement(t *testing.T) {
 		_, err := brokenLayout(t, fmt.Sprintf(`[bar.top]
 left = [{ segment = "active-model", priority = %q }]
 `, priority))
-		if err == nil || !strings.Contains(err.Error(), "priority must be normal or important") {
+		if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.PriorityChoice, "normal", "important")) {
 			t.Errorf("priority %q: got %v", priority, err)
 		}
 	}

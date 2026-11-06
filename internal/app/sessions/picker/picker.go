@@ -15,6 +15,8 @@ import (
 	"crdx.org/oh/internal/app/segment/fastMode"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
@@ -22,21 +24,23 @@ import (
 )
 
 const (
-	animalColumn      = 20
-	workspaceColumn   = 20
-	modelColumn       = 20
-	messageColumn     = 8
-	lengthColumn      = 6
-	sizeColumn        = 5
-	roomForSize       = 80
-	lastMessageColumn = 12
-	roomForModel      = 100
-	archiveKey        = 'a'
-	markWidth         = 2
-	unknownSize       = "—"
-	belowMegabyte     = "<1M"
-	megabyte          = 1 << 20
-	gigabyte          = 1 << 30
+	animalColumn        = 20
+	workspaceColumn     = 20
+	modelColumn         = 20
+	messageColumn       = 8
+	lengthColumn        = 6
+	sizeColumn          = 5
+	roomForSize         = 80
+	lastMessageColumn   = 12
+	roomForModel        = 100
+	archiveKey          = 'a'
+	deleteKeyName       = "del"
+	deletePromptKeyName = "delete"
+	markWidth           = 2
+	unknownSize         = "—"
+	belowMegabyte       = "<1M"
+	megabyte            = 1 << 20
+	gigabyte            = 1 << 30
 )
 
 type Session struct {
@@ -114,12 +118,12 @@ func (self *sessionList) SwitchScope() bool {
 
 func (self *sessionList) KeyboardHelp(int) []menu.Shortcut {
 	return []menu.Shortcut{
-		{Key: "tab", Description: "scope"},
-		{Key: "← →", Description: "view"},
-		{Key: "enter", Description: "preview"},
-		{Key: "a", Description: "archive/restore"},
-		{Key: "del", Description: "delete"},
-		{Key: "q", Description: "quit"},
+		{Key: "tab", Description: tr.PickerScopeAction},
+		{Key: "← →", Description: tr.PickerViewAction},
+		{Key: "enter", Description: tr.PickerPreviewAction},
+		{Key: string(archiveKey), Description: tr.PickerArchiveAction},
+		{Key: deleteKeyName, Description: tr.PickerDeleteAction},
+		{Key: "q", Description: tr.PickerQuitAction},
 	}
 }
 
@@ -160,8 +164,8 @@ func (self *sessionList) Preview(index int, keypress key.Key) (menu.Preview, boo
 		RequiresRestoration: readSession.IsArchived,
 	}
 	if readSession.IsOtherWorkspace {
-		preview.UnavailableLabel = "other workspace"
-		preview.UnavailableMessage = "Session belongs to " + pathutil.Shorten(readSession.WorkspaceDir)
+		preview.UnavailableLabel = tr.OtherWorkspaceLabel
+		preview.UnavailableMessage = fmt.Sprintf(tr.OtherWorkspaceMessage, pathutil.Shorten(readSession.WorkspaceDir))
 	}
 
 	return preview, true
@@ -256,8 +260,8 @@ func (self *sessionList) archival(movedSession *Session) (menu.Removal, bool) {
 		var restoredBytes int64
 
 		return menu.Removal{
-			Prompt:   "Press a again to restore " + movedSession.Name,
-			Progress: "Restoring…",
+			Prompt:   fmt.Sprintf(tr.RestorePrompt, string(archiveKey), movedSession.Name),
+			Progress: tr.RestoreProgress,
 			Perform: func() error {
 				bytes, err := self.store.Restore(movedSession)
 				restoredBytes = bytes
@@ -274,8 +278,8 @@ func (self *sessionList) archival(movedSession *Session) (menu.Removal, bool) {
 	var archivedBytes int64
 
 	return menu.Removal{
-		Prompt:   "Press a again to archive " + movedSession.Name,
-		Progress: "Archiving…",
+		Prompt:   fmt.Sprintf(tr.ArchivePrompt, string(archiveKey), movedSession.Name),
+		Progress: tr.ArchiveProgress,
 		Perform: func() error {
 			bytes, err := self.store.Archive(movedSession)
 			archivedBytes = bytes
@@ -291,8 +295,8 @@ func (self *sessionList) deletion(index int, movedSession *Session) (menu.Remova
 	}
 
 	return menu.Removal{
-		Prompt:   "Press delete again to delete " + movedSession.Name,
-		Progress: "Deleting…",
+		Prompt:   fmt.Sprintf(tr.DeletePrompt, deletePromptKeyName, movedSession.Name),
+		Progress: tr.DeleteProgress,
 		Perform:  func() error { return self.store.Delete(movedSession) },
 		Apply:    func() { self.forget(index) },
 	}, true
@@ -383,22 +387,22 @@ func (self *sessionList) at(index int) *Session { return self.rows()[index] }
 func (self *sessionList) agentColumn() string {
 	qualifiers := make([]string, 0, 2)
 	if self.isAllWorkspacesView {
-		qualifiers = append(qualifiers, "all")
+		qualifiers = append(qualifiers, tr.AllWorkspacesQualifier)
 	}
 	if self.isArchivedView {
-		qualifiers = append(qualifiers, "archived")
+		qualifiers = append(qualifiers, tr.ArchivedQualifier)
 	}
 	if len(qualifiers) == 0 {
-		return "Agent"
+		return tr.AgentColumn
 	}
 
-	return "Agent (" + strings.Join(qualifiers, " ") + ")"
+	return fmt.Sprintf(tr.AgentColumnQualified, strings.Join(qualifiers, " "))
 }
 
 func (self *sessionList) chosen(index int) (*Session, error) {
 	chosenSession := self.at(index)
 	if chosenSession.IsOtherWorkspace {
-		return nil, fmt.Errorf("session %s belongs to another workspace", chosenSession.Name)
+		return nil, fmt.Errorf(tr.OtherWorkspaceError, chosenSession.Name)
 	}
 	if !chosenSession.IsArchived {
 		return chosenSession, nil
@@ -417,19 +421,23 @@ func sessionTable(agentTitle string, isWorkspaceShown bool) *table.Table {
 		{Title: strings.Repeat(" ", markWidth) + agentTitle, Width: markWidth + animalColumn},
 	}
 	if isWorkspaceShown {
-		columns = append(columns, table.Column{Title: "Workspace", Width: workspaceColumn})
+		columns = append(columns, table.Column{Title: tr.WorkspaceColumn, Width: workspaceColumn})
 	}
 	columns = append(columns,
-		table.Column{Title: "Title", IsFlex: true},
-		table.Column{Title: "Model", Width: modelColumn, MinRoom: roomForModel},
-		table.Column{Title: "Effort", Width: menu.EffortColumn, Align: table.Right, MinRoom: roomForModel},
-		table.Column{Title: "Messages", Width: messageColumn, Align: table.Right},
-		table.Column{Title: "Size", Width: sizeColumn, Align: table.Right, MinRoom: roomForSize},
-		table.Column{Title: "Length", Width: lengthColumn, Align: table.Right},
-		table.Column{Title: "Last Message", Width: lastMessageColumn, Align: table.Right},
+		table.Column{Title: tr.TitleColumn, IsFlex: true},
+		table.Column{Title: tr.ModelColumn, Width: modelColumn, MinRoom: roomForModel},
+		table.Column{Title: tr.EffortColumn, Width: titled(tr.EffortColumn, menu.EffortColumn), Align: table.Right, MinRoom: roomForModel},
+		table.Column{Title: tr.MessagesColumn, Width: titled(tr.MessagesColumn, messageColumn), Align: table.Right},
+		table.Column{Title: tr.SizeColumn, Width: titled(tr.SizeColumn, sizeColumn), Align: table.Right, MinRoom: roomForSize},
+		table.Column{Title: tr.LengthColumn, Width: titled(tr.LengthColumn, lengthColumn), Align: table.Right},
+		table.Column{Title: tr.LastMessageColumn, Width: titled(tr.LastMessageColumn, lastMessageColumn), Align: table.Right},
 	)
 
 	return table.New(columns...)
+}
+
+func titled(title string, minimum int) int {
+	return max(minimum, width.Of(title))
 }
 
 func row(storedSession *Session, isChosen bool, room int) string {
@@ -451,7 +459,7 @@ func rowInView(storedSession *Session, isChosen bool, room int, isWorkspaceShown
 		util.Ago(storedSession.TouchedAt),
 	)
 
-	return sessionTable("Agent", isWorkspaceShown).Row(cells, room)
+	return sessionTable(tr.AgentColumn, isWorkspaceShown).Row(cells, room)
 }
 
 func sessionModel(storedSession *Session) string {
@@ -494,7 +502,7 @@ func sessionAnimal(storedSession *Session) string {
 
 func sessionTitle(storedSession *Session) string {
 	if storedSession.Title == "" {
-		return "(untitled)"
+		return tr.UntitledSession
 	}
 
 	return strings.ReplaceAll(storedSession.Title, "\n", " ")

@@ -13,10 +13,15 @@ import (
 	"crdx.org/oh/internal/app/drops"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 )
 
-const sessionTranscriptName = "chat.md"
+const (
+	sessionTranscriptName = "chat.md"
+	forceFlag             = "-f"
+	yoloFlag              = "--yolo"
+)
 
 type ForkSource struct {
 	SourceChatPath  string
@@ -140,10 +145,10 @@ func LoadForResume(directory string, workspace *work.Space, name string, isForce
 		return nil, err
 	}
 	if isRunning {
-		return nil, fmt.Errorf("session %s is running", name)
+		return nil, fmt.Errorf(tr.SessionRunning, name)
 	}
 	if session.IsArchived(directory, name) && !isForced {
-		return nil, fmt.Errorf("session %s is archived; pass -f to restore and resume", name)
+		return nil, fmt.Errorf(tr.SessionArchived, name, forceFlag)
 	}
 
 	storedSession, err := store.Read(directory, name)
@@ -168,7 +173,7 @@ func LoadForResume(directory string, workspace *work.Space, name string, isForce
 func recoverIncompleteTurn(directory string, storedSession *store.Session) (*store.Session, error) {
 	recoveredSession, err := store.AbandonIncompleteTurn(directory, storedSession.Name, nil)
 	if errors.Is(err, session.ErrInUse) {
-		return nil, fmt.Errorf("session %s is running", storedSession.Name)
+		return nil, fmt.Errorf(tr.SessionRunning, storedSession.Name)
 	}
 	return recoveredSession, err
 }
@@ -179,7 +184,7 @@ func requireWorkspace(storedSession *store.Session, workspace *work.Space) error
 	}
 
 	return fmt.Errorf(
-		"session %s belongs to %s and can only be opened there",
+		tr.SessionElsewhere,
 		storedSession.Name,
 		storedSession.Meta.WorkspaceDir,
 	)
@@ -192,7 +197,7 @@ func OpenWriter(directory string, resumedSession *store.Session, meta store.Meta
 
 	log, err := store.Open(directory, resumedSession.Name)
 	if errors.Is(err, session.ErrInUse) {
-		return nil, fmt.Errorf("session %s is running", resumedSession.Name)
+		return nil, fmt.Errorf(tr.SessionRunning, resumedSession.Name)
 	}
 
 	return log, err
@@ -248,7 +253,7 @@ func OpeningCaps(
 
 	if wereCapsChosen && requestedCaps&^alwaysOn != lastCaps&^alwaysOn {
 		return 0, fmt.Errorf(
-			"a resumed conversation opens in the mode it was left in, which was %s rather than %s",
+			tr.ResumedModeMismatch,
 			lastCaps.Flags(),
 			requestedCaps.Flags(),
 		)
@@ -268,7 +273,7 @@ func OpeningToolGroups(requestedGroups string, wereCapsChosen bool, resumedSessi
 	}
 	if wereCapsChosen && requestedGroups != lastGroups {
 		return "", fmt.Errorf(
-			"a resumed conversation opens with the custom tool groups it was left with, which were %q rather than %q",
+			tr.ResumedGroupsMismatch,
 			lastGroups,
 			requestedGroups,
 		)
@@ -282,7 +287,7 @@ func OpeningConfinement(wasYoloChosen bool, resumedSession *store.Session) (bool
 	}
 
 	if wasYoloChosen && !resumedSession.Meta.Yolo {
-		return false, errors.New("this conversation is sandboxed; resume it without --yolo")
+		return false, fmt.Errorf(tr.ResumedSandboxed, yoloFlag)
 	}
 
 	return resumedSession.Meta.Yolo, nil

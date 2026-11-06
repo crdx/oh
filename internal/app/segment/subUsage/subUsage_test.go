@@ -12,6 +12,7 @@ import (
 
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/req"
@@ -113,7 +114,7 @@ func renderSettled(t *testing.T, built segment.Segment) string {
 
 	for {
 		text := style.Plain(built.Render(segment.Context{}))
-		if text == "usage unavailable" || !strings.HasPrefix(text, "usage ") {
+		if text == tr.UsageUnavailable || !strings.HasPrefix(text, "usage ") {
 			return text
 		}
 
@@ -341,7 +342,7 @@ func TestASnapshotMeteringOnlyOtherModelsSaysSo(t *testing.T) {
 		Scope:    "opus",
 	}}}, "claude-sonnet-4-6", &testClock{now: testNow})
 
-	if got := renderSettled(t, built); got != "usage unavailable" {
+	if got := renderSettled(t, built); got != tr.UsageUnavailable {
 		t.Errorf("got %q", got)
 	}
 }

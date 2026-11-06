@@ -1,6 +1,7 @@
 package harness
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -9,16 +10,13 @@ import (
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/metrics"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tasks"
 )
 
-const (
-	undoUnavailable   = "nothing to undo"
-	undoFailurePrefix = "undo failed"
-	undoHintPadding   = 2
-)
+const undoHintPadding = 2
 
 type undoState struct {
 	restoreConversation func() error
@@ -36,11 +34,11 @@ type undoState struct {
 func (self *App) checkpointTurn(message string, wereNoticesPending bool) {
 	self.undo = undoState{message: message}
 	if message == "" {
-		self.undo.blocker = "this turn has no message"
+		self.undo.blocker = tr.NoMessageBlocker
 		return
 	}
 	if wereNoticesPending {
-		self.undo.blocker = "this turn submitted pending notices"
+		self.undo.blocker = tr.NoticesBlocker
 		return
 	}
 	if blocker := self.undoWorkBlocker(); blocker != "" {
@@ -67,15 +65,15 @@ func (self *App) checkpointTurn(message string, wereNoticesPending bool) {
 
 func (self *App) undoWorkBlocker() string {
 	if self.children.isBusy() || self.isHostCommandUnderway() {
-		return "background work is active"
+		return tr.BackgroundBlocker
 	}
 	for _, task := range self.getTasks() {
 		if task.State == tasks.Running || task.State == tasks.Queued || task.State == tasks.Stopping {
-			return "background work is active"
+			return tr.BackgroundBlocker
 		}
 	}
 	if self.hasUntoldPendingNotices() || self.currentTurn.HasInterjections() {
-		return "messages or notices are pending"
+		return tr.PendingBlocker
 	}
 	return ""
 }
@@ -85,7 +83,7 @@ func (self *App) undoBlocker() string {
 		return self.undo.blocker
 	}
 	if self.undo.restoreJournal == nil {
-		return undoUnavailable
+		return tr.UndoUnavailable
 	}
 	if blocker := self.undoWorkBlocker(); blocker != "" {
 		return blocker
@@ -96,20 +94,20 @@ func (self *App) undoBlocker() string {
 		case agent.UserMessageEvent:
 			messages++
 			if messages > 1 || event.Text != self.undo.message {
-				return "another message was submitted"
+				return tr.NextMessageBlocker
 			}
 		case agent.ModelMessageEvent, agent.ModelReasoningEvent, agent.CacheRebuildEvent,
 			agent.PrefixRewriteEvent, agent.RetryingEvent, agent.FailureEvent:
 		case agent.InterruptionEvent:
 			if !slices.Contains([]string{string(interrupt.ControlZ), string(interrupt.Escape), string(interrupt.ControlD)}, event.Name) {
-				return "the turn stopped for another reason"
+				return tr.InterruptionBlocker
 			}
 		case agent.ToolCallRequestEvent, agent.ToolCallResultEvent:
-			return "the turn reached a tool call"
+			return tr.ToolCallBlocker
 		case agent.StartupEvent, agent.SilentTurnEvent, agent.StateChangeEvent:
-			return "the session state changed"
+			return tr.StateChangeBlocker
 		default:
-			return "the session state changed"
+			return tr.StateChangeBlocker
 		}
 	}
 	return ""
@@ -173,11 +171,11 @@ func restoreRecalledDraft(inputLine *edit.Input, message string) {
 }
 
 func (self *App) refuseUndo(blocker string) {
-	if blocker == undoUnavailable {
-		self.undo.refusal = undoUnavailable
+	if blocker == tr.UndoUnavailable {
+		self.undo.refusal = tr.UndoUnavailable
 		return
 	}
-	self.undo.refusal = "cannot undo: " + blocker
+	self.undo.refusal = fmt.Sprintf(tr.UndoRefusal, blocker)
 }
 
 func (self *App) undoHint(columns int) string {
@@ -185,13 +183,13 @@ func (self *App) undoHint(columns int) string {
 		return width.Elide(self.undo.refusal, max(columns-undoHintPadding, 0))
 	}
 	if self.undo.isPending {
-		return "undoing…"
+		return tr.UndoProgress
 	}
 	return ""
 }
 
 func (self *App) clearUndoFailure() {
-	if strings.HasPrefix(self.feedback.Message().Text, undoFailurePrefix) {
+	if isUndoFailure(self.feedback.Message().Text) {
 		self.feedback.Clear(feedback.System)
 	}
 }
@@ -199,10 +197,15 @@ func (self *App) clearUndoFailure() {
 func (self *App) failUndo(reason string) {
 	self.queuedTurn.Drop()
 	if self.currentTurn.Cancelled() {
-		self.notifyFailure(undoFailurePrefix + "; the turn remains stopped: " + reason)
+		self.notifyFailure(fmt.Sprintf(tr.UndoFailureStopped, reason))
 		return
 	}
-	self.notifyFailure(undoFailurePrefix + ": " + reason)
+	self.notifyFailure(fmt.Sprintf(tr.UndoFailure, reason))
+}
+
+func isUndoFailure(text string) bool {
+	return strings.HasPrefix(text, strings.TrimSuffix(tr.UndoFailure, "%s")) ||
+		strings.HasPrefix(text, strings.TrimSuffix(tr.UndoFailureStopped, "%s"))
 }
 
 func (self *App) takeBackTurn(inputLine *edit.Input) bool {
@@ -216,7 +219,7 @@ func (self *App) takeBackTurn(inputLine *edit.Input) bool {
 		return false
 	}
 	if err := self.undo.restoreConversation(); err != nil {
-		self.failUndo("the conversation could not be restored: " + err.Error())
+		self.failUndo(fmt.Sprintf(tr.ConversationRestoreReason, err.Error()))
 		return false
 	}
 	restoreRecalledDraft(inputLine, self.undo.message)

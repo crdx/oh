@@ -2,6 +2,7 @@ package commands
 
 import (
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/tr"
 )
 
 const (
@@ -12,7 +13,7 @@ const (
 func shellCommand(environment commandEnvironment) slash.Command {
 	return slash.Command{
 		Name:        shellCommandName,
-		Description: "run a command on the host and tell the model what it printed",
+		Description: tr.HostCommandDescription,
 		Run: func(_ slash.Context, arguments slash.Arguments) error {
 			if arguments.Text == "" {
 				return slash.Usage()

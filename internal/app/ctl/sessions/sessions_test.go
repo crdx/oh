@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -105,7 +106,7 @@ func TestTheTableNamesEveryColumnAndAlignsThem(t *testing.T) {
 	}
 
 	header := lines[0]
-	for _, column := range []string{"Status", "Agent", "Title", "Messages", "Size", "Length", "Last Message", "Model", "Effort", "Workspace"} {
+	for _, column := range []string{tr.StatusColumn, tr.AgentColumn, tr.TitleColumn, tr.MessagesColumn, tr.SizeColumn, tr.LengthColumn, tr.LastMessageColumn, tr.ModelColumn, tr.EffortColumn, tr.WorkspaceColumn} {
 		if !strings.Contains(header, column) {
 			t.Errorf("expected the header to name %q, got %q", column, header)
 		}

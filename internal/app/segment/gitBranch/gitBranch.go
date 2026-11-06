@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/gitrepo"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 )
 
 var _ segment.Refresher = &state{}
@@ -37,7 +38,7 @@ func New(workspaceDir string) segment.Factory {
 		}
 
 		if args.Rate < 0 {
-			return nil, fmt.Errorf("rate must not be negative (got %s)", args.Rate)
+			return nil, fmt.Errorf(tr.RateNegative, args.Rate)
 		}
 
 		if args.Rate == 0 {

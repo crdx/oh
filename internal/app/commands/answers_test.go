@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/revocation"
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/question"
 )
 
@@ -60,7 +61,7 @@ func TestRevokeListsAndForgetsAnswersAlongsidePathsAndPorts(t *testing.T) {
 		if got := revocableSubjects(registry); !slices.Equal(got, []string{"tool:weather"}) {
 			t.Fatalf("remaining targets: %v", got)
 		}
-		if context.success != "Revoked the approval for tool:fetch." {
+		if context.success != fmt.Sprintf(tr.ApprovalRevoked, "tool:fetch") {
 			t.Fatalf("got confirmation %q", context.success)
 		}
 		time.Sleep(24 * time.Hour)

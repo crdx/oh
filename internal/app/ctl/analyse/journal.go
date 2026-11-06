@@ -8,6 +8,7 @@ import (
 
 	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 )
@@ -94,7 +95,7 @@ func analyseJournal(directory string, name string) (SessionStatistics, []childRe
 	}
 
 	if err := session.Records(directory, name, tally.record); err != nil {
-		return SessionStatistics{}, nil, false, fmt.Errorf("could not analyse %s: %w", name, err)
+		return SessionStatistics{}, nil, false, fmt.Errorf("%s: %w", fmt.Sprintf(tr.AnalysisFailure, name), err)
 	}
 
 	statistics, isWhole := tally.finish()

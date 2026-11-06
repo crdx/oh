@@ -1,9 +1,11 @@
 package painter
 
 import (
+	"fmt"
 	"strings"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 )
 
@@ -14,25 +16,25 @@ const (
 	WritingAReply
 )
 
-func (self DraftPurpose) FailureLead() string {
+func (self DraftPurpose) FailureMessage(reason string) string {
 	if self == WritingAReply {
-		return "The reply was dropped: "
+		return fmt.Sprintf(tr.ReplyDropped, reason)
 	}
-	return "The draft was kept as it was: "
+	return fmt.Sprintf(tr.DraftKept, reason)
 }
 
 func (self DraftPurpose) lead() string {
 	if self == WritingAReply {
-		return "Writing the reply in "
+		return tr.WritingReplyLead
 	}
-	return "Editing the draft in "
+	return tr.EditingDraftLead
 }
 
 func (self DraftPurpose) hint() string {
 	if self == WritingAReply {
-		return "esc to drop the reply"
+		return fmt.Sprintf(tr.DropReplyHint, "esc")
 	}
-	return "esc to keep the draft as it was"
+	return fmt.Sprintf(tr.KeepDraftHint, "esc")
 }
 
 func RenderDraftEditing(editorName string, purpose DraftPurpose, columns int) []string {

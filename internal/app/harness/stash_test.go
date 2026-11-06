@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/stash"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 )
 
@@ -163,7 +164,7 @@ func TestPoppingAnEmptyStashLeavesTheDraftAndSaysWhy(t *testing.T) {
 	if got := inputLine.Text(); got != "keep this" {
 		t.Errorf("empty pop changed the draft to %q", got)
 	}
-	if got := self.feedback.Message().Text; got != "Stash is empty" {
+	if got := self.feedback.Message().Text; got != tr.StashEmpty {
 		t.Errorf("empty pop said %q", got)
 	}
 }

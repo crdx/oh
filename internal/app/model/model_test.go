@@ -19,6 +19,7 @@ import (
 	"unicode"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 )
@@ -102,7 +103,7 @@ func TestListingModelsPrintsTheSameOffersAsThePicker(t *testing.T) {
 	}
 
 	want := []string{
-		"Provider", "Model", "Effort", "Context", "Cost", "Input", "Output", "Identifier",
+		tr.ProviderColumn, tr.ModelColumn, tr.EffortColumn, tr.ContextColumn, tr.CostColumn, tr.InputColumn, tr.OutputColumn, tr.IdentifierColumn,
 		"Codex", "Sol", "high ⚡", "gpt-5.6-sol",
 		"OpenCode Go", "DeepSeek", "high", "deepseek-v4-pro",
 		"Anthropic", "Opus", "high", "claude-opus-5",

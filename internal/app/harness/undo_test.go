@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -101,7 +102,7 @@ func TestTakingBackATurnRefusesToolsAndInterveningState(t *testing.T) {
 			self.recordedEvents = append(self.recordedEvents, agent.Event{Kind: kind, Text: "another message"})
 			self.finish()
 			self.handleKeypressAndShowInput(inputLine, history, undoKey('z'))
-			if !strings.Contains(self.undoHint(replayColumns), "cannot undo") || len(provider.items) == 0 || inputLine.Text() != "" {
+			if !strings.HasPrefix(self.undoHint(replayColumns), strings.TrimSuffix(tr.UndoRefusal, "%s")) || len(provider.items) == 0 || inputLine.Text() != "" {
 				t.Fatalf("unsafe undo was not refused: %s", self.undoHint(replayColumns))
 			}
 		})
@@ -263,7 +264,7 @@ func TestAnUnsafeDeferredUndoKeepsTheNewQueuedMessage(t *testing.T) {
 	if self.currentTurn.Running() || !self.currentTurn.HasInterjections() {
 		t.Fatal("refused undo did not leave the new message pending")
 	}
-	if !strings.Contains(self.feedback.Message().Text, "undo failed; the turn remains stopped") {
+	if !strings.HasPrefix(self.feedback.Message().Text, strings.TrimSuffix(tr.UndoFailureStopped, "%s")) {
 		t.Fatal("refused undo did not explain that the turn remains stopped")
 	}
 	self.continueOrFlush(inputLine, history)
@@ -284,7 +285,7 @@ func TestAFailedJournalUndoKeepsTheConversation(t *testing.T) {
 	if len(provider.items) == 0 || inputLine.Text() != "" || self.undo.isPending {
 		t.Fatal("failed undo changed the conversation")
 	}
-	if self.feedback.Message().Text != "undo failed; the turn remains stopped: disk unavailable" {
+	if self.feedback.Message().Text != fmt.Sprintf(tr.UndoFailureStopped, "disk unavailable") {
 		t.Fatalf("failed undo did not explain the failure and stopped turn: %q", self.feedback.Message().Text)
 	}
 }
@@ -305,7 +306,7 @@ func TestAQueuedRecallBreaksTheDraftClearingSequence(t *testing.T) {
 func TestUndoStopsARunningTurnBeforeTakingItBack(t *testing.T) {
 	self, _, inputLine, history, _ := undoFixture(t)
 	self.handleKeypressAndShowInput(inputLine, history, undoKey('z'))
-	if !self.currentTurn.Cancelled() || !self.undo.isPending || self.undoHint(replayColumns) != "undoing…" {
+	if !self.currentTurn.Cancelled() || !self.undo.isPending || self.undoHint(replayColumns) != tr.UndoProgress {
 		t.Fatal("undo did not stop the turn before taking it back")
 	}
 	self.finish()

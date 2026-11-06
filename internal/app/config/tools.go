@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"maps"
 	"slices"
@@ -12,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/async"
@@ -60,14 +60,14 @@ func (self *Permission) UnmarshalTOML(value any) error {
 	switch configuredValue := value.(type) {
 	case string:
 		if strings.TrimSpace(configuredValue) == "" {
-			return errors.New("permission is empty")
+			return fmt.Errorf(tr.SettingEmpty, "permission")
 		}
 		*self = Permission{Rule: configuredValue}
 		return nil
 	case map[string]any:
 		return self.unmarshalTable(configuredValue)
 	default:
-		return errors.New("permission is not a rule or a table")
+		return fmt.Errorf(tr.PermissionShape, "permission")
 	}
 }
 
@@ -80,33 +80,33 @@ func (self *Permission) unmarshalTable(configuredTable map[string]any) error {
 	}
 	if len(unknown) > 0 {
 		slices.Sort(unknown)
-		return fmt.Errorf("unknown: %s", strings.Join(unknown, ", "))
+		return fmt.Errorf(tr.UnknownSettingNames, strings.Join(unknown, ", "))
 	}
 
 	ruleValue, hasRule := configuredTable["rule"]
 	if !hasRule {
-		return errors.New("rule is missing")
+		return fmt.Errorf(tr.SettingMissing, "rule")
 	}
 	rule, isText := ruleValue.(string)
 	if !isText {
-		return errors.New("rule is not text")
+		return fmt.Errorf(tr.SettingNotText, "rule")
 	}
 	if strings.TrimSpace(rule) == "" {
-		return errors.New("rule is empty")
+		return fmt.Errorf(tr.SettingEmpty, "rule")
 	}
 
 	var timeout time.Duration
 	if timeoutValue, hasTimeout := configuredTable["timeout"]; hasTimeout {
 		configuredTimeout, isText := timeoutValue.(string)
 		if !isText {
-			return errors.New("timeout is not a duration")
+			return fmt.Errorf(tr.SettingNotDuration, "timeout")
 		}
 		var err error
 		if timeout, err = time.ParseDuration(configuredTimeout); err != nil {
 			return fmt.Errorf("timeout: %w", err)
 		}
 		if timeout <= 0 {
-			return fmt.Errorf("timeout must be positive, got %q", configuredTimeout)
+			return fmt.Errorf(tr.SettingNotPositive, "timeout", configuredTimeout)
 		}
 	}
 
@@ -123,7 +123,7 @@ func (self *Permission) setting() (permission.Setting, error) {
 		}
 	}
 	if rule == permission.Allow && self.Timeout != 0 {
-		return permission.Setting{}, fmt.Errorf("timeout applies only when rule is %q", permission.Ask)
+		return permission.Setting{}, fmt.Errorf(tr.TimeoutOnlyWhenRule, "timeout", "rule", permission.Ask)
 	}
 
 	return permission.Setting{Rule: rule, Timeout: self.Timeout}, nil
@@ -173,12 +173,12 @@ func (self Config) ToolGroups() (caps.ToolGroups, error) {
 		group := setting.Group
 		if group == "" {
 			if !setting.IsGranted && self.getSourcePath(toolsSetting, name, "granted") != "" {
-				return nil, self.complain(name, errors.New("granted = false has no effect without a group; add a group or remove the setting"))
+				return nil, self.complain(name, fmt.Errorf(tr.UngroupedDenial, "granted = false"))
 			}
 			continue
 		}
 		if utf8.RuneCountInString(group) != 1 || group[0] < 'a' || group[0] > 'z' {
-			return nil, self.complain(name, fmt.Errorf("group %q is not one lowercase letter", group))
+			return nil, self.complain(name, fmt.Errorf(tr.GroupLetter, group))
 		}
 		groups[group] = append(groups[group], name)
 	}
@@ -224,7 +224,7 @@ func (self Config) buildCustomTool(name string, options command.Options) (tool.T
 func (self Config) declare(name string) (command.Declaration, error) {
 	setting := self.Tools[name]
 	if setting.Group != "" && (utf8.RuneCountInString(setting.Group) != 1 || setting.Group[0] < 'a' || setting.Group[0] > 'z') {
-		return command.Declaration{}, fmt.Errorf("group %q is not one lowercase letter", setting.Group)
+		return command.Declaration{}, fmt.Errorf(tr.GroupLetter, setting.Group)
 	}
 
 	approval, err := setting.Permission.setting()
@@ -295,7 +295,7 @@ func (self Config) validateToolSettings() error {
 	for _, source := range self.sources {
 		for _, key := range source.meta.Undecoded() {
 			if len(key) > 0 && (key[0] == toolsSetting || key[0] == "tools") {
-				return fmt.Errorf("%s: unknown tool setting %s", source.path, key.String())
+				return fmt.Errorf("%s: %s", source.path, fmt.Sprintf(tr.UnknownToolSetting, key.String()))
 			}
 		}
 	}
@@ -303,7 +303,7 @@ func (self Config) validateToolSettings() error {
 	for _, name := range slices.Sorted(maps.Keys(self.Tools)) {
 		setting := self.Tools[name]
 		if path := self.getSourcePath(toolsSetting, name, hostNetworkSetting); path != "" && name != "bash" {
-			return fmt.Errorf("%s: %s.%s.%s is only valid for bash", path, toolsSetting, name, hostNetworkSetting)
+			return fmt.Errorf("%s: %s", path, fmt.Sprintf(tr.OnlyForBash, toolsSetting+"."+name+"."+hostNetworkSetting))
 		}
 		if toolset.IsBuiltin(name) {
 			if err := self.validateBuiltinSettings(name, setting); err != nil {
@@ -312,15 +312,15 @@ func (self Config) validateToolSettings() error {
 			continue
 		}
 		if timeoutType := self.getSourceType(toolsSetting, name, "timeout"); timeoutType != "" && timeoutType != "String" {
-			return self.complain(name, errors.New(`timeout is not a duration such as "30s"`))
+			return self.complain(name, fmt.Errorf(tr.SettingDurationShape, "timeout", "30s"))
 		}
 		if setting.Timeout < 0 {
-			return self.complain(name, errors.New("timeout must not be negative"))
+			return self.complain(name, fmt.Errorf(tr.SettingNegative, "timeout"))
 		}
 		if setting.IsBackgroundable != nil && *setting.IsBackgroundable {
 			for _, parameter := range setting.Parameters {
 				if async.IsReserved(parameter.Name) {
-					return self.complain(name, fmt.Errorf("parameter %s is reserved for task execution", parameter.Name))
+					return self.complain(name, fmt.Errorf(tr.ReservedParameter, parameter.Name))
 				}
 			}
 		}
@@ -337,7 +337,7 @@ func (self Config) validateBuiltinSettings(name string, setting ToolConfig) erro
 			continue
 		}
 		if self.getSourcePath(toolsSetting, name, field) != "" {
-			return self.complain(name, fmt.Errorf("%s cannot be set on a built-in tool", field))
+			return self.complain(name, fmt.Errorf(tr.BuiltinToolSetting, field))
 		}
 	}
 	if _, err := setting.Permission.setting(); err != nil {

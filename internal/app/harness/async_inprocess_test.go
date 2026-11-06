@@ -27,6 +27,7 @@ import (
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/taskrecord"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
@@ -336,7 +337,9 @@ func (self *taskFlowStoredSession) read(t *testing.T) *store.Session {
 	if len(stored.Items) == 0 {
 		t.Fatal("provider history was not persisted")
 	}
-	if strings.Contains(self.screen.String(), "conversation state could not be stored") {
+	if slices.ContainsFunc([]string{tr.ConversationStoreFailure, tr.ConversationStateFailure, tr.TurnStoreFailure}, func(pattern string) bool {
+		return strings.Contains(self.screen.String(), strings.TrimSuffix(pattern, ": %s"))
+	}) {
 		t.Fatal("App reported a provider-state storage warning")
 	}
 	return stored

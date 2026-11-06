@@ -2,11 +2,13 @@ package paste_test
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/paste"
+	"crdx.org/oh/internal/app/tr"
 )
 
 func opened(password string, location string) *key.ClipboardReport {
@@ -172,10 +174,10 @@ func TestAnOversizedPasteIsRefusedRatherThanHeldWhole(t *testing.T) {
 
 func TestARefusedClipboardIsExplainedRatherThanNamedByItsCode(t *testing.T) {
 	for failure, want := range map[string]string{
-		"EPERM":  "permission to read the clipboard was refused",
-		"ENOSYS": "the terminal has no clipboard to read",
-		"EBUSY":  "another window is using the clipboard",
-		"EWEIRD": "the terminal refused the clipboard with EWEIRD",
+		"EPERM":  tr.ClipboardRefused,
+		"ENOSYS": tr.ClipboardMissing,
+		"EBUSY":  tr.ClipboardBusy,
+		"EWEIRD": fmt.Sprintf(tr.ClipboardFailure, "EWEIRD"),
 	} {
 		t.Run(failure, func(t *testing.T) {
 			var exchange paste.Exchange

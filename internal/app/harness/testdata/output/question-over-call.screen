@@ -17,12 +17,12 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
 Run the commit tool?
 
 patch: /tmp/layout.patch
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a question with an extended message and scratch patch, answered ===
 
@@ -42,7 +42,7 @@ $ curl example.com ✦· 5s
 
 Writing it.
 $ curl example.com ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
 Run the commit tool?
 
 message: Record removal of IMU posting
@@ -51,7 +51,7 @@ Explain the removal.
 
 patch: <s>/split2/02-record-removal-of-imu-posting.patch
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a question with fields, answered ===
 
@@ -72,13 +72,13 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
 Run the commit tool?
 
 message: Align header controls consistently
 patch: /tmp/layout.patch
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question asked before its call and redrawn, answered ===
 
@@ -99,12 +99,12 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question asked before its call, answered ===
 
@@ -125,12 +125,12 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question beside another call, answered ===
 
@@ -165,12 +165,12 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question beside another call, redrawn, answered ===
 
@@ -193,12 +193,12 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question beside another call, standing ===
 
@@ -209,12 +209,12 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question redrawn while it stands, answered ===
 
@@ -235,12 +235,12 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with a blank intent, answered ===
 
@@ -261,12 +261,12 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with a long intent, answered ===
 
@@ -287,15 +287,15 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world many times over, so the greeting is impossible to miss, and
 check every line of it reads the same before anything runs it, since a script nobody has read is not
 one anybody should run with the host network
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent beside another call, answered ===
 
@@ -318,13 +318,13 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent of control characters, answered ===
 
@@ -345,13 +345,13 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 greet the world
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent, answered ===
 
@@ -383,13 +383,13 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent, redrawn, answered ===
 
@@ -410,13 +410,13 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question with an intent, standing ===
 
@@ -426,13 +426,13 @@ $ curl example.com
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question, answered ===
 
@@ -464,12 +464,12 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question, standing ===
 
@@ -479,12 +479,12 @@ $ curl example.com
 Writing it.
 $ curl example.com ✦·
 
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ curl example.com
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question asked before its call and redrawn, answered ===
 
@@ -504,8 +504,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -513,7 +513,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question asked before its call, answered ===
 
@@ -533,8 +533,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -542,7 +542,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, answered ===
 
@@ -575,8 +575,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -584,7 +584,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, its calls redrawn once answered, answered ===
 
@@ -605,8 +605,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -614,7 +614,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, redrawn, answered ===
 
@@ -635,8 +635,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -644,7 +644,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, standing ===
 
@@ -653,8 +653,8 @@ Run this command in the sandbox with host networking?
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -662,7 +662,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question redrawn while it stands, answered ===
 
@@ -682,8 +682,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -691,7 +691,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled past its bottom, answered ===
 
@@ -711,8 +711,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -720,7 +720,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled to its top and back down, answered ===
 
@@ -740,8 +740,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 3 more lines
   print('hello')
@@ -749,7 +749,7 @@ Run this command in the sandbox with host networking?
   print('hello')
 ⋮ 32 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled to its top, answered ===
 
@@ -769,8 +769,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ cat > script.py <<'EOF'
   print('hello')
@@ -778,7 +778,7 @@ $ cat > script.py <<'EOF'
   print('hello')
 ⋮ 34 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled up, answered ===
 
@@ -809,8 +809,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 33 more lines
   print('hello')
@@ -818,7 +818,7 @@ Run this command in the sandbox with host networking?
   print('hello')
 ⋮ 2 more lines
 
- Deny   Allow once  [Allow for 5 mins]  Allow for session
+ Deny   Allow  [Allow for 5m]  Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question scrolled up, standing ===
 
@@ -827,8 +827,8 @@ Run this command in the sandbox with host networking?
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 31 more lines
   print('hello')
@@ -836,7 +836,7 @@ Run this command in the sandbox with host networking?
   print('hello')
 ⋮ 4 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with a long intent scrolled to its top, answered ===
 
@@ -856,8 +856,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 $ cat > script.py <<'EOF'
   print('hello')
@@ -865,7 +865,7 @@ $ cat > script.py <<'EOF'
   print('hello')
 ⋮ 34 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with a long intent, answered ===
 
@@ -885,8 +885,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -894,7 +894,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent scrolled past its bottom, answered ===
 
@@ -914,8 +914,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 35 more lines
@@ -923,7 +923,7 @@ write a script that greets the world
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent scrolled to its top, answered ===
 
@@ -943,8 +943,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 $ cat > script.py <<'EOF'
@@ -952,7 +952,7 @@ $ cat > script.py <<'EOF'
   print('hello')
 ⋮ 35 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent scrolled up, answered ===
 
@@ -972,8 +972,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 32 more lines
@@ -981,7 +981,7 @@ write a script that greets the world
   print('hello')
 ⋮ 4 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, answered ===
 
@@ -1012,8 +1012,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 35 more lines
@@ -1021,7 +1021,7 @@ write a script that greets the world
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, its call redrawn once answered, answered ===
 
@@ -1041,8 +1041,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 35 more lines
@@ -1050,7 +1050,7 @@ write a script that greets the world
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, redrawn, answered ===
 
@@ -1070,8 +1070,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 35 more lines
@@ -1079,7 +1079,7 @@ write a script that greets the world
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent, standing ===
 
@@ -1088,8 +1088,8 @@ write a script that greets the world
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 35 more lines
@@ -1097,7 +1097,7 @@ write a script that greets the world
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question, answered ===
 
@@ -1128,8 +1128,8 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -1137,7 +1137,7 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question, standing ===
 
@@ -1146,8 +1146,8 @@ Run this command in the sandbox with host networking?
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
-Run this command in the sandbox with host networking?
+───────────────────────────────────────── denies in 4m 20s ─────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 34 more lines
   print('hello')
@@ -1155,5 +1155,5 @@ Run this command in the sandbox with host networking?
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────

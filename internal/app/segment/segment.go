@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/schedule"
+	"crdx.org/oh/internal/app/tr"
 )
 
 type Position int
@@ -103,7 +104,7 @@ func (self Registry) Build(name string, position Position, options Options) (Seg
 	buildSegment, ok := self[name]
 	if !ok {
 		return nil, fmt.Errorf(
-			"%s: there is no segment called %q, only: %s",
+			tr.UnknownSegment,
 			position,
 			name,
 			strings.Join(self.Available(), ", "),

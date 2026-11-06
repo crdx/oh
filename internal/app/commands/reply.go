@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/tr"
 )
 
 const quoteMark = ">"
@@ -12,7 +13,7 @@ func replyCommand(getLastMessage func() (string, bool), replyInEditor func(strin
 	lastMessage := lastMessageTarget(getLastMessage)
 	return slash.Command{
 		Name:        "reply",
-		Description: "reply inline to the last answer in your editor",
+		Description: tr.ReplyDescription,
 		Run: func(_ slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()

@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/question"
 )
@@ -68,7 +69,7 @@ func pathGrantCommands(
 func forwardCommand(forwards Forwards) slash.Command {
 	return slash.Command{
 		Name:        "forward",
-		Description: "forward a sandbox port to the host",
+		Description: tr.ForwardDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			port, err := portgrant.ParsePort(arguments.Text)
 			if err != nil {
@@ -92,7 +93,7 @@ func grantCommand(grants PathGrants) slash.Command {
 
 	return slash.Command{
 		Name:        "grant",
-		Description: "grant temporary access to a path",
+		Description: tr.GrantDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			accessText, pathText, _ := strings.Cut(arguments.Text, " ")
 			paths, isWellFormed := slash.QuotedFields(pathText)
@@ -147,7 +148,7 @@ func grantFlagChoices() []string {
 func grantsCommand(grants PathGrants, forwards Forwards, broker *question.Broker) slash.Command {
 	return slash.Command{
 		Name:        "grants",
-		Description: "list effective access, forwarded ports and approvals",
+		Description: tr.GrantsDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" && arguments.Text != grantsAllArgument {
 				return slash.Usage()
@@ -168,7 +169,7 @@ func grantsCommand(grants PathGrants, forwards Forwards, broker *question.Broker
 func revokeCommand(registry *revocation.Registry) slash.Command {
 	return slash.Command{
 		Name:        "revoke",
-		Description: "revoke a listed target",
+		Description: tr.RevokeDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text == "" {
 				return slash.Usage()
@@ -268,7 +269,7 @@ func formatGrants(
 		sections = append(sections, listing)
 	}
 	if len(sections) == 0 {
-		return "No grants or forwarded ports."
+		return tr.NoGrants
 	}
 
 	return strings.Join(sections, "\n\n")
@@ -318,7 +319,7 @@ func formatDeniedPaths(grants PathGrants) string {
 		return ""
 	}
 
-	return style.Info("Denied:") + "\n  " + strings.Join(grants.DenyPatterns, ", ")
+	return style.Info(tr.DeniedHeading) + "\n  " + strings.Join(grants.DenyPatterns, ", ")
 }
 
 func formatForwards(forwards Forwards) string {
@@ -336,7 +337,7 @@ func formatForwards(forwards Forwards) string {
 		return ""
 	}
 
-	return style.Info("Forwarded:") + "\n" + strings.Join(lines, "\n")
+	return style.Info(tr.ForwardedHeading) + "\n" + strings.Join(lines, "\n")
 }
 
 type pathGrantGroup struct {
@@ -360,7 +361,7 @@ func formatPathGrants(grants []effectivePathGrant) string {
 			strings.Join(compactPaths(group.paths), " "),
 		))
 	}
-	return style.Info("Paths:") + "\n" + strings.Join(lines, "\n")
+	return style.Info(tr.PathsHeading) + "\n" + strings.Join(lines, "\n")
 }
 
 func groupPathGrants(grants []effectivePathGrant) []pathGrantGroup {

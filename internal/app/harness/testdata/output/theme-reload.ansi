@@ -380,9 +380,9 @@ normal\r
 \e[48;2;1;2;3m                                                                                                    \e[0m\r
 \e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r\e[K\r
  \e[38;2;150;152;150m╭────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\e[K\r
- \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mThe configuration could not be reloaded: config.toml:\e[0m    \e[38;2;150;152;150m│\e[0m\e[K\r
- \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mtoml: line 3 (last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write\e[0m     \e[38;2;150;152;150m│\e[0m\e[K\r
- \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m#rrggbb, "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",\e[0m      \e[38;2;150;152;150m│\e[0m\e[K\r
+ \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mCould not reload the config: config.toml: toml: line 3\e[0m   \e[38;2;150;152;150m│\e[0m\e[K\r
+ \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m(last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write #rrggbb,\e[0m         \e[38;2;150;152;150m│\e[0m\e[K\r
+ \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m"default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",\e[0m               \e[38;2;150;152;150m│\e[0m\e[K\r
  \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m"strikethrough", "overline", or a shaped or coloured underline such as "underline:curly"\e[0m       \e[38;2;150;152;150m│\e[0m\e[K\r
 \e[38;2;150;152;150m─┴\e[0m\e[38;2;150;152;150m──\e[0m \e[38;2;150;152;150m·✦·\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150mn\e[0m\e[38;2;150;152;150ml\e[0m\e[38;2;150;152;150mg\e[0m \e[38;2;150;152;150m───────────────────────────────────────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m──\e[0m\e[38;2;150;152;150m┴─\e[0m\r
 \e[K\r
@@ -395,7 +395,7 @@ normal\r
 \e[3m\e[38;2;1;2;3mstill thinking\e[0m\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
  \e[38;2;1;2;3m╭────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\e[K\r
- \e[38;2;1;2;3m│\e[0m \e[38;2;76;154;44mConfiguration reloaded automatically\e[0m                                                           \e[38;2;1;2;3m│\e[0m\e[K\r
+ \e[38;2;1;2;3m│\e[0m \e[38;2;76;154;44mReloaded the config:\e[0m                                                                           \e[38;2;1;2;3m│\e[0m\e[K\r
  \e[38;2;1;2;3m│\e[0m config.toml: ui.theme \e[38;2;1;2;3m(dismissing in 10s)\e[0m                                                      \e[38;2;1;2;3m│\e[0m\e[K\r
 \e[38;2;1;2;3m─┴\e[0m\e[38;2;1;2;3m────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[38;2;1;2;3m┴─\e[0m\r
 half written\e[K\r

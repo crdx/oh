@@ -9,19 +9,23 @@ import (
 	"crdx.org/oh/internal/app/input"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 )
 
 const (
-	previewKeysHint         = " · esc/q return · ↑↓ scroll · ←→ browse"
-	openablePreviewHint     = "enter to open" + previewKeysHint
-	runningPreviewHint      = "running" + previewKeysHint
+	previewKeysHint         = " · esc/q " + tr.PreviewReturnAction + " · ↑↓ " + tr.PreviewScrollAction + " · ←→ " + tr.PreviewBrowseAction
+	openablePreviewHint     = "enter " + tr.PreviewOpenAction + previewKeysHint
+	runningPreviewHint      = tr.PreviewRunningStatus + previewKeysHint
 	previewRule             = "─"
 	previewHeaderRows       = 3
 	previewFooterRows       = 4
-	previewLoadInputHint    = "Press enter to load..."
-	previewRestoreInputHint = "Press enter to restore and load..."
-	previewRunningInputHint = "Session is running..."
+	previewRunningInputHint = tr.PreviewRunningPrompt
+)
+
+var (
+	previewLoadInputHint    = fmt.Sprintf(tr.PreviewLoadPrompt, "enter")
+	previewRestoreInputHint = fmt.Sprintf(tr.PreviewRestorePrompt, "enter")
 )
 
 type previewState struct {
@@ -250,5 +254,5 @@ func (self *state) previewPosition() string {
 
 	last := min(self.preview.offset+max(self.window, 1), total)
 
-	return fmt.Sprintf("%d-%d of %d", self.preview.offset+1, last, total)
+	return fmt.Sprintf(tr.PreviewPosition, self.preview.offset+1, last, total)
 }

@@ -12,6 +12,8 @@ import (
 	"crdx.org/oh/internal/app/segment/fastMode"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
@@ -35,8 +37,9 @@ const (
 	shortenedIdentifier = 18
 )
 
+const providerTitle = "  " + tr.ProviderColumn
+
 const (
-	costTitle        = "Cost"
 	costRequestCount = 100
 	costColumn       = 10
 	costRoom         = markWidth + providerColumn + nameColumn + effortColumn +
@@ -166,18 +169,18 @@ func (self *modelList) IsChoosable(int) bool { return true }
 func (self *modelList) KeyboardHelp(room int) []menu.Shortcut {
 	if room < sortHelpRoom {
 		return []menu.Shortcut{
-			{Key: "s", Description: "sort: " + self.sortLabel()},
-			{Key: "enter", Description: "choose"},
-			{Key: "q", Description: "quit"},
+			{Key: "s", Description: fmt.Sprintf(tr.ModelSortAction, self.sortLabel())},
+			{Key: "enter", Description: tr.MenuChooseAction},
+			{Key: "q", Description: tr.MenuQuitAction},
 		}
 	}
 
 	return []menu.Shortcut{
-		{Key: "↑↓", Description: "move"},
-		{Key: "← →", Description: "effort"},
-		{Key: "s", Description: "sort: " + self.sortLabel()},
-		{Key: "enter", Description: "choose"},
-		{Key: "q", Description: "quit"},
+		{Key: "↑↓", Description: tr.MenuMoveAction},
+		{Key: "← →", Description: tr.ModelEffortAction},
+		{Key: "s", Description: fmt.Sprintf(tr.ModelSortAction, self.sortLabel())},
+		{Key: "enter", Description: tr.MenuChooseAction},
+		{Key: "q", Description: tr.MenuQuitAction},
 	}
 }
 
@@ -216,17 +219,17 @@ func (self *modelList) Row(index int, isChosen bool, room int) string {
 func (self *modelList) sortLabel() string {
 	switch self.order {
 	case cheapestFirst:
-		return "cost ↑"
+		return tr.CheapestFirstOrder
 	case dearestFirst:
-		return "cost ↓"
+		return tr.DearestFirstOrder
 	case providerOrder:
-		return "provider"
+		return tr.ProviderOrder
 	}
-	return "provider"
+	return tr.ProviderOrder
 }
 
 func modelTable(order sortOrder) *table.Table {
-	title := costTitle
+	title := tr.CostColumn
 	switch order {
 	case cheapestFirst:
 		title += " ↑"
@@ -236,15 +239,19 @@ func modelTable(order sortOrder) *table.Table {
 	}
 
 	return table.New(
-		table.Column{Title: "  Provider", Width: markWidth + providerColumn},
-		table.Column{Title: "Model", Width: nameColumn},
-		table.Column{Title: "Effort", Width: effortColumn},
-		table.Column{Title: "Context", Width: contextColumn, Align: table.Right},
-		table.Column{Title: title, Width: costColumn, Align: table.Right, MinRoom: costRoom},
-		table.Column{Title: "Input", Width: inputColumn, Align: table.Right, MinRoom: rateRoom},
-		table.Column{Title: "Output", Width: outputColumn, Align: table.Right, MinRoom: rateRoom},
-		table.Column{Title: "Identifier", Width: identifierColumn, Style: style.Subtle},
+		table.Column{Title: providerTitle, Width: titled(providerTitle, markWidth+providerColumn)},
+		table.Column{Title: tr.ModelColumn, Width: titled(tr.ModelColumn, nameColumn)},
+		table.Column{Title: tr.EffortColumn, Width: titled(tr.EffortColumn, effortColumn)},
+		table.Column{Title: tr.ContextColumn, Width: titled(tr.ContextColumn, contextColumn), Align: table.Right},
+		table.Column{Title: title, Width: titled(title, costColumn), Align: table.Right, MinRoom: costRoom},
+		table.Column{Title: tr.InputColumn, Width: titled(tr.InputColumn, inputColumn), Align: table.Right, MinRoom: rateRoom},
+		table.Column{Title: tr.OutputColumn, Width: titled(tr.OutputColumn, outputColumn), Align: table.Right, MinRoom: rateRoom},
+		table.Column{Title: tr.IdentifierColumn, Width: titled(tr.IdentifierColumn, identifierColumn), Style: style.Subtle},
 	)
+}
+
+func titled(title string, minimum int) int {
+	return max(minimum, width.Of(title))
 }
 
 func modelRow(model *Model, currency money.Currency, isChosen bool, room int) string {

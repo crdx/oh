@@ -7,6 +7,7 @@ import (
 
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -430,7 +431,7 @@ func TestHelpSaysWhenNoSnippetsAreConfigured(t *testing.T) {
 	if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 		t.Fatal(err)
 	}
-	if context.notice != "No snippets are configured." {
+	if context.notice != tr.NoSnippets {
 		t.Errorf("got help %q", context.notice)
 	}
 }

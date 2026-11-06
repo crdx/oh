@@ -113,6 +113,7 @@ import (
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
@@ -2190,7 +2191,7 @@ func TestACustomToolApprovalCarriesNamedArgumentsAndItsTimeout(t *testing.T) {
 		t.Errorf("got deadline %v", deadline)
 	}
 	asked := request.Question
-	if asked.Label != "Run the commit tool?" || !slices.Equal(asked.Fields, []question.Field{
+	if asked.Label != fmt.Sprintf(tr.CustomToolQuestion, "commit") || !slices.Equal(asked.Fields, []question.Field{
 		{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 		{Name: "patch", Value: "/tmp/layout.patch"},
 		{Name: "labels", Value: "one, two words"},
@@ -2284,7 +2285,7 @@ func TestAQuestionCountsDownToItsDeadline(t *testing.T) {
 		t.Fatal("a question awaiting an answer drew nothing")
 	}
 	head := painter.QuestionHead(self.question.request.Question, self.remainingAnswerTime(askedAt))
-	if got := style.Plain(head); !strings.Contains(got, "auto-denies in 1m") {
+	if got := style.Plain(head); !strings.Contains(got, tr.ApprovalLapse+" in 1m") {
 		t.Errorf("got head %q, want a countdown", got)
 	}
 
@@ -3079,7 +3080,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 
 	typeMessage(t, self, inputLine, history, "check the other path too")
 	if drawn := drawnQueue(self); !strings.Contains(
-		drawn, "double-enter to send",
+		drawn, fmt.Sprintf(tr.SendHint, "double-enter"),
 	) {
 		t.Errorf("drew %q, want the queue offering to send itself now", drawn)
 	}
@@ -3091,7 +3092,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	if !strings.Contains(drawn, "check the other path too") {
 		t.Errorf("drew %q, want the flushed message still standing", drawn)
 	}
-	if !strings.Contains(drawn, "sending…") {
+	if !strings.Contains(drawn, tr.SendingHint) {
 		t.Errorf("drew %q, want the queue saying what it is waiting for", drawn)
 	}
 }
@@ -11710,14 +11711,14 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 	}{
 		"one setting": {
 			changes: []config.SourceChange{{Path: "oh.toml", Settings: []string{"editor.command"}}},
-			want:    "Configuration reloaded automatically\noh.toml: editor.command",
+			want:    tr.ReloadConfirmation + "\noh.toml: editor.command",
 		},
 		"several files": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"ui.theme.dim"}},
 				{Path: "oh.toml", Settings: []string{"default.tool_output", "snippet.fix"}},
 			},
-			want: "Configuration reloaded automatically\n" +
+			want: tr.ReloadConfirmation + "\n" +
 				"config.toml: ui.theme.dim\n" +
 				"oh.toml: default.tool_output, snippet.fix",
 		},
@@ -11725,27 +11726,27 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 			changes: []config.SourceChange{
 				{Path: "oh.toml", Settings: []string{"ui.streaming"}, IsRemoved: true},
 			},
-			want: "Configuration reloaded automatically\noh.toml: gone, dropping ui.streaming",
+			want: tr.ReloadConfirmation + "\n" + fmt.Sprintf(tr.RemovedSourceDropping, "oh.toml", "ui.streaming"),
 		},
 		"nothing of consequence": {
 			changes: []config.SourceChange{{Path: "oh.toml"}},
-			want:    "Configuration reloaded automatically\noh.toml: no setting changed",
+			want:    tr.ReloadConfirmation + "\n" + fmt.Sprintf(tr.UnchangedSource, "oh.toml"),
 		},
 		"a grant this run will never read": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"grants.read", "grants.write"}},
 			},
-			want: "Configuration reloaded automatically\n" +
+			want: tr.ReloadConfirmation + "\n" +
 				"config.toml: grants.read, grants.write\n" +
-				"applies when oh next starts: grants.read, grants.write",
+				tr.NextRunReach + ": grants.read, grants.write",
 		},
 		"a grant withdrawn is no more immediate": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"grants.read"}, IsRemoved: true},
 			},
-			want: "Configuration reloaded automatically\n" +
-				"config.toml: gone, dropping grants.read\n" +
-				"applies when oh next starts: grants.read",
+			want: tr.ReloadConfirmation + "\n" +
+				fmt.Sprintf(tr.RemovedSourceDropping, "config.toml", "grants.read") + "\n" +
+				tr.NextRunReach + ": grants.read",
 		},
 		"both waits beside a setting that landed": {
 			changes: []config.SourceChange{
@@ -11756,28 +11757,28 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 					"ui.streaming",
 				}},
 			},
-			want: "Configuration reloaded automatically\n" +
+			want: tr.ReloadConfirmation + "\n" +
 				"config.toml: agent.round_robin, default.caps, grants.exec, ui.streaming\n" +
-				"applies when oh next starts: grants.exec\n" +
-				"applies to new sessions: agent.round_robin, default.caps",
+				tr.NextRunReach + ": grants.exec\n" +
+				tr.NextSessionReach + ": agent.round_robin, default.caps",
 		},
 		"an experiment read once at startup": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"experimental.forward_hostname", "experimental.shared_history"}},
 			},
-			want: "Configuration reloaded automatically\n" +
+			want: tr.ReloadConfirmation + "\n" +
 				"config.toml: experimental.forward_hostname, experimental.shared_history\n" +
-				"applies when oh next starts: experimental.forward_hostname",
+				tr.NextRunReach + ": experimental.forward_hostname",
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"skill.include"}},
 				{Path: "oh.toml", Settings: []string{"skill.include"}},
 			},
-			want: "Configuration reloaded automatically\n" +
+			want: tr.ReloadConfirmation + "\n" +
 				"config.toml: skill.include\n" +
 				"oh.toml: skill.include\n" +
-				"applies when oh next starts: skill.include",
+				tr.NextRunReach + ": skill.include",
 		},
 	}
 
@@ -11789,13 +11790,13 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 
 	subagentChange := []config.SourceChange{{Path: "config.toml", Settings: []string{"subagent.concurrency"}}}
 	running := childState{manager: &subagents.Manager{}}
-	if got, want := reloadConfirmation(subagentChange, running.reachOf), "Configuration reloaded automatically\n"+
+	if got, want := reloadConfirmation(subagentChange, running.reachOf), tr.ReloadConfirmation+"\n"+
 		"config.toml: subagent.concurrency"; got != want {
 		t.Errorf("subagents that follow a reload drew %q, want %q", got, want)
 	}
-	if got, want := reloadConfirmation(subagentChange, childState{}.reachOf), "Configuration reloaded automatically\n"+
+	if got, want := reloadConfirmation(subagentChange, childState{}.reachOf), tr.ReloadConfirmation+"\n"+
 		"config.toml: subagent.concurrency\n"+
-		"applies when oh next starts: subagent.concurrency"; got != want {
+		tr.NextRunReach+": subagent.concurrency"; got != want {
 		t.Errorf("subagents off since startup drew %q, want %q", got, want)
 	}
 }
@@ -14076,7 +14077,7 @@ func TestRetryRemainsDurableConversationHistory(t *testing.T) {
 	}
 	replayed.replay()
 
-	if !strings.Contains(style.Plain(replayOutput.String()), "[#1] Request failed; retrying in 0.3s: Temporary fault") {
+	if !strings.Contains(style.Plain(replayOutput.String()), fmt.Sprintf(tr.RetryingIn, 1, "0.3s")+": Temporary fault") {
 		t.Errorf("stored replay omitted the retry:\n%s", style.Plain(replayOutput.String()))
 	}
 	requireSameVisibleScreen(t, "durable retry changed after replay", liveOutput.String(), replayOutput.String())
@@ -14683,8 +14684,8 @@ func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 		"turn timer alone on a slow loop":                    goldenTimerSchedulePass(t, 200*time.Millisecond, 3*time.Minute),
 		"clock alone to the minute":                          goldenClockSchedulePass(t, "15:04", 3*time.Minute),
 		"clock alone to the second":                          goldenClockSchedulePass(t, "15:04:05", 3*time.Second),
-		"confirmation feedback ticks down to its dismissal":  goldenFeedbackSchedulePass(t, configReloadConfirmationDuration+time.Second, configReloadConfirmationDuration, "Configuration reloaded automatically"),
-		"redraw feedback ticks at its own start and expires": goldenFeedbackSchedulePass(t, redrawFeedbackDuration+time.Second, redrawFeedbackDuration, "Redrawn in 42ms"),
+		"confirmation feedback ticks down to its dismissal":  goldenFeedbackSchedulePass(t, configReloadConfirmationDuration+time.Second, configReloadConfirmationDuration, tr.ReloadConfirmation),
+		"redraw feedback ticks at its own start and expires": goldenFeedbackSchedulePass(t, redrawFeedbackDuration+time.Second, redrawFeedbackDuration, fmt.Sprintf(tr.RedrawTime, "42ms")),
 		"a finished task lingers on the bar and then goes":   goldenTaskSchedulePass(t, 3*time.Second, 40*time.Second),
 		"default bar between turns outside a repository":     goldenDefaultBarSchedulePass(t, false, 16*time.Second),
 		"default bar during a turn outside a repository":     goldenDefaultBarSchedulePass(t, true, time.Second),
@@ -21376,7 +21377,7 @@ func TestAPasteFailureIsShownWithoutChangingTheInput(t *testing.T) {
 	if inputLine.Text() != "draft" {
 		t.Errorf("failed paste changed the input to %q", inputLine.Text())
 	}
-	want := "Could not paste: permission to read the clipboard was refused"
+	want := fmt.Sprintf(tr.PasteFailure, tr.ClipboardRefused)
 	if self.feedback.Message().Text != want || self.feedback.Message().Status != agent.ErrorStatus {
 		t.Errorf("paste feedback is %+v, want error %q", self.feedback.Message(), want)
 	}
@@ -24792,13 +24793,14 @@ func priorityApprovalStream(t *testing.T, columns int, isResolved bool) string {
 	questionContext, cancelQuestion := context.WithDeadline(t.Context(), self.getNow().Add(time.Minute))
 	defer cancelQuestion()
 	result := make(chan error, 1)
+	confirmation := question.Confirmation{
+		Label:    "Run this command in the sandbox with host networking?",
+		Intent:   "Checking a fixed generic browser header",
+		Detail:   "curl -I https://example.com",
+		Language: "bash",
+	}
 	go func() {
-		result <- question.Confirm(questionContext, broker, question.Confirmation{
-			Label:    "Run this command in the sandbox with host networking?",
-			Intent:   "Checking a fixed generic browser header",
-			Detail:   "curl -I https://example.com",
-			Language: "bash",
-		})
+		result <- question.Confirm(questionContext, broker, confirmation)
 	}()
 	<-broker.Changes()
 	self.question.broker = broker
@@ -24806,7 +24808,8 @@ func priorityApprovalStream(t *testing.T, columns int, isResolved bool) string {
 	self.show(inputLine)
 	approvalStream := screenOutput.String()
 	approval := shown(t, approvalStream, columns)
-	if columns >= style.Width("auto-denies in 1m")+2 && !strings.Contains(approval, "auto-denies in 1m") {
+	countdown := confirmation.Question().Lapse + " in 1m"
+	if columns >= style.Width(countdown)+2 && !strings.Contains(approval, countdown) {
 		t.Errorf("%d columns lost the approval countdown:\n%s", columns, approval)
 	}
 	self.answerQuestion(key.Key{Code: key.Rune, Value: 'n'})

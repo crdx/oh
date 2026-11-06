@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -419,7 +420,7 @@ func TestGoldenOneOfEverythingNeedsNoTotalsAndDrawsNoFaults(t *testing.T) {
 		t.Error("a quiet analysis should draw no faults")
 	}
 	for line := range strings.SplitSeq(output.String(), "\n") {
-		if strings.HasPrefix(line, totalName) {
+		if strings.HasPrefix(line, tr.TotalRow) {
 			t.Errorf("a single row of each kind should need no total, got %q", line)
 		}
 	}
@@ -951,7 +952,7 @@ func writeFamily(t *testing.T, directory string, childAnswers ...string) {
 
 const childAnswer = `{"kind":"model_message","text":"child","usage":{"input_tokens":600000,"output_tokens":60,"cache":{"read_tokens":200000}}}`
 
-func TestAChildIsFoldedIntoItsParentAtItsOwnModel(t *testing.T) {
+func TestGoldenAChildIsFoldedIntoItsParentAtItsOwnModel(t *testing.T) {
 	directory := t.TempDir()
 	writeFamily(t, directory, childAnswer)
 	statistics := analyseOne(t, directory, "parent-lynx")
@@ -984,7 +985,7 @@ func TestAChildIsFoldedIntoItsParentAtItsOwnModel(t *testing.T) {
 	assertGolden(t, "subagent-family.txt", report.String())
 }
 
-func TestAMissingChildIsCountedFromItsParentsRecord(t *testing.T) {
+func TestGoldenAMissingChildIsCountedFromItsParentsRecord(t *testing.T) {
 	directory := t.TempDir()
 	writeFamily(t, directory)
 	statistics := analyseOne(t, directory, "parent-lynx")
@@ -1002,7 +1003,7 @@ func TestAMissingChildIsCountedFromItsParentsRecord(t *testing.T) {
 	if err := writeText(analysis, presentation{currency: money.Dollar(), isPerSession: true}, &report); err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(report.String(), "1 subagent's journal is gone") {
+	if !strings.Contains(report.String(), fmt.Sprintf(tr.MissingSubagentJournal, "1")) {
 		t.Errorf("the report hides the missing child: %s", report.String())
 	}
 	assertGolden(t, "missing-subagent.txt", report.String())

@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/paste"
 	"crdx.org/oh/internal/app/spinner"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/strutil"
@@ -40,8 +41,7 @@ const (
 )
 
 const (
-	filterPrompt = "Filter: "
-	quitKey      = 'q'
+	quitKey = 'q'
 )
 
 var ErrCancelled = errors.New("cancelled")
@@ -764,15 +764,15 @@ func (self *state) removalLine(room int) (string, bool) {
 }
 
 func (self *state) filterLine(room int) string {
-	return style.Subtle(Clip(filterPrompt, room)) + style.Answer(Clip(self.query, max(room-len(filterPrompt), 0)))
+	return style.Subtle(Clip(tr.MenuFilterPrompt, room)) + style.Answer(Clip(self.query, max(room-width.Of(tr.MenuFilterPrompt), 0)))
 }
 
 func (self *state) shortcutLine(room int) string {
-	filter := renderKeyboardHelp([]Shortcut{{Key: "/", Description: "filter"}})
+	filter := renderKeyboardHelp([]Shortcut{{Key: "/", Description: tr.MenuFilterAction}})
 	shortcuts := []Shortcut{
-		{Key: "↑↓", Description: "move"},
-		{Key: "enter", Description: "choose"},
-		{Key: "q", Description: "quit"},
+		{Key: "↑↓", Description: tr.MenuMoveAction},
+		{Key: "enter", Description: tr.MenuChooseAction},
+		{Key: "q", Description: tr.MenuQuitAction},
 	}
 	if rows, hasKeyboardHelp := self.list.(KeyboardHelp); hasKeyboardHelp {
 		shortcuts = rows.KeyboardHelp(room)

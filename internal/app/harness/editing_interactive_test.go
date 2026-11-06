@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"golang.org/x/sys/unix"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 )
 
@@ -132,7 +133,7 @@ func TestAnInterruptInTheEditorReachesTheEditorAlone(t *testing.T) {
 	session.waitFor(fakeEditorBanner)
 	session.typeText(pressCtrlC)
 
-	session.waitFor("The draft was kept as it was")
+	session.waitFor(strings.TrimSuffix(fmt.Sprintf(tr.DraftKept, ""), ": "))
 	session.requireShown("keep me")
 	session.typeAndSettle(" still here")
 	session.requireShown("keep me still here")

@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/util/pathutil"
 )
@@ -32,7 +33,6 @@ const (
 	aheadMark       = "↑"
 	behindMark      = "↓"
 	conflictedLabel = "conflicted"
-	failureLabel    = "status failed"
 	branchHeader    = "# branch.ab "
 )
 
@@ -81,7 +81,7 @@ func New(workspaceDir string, runner sandbox.ArgvRunner) segment.Factory {
 		}
 
 		if args.Rate < 0 {
-			return nil, fmt.Errorf("rate must not be negative (got %s)", args.Rate)
+			return nil, fmt.Errorf(tr.RateNegative, args.Rate)
 		}
 
 		if args.Rate == 0 {
@@ -136,7 +136,7 @@ func (self *state) Ladder(segment.Context) []string {
 
 	switch {
 	case isFailed:
-		return fit.Ladder(style.Dim(failureLabel), "")
+		return fit.Ladder(style.Dim(tr.GitStatusFailure), "")
 	case !isRead:
 		return []string{""}
 	default:

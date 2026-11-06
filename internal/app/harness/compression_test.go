@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/ctl/analyse"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sim"
 )
 
@@ -149,7 +150,7 @@ func TestGoldenProviderRequestCompressionRunsThroughTheBinary(t *testing.T) {
 			if test.shouldReject {
 				wantRejections = 1
 				text := runTestBinary(t, binary, workspace, environment, "--ctl", "analyse")
-				if !strings.Contains(text, "Compression Rejections") {
+				if !strings.Contains(text, tr.CompressionRejectionsColumn) {
 					t.Fatalf("the compression rejection is not visible in analyse: %s", text)
 				}
 			}

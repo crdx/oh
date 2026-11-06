@@ -308,127 +308,127 @@ prose off the screen. And a fifth rounds it off, which is where a redraw is aske
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
+ Deny  [Allow]  Allow for 5m   Allow for session
 === a tall question on a terminal of 5 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 ⋮ 40 more lines
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 === a tall question on a terminal of 6 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 ⋮ 40 more lines
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 04 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
+ Deny  [Allow]  Allow for 5m   Allow for session
 === a tall question with an intent on a terminal of 05 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 ⋮ 40 more lines
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 === a tall question with an intent on a terminal of 06 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 ⋮ 40 more lines
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 07 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 39 more lines
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 08 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 38 more lines
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 09 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 37 more lines
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ⋮ 1 more line
 === a tall question with an intent on a terminal of 10 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 
 ⋮ 36 more lines
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent on a terminal of 11 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 36 more lines
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question with an intent on a terminal of 12 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
-Run this command in the sandbox with host networking?
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
+Run in the sandbox on the host network?
 write a script that greets the world
 
 ⋮ 35 more lines
@@ -436,7 +436,7 @@ write a script that greets the world
   print('hello')
   EOF
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a thought whose diagram arrived at 24 lines, sealed ===
 

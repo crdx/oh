@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/ptytest"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -173,7 +174,7 @@ func TestOnboardingOffersAnotherProviderAfterLoginFails(t *testing.T) {
 	onboarding := wizard{
 		output: &output,
 		choose: func(prompt string, _ []string) (int, error) {
-			if style.Plain(prompt) == modelPrompt {
+			if style.Plain(prompt) == tr.ModelPrompt {
 				return 0, nil
 			}
 			chosen := chosenProviders[providerChoices]
@@ -245,7 +246,7 @@ func TestANamedExistingLoginCanBeRemoved(t *testing.T) {
 			if got := style.Plain(prompt); !strings.Contains(got, anthropicName) {
 				t.Errorf("action prompt %q does not name the provider", got)
 			}
-			if !slices.Equal(labels, []string{oauthSignIn.renewal, oauthSignIn.removal, doNothing}) {
+			if !slices.Equal(labels, []string{oauthSignIn.renewal, oauthSignIn.removal, tr.DoNothing}) {
 				t.Errorf("got actions %v", labels)
 			}
 			return slices.Index(labels, oauthSignIn.removal), nil
@@ -279,7 +280,7 @@ func TestAKeyIsReplacedAndRemovedRatherThanSignedInto(t *testing.T) {
 	harry := wizard{
 		output: &output,
 		choose: func(_ string, labels []string) (int, error) {
-			if !slices.Equal(labels, []string{apiKey.renewal, apiKey.removal, doNothing}) {
+			if !slices.Equal(labels, []string{apiKey.renewal, apiKey.removal, tr.DoNothing}) {
 				t.Errorf("got actions %v", labels)
 			}
 			return slices.Index(labels, apiKey.removal), nil
@@ -316,7 +317,7 @@ func TestChoosingNothingLeavesANamedLoginAlone(t *testing.T) {
 	harry := wizard{
 		output: &output,
 		choose: func(_ string, labels []string) (int, error) {
-			return slices.Index(labels, doNothing), nil
+			return slices.Index(labels, tr.DoNothing), nil
 		},
 		login: func(provider, func(string)) error {
 			t.Error("sign-in was started")
@@ -434,17 +435,17 @@ func TestTheOpeningIsTypedInTheRhythmOfSomebodyWakingUp(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	rule := strings.Repeat(openingRule, style.Width(spoken(introduction, "")))
+	rule := strings.Repeat(openingRule, style.Width(spoken(tr.Introduction, "")))
 	lines := strings.Split(style.Plain(output.String()), "\n")
-	if want := []string{spoken(greeting, greetingAside), introduction, rule, "", ""}; !slices.Equal(lines, want) {
+	if want := []string{spoken(tr.Greeting, tr.GreetingAside), tr.Introduction, rule, "", ""}; !slices.Equal(lines, want) {
 		t.Errorf("the opening drew %q, want %q", lines, want)
 	}
 
 	want := slices.Concat(
-		typingWaits(greeting, typingInterval),
-		typingWaits(greetingAside, drowsyInterval),
+		typingWaits(tr.Greeting, typingInterval),
+		typingWaits(tr.GreetingAside, drowsyInterval),
 		[]time.Duration{wakingRest},
-		typingWaits(introduction, typingInterval),
+		typingWaits(tr.Introduction, typingInterval),
 		typingWaits(rule, ruleInterval),
 	)
 	if !slices.Equal(waits, want) {
@@ -468,9 +469,9 @@ func TestEnterEndsTheOpeningAnimationAtOnce(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	rule := strings.Repeat(openingRule, style.Width(spoken(introduction, "")))
+	rule := strings.Repeat(openingRule, style.Width(spoken(tr.Introduction, "")))
 	lines := strings.Split(style.Plain(output.String()), "\n")
-	if want := []string{spoken(greeting, greetingAside), introduction, rule, "", ""}; !slices.Equal(lines, want) {
+	if want := []string{spoken(tr.Greeting, tr.GreetingAside), tr.Introduction, rule, "", ""}; !slices.Equal(lines, want) {
 		t.Errorf("the completed opening drew %q, want %q", lines, want)
 	}
 	if pauses != 1 {
@@ -555,12 +556,12 @@ func TestOnlyTheAsideIsDrawnInItalics(t *testing.T) {
 	var output bytes.Buffer
 	harry := wizard{output: &output}
 
-	if err := harry.speakOut(greeting, greetingAside); err != nil {
+	if err := harry.speakOut(tr.Greeting, tr.GreetingAside); err != nil {
 		t.Fatal(err)
 	}
 
 	drawn := output.String()
-	if !strings.HasPrefix(drawn, greeting+" ") {
+	if !strings.HasPrefix(drawn, tr.Greeting+" ") {
 		t.Errorf("the greeting %q painted the words, want the terminal's own colour", drawn)
 	}
 
@@ -568,7 +569,7 @@ func TestOnlyTheAsideIsDrawnInItalics(t *testing.T) {
 	if italics < 0 {
 		t.Fatalf("the greeting %q drew no italics", drawn)
 	}
-	if style.Plain(strings.TrimSuffix(drawn[italics:], "\n")) != greetingAside {
+	if style.Plain(strings.TrimSuffix(drawn[italics:], "\n")) != tr.GreetingAside {
 		t.Errorf("the greeting %q put more than the aside in italics", drawn)
 	}
 }

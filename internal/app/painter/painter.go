@@ -1,9 +1,9 @@
 package painter
 
 import (
+	"fmt"
 	"math"
 	"slices"
-	"strconv"
 	"strings"
 
 	"crdx.org/oh/internal/money"
@@ -34,6 +34,7 @@ import (
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
@@ -169,12 +170,9 @@ func (self *Picasso) ProvisionalDelta() agent.Delta {
 }
 
 func RenderRetry(event agent.Event) string {
-	notice := "[#" + strconv.Itoa(event.Attempt) + "] Request failed"
-
+	notice := fmt.Sprintf(tr.Retrying, event.Attempt)
 	if event.Took > 0 {
-		notice += "; retrying in " + util.CompactDuration(event.Took)
-	} else {
-		notice += "; retrying"
+		notice = fmt.Sprintf(tr.RetryingIn, event.Attempt, util.CompactDuration(event.Took))
 	}
 
 	if failure := agent.FailureText(event); failure != "" {
@@ -1089,20 +1087,16 @@ func RenderFailure(event agent.Event) string {
 	return strutil.CapitaliseSentence(strutil.PrintableLines(agent.FailureText(event)))
 }
 
-const (
-	contextExceededNotice = "Context window full."
-	forkCommand           = "/fork -m"
-)
+const forkCommand = "/fork -m"
 
 func RenderContextExceeded(event agent.Event, modelName string) (string, bool) {
 	if event.Failure == nil || !event.Failure.IsContextExceeded() {
 		return "", false
 	}
 
-	notice := contextExceededNotice
-	if modelName != "" {
-		notice += " Run " + forkCommand + " " + modelName + " to continue in a new session."
+	if modelName == "" {
+		return tr.ContextFull, true
 	}
 
-	return notice, true
+	return fmt.Sprintf(tr.ContextFullHint, forkCommand+" "+modelName), true
 }

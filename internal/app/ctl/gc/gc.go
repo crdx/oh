@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/diskutil"
 	"crdx.org/oh/pkg/session"
@@ -153,7 +154,7 @@ func run(directories Directories, choice options, output console.Output) error {
 	))
 
 	if failureCount := len(total.failures); failureCount > 0 {
-		return fmt.Errorf("%d of %d could not be removed", failureCount, count+failureCount)
+		return fmt.Errorf(tr.RemovalFailures, failureCount, count+failureCount)
 	}
 
 	return nil
@@ -191,9 +192,9 @@ func writeRemovals(removals []removal, writer io.Writer) {
 	}
 
 	removalTable := table.New(
-		table.Column{Title: "Kind", Style: style.Qualifier},
-		table.Column{Title: "Size", Align: table.Right},
-		table.Column{Title: "Path"},
+		table.Column{Title: tr.KindColumn, Style: style.Qualifier},
+		table.Column{Title: tr.SizeColumn, Align: table.Right},
+		table.Column{Title: tr.PathColumn},
 	).Fit(rows)
 
 	_, _ = fmt.Fprintln(writer, style.Column(removalTable.Header(0)))
@@ -539,33 +540,31 @@ func isMarker(contents map[string]bool, name string) bool {
 }
 
 func takenNoun(count int) string {
-	return util.PluralNoun(count, "path")
+	return util.PluralNoun(count, tr.PathNoun)
 }
 
-func emptyNoun(count int) string {
+func emptyDirectories(count int) string {
 	if count == 1 {
-		return "empty directory"
+		return fmt.Sprintf(tr.EmptyDirectory, count)
 	}
 
-	return "empty directories"
+	return fmt.Sprintf(tr.EmptyDirectories, count)
 }
 
 func summary(count int, emptyCount int, reclaimedBytes int64, runningCount int, isDryRun bool) string {
-	text := strconv.Itoa(count) + " " + takenNoun(count) + ", " +
-		util.FormatBytes(reclaimedBytes, bytePrecision)
+	pattern := tr.ReclaimedSummary
 	if isDryRun {
-		text += " to reclaim"
-	} else {
-		text += " reclaimed"
+		pattern = tr.ReclaimableSummary
 	}
+	parts := []string{fmt.Sprintf(pattern, strconv.Itoa(count)+" "+takenNoun(count), util.FormatBytes(reclaimedBytes, bytePrecision))}
 
 	if runningCount > 0 {
-		text += ", " + util.Plural(runningCount, "running session") + " and the shared home left alone"
+		parts = append(parts, fmt.Sprintf(tr.LeftAlone, util.Plural(runningCount, tr.RunningSessionNoun)))
 	}
 
 	if emptyCount > 0 {
-		text += ", also " + strconv.Itoa(emptyCount) + " " + emptyNoun(emptyCount)
+		parts = append(parts, emptyDirectories(emptyCount))
 	}
 
-	return text
+	return strings.Join(parts, ", ")
 }

@@ -9,6 +9,7 @@ import (
 
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool/command"
 )
@@ -76,7 +77,7 @@ func TestInProcessWorkspaceSourceCannotDeclareACustomTool(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err := LoadSources(Source{Path: globalPath}, Source{Path: workspacePath, IsOverride: true})
-	if err == nil || !strings.Contains(err.Error(), "cannot be overridden in oh.toml") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(strings.TrimPrefix(tr.WorkspaceOverride, "%s "), "oh.toml")) {
 		t.Errorf("got %v", err)
 	}
 }
@@ -88,7 +89,7 @@ func TestInProcessOnlyBashAcceptsHostNetworkSettings(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err := Load(path)
-	want := path + ": tool.read.host_network is only valid for bash"
+	want := path + ": " + fmt.Sprintf(tr.OnlyForBash, "tool.read.host_network")
 	if err == nil || err.Error() != want {
 		t.Errorf("got %v, want %q", err, want)
 	}

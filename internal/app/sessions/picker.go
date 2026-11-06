@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/diskutil"
@@ -33,7 +34,7 @@ func Choose(directory string, workspace *work.Space, currency money.Currency, te
 	markOtherWorkspaces(archivedSessions, workspace)
 
 	if len(sessions) == 0 && len(archivedSessions) == 0 {
-		return "", errors.New("there are no stored conversations")
+		return "", errors.New(tr.NoStoredConversations)
 	}
 
 	store := picker.Store{
@@ -231,7 +232,7 @@ func refreshMetadata(
 		metadata[key] = readOneMetadata(directory, key)
 	}
 	if rebuilt > 0 {
-		_, _ = fmt.Fprintln(screen, style.Subtle("writing the session listing again from the journals"))
+		_, _ = fmt.Fprintln(screen, style.Subtle(tr.RebuildingSessionListing))
 	}
 	return metadata, nil
 }

@@ -23,6 +23,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/question"
@@ -222,25 +223,25 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 		shellCommand(environment),
 		editorCommand(
 			"conf",
-			"edit the config and system prompt",
+			tr.ConfDescription,
 			configTarget(environment),
 			openConfiguration,
 		),
 		targetCommand(
 			"copy",
-			"copy a target to the clipboard",
+			tr.CopyDescription,
 			copyTargets(environment, targets),
 			targetNames,
 			environment.copyText,
 			copyConfirmation,
 		),
 		contextCommand(environment.getContextSources),
-		targetCommand("edit", "open a target in your editor", targets, targetNames, environment.openEditor, nil),
+		targetCommand("edit", tr.EditDescription, targets, targetNames, environment.openEditor, nil),
 		infoCommand(environment.getInfo),
-		targetCommand("open", "open a target with its default application", targets, targetNames, environment.openTarget, nil),
+		targetCommand("open", tr.OpenDescription, targets, targetNames, environment.openTarget, nil),
 		sessionCommand(
 			"new",
-			"start a new session",
+			tr.NewDescription,
 			environment,
 			environment.startSession,
 		),
@@ -273,7 +274,7 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 		environment.session.isPersisted,
 		sessionCommand(
 			"fork",
-			"fork this session",
+			tr.ForkDescription,
 			environment,
 			func(start SessionStart) error {
 				if start.SourceSessionName == "" {
@@ -311,7 +312,7 @@ func copyTargets(environment commandEnvironment, targets map[string]commandTarge
 	copiedTargets := maps.Clone(targets)
 	copiedTargets["last-message"] = lastMessageTarget(environment.session.getLastMessage)
 	copiedTargets["session-chat"] = textFileTarget(
-		"Session chat",
+		tr.SessionChatLabel,
 		filepath.Join(environment.session.directory, sessionTranscriptName),
 	)
 	copiedTargets["session-name"] = staticTarget(environment.session.name)
@@ -331,7 +332,7 @@ func configTarget(environment commandEnvironment) commandTarget {
 			switch _, err := os.Stat(environment.systemPromptPath); {
 			case errors.Is(err, fs.ErrNotExist):
 			case err != nil:
-				return nil, fmt.Errorf("could not inspect System prompt: %w", err)
+				return nil, fmt.Errorf("%s: %w", fmt.Sprintf(tr.TargetInspectFailure, tr.SystemPromptLabel), err)
 			default:
 				paths = append(paths, environment.systemPromptPath)
 			}
@@ -366,22 +367,22 @@ func locationTargets(environment commandEnvironment) map[string]commandTarget {
 	prepareDirectory := prepareConfigDir(environment)
 
 	targets := map[string]commandTarget{
-		"agents-file":        existingTarget("Project context", prompt.ProjectContextPaths(environment.workspace)...),
+		"agents-file":        existingTarget(tr.ProjectContextLabel, prompt.ProjectContextPaths(environment.workspace)...),
 		"config-dir":         preparedTarget(prepareDirectory, environment.configDir),
 		"config-file":        preparedTarget(prepareDirectory, environment.configPath),
 		"defaults-file":      defaultConfigTarget(),
 		"system-prompt-file": preparedTarget(prepareDirectory, environment.systemPromptPath),
-		"skills-dir":         existingTarget("Skills directory", environment.skillDirs...),
+		"skills-dir":         existingTarget(tr.SkillsDirLabel, environment.skillDirs...),
 		"workspace-dir":      staticTarget(environment.workspace.GetDir()),
 		"scratch-dir":        staticTarget(environment.scratchDir),
 		"home-dir":           staticTarget(environment.homeDir),
-		"session-dir":        existingTarget("Session directory", environment.session.directory),
+		"session-dir":        existingTarget(tr.SessionDirLabel, environment.session.directory),
 		"session-log-file": existingTarget(
-			"Session log",
+			tr.SessionLogLabel,
 			filepath.Join(environment.session.directory, sessionJournalName),
 		),
 		"session-chat-file": existingTarget(
-			"Session chat",
+			tr.SessionChatLabel,
 			filepath.Join(environment.session.directory, sessionTranscriptName),
 		),
 	}
@@ -396,7 +397,7 @@ func locationTargets(environment commandEnvironment) map[string]commandTarget {
 func helpCommand(getHelp func() string) slash.Command {
 	return slash.Command{
 		Name:        "help",
-		Description: "list the commands and targets",
+		Description: tr.HelpDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -411,7 +412,7 @@ func helpCommand(getHelp func() string) slash.Command {
 func contextCommand(getSources func() ContextSources) slash.Command {
 	return slash.Command{
 		Name:        "ctx",
-		Description: "list sources contributing to model context",
+		Description: tr.ContextDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -419,7 +420,7 @@ func contextCommand(getSources func() ContextSources) slash.Command {
 
 			sources := getSources()
 			if sources.IsEmpty() {
-				context.Notice("No context sources.")
+				context.Notice(tr.NoContextSources)
 				return nil
 			}
 			context.PlainNoticeListing(formatContextSources(sources))
@@ -430,12 +431,12 @@ func contextCommand(getSources func() ContextSources) slash.Command {
 
 func formatContextSources(sources ContextSources) string {
 	sections := []struct {
-		label   string
+		heading string
 		sources []contextsource.Source
 	}{
-		{label: "System", sources: sources.SystemSources},
-		{label: "Project", sources: sources.ProjectSources},
-		{label: "Session", sources: sources.SessionSources},
+		{heading: tr.SystemContextHeading, sources: sources.SystemSources},
+		{heading: tr.ProjectContextHeading, sources: sources.ProjectSources},
+		{heading: tr.SessionContextHeading, sources: sources.SessionSources},
 	}
 
 	var rows [][]string
@@ -454,7 +455,7 @@ func formatContextSources(sources ContextSources) string {
 			continue
 		}
 
-		listing := []string{style.Info(section.label + ":")}
+		listing := []string{style.Info(section.heading)}
 		for _, source := range section.sources {
 			listing = append(listing, "  "+contextTable.Row([]string{
 				util.FormatEstimatedTokens(source.EstimatedTokens),
@@ -480,7 +481,7 @@ func paintSourceName(source contextsource.Source) string {
 func infoCommand(getInfo func() (string, error)) slash.Command {
 	return slash.Command{
 		Name:        "info",
-		Description: "show every bar segment with its current value",
+		Description: tr.InfoDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -537,10 +538,10 @@ func helpText(commandUsages []string, hiddenCommandUsage string, targetNames []s
 	usesTargets := slices.ContainsFunc(visibleCommandUsages, func(usage string) bool {
 		return strings.Contains(usage, targetPlaceholder)
 	})
-	sections := []string{style.Info("Commands:") + "\n" + slash.HelpIndent + strings.Join(visibleCommandUsages, "\n"+slash.HelpIndent)}
+	sections := []string{style.Info(tr.CommandsHeading) + "\n" + slash.HelpIndent + strings.Join(visibleCommandUsages, "\n"+slash.HelpIndent)}
 	if usesTargets {
 		targetRows := column.Rows(targetNames, slash.HelpWidth-len(slash.HelpIndent))
-		sections = append(sections, style.Info("Targets:")+"\n"+slash.HelpIndent+strings.Join(targetRows, "\n"+slash.HelpIndent))
+		sections = append(sections, style.Info(tr.TargetsHeading)+"\n"+slash.HelpIndent+strings.Join(targetRows, "\n"+slash.HelpIndent))
 	}
 	return strings.Join(sections, "\n\n")
 }
@@ -571,13 +572,13 @@ func existingTarget(description string, paths ...string) commandTarget {
 				case errors.Is(err, fs.ErrNotExist):
 					continue
 				case err != nil:
-					return nil, fmt.Errorf("could not inspect %s: %w", description, err)
+					return nil, fmt.Errorf("%s: %w", fmt.Sprintf(tr.TargetInspectFailure, description), err)
 				default:
 					present = append(present, path)
 				}
 			}
 			if len(present) == 0 {
-				return nil, fmt.Errorf("%s does not exist yet", description)
+				return nil, fmt.Errorf(tr.TargetMissing, description)
 			}
 			return present, nil
 		},
@@ -589,10 +590,10 @@ func textFileTarget(description string, path string) commandTarget {
 		resolveValues: func() ([]string, error) {
 			contents, err := os.ReadFile(path) //nolint:gosec // the path is selected by the command
 			if errors.Is(err, fs.ErrNotExist) {
-				return nil, fmt.Errorf("%s does not exist yet", description)
+				return nil, fmt.Errorf(tr.TargetMissing, description)
 			}
 			if err != nil {
-				return nil, fmt.Errorf("could not read %s: %w", description, err)
+				return nil, fmt.Errorf("%s: %w", fmt.Sprintf(tr.TargetReadFailure, description), err)
 			}
 			return []string{string(contents)}, nil
 		},
@@ -615,9 +616,9 @@ func lastMessageTarget(getLastMessage func() (string, bool)) commandTarget {
 func copyConfirmation(targetName string, values []string) string {
 	description := strings.ReplaceAll(targetName, "-", " ")
 	if targetName == "last-message" || targetName == "session-chat" {
-		return fmt.Sprintf("Copied %s to clipboard", description)
+		return fmt.Sprintf(tr.CopiedTarget, description)
 	}
-	return fmt.Sprintf("Copied %s to clipboard: %s", description, strings.Join(values, ", "))
+	return fmt.Sprintf(tr.CopiedTargetValues, description, strings.Join(values, ", "))
 }
 
 func targetCommand(

@@ -8,5 +8,5 @@ revoke: network:host, tool:fetch
   network:host — Allow for session (until you quit)
 revoke: network:host
 === forgotten ===
-No grants or forwarded ports.
+No grants, forwarded ports or approvals.
 revoke: (none)

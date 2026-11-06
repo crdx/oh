@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/format"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/session"
@@ -76,10 +77,10 @@ const (
 type repair string
 
 const (
-	repairTail       repair = "remove an incomplete final journal record"
-	repairTurn       repair = "abandon an unfinished turn"
-	repairMeta       repair = "rebuild listing metadata"
-	repairTranscript repair = "rebuild the transcript"
+	repairTail       repair = tr.RemoveIncompleteRecord
+	repairTurn       repair = tr.AbandonTurn
+	repairMeta       repair = tr.RebuildMetadata
+	repairTranscript repair = tr.RebuildTranscript
 )
 
 type result struct {
@@ -93,7 +94,7 @@ type result struct {
 func Run() error {
 	arguments := duckopt.MustBind[inputOpts](Usage, "$0")
 	if arguments.DryRun && !arguments.Fix {
-		return errors.New("--dry-run requires --fix")
+		return fmt.Errorf(tr.FlagNeedsFlag, "--dry-run", "--fix")
 	}
 	workingDirectory, err := os.Getwd()
 	if err != nil {
@@ -113,15 +114,15 @@ func run(checkPaths paths, requestedNames []string, settings options, output con
 	failureCount := 0
 	if _, err := config.LoadSources(checkPaths.configSources...); err != nil {
 		failureCount++
-		writeFailure(output.Failure, "configuration", err)
+		writeFailure(output.Failure, tr.ConfigTarget, err)
 	} else {
-		_, _ = fmt.Fprintln(output.Screen, style.Success("ok")+" configuration")
+		_, _ = fmt.Fprintln(output.Screen, style.Success(tr.CheckPassed)+" "+tr.ConfigTarget)
 	}
 
 	candidates, err := sessionCandidates(checkPaths.sessionsDir, requestedNames)
 	if err != nil {
 		failureCount++
-		writeFailure(output.Failure, "session store", err)
+		writeFailure(output.Failure, tr.StoreTarget, err)
 	} else {
 		results := checkSessions(checkPaths.sessionsDir, candidates)
 		sessionFailureCount := 0
@@ -140,18 +141,18 @@ func run(checkPaths paths, requestedNames []string, settings options, output con
 		sessionCount := len(candidates)
 		switch {
 		case sessionCount == 0:
-			_, _ = fmt.Fprintln(output.Screen, style.Success("ok")+" session store (no sessions)")
+			_, _ = fmt.Fprintln(output.Screen, style.Success(tr.CheckPassed)+" "+tr.EmptyStore)
 		case fixedCount > 0 && sessionFailureCount == 0:
-			_, _ = fmt.Fprintln(output.Screen, style.Success("fixed")+" "+fmt.Sprintf("%d of %s", fixedCount, util.Plural(sessionCount, "session")))
+			_, _ = fmt.Fprintln(output.Screen, style.Success(tr.CheckFixed)+" "+fmt.Sprintf(tr.FixedCount, fixedCount, util.Plural(sessionCount, tr.SessionNoun)))
 		case sessionFailureCount == 0:
-			_, _ = fmt.Fprintln(output.Screen, style.Success("ok")+" "+util.Plural(sessionCount, "session"))
+			_, _ = fmt.Fprintln(output.Screen, style.Success(tr.CheckPassed)+" "+util.Plural(sessionCount, tr.SessionNoun))
 		default:
-			_, _ = fmt.Fprintln(output.Screen, style.Subtle("checked "+util.Plural(sessionCount, "session")))
+			_, _ = fmt.Fprintln(output.Screen, style.Subtle(fmt.Sprintf(tr.CheckedCount, util.Plural(sessionCount, tr.SessionNoun))))
 		}
 	}
 
 	if failureCount > 0 {
-		return fmt.Errorf("%s failed", util.Plural(failureCount, "health check"))
+		return fmt.Errorf(tr.ChecksFailed, util.Plural(failureCount, tr.HealthCheckNoun))
 	}
 	return nil
 }
@@ -161,14 +162,14 @@ func handleResult(directory string, settings options, output console.Output, ses
 	case healthy:
 		return false, false
 	case running:
-		_, _ = fmt.Fprintln(output.Screen, style.Subtle("skipped "+sessionResult.candidate.target+" in use"))
+		_, _ = fmt.Fprintln(output.Screen, style.Subtle(fmt.Sprintf(tr.SkippedInUse, sessionResult.candidate.target)))
 		return false, false
 	case invalid:
 		writeFailure(output.Failure, sessionResult.candidate.target, sessionResult.err)
 		return true, false
 	case recoverable:
 		if !settings.isFixing {
-			writeWarning(output.Screen, sessionResult.candidate.target, "unfinished turn is recoverable")
+			writeWarning(output.Screen, sessionResult.candidate.target, tr.RecoverableTurn)
 			return false, false
 		}
 	case repairable:
@@ -179,7 +180,7 @@ func handleResult(directory string, settings options, output console.Output, ses
 	}
 
 	if sessionResult.archived {
-		writeFailure(output.Failure, sessionResult.candidate.target, errors.New("restore the archived session before fixing it"))
+		writeFailure(output.Failure, sessionResult.candidate.target, errors.New(tr.RestoreBeforeFixing))
 		return true, false
 	}
 	if settings.isDryRun {
@@ -231,9 +232,9 @@ func sessionCandidates(directory string, requestedNames []string) ([]candidate, 
 				candidates = append(candidates, candidate{name: name, target: entryName})
 				continue
 			}
-			candidates = append(candidates, candidate{target: entryName, err: errors.New("unrecognised entry in the session store")})
+			candidates = append(candidates, candidate{target: entryName, err: errors.New(tr.UnrecognisedEntry)})
 		default:
-			candidates = append(candidates, candidate{target: entryName, err: errors.New("unrecognised entry in the session store")})
+			candidates = append(candidates, candidate{target: entryName, err: errors.New(tr.UnrecognisedEntry)})
 		}
 	}
 
@@ -326,7 +327,7 @@ type journalStamp struct {
 
 func fixSession(directory string, sessionResult result) error {
 	if sessionResult.archived {
-		return errors.New("restore the archived session before fixing it")
+		return errors.New(tr.RestoreBeforeFixing)
 	}
 
 	backupRoot := directory + "_pre_check"
@@ -341,7 +342,7 @@ func fixSession(directory string, sessionResult result) error {
 	originalStamp, stampError := journalStampOf(directory, sessionResult.candidate.name)
 	releaseError := heldLock.Release()
 	if err := errors.Join(copyError, stampError, releaseError); err != nil {
-		return fmt.Errorf("keep a copy: %w", err)
+		return fmt.Errorf("%s: %w", tr.CopyFailure, err)
 	}
 
 	postRepairStamp, err := repairStoredSession(directory, sessionResult, originalStamp)
@@ -365,9 +366,9 @@ func fixSession(directory string, sessionResult result) error {
 			return result.err
 		}
 		if result.state == running {
-			return errors.New("the session was opened while it was being repaired")
+			return errors.New(tr.OpenedDuringRepair)
 		}
-		return fmt.Errorf("repair left %s", repairsText(result.repairs))
+		return fmt.Errorf(tr.RepairLeft, repairsText(result.repairs))
 	}
 	return nil
 }
@@ -409,14 +410,14 @@ func requireJournalStamp(directory string, name string, expectedStamp journalSta
 		return err
 	}
 	if actual != expectedStamp {
-		return errors.New("session changed while its repair started; no further repair was attempted")
+		return errors.New(tr.ChangedDuringRepair)
 	}
 	return nil
 }
 
 func copyTree(source string, destination string) error {
 	if _, err := os.Lstat(destination); err == nil {
-		return fmt.Errorf("a copy is already kept in %s: move it aside first", destination)
+		return fmt.Errorf(tr.CopyAlreadyKept, destination)
 	}
 	return filepath.WalkDir(source, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
@@ -433,14 +434,14 @@ func copyTree(source string, destination string) error {
 		case entry.Type().IsRegular():
 			return copyFile(path, copyPath)
 		default:
-			return fmt.Errorf("%s is neither a file nor a directory", path)
+			return fmt.Errorf(tr.NeitherFileNorDirectory, path)
 		}
 	})
 }
 
 func copyFile(source string, destination string) error {
 	if _, err := os.Lstat(destination); err == nil {
-		return fmt.Errorf("a copy is already kept in %s: move it aside first", destination)
+		return fmt.Errorf(tr.CopyAlreadyKept, destination)
 	}
 	if err := os.MkdirAll(filepath.Dir(destination), 0o700); err != nil {
 		return err
@@ -467,26 +468,26 @@ func repairsText(repairs []repair) string {
 }
 
 func writeWarning(writer io.Writer, target string, message string) {
-	_, _ = fmt.Fprintln(writer, style.Warning("warning")+" "+target+": "+message)
+	_, _ = fmt.Fprintln(writer, style.Warning(tr.CheckWarning)+" "+target+": "+message)
 }
 
 func writeRepairable(writer io.Writer, sessionResult *result) {
-	_, _ = fmt.Fprintln(writer, style.Warning("repairable")+" "+sessionResult.candidate.target+": "+repairsText(sessionResult.repairs))
+	_, _ = fmt.Fprintln(writer, style.Warning(tr.CheckRepairable)+" "+sessionResult.candidate.target+": "+repairsText(sessionResult.repairs))
 }
 
 func writePlanned(writer io.Writer, sessionResult *result) {
-	_, _ = fmt.Fprintln(writer, style.Subtle("would fix")+" "+sessionResult.candidate.target+": "+repairsText(sessionResult.repairs))
+	_, _ = fmt.Fprintln(writer, style.Subtle(tr.CheckPlanned)+" "+sessionResult.candidate.target+": "+repairsText(sessionResult.repairs))
 }
 
 func writeFixed(writer io.Writer, directory string, sessionResult *result) {
 	backupPath := filepath.Join(directory+"_pre_check", sessionResult.candidate.name)
 	_, _ = fmt.Fprintln(
 		writer,
-		style.Success("fixed")+" "+sessionResult.candidate.target+": "+repairsText(sessionResult.repairs)+
-			style.Subtle("; copy kept in "+backupPath),
+		style.Success(tr.CheckFixed)+" "+sessionResult.candidate.target+": "+repairsText(sessionResult.repairs)+
+			style.Subtle(fmt.Sprintf(tr.CopyKept, backupPath)),
 	)
 }
 
 func writeFailure(writer io.Writer, target string, err error) {
-	_, _ = fmt.Fprintln(writer, style.Failure("failed")+" "+target+": "+err.Error())
+	_, _ = fmt.Fprintln(writer, style.Failure(tr.CheckFailed)+" "+target+": "+err.Error())
 }

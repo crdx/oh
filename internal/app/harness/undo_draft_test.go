@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -68,7 +69,7 @@ func TestRepeatedUndoCollectsTheQueueAndTurnWithoutLosingTheDraft(t *testing.T) 
 	if inputLine.Text() != want || len(provider.items) != 0 || self.currentTurn.Running() {
 		t.Fatalf("repeated undo lost or sent text: %q", inputLine.Text())
 	}
-	if self.undoHint(replayColumns) != "nothing to undo" {
+	if self.undoHint(replayColumns) != tr.UndoUnavailable {
 		t.Fatalf("unexpected empty undo status: %q", self.undoHint(replayColumns))
 	}
 }

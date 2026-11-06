@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/tr"
 )
 
 const (
@@ -289,15 +290,11 @@ func RefuseConfinedCaps(flags string) error {
 
 func (self Input) Check(isPromptPiped bool) error {
 	if self.isResuming() && self.isChoosingModel() {
-		return errors.New(
-			"a resumed conversation preserves its model; start a new session to choose another",
-		)
+		return errors.New(tr.ResumedModelKept)
 	}
 
 	if self.isResuming() && len(self.Tools) > 0 {
-		return errors.New(
-			"a resumed conversation preserves its toolbox; start a new session to change them",
-		)
+		return errors.New(tr.ResumedToolboxKept)
 	}
 
 	if self.IsDemoing {

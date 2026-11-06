@@ -3,6 +3,7 @@ package harness
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"crdx.org/oh/internal/app/experimental"
@@ -10,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/spinner"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -88,7 +90,7 @@ func (self *App) hostCommandEnded(outcome hostcommand.Outcome) {
 
 	if outcome.Failure != nil {
 		self.showFeedback(feedback.Command, feedback.Message{
-			Text:   "The command could not run: " + outcome.Failure.Error(),
+			Text:   fmt.Sprintf(tr.HostCommandFailure, outcome.Failure.Error()),
 			Status: agent.ErrorStatus,
 		})
 		return

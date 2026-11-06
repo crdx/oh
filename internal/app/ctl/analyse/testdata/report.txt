@@ -1,6 +1,6 @@
 Cache
 
-Provider    Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Provider    Sessions  Requests  Hits  Misses  Hit rate  Input cached  Tokens read
 Anthropic          2         8     6       2     75.0%         90.0%        450Kt
 Codex              1        10     7       3     70.0%         70.0%        175Kt
 Ollama             1         4     0       4      0.0%          0.0%           0t
@@ -9,7 +9,7 @@ Total              5        23    13      10     56.5%         76.0%        625K
 
 Tokens
 
-Provider    Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Provider    Average input  Peak input  Total input  Cache reads  Cache writes  Fresh input  Output
 Anthropic            62Kt       100Kt        500Kt        450Kt          25Kt         25Kt    13Kt
 Codex                25Kt        40Kt        250Kt        175Kt          10Kt         65Kt    22Kt
 Ollama               15Kt        20Kt         60Kt           0t            0t         60Kt   2.5Kt
@@ -18,7 +18,7 @@ Total                36Kt       100Kt        822Kt        625Kt          35Kt   
 
 Models
 
-Provider    Model              Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend
+Provider    Model              Sessions  Requests  Fresh input  Cache reads  Cache writes  Output  Spend
 Anthropic   claude-sonnet-4-6         2         8         25Kt        450Kt          25Kt    13Kt  $0.50
 Codex       gpt-5.6-sol               1        10         65Kt        175Kt          10Kt    22Kt  $0.32
 Ollama      qwen3.8:27b               1         4         60Kt           0t            0t   2.5Kt      —
@@ -28,7 +28,7 @@ Total                                 5        23        162Kt        625Kt     
 
 Conversation
 
-Provider    Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
+Provider    Sessions  Turns  Prompts  Replies  Reasoning  Tool calls  Average turn  Longest turn  Open for
 Anthropic          2      8        8        8         12          35           56s            2m       50m
 Codex              1     10       11        9         44         120        2m 30s            5m    1h 35m
 Ollama             1      4        4        4          0           6           30s           45s       12m
@@ -37,7 +37,7 @@ Total              5     22       24       21         56         161        1m 3
 
 Faults
 
-Provider    Retries  Interruptions  Failures  Compression Rejections  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens
+Provider    Retries  Interruptions  Failures  Compression rejections  Silent turns  Rewrites  Rebuilds  Rebuilt tokens
 Anthropic         1              2         0                       2             1         0         1            15Kt
 Codex             3              0         1                       1             0         2         3            30Kt
 Openrouter        0              0         1                       0             0         0         0              0t
@@ -45,7 +45,7 @@ Total             4              2         2                       3            
 
 Tools
 
-Tool   Calls  Failures  Cancelled  Failure Rate  Total Time  Average Call
+Tool   Calls  Failures  Cancelled  Failure rate  Total time  Average call
 bash      72         6          1          8.3%      9m 40s            8s
 read      49         0          0          0.0%          8s          0.2s
 edit      40         1          0          2.5%         20s          0.5s

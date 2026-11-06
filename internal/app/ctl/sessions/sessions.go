@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util"
@@ -91,12 +92,12 @@ func run(options *inputOpts, output console.Output) error {
 	directory := location.GetSessionsDir()
 	if options.Delete {
 		if !session.Exists(directory, options.Label) {
-			return fmt.Errorf("no stored or archived session named %q", options.Label)
+			return fmt.Errorf(tr.NoSessionToDelete, options.Label)
 		}
 		if err := session.Delete(directory, options.Label); err != nil {
-			return fmt.Errorf("could not delete session %q: %w", options.Label, err)
+			return fmt.Errorf("%s: %w", fmt.Sprintf(tr.SessionDeleteFailure, options.Label), err)
 		}
-		_, err := fmt.Fprintf(output.Screen, "deleted session %q\n", options.Label)
+		_, err := fmt.Fprintf(output.Screen, tr.SessionDeleted+"\n", options.Label)
 		return err
 	}
 
@@ -111,7 +112,7 @@ func run(options *inputOpts, output console.Output) error {
 	if options.Workspace != "" {
 		workspaceDir, err := filepath.Abs(options.Workspace)
 		if err != nil {
-			return fmt.Errorf("could not resolve the workspace path: %w", err)
+			return fmt.Errorf("%s: %w", tr.WorkspacePathFailure, err)
 		}
 		storedSessions = sessions.InWorkspace(storedSessions, work.At(workspaceDir))
 	}
@@ -135,15 +136,16 @@ func run(options *inputOpts, output console.Output) error {
 }
 
 func nothingToList(options *inputOpts) string {
-	kind := "stored"
-	if options.Archived {
-		kind = "archived"
+	switch {
+	case options.Archived && options.Filter != "":
+		return fmt.Sprintf(tr.NoArchivedSessionMatches, options.Filter)
+	case options.Filter != "":
+		return fmt.Sprintf(tr.NoStoredSessionMatches, options.Filter)
+	case options.Archived:
+		return tr.NoArchivedSessions
+	default:
+		return tr.NoStoredSessions
 	}
-	if options.Filter != "" {
-		return fmt.Sprintf("no %s session matches %q", kind, options.Filter)
-	}
-
-	return "there are no " + kind + " sessions to list"
 }
 
 func loadRequestedSessions(directory string, options *inputOpts, failure io.Writer) ([]*picker.Session, int, error) {
@@ -203,10 +205,7 @@ func withinLimit(listings []Listing, total int, filter string, failure io.Writer
 		return listings
 	}
 
-	_, _ = fmt.Fprintln(failure, style.Subtle(fmt.Sprintf(
-		"listing the newest %d of %d sessions, which a filter of more than %d characters lists in full",
-		listLimit, total, shortFilter,
-	)))
+	_, _ = fmt.Fprintln(failure, style.Subtle(fmt.Sprintf(tr.ListingLimit, listLimit, total, shortFilter)))
 
 	return listings[:min(listLimit, len(listings))]
 }
@@ -284,16 +283,16 @@ func writeTable(listings []Listing, writer io.Writer) error {
 	}
 
 	listingTable := table.New(
-		table.Column{Title: "Status"},
-		table.Column{Title: "Agent"},
-		table.Column{Title: "Title"},
-		table.Column{Title: "Messages"},
-		table.Column{Title: "Size", Align: table.Right},
-		table.Column{Title: "Length"},
-		table.Column{Title: "Last Message"},
-		table.Column{Title: "Model"},
-		table.Column{Title: "Effort"},
-		table.Column{Title: "Workspace"},
+		table.Column{Title: tr.StatusColumn},
+		table.Column{Title: tr.AgentColumn},
+		table.Column{Title: tr.TitleColumn},
+		table.Column{Title: tr.MessagesColumn},
+		table.Column{Title: tr.SizeColumn, Align: table.Right},
+		table.Column{Title: tr.LengthColumn},
+		table.Column{Title: tr.LastMessageColumn},
+		table.Column{Title: tr.ModelColumn},
+		table.Column{Title: tr.EffortColumn},
+		table.Column{Title: tr.WorkspaceColumn},
 	).Fit(rows)
 
 	if _, err := fmt.Fprintln(writer, style.Subtle(listingTable.Header(0))); err != nil {

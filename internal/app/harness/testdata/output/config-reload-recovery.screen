@@ -1,7 +1,6 @@
 === invalid ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ The configuration could not be reloaded: oh.toml: toml: line 2: expected '.' or '=', but got   │
- │ '<' instead                                                                                    │
+ │ Could not reload the config: oh.toml: toml: line 2: expected '.' or '=', but got '<' instead   │
 ─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
 
 ── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
@@ -17,8 +16,7 @@
 ── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
 === still invalid ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ The configuration could not be reloaded: oh.toml: toml: line 2: expected '.' or '=', but got   │
- │ '<' instead                                                                                    │
+ │ Could not reload the config: oh.toml: toml: line 2: expected '.' or '=', but got '<' instead   │
 ─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
 
 ── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──

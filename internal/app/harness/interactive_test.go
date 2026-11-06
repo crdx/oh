@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/ptytest"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sim"
 )
 
@@ -642,12 +643,12 @@ center = [{ segment = "local-time", format = "ordinary-centre" }]
 right = [{ segment = "local-time", format = "ordinary-right-with-detail-that-can-yield" }]
 `)
 	session := rig.start("--yolo", "-c", "a", "-m", "opencode-go/fake", "Ask for the weather.")
-	session.waitFor("auto-denies in")
-	session.requireShown("auto-denies in")
+	session.waitFor(tr.ApprovalLapse + " in")
+	session.requireShown(tr.ApprovalLapse + " in")
 	session.requireHidden("ordinary-left-with-detail-that-can-yield")
 	session.typeText(pressEnter)
 	session.waitFor("The approval has ended.")
 	session.requireShown("ordinary-left-with-detail-that-can-yield")
-	session.requireHidden("auto-denies in")
+	session.requireHidden(tr.ApprovalLapse + " in")
 	session.quit()
 }

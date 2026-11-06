@@ -2,6 +2,7 @@ package painter
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -21,6 +22,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/taskrecord"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/money"
@@ -356,8 +358,8 @@ func TestQueuedMessagesSayHowToSendThemNow(t *testing.T) {
 func TestAQueueAwaitingAStoppingTurnSaysSoRatherThanOfferingToSendItNow(t *testing.T) {
 	queue := RenderQueue([]string{"one"}, nil, false, 40, false, link.Roots{})
 
-	if queue.Hint != stoppingHint {
-		t.Errorf("got hint %q, want %q", queue.Hint, stoppingHint)
+	if queue.Hint != tr.SendingHint {
+		t.Errorf("got hint %q, want %q", queue.Hint, tr.SendingHint)
 	}
 	if len(queue.Rows) != 1 || style.Plain(queue.Rows[0]) != unsentMark+" one" {
 		t.Errorf("got rows %q, want the message still standing unsent", queue.Rows)
@@ -774,8 +776,7 @@ func TestARetryIsDrawnFromWhatItWasRatherThanFromWhatItSaid(t *testing.T) {
 	drawn := style.Plain(screenOutput.String())
 
 	for _, want := range []string{
-		"[#2] Request failed",
-		"retrying in 0.5s",
+		fmt.Sprintf(tr.RetryingIn, 2, "0.5s"),
 		"The stream ended before the response did",
 	} {
 		if !strings.Contains(drawn, want) {
@@ -802,7 +803,7 @@ func TestARetryShowsTheCallThatProvokedIt(t *testing.T) {
 
 	drawn := style.Plain(screenOutput.String())
 
-	if !strings.Contains(drawn, "[#1] Request failed; retrying") {
+	if !strings.Contains(drawn, fmt.Sprintf(tr.Retrying, 1)) {
 		t.Errorf("expected the first retry to show its attempt number, got %q", drawn)
 	}
 	if !strings.Contains(drawn, `{"path": "one.go",, "limit": 20}`) {

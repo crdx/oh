@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/tool/command"
 )
 
@@ -251,7 +252,7 @@ func TestAnUngroupedCustomToolCannotBeExplicitlyDisabled(t *testing.T) {
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "tool.rpc: granted = false has no effect without a group") {
+	if err == nil || !strings.Contains(err.Error(), "tool.rpc: "+fmt.Sprintf(tr.UngroupedDenial, "granted = false")) {
 		t.Errorf("got %v", err)
 	}
 	if err == nil || !strings.Contains(err.Error(), "config.toml") {
@@ -315,7 +316,7 @@ func TestACustomToolGroupIsOneLowercaseLetter(t *testing.T) {
 			if err := writeConfigFile(path, body); err != nil {
 				t.Fatal(err)
 			}
-			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "is not one lowercase letter") {
+			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.GroupLetter, group)) {
 				t.Errorf("got %v", err)
 			}
 		})
@@ -398,11 +399,11 @@ func TestAnInvalidCustomToolPermissionTableIsRefused(t *testing.T) {
 	}{
 		"missing rule": {
 			written: `{ timeout = "5m" }`,
-			want:    "rule is missing",
+			want:    fmt.Sprintf(tr.SettingMissing, "rule"),
 		},
 		"empty rule": {
 			written: `{ rule = "" }`,
-			want:    "rule is empty",
+			want:    fmt.Sprintf(tr.SettingEmpty, "rule"),
 		},
 		"invalid rule": {
 			written: `{ rule = "whenever" }`,
@@ -410,7 +411,7 @@ func TestAnInvalidCustomToolPermissionTableIsRefused(t *testing.T) {
 		},
 		"timeout with allow": {
 			written: `{ rule = "allow", timeout = "5m" }`,
-			want:    `timeout applies only when rule is "ask"`,
+			want:    fmt.Sprintf(tr.TimeoutOnlyWhenRule, "timeout", "rule", "ask"),
 		},
 		"invalid timeout": {
 			written: `{ rule = "ask", timeout = "later" }`,
@@ -418,15 +419,15 @@ func TestAnInvalidCustomToolPermissionTableIsRefused(t *testing.T) {
 		},
 		"non-duration timeout": {
 			written: `{ rule = "ask", timeout = 5 }`,
-			want:    "timeout is not a duration",
+			want:    fmt.Sprintf(tr.SettingNotDuration, "timeout"),
 		},
 		"zero timeout": {
 			written: `{ rule = "ask", timeout = "0s" }`,
-			want:    "timeout must be positive",
+			want:    fmt.Sprintf(tr.SettingNotPositive, "timeout", "0s"),
 		},
 		"unknown field": {
 			written: `{ rule = "ask", waiting = "5m" }`,
-			want:    "unknown: waiting",
+			want:    fmt.Sprintf(tr.UnknownSettingNames, "waiting"),
 		},
 	}
 	for name, test := range tests {
@@ -462,7 +463,7 @@ func TestAWorkspaceMayNotAddACustomTool(t *testing.T) {
 	}
 
 	_, err := LoadSources(Source{Path: path}, Source{Path: overridePath, IsOverride: true})
-	if err == nil || !strings.Contains(err.Error(), "cannot be overridden in oh.toml") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(strings.TrimPrefix(tr.WorkspaceOverride, "%s "), "oh.toml")) {
 		t.Errorf("got %v", err)
 	}
 }
@@ -475,7 +476,7 @@ func TestAWorkspaceMayNotOpenAToolTableAtAll(t *testing.T) {
 	}
 
 	_, err := LoadSources(Source{Path: overridePath, IsOverride: true})
-	if err == nil || !strings.Contains(err.Error(), "cannot be overridden in oh.toml") {
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(strings.TrimPrefix(tr.WorkspaceOverride, "%s "), "oh.toml")) {
 		t.Errorf("got %v", err)
 	}
 }
@@ -497,7 +498,7 @@ func TestABuiltinToolTakesNoOverrides(t *testing.T) {
 				t.Fatal(err)
 			}
 			name, _, _ := strings.Cut(field, " ")
-			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "tool.read: "+name+" cannot be set on a built-in tool") {
+			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "tool.read: "+fmt.Sprintf(tr.BuiltinToolSetting, name)) {
 				t.Errorf("got %v", err)
 			}
 		})
@@ -509,7 +510,7 @@ func TestOnlyGatedBuiltinsTakeAPermission(t *testing.T) {
 	if err := writeConfigFile(path, "[tool.bash]\npermission = \"ask\"\n"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "tool.bash: permission cannot be set on a built-in tool") {
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "tool.bash: "+fmt.Sprintf(tr.BuiltinToolSetting, "permission")) {
 		t.Errorf("got %v", err)
 	}
 	for _, name := range []string{"lookup", "fetch"} {
@@ -524,13 +525,13 @@ func TestOnlyGatedBuiltinsTakeAPermission(t *testing.T) {
 
 func TestBuiltinsRefuseCustomImplementationAndUnknownNetworkSettings(t *testing.T) {
 	for _, test := range []struct{ name, body, reason string }{
-		{"command", "[tool.read]\ncommand = [\"true\"]\n", "command cannot be set on a built-in tool"},
-		{"parameters", "[tool.read]\nparameters = []\n", "parameters cannot be set on a built-in tool"},
-		{"version", "[tool.read]\nversion = 2\n", "version cannot be set on a built-in tool"},
-		{"network", "[tool.read]\nhost_network = \"ask\"\n", "tool.read.host_network is only valid for bash"},
-		{"typo", "[tool.read]\nhost_netwrk = \"ask\"\n", "unknown tool setting tool.read.host_netwrk"},
-		{"bash typo", "[tool.bash]\nhost_netwrk = \"ask\"\n", "unknown tool setting tool.bash.host_netwrk"},
-		{"nested host permission", "[tool.bash.network.host]\npermission = \"ask\"\n", "unknown tool setting tool.bash.network"},
+		{"command", "[tool.read]\ncommand = [\"true\"]\n", fmt.Sprintf(tr.BuiltinToolSetting, "command")},
+		{"parameters", "[tool.read]\nparameters = []\n", fmt.Sprintf(tr.BuiltinToolSetting, "parameters")},
+		{"version", "[tool.read]\nversion = 2\n", fmt.Sprintf(tr.BuiltinToolSetting, "version")},
+		{"network", "[tool.read]\nhost_network = \"ask\"\n", fmt.Sprintf(tr.OnlyForBash, "tool.read.host_network")},
+		{"typo", "[tool.read]\nhost_netwrk = \"ask\"\n", fmt.Sprintf(tr.UnknownToolSetting, "tool.read.host_netwrk")},
+		{"bash typo", "[tool.bash]\nhost_netwrk = \"ask\"\n", fmt.Sprintf(tr.UnknownToolSetting, "tool.bash.host_netwrk")},
+		{"nested host permission", "[tool.bash.network.host]\npermission = \"ask\"\n", fmt.Sprintf(tr.UnknownToolSetting, "tool.bash.network")},
 		{"unreadable host permission", "[tool.bash]\nhost_network = \"whenever\"\n", "tool.bash: host_network: must be"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
@@ -673,8 +674,8 @@ func TestAToolTimeoutMustBeADurationText(t *testing.T) {
 		written string
 		want    string
 	}{
-		"custom integer":  {written: "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ntimeout = 60\n", want: `tool.weather: timeout is not a duration such as "30s"`},
-		"custom negative": {written: "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ntimeout = \"-5s\"\n", want: "tool.weather: timeout must not be negative"},
+		"custom integer":  {written: "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ntimeout = 60\n", want: "tool.weather: " + fmt.Sprintf(tr.SettingDurationShape, "timeout", "30s")},
+		"custom negative": {written: "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ntimeout = \"-5s\"\n", want: "tool.weather: " + fmt.Sprintf(tr.SettingNegative, "timeout")},
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {

@@ -11,6 +11,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 
 	"crdx.org/oh/internal/app/backend"
@@ -32,9 +33,7 @@ import (
 
 var ErrCancelled = menu.ErrCancelled
 
-var ErrNobodyToAsk = errors.New(
-	"there is no model to print with yet; choose one with -m, or run oh once without -p to set one up",
-)
+var ErrNobodyToAsk = errors.New(tr.NoPrintModel)
 
 const (
 	chatGPTName    = "ChatGPT"
@@ -67,20 +66,7 @@ const (
 	wakingRest     = 600 * time.Millisecond
 )
 
-const (
-	greeting             = "Oh, hello."
-	greetingAside        = "*yawns*"
-	introduction         = "Yes? Oh, right. Let's get you signed in."
-	farewell             = "Thanks. Transferring you…"
-	providerPrompt       = "Choose your provider:"
-	modelPrompt          = "Choose a model:"
-	openCodeGoPrompt     = "OpenCode Go API key: "
-	pasteHint            = "If the redirect breaks, paste the full redirect URL here instead."
-	browserHint          = "Visit the URL above to continue."
-	openingBrowser       = "Opening your browser to shake hands with %s…"
-	providerActionPrompt = "Choose what to do with %s:"
-	doNothing            = "Nothing"
-)
+var openCodeGoPrompt = fmt.Sprintf(tr.KeyEntryPrompt, openCodeGoName)
 
 type credential struct {
 	presence      string
@@ -93,27 +79,27 @@ type credential struct {
 }
 
 var oauthSignIn = credential{
-	presence:      "signed in",
-	renewal:       "Sign in again",
-	removal:       "Sign out",
-	addition:      "Signed in to %s",
-	withdrawal:    "Signed out of %s",
-	failure:       "Unable to sign in: %s",
-	changeFailure: "Unable to update sign-in: %s",
+	presence:      tr.SignInPresence,
+	renewal:       tr.SignInRenewal,
+	removal:       tr.SignInRemoval,
+	addition:      tr.SignInAddition,
+	withdrawal:    tr.SignInWithdrawal,
+	failure:       tr.SignInFailure,
+	changeFailure: tr.SignInChangeFailure,
 }
 
 var apiKey = credential{
-	presence:      "saved",
-	renewal:       "Replace key",
-	removal:       "Remove key",
-	addition:      "Saved the %s key",
-	withdrawal:    "Removed the %s key",
-	failure:       "Unable to save the key: %s",
-	changeFailure: "Unable to update the key: %s",
+	presence:      tr.KeyPresence,
+	renewal:       tr.KeyRenewal,
+	removal:       tr.KeyRemoval,
+	addition:      tr.KeyAddition,
+	withdrawal:    tr.KeyWithdrawal,
+	failure:       tr.KeyFailure,
+	changeFailure: tr.KeyChangeFailure,
 }
 
 func (self credential) actions() []string {
-	return []string{self.renewal, self.removal, doNothing}
+	return []string{self.renewal, self.removal, tr.DoNothing}
 }
 
 type provider struct {
@@ -124,12 +110,12 @@ type provider struct {
 }
 
 var providers = []provider{
-	{name: chatGPTName, identifier: model.CodexProvider, note: "OAuth", credential: oauthSignIn},
-	{name: anthropicName, identifier: model.AnthropicProvider, note: "OAuth", credential: oauthSignIn},
-	{name: openCodeGoName, identifier: model.OpencodeGoProvider, note: "Key", credential: apiKey},
+	{name: chatGPTName, identifier: model.CodexProvider, note: tr.OAuthNote, credential: oauthSignIn},
+	{name: anthropicName, identifier: model.AnthropicProvider, note: tr.OAuthNote, credential: oauthSignIn},
+	{name: openCodeGoName, identifier: model.OpencodeGoProvider, note: tr.KeyNote, credential: apiKey},
 }
 
-var simulation = provider{name: simulatorName, identifier: simulationIdentifier, note: "The doctor will see you now"}
+var simulation = provider{name: simulatorName, identifier: simulationIdentifier, note: tr.SimulatorNote}
 
 type Options struct {
 	Input          *os.File
@@ -258,10 +244,10 @@ func (self *wizard) castSpell() error {
 
 	choices := choicesForProvider(self.getModels(), chosenProvider.identifier)
 	if len(choices) == 0 {
-		return fmt.Errorf("no models are available for %s", chosenProvider.name)
+		return fmt.Errorf(tr.NoModelsAvailable, chosenProvider.name)
 	}
 
-	chosenIndex, err := self.choose(modelPrompt, modelLabels(choices))
+	chosenIndex, err := self.choose(tr.ModelPrompt, modelLabels(choices))
 	if err != nil {
 		return err
 	}
@@ -286,7 +272,7 @@ func (self *wizard) castSpell() error {
 }
 
 func (self *wizard) sayFarewell() error {
-	_, err := fmt.Fprintf(self.output, "\n%s %s\n", style.Success(successMark), style.Subtle(farewell))
+	_, err := fmt.Fprintf(self.output, "\n%s %s\n", style.Success(successMark), style.Subtle(tr.Farewell))
 	return err
 }
 
@@ -295,15 +281,15 @@ func (self *wizard) openScreen() error {
 		defer self.stopPausing()
 	}
 
-	width := max(style.Width(spoken(greeting, greetingAside)), style.Width(spoken(introduction, "")))
+	width := max(style.Width(spoken(tr.Greeting, tr.GreetingAside)), style.Width(spoken(tr.Introduction, "")))
 
-	if err := self.speakOut(greeting, greetingAside); err != nil {
+	if err := self.speakOut(tr.Greeting, tr.GreetingAside); err != nil {
 		return err
 	}
 
 	self.rest(wakingRest)
 
-	if err := self.speakOut(introduction, ""); err != nil {
+	if err := self.speakOut(tr.Introduction, ""); err != nil {
 		return err
 	}
 
@@ -489,7 +475,7 @@ func (self *wizard) chooseProvider(providerName string) (provider, error) {
 		chosenProvider, found := providerNamed(providerName)
 		if !found {
 			return provider{}, fmt.Errorf(
-				"unknown provider %q: choose one of %s",
+				tr.UnknownProviderName,
 				providerName,
 				strings.Join(model.LoginProviderNames(), ", "),
 			)
@@ -501,7 +487,7 @@ func (self *wizard) chooseProvider(providerName string) (provider, error) {
 	labels := providerLabels(candidates)
 
 	for {
-		chosenIndex, err := self.choose(providerPrompt, labels)
+		chosenIndex, err := self.choose(tr.ProviderPrompt, labels)
 		if err != nil {
 			return provider{}, err
 		}
@@ -597,14 +583,14 @@ func (self *wizard) manageProvider(chosenProvider provider, shouldSeparate bool)
 	}
 
 	actions := chosenProvider.credential.actions()
-	chosenAction, err := self.choose(fmt.Sprintf(providerActionPrompt, chosenProvider.name), actions)
+	chosenAction, err := self.choose(fmt.Sprintf(tr.ProviderActionPrompt, chosenProvider.name), actions)
 	if err != nil {
 		return err
 	}
 	switch actions[chosenAction] {
 	case chosenProvider.credential.renewal:
 		return self.authenticate(chosenProvider, true)
-	case doNothing:
+	case tr.DoNothing:
 		return ErrCancelled
 	}
 
@@ -635,18 +621,18 @@ func (self *wizard) authenticate(chosenProvider provider, shouldSeparate bool) e
 			self.output,
 			"%s %s\n\n%s\n\n",
 			style.Info(stepMark),
-			fmt.Sprintf(openingBrowser, style.Subject(chosenProvider.name)),
+			fmt.Sprintf(tr.OpeningBrowser, style.Subject(chosenProvider.name)),
 			link.RenderURL(style.Link(address), address),
 		)
 
 		if self.openBrowser != nil {
 			if err := self.openBrowser(address); err != nil {
 				_, _ = fmt.Fprintf(self.output, "%s\n", style.Failure("%s", err))
-				_, _ = fmt.Fprintf(self.output, "%s\n\n", style.Subtle(browserHint))
+				_, _ = fmt.Fprintf(self.output, "%s\n\n", style.Subtle(tr.BrowserHint))
 			}
 		}
 
-		_, _ = fmt.Fprintf(self.output, "%s\n\n", style.Subtle(pasteHint))
+		_, _ = fmt.Fprintf(self.output, "%s\n\n", style.Subtle(tr.PasteHint))
 	})
 	if err != nil {
 		return err
@@ -773,7 +759,7 @@ func readOpenCodeGoKey(input io.Reader, output io.Writer) (string, error) {
 
 	key := strings.TrimSpace(line)
 	if key == "" {
-		return "", errors.New("OpenCode Go API key is empty")
+		return "", fmt.Errorf(tr.EmptyKeyEntry, openCodeGoName)
 	}
 
 	return key, nil

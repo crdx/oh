@@ -8,7 +8,7 @@ Nothing was recorded.
 === one session skipped beside one unpriced model ===
 Models
 
-Provider  Model        Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend
+Provider  Model        Sessions  Requests  Fresh input  Cache reads  Cache writes  Output  Spend
 Ollama    qwen3.8:27b         1         3          9Kt           0t            0t    600t      —
 1 model has no listed price, so its spend is unknown and missing from the total.
 
@@ -17,27 +17,27 @@ Ollama    qwen3.8:27b         1         3          9Kt           0t            0
 === one provider, which is its own total ===
 Cache
 
-Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Provider  Sessions  Requests  Hits  Misses  Hit rate  Input cached  Tokens read
 Codex            1         2     1       1     50.0%         66.7%          8Kt
 
 Tokens
 
-Provider  Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Provider  Average input  Peak input  Total input  Cache reads  Cache writes  Fresh input  Output
 Codex               6Kt         9Kt         12Kt          8Kt           1Kt          3Kt     3Kt
 
 === counts in their thousands, tokens in their billions, and nothing written ===
 Cache
 
-Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Provider  Sessions  Requests  Hits  Misses  Hit rate  Input cached  Tokens read
 Codex          186       22K   22K     335     98.5%         98.4%        3.8Bt
 
 Tokens
 
-Provider  Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Provider  Average input  Peak input  Total input  Cache reads  Cache writes  Fresh input  Output
 Codex             172Kt       614Kt        3.8Bt        3.8Bt            0t         60Mt    12Mt
 
 Conversation
 
-Provider  Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
+Provider  Sessions  Turns  Prompts  Replies  Reasoning  Tool calls  Average turn  Longest turn  Open for
 Codex          186   4.1K     4.1K       4K        51K         88K       10m 49s           52m   87d 12h
 

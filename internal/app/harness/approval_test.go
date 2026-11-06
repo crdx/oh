@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/permission"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/question"
 )
@@ -96,11 +97,11 @@ parameters = [{ name = "city", kind = "string", description = "the city" }]
 	}
 	writeRigConfig(t, rig, configuration.String())
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "check the weather twice, then the forecast")
-	session.waitFor("Run the weather tool?")
+	session.waitFor(fmt.Sprintf(tr.CustomToolQuestion, "weather"))
 	session.typeAndSettle("\t")
-	session.requireShown("Allow for 5 mins")
+	session.requireShown(tr.AllowForMinutesOption)
 	session.typeText(pressEnter)
-	session.waitFor("Run the forecast tool?")
+	session.waitFor(fmt.Sprintf(tr.CustomToolQuestion, "forecast"))
 	session.typeAndSettle(pressLeft)
 	session.typeText(pressEnter)
 	session.waitFor("Timed approvals finished.")
@@ -113,11 +114,11 @@ parameters = [{ name = "city", kind = "string", description = "the city" }]
 	session.typeText("tool:weather" + pressEnter)
 	session.waitFor("Revoked the approval for tool:weather.")
 	session.typeAndSettle(pressEscape)
-	questionCount := session.Count("Run the weather tool?")
+	questionCount := session.Count(fmt.Sprintf(tr.CustomToolQuestion, "weather"))
 	session.typeText("check again" + pressEnter)
-	session.waitForCount("Run the weather tool?", questionCount+1)
+	session.waitForCount(fmt.Sprintf(tr.CustomToolQuestion, "weather"), questionCount+1)
 	session.typeAndSettle("\t\t")
-	session.requireShown("Allow for session")
+	session.requireShown(tr.AllowForSessionOption)
 	session.typeText(pressEnter)
 	session.waitFor("Session approvals finished.")
 	session.typeText("/grants" + pressEnter)
@@ -127,13 +128,13 @@ parameters = [{ name = "city", kind = "string", description = "the city" }]
 	session.typeText("/revoke tool:weather" + pressEnter)
 	session.waitForCount("Revoked the approval for tool:weather.", forgetCount+1)
 	session.typeAndSettle(pressEscape)
-	questionCount = session.Count("Run the weather tool?")
+	questionCount = session.Count(fmt.Sprintf(tr.CustomToolQuestion, "weather"))
 	session.typeText("check after revocation" + pressEnter)
-	session.waitForCount("Run the weather tool?", questionCount+1)
-	session.requireShown("Allow once")
-	questionCount = session.Count("Run the weather tool?")
+	session.waitForCount(fmt.Sprintf(tr.CustomToolQuestion, "weather"), questionCount+1)
+	session.requireShown(tr.AllowOnceOption)
+	questionCount = session.Count(fmt.Sprintf(tr.CustomToolQuestion, "weather"))
 	session.typeText(pressEnter)
-	session.waitForCount("Run the weather tool?", questionCount+1)
+	session.waitForCount(fmt.Sprintf(tr.CustomToolQuestion, "weather"), questionCount+1)
 	session.requireShown("Truro")
 	session.typeAndSettle(pressLeft)
 	session.typeText(pressEnter)
@@ -203,10 +204,10 @@ func TestApprovalChoicesHaveNoEditorOrLetterShortcuts(t *testing.T) {
 		chat := &App{question: questionState{broker: broker}}
 		chat.onQuestionChange()
 		want := []question.Option{
-			{Label: "Deny"},
-			{Label: "Allow once"},
-			{Label: "Allow for 5 mins", RememberFor: 5 * time.Minute},
-			{Label: "Allow for session", RememberForSession: true},
+			{Label: tr.DenyOption},
+			{Label: tr.AllowOnceOption},
+			{Label: tr.AllowForMinutesOption, RememberFor: 5 * time.Minute},
+			{Label: tr.AllowForSessionOption, RememberForSession: true},
 		}
 		if chat.question.cursor != onceApprovalIndex || !slices.Equal(broker.Current().Question.Options, want) {
 			t.Fatalf("unexpected default or options: %+v", broker.Current().Question)

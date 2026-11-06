@@ -1,6 +1,7 @@
 package painter
 
 import (
+	"fmt"
 	"math"
 	"slices"
 	"strings"
@@ -19,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/toolresult"
@@ -32,10 +34,10 @@ const (
 	harnessMark             = "🤖"
 	taskMark                = "⚙️"
 	unwrappedPreviewColumns = 1 << 16
-	sendHint                = "double-enter to send"
-	stoppingHint            = "sending" + width.Ellipsis
 	everyTaskOutputLine     = math.MaxInt32
 )
+
+var sendHint = fmt.Sprintf(tr.SendHint, "double-enter")
 
 type submissionKind uint8
 
@@ -108,7 +110,7 @@ func RenderQueue(
 
 	hint := sendHint
 	if !canBeSentNow {
-		hint = stoppingHint
+		hint = tr.SendingHint
 	}
 
 	return Queue{Rows: rows, Hint: hint, IsSending: !canBeSentNow}

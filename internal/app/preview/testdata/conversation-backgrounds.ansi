@@ -34,7 +34,7 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;70;70;78m                                                                                                    \e[0m
 
 \e[38;2;255;184;184mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
-\e[38;2;255;226;122mContext window full.\e[0m
+\e[38;2;255;226;122mThe context window is full.\e[0m
 === grey-light, 100 columns ===
 \e[48;2;196;196;204m                                                                                                    \e[0m
 \e[48;2;196;196;204m why does the spinner stutter when a tool runs                                                      \e[0m
@@ -71,7 +71,7 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;196;196;204m                                                                                                    \e[0m
 
 \e[38;2;118;22;22mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
-\e[38;2;86;63;0mContext window full.\e[0m
+\e[38;2;86;63;0mThe context window is full.\e[0m
 === light, 100 columns ===
 \e[48;2;232;232;239m                                                                                                    \e[0m
 \e[48;2;232;232;239m why does the spinner stutter when a tool runs                                                      \e[0m
@@ -108,4 +108,4 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;232;232;239m                                                                                                    \e[0m
 
 \e[38;2;184;60;60mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
-\e[38;2;143;106;0mContext window full.\e[0m
+\e[38;2;143;106;0mThe context window is full.\e[0m

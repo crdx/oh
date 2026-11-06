@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/ptytest"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/auth"
 	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/provider/codex"
@@ -45,11 +46,11 @@ func TestAFirstRunOverATerminalCanHandOverToTheSimulation(t *testing.T) {
 		result <- prepared{isSimulated: isSimulated, err: err}
 	}()
 
-	if !screen.WaitForCount(greeting[:4], 1, terminalDeadline) {
+	if !screen.WaitForCount(string([]rune(tr.Greeting)[:4]), 1, terminalDeadline) {
 		t.Fatalf("the opening was never typed, having drawn %q", screen.String())
 	}
 	typeInto(t, controller, pressEnter)
-	if !screen.WaitForCount(providerPrompt, 1, terminalDeadline) {
+	if !screen.WaitForCount(tr.ProviderPrompt, 1, terminalDeadline) {
 		t.Fatalf("no provider was asked for, having drawn %q", screen.String())
 	}
 	typeInto(t, controller, pressEnd+pressEnter)
@@ -62,7 +63,7 @@ func TestAFirstRunOverATerminalCanHandOverToTheSimulation(t *testing.T) {
 	case <-time.After(terminalDeadline):
 		t.Fatalf("choosing the simulation finished nothing, having drawn %q", screen.String())
 	}
-	if !screen.WaitForCount(farewell, 1, terminalDeadline) {
+	if !screen.WaitForCount(tr.Farewell, 1, terminalDeadline) {
 		t.Errorf("the farewell was not drawn, in %q", screen.String())
 	}
 }
@@ -89,7 +90,7 @@ func TestASignInOverATerminalTakesThePastedRedirect(t *testing.T) {
 			result := make(chan error, 1)
 			go func() { result <- Login(providerName, terminal, terminal) }()
 
-			if !screen.WaitForCount(pasteHint, 1, terminalDeadline) {
+			if !screen.WaitForCount(tr.PasteHint, 1, terminalDeadline) {
 				t.Fatalf("nothing asked for the redirect, having drawn %q", screen.String())
 			}
 			state := presentedState.FindStringSubmatch(screen.String())

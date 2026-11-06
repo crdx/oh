@@ -1,21 +1,22 @@
 package painter
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
 
-const (
-	hostCommandStopHint     = "esc to stop"
-	hostCommandOutputIndent = "  "
-)
+const hostCommandOutputIndent = "  "
+
+var hostCommandStopHint = fmt.Sprintf(tr.StopHint, "esc")
 
 func RenderHostCommand(command string, latestLine string, elapsedTime time.Duration, timeLimit time.Duration, columns int) []string {
 	rows := []string{runningHostCommand(command, elapsedTime, timeLimit, columns)}

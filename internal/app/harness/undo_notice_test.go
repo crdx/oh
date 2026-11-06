@@ -2,11 +2,13 @@ package harness
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -28,7 +30,7 @@ func TestUndoStopsAreRecordedWithoutDrawingTheRoutineNotice(t *testing.T) {
 	if strings.Contains(style.Plain(drawn.String()), interrupt.Notice(interrupt.Event(interrupt.ControlZ))) {
 		t.Fatal("undo drew its internal interruption notice")
 	}
-	if self.feedback.Message().Text != "undo failed; the turn remains stopped: disk unavailable" {
+	if self.feedback.Message().Text != fmt.Sprintf(tr.UndoFailureStopped, "disk unavailable") {
 		t.Fatalf("unexpected failure: %q", self.feedback.Message().Text)
 	}
 	if inputLine.Text() != "keep this draft" || self.currentTurn.Running() {
@@ -41,7 +43,7 @@ func TestFailedUndoOfACompletedTurnDoesNotClaimToHaveStoppedIt(t *testing.T) {
 	self.finish()
 	self.undo.restoreJournal = func() error { return errors.New("disk unavailable") }
 	self.handleKeypressAndShowInput(inputLine, history, undoKey('z'))
-	if self.feedback.Message().Text != "undo failed: disk unavailable" {
+	if self.feedback.Message().Text != fmt.Sprintf(tr.UndoFailure, "disk unavailable") {
 		t.Fatalf("completed-turn failure claimed an interruption: %q", self.feedback.Message().Text)
 	}
 }

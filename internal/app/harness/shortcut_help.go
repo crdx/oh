@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 )
 
@@ -85,7 +86,7 @@ func (self *App) showShortcutHelp(inputLine *edit.Input) {
 
 func (self *App) shortcutRows(inputLine *edit.Input, columns int) []string {
 	rule := self.ruleStyle()(strings.Repeat("─", max(0, columns)))
-	rows := []string{rule, style.Heading(width.Elide("Keyboard shortcuts", columns)), ""}
+	rows := []string{rule, style.Heading(width.Elide(tr.ShortcutHelpTitle, columns)), ""}
 	for _, shortcut := range self.keyboardShortcuts(inputLine) {
 		if shortcut.keys == "" {
 			rows = append(rows, "", style.Subtle(shortcut.action))
@@ -99,19 +100,19 @@ func (self *App) shortcutRows(inputLine *edit.Input, columns int) []string {
 		line := style.Accent(fmt.Sprintf("%-*s", shortcutKeyWidth, shortcut.keys)) + shortcut.action
 		rows = append(rows, width.WrapIndented(line, columns, shortcutKeyWidth)...)
 	}
-	return append(rows, "", style.Subtle(width.Elide("^/ or ^C closes · ↑/↓ scrolls", columns)), rule)
+	return append(rows, "", style.Subtle(width.Elide(fmt.Sprintf(tr.ShortcutHelpFooter, "^/ or ^C", "↑/↓"), columns)), rule)
 }
 
 func (self *App) keyboardShortcuts(inputLine *edit.Input) []keyboardShortcut {
 	shortcuts := []keyboardShortcut{
-		{keys: "^/ or ^?", action: "Show or close this reference"},
+		{keys: "^/ or ^?", action: tr.ShowOrCloseShortcuts},
 	}
 	if self.isAwaitingAnswer() {
 		shortcuts = append(shortcuts,
-			keyboardShortcut{keys: "Escape / ^C", action: "Cancel the question"},
-			keyboardShortcut{keys: "Enter", action: "Choose the selected answer"},
-			keyboardShortcut{keys: "Left / Right / Tab", action: "Select an answer"},
-			keyboardShortcut{keys: "Up / Down", action: "Scroll question details"},
+			keyboardShortcut{keys: "Escape / ^C", action: tr.CancelQuestion},
+			keyboardShortcut{keys: "Enter", action: tr.ChooseSelectedAnswer},
+			keyboardShortcut{keys: "Left / Right / Tab", action: tr.SelectAnswer},
+			keyboardShortcut{keys: "Up / Down", action: tr.ScrollQuestionDetails},
 		)
 		for _, option := range self.question.request.Question.Options {
 			if option.Key != 0 {
@@ -121,30 +122,30 @@ func (self *App) keyboardShortcuts(inputLine *edit.Input) []keyboardShortcut {
 		return shortcuts
 	}
 	if self.isEditorAwaited() {
-		return append(shortcuts, keyboardShortcut{keys: "Escape / ^C / ^D", action: "Cancel external editing"})
+		return append(shortcuts, keyboardShortcut{keys: "Escape / ^C / ^D", action: tr.CancelExternalEditing})
 	}
 	if inputLine.IsSearching() {
 		return append(shortcuts,
-			keyboardShortcut{keys: "Escape", action: "Leave the search"},
-			keyboardShortcut{keys: "^R", action: "Find the previous match"},
-			keyboardShortcut{keys: "^C twice", action: "Clear search and draft"},
-			keyboardShortcut{keys: "Backspace", action: "Shorten the search"},
+			keyboardShortcut{keys: "Escape", action: tr.LeaveSearch},
+			keyboardShortcut{keys: "^R", action: tr.FindPreviousMatch},
+			keyboardShortcut{keys: "^C twice", action: tr.ClearSearchAndDraft},
+			keyboardShortcut{keys: "Backspace", action: tr.ShortenSearch},
 		)
 	}
 	if inputLine.IsPrefixPending() {
 		return append(shortcuts, self.modeShortcuts()...)
 	}
 	if self.currentTurn.Running() || self.isHostCommandUnderway() {
-		shortcuts = append(shortcuts, keyboardShortcut{keys: "Escape / ^D", action: "Stop the foreground command, then the turn"})
+		shortcuts = append(shortcuts, keyboardShortcut{keys: "Escape / ^D", action: tr.StopCommandThenTurn})
 	} else {
-		shortcuts = append(shortcuts, keyboardShortcut{keys: "^D", action: "Quit from an empty draft"})
+		shortcuts = append(shortcuts, keyboardShortcut{keys: "^D", action: tr.QuitFromEmptyDraft})
 	}
 	shortcuts = append(shortcuts,
-		keyboardShortcut{keys: "^C twice / ^U", action: "Clear the draft without stopping work"},
-		keyboardShortcut{keys: "Shift+Enter / ^J", action: "Insert a newline"},
+		keyboardShortcut{keys: "^C twice / ^U", action: tr.ClearDraft},
+		keyboardShortcut{keys: "Shift+Enter / ^J", action: tr.InsertNewline},
 	)
 	if self.currentTurn.Running() && !self.currentTurn.Cancelled() {
-		enterAction, alternateAction := "Queue the draft", "Stop the turn and send the draft"
+		enterAction, alternateAction := tr.QueueDraft, tr.StopTurnAndSendDraft
 		if self.experimental.IsEnabled(experimental.EnterInterrupts) {
 			enterAction, alternateAction = alternateAction, enterAction
 		}
@@ -153,66 +154,66 @@ func (self *App) keyboardShortcuts(inputLine *edit.Input) []keyboardShortcut {
 			keyboardShortcut{keys: "Alt+Enter", action: alternateAction},
 		)
 	} else {
-		shortcuts = append(shortcuts, keyboardShortcut{keys: "Enter / Alt+Enter", action: "Send the draft"})
+		shortcuts = append(shortcuts, keyboardShortcut{keys: "Enter / Alt+Enter", action: tr.SendDraft})
 	}
 	if self.currentTurn.HasInterjections() {
 		shortcuts = append(shortcuts,
-			keyboardShortcut{keys: "^Z / Escape / ^D", action: "Take back the newest queued message"},
-			keyboardShortcut{keys: "Enter twice", action: "Send the queued messages"},
+			keyboardShortcut{keys: "^Z / Escape / ^D", action: tr.TakeBackQueuedMessage},
+			keyboardShortcut{keys: "Enter twice", action: tr.SendQueuedMessages},
 		)
 	} else {
 		if self.undoBlocker() == "" {
-			shortcuts = append(shortcuts, keyboardShortcut{keys: "^Z", action: "Take back the last turn"})
+			shortcuts = append(shortcuts, keyboardShortcut{keys: "^Z", action: tr.TakeBackLastTurn})
 		}
 		if !self.currentTurn.Running() {
-			shortcuts = append(shortcuts, keyboardShortcut{keys: "Enter twice", action: "Continue or send pending notices"})
+			shortcuts = append(shortcuts, keyboardShortcut{keys: "Enter twice", action: tr.ContinueOrSendNotices})
 		}
 	}
 	shortcuts = append(shortcuts,
-		keyboardShortcut{action: "Editing"},
-		keyboardShortcut{keys: "Tab", action: "Complete a word or choose a suggestion"},
-		keyboardShortcut{keys: "Up / Down", action: "Move by line or recall history"},
-		keyboardShortcut{keys: "^R", action: "Search input history"},
-		keyboardShortcut{keys: "Home / ^A", action: "Move to the start of the line"},
-		keyboardShortcut{keys: "End / ^E", action: "Move to the end of the line"},
-		keyboardShortcut{keys: "^Left / ^Right", action: "Move by word"},
-		keyboardShortcut{keys: "^Backspace / ^W", action: "Delete the previous word"},
-		keyboardShortcut{keys: "^Delete", action: "Delete the next word"},
-		keyboardShortcut{keys: "^K", action: "Delete to the end of the line"},
-		keyboardShortcut{keys: "^G", action: "Edit the draft externally"},
-		keyboardShortcut{keys: "^S", action: "Stash the draft or restore the latest stash"},
-		keyboardShortcut{keys: "^Shift+S", action: "Swap the draft with the latest stash"},
-		keyboardShortcut{keys: "^L", action: "Redraw the conversation"},
+		keyboardShortcut{action: tr.ShortcutEditingSection},
+		keyboardShortcut{keys: "Tab", action: tr.CompleteWord},
+		keyboardShortcut{keys: "Up / Down", action: tr.MoveByLine},
+		keyboardShortcut{keys: "^R", action: tr.SearchInputHistory},
+		keyboardShortcut{keys: "Home / ^A", action: tr.MoveToLineStart},
+		keyboardShortcut{keys: "End / ^E", action: tr.MoveToLineEnd},
+		keyboardShortcut{keys: "^Left / ^Right", action: tr.MoveByWord},
+		keyboardShortcut{keys: "^Backspace / ^W", action: tr.DeletePreviousWord},
+		keyboardShortcut{keys: "^Delete", action: tr.DeleteNextWord},
+		keyboardShortcut{keys: "^K", action: tr.DeleteToLineEnd},
+		keyboardShortcut{keys: "^G", action: tr.EditDraftExternally},
+		keyboardShortcut{keys: "^S", action: tr.StashDraft},
+		keyboardShortcut{keys: "^Shift+S", action: tr.SwapDraftWithStash},
+		keyboardShortcut{keys: "^L", action: tr.RedrawConversation},
 	)
 	if _, hasAnswer := self.getLastMessage(); hasAnswer {
-		shortcuts = append(shortcuts, keyboardShortcut{keys: "^.", action: "Reply to the last answer in the editor"})
+		shortcuts = append(shortcuts, keyboardShortcut{keys: "^.", action: tr.ReplyInEditor})
 	}
 	if self.mode != nil {
-		shortcuts = append(shortcuts, keyboardShortcut{action: "Access: press ^X, then a letter"})
+		shortcuts = append(shortcuts, keyboardShortcut{action: fmt.Sprintf(tr.ShortcutAccessSection, "^X")})
 		shortcuts = append(shortcuts, self.modeShortcuts()...)
 	}
 	return shortcuts
 }
 
 func (self *App) modeShortcuts() []keyboardShortcut {
-	shortcuts := []keyboardShortcut{{keys: "Escape / ^C", action: "Cancel the mode prefix"}}
+	shortcuts := []keyboardShortcut{{keys: "Escape / ^C", action: tr.CancelModePrefix}}
 	if self.mode == nil {
 		return shortcuts
 	}
 	if !self.mode.IsUnconfined() {
 		shortcuts = append(shortcuts,
-			keyboardShortcut{keys: "w", action: "Toggle workspace writes"},
-			keyboardShortcut{keys: "x", action: "Toggle shell execution"},
-			keyboardShortcut{keys: "n", action: "Toggle host network"},
-			keyboardShortcut{keys: "g", action: "Toggle repository history"},
+			keyboardShortcut{keys: "w", action: tr.ToggleWorkspaceWrites},
+			keyboardShortcut{keys: "x", action: tr.ToggleShellExecution},
+			keyboardShortcut{keys: "n", action: tr.ToggleHostNetwork},
+			keyboardShortcut{keys: "g", action: tr.ToggleRepositoryHistory},
 		)
 	}
 	shortcuts = append(shortcuts,
-		keyboardShortcut{keys: "s", action: "Toggle subagents"},
-		keyboardShortcut{keys: "l", action: "Toggle lookup"},
+		keyboardShortcut{keys: "s", action: tr.ToggleSubagents},
+		keyboardShortcut{keys: "l", action: tr.ToggleLookup},
 	)
 	for _, flag := range self.mode.Groups().Flags {
-		shortcuts = append(shortcuts, keyboardShortcut{keys: string(flag), action: "Toggle this custom tool group"})
+		shortcuts = append(shortcuts, keyboardShortcut{keys: string(flag), action: tr.ToggleCustomToolGroup})
 	}
 	return shortcuts
 }

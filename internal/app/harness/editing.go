@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/painter"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/pkg/agent"
 )
@@ -120,7 +121,7 @@ func (self *App) editDraft() {
 	err := self.startDraft()
 	if err != nil {
 		self.showFeedback(feedback.Command, feedback.Message{
-			Text:   "The draft could not be edited: " + err.Error(),
+			Text:   fmt.Sprintf(tr.DraftEditFailure, err.Error()),
 			Status: agent.ErrorStatus,
 		})
 	}
@@ -144,7 +145,7 @@ func (self *App) replyToLastAnswer() {
 	err := self.startReplyToLastAnswer()
 	if err != nil {
 		self.showFeedback(feedback.Command, feedback.Message{
-			Text:   "The reply could not be written: " + err.Error(),
+			Text:   fmt.Sprintf(tr.ReplyFailure, err.Error()),
 			Status: agent.ErrorStatus,
 		})
 	}
@@ -293,14 +294,14 @@ func (self *App) takeTerminalBack() error {
 func (self *App) editorEnded(outcome editor.Outcome) {
 	if !outcome.IsAwaited {
 		if outcome.Failure != nil {
-			self.showEditorFailure("The editor failed: " + outcome.Failure.Error())
+			self.showEditorFailure(fmt.Sprintf(tr.EditorFailure, outcome.Failure.Error()))
 		}
 		return
 	}
 
-	failureLead := "The editor failed: "
+	failurePattern := tr.EditorFailure
 	if self.children.viewedConversation != "" {
-		failureLead = "The pager failed: "
+		failurePattern = tr.PagerFailure
 	}
 	self.forgetViewedConversation()
 	draftPath := self.externalEdit.draftPath
@@ -317,12 +318,12 @@ func (self *App) editorEnded(outcome editor.Outcome) {
 	switch {
 	case draftPath == "":
 		if outcome.Failure != nil {
-			self.showEditorFailure(failureLead + outcome.Failure.Error())
+			self.showEditorFailure(fmt.Sprintf(failurePattern, outcome.Failure.Error()))
 		}
 	case outcome.Failure != nil:
 		_ = os.Remove(draftPath)
 		if !errors.Is(outcome.Failure, context.Canceled) {
-			self.showEditorFailure(draftPurpose.FailureLead() + outcome.Failure.Error())
+			self.showEditorFailure(draftPurpose.FailureMessage(outcome.Failure.Error()))
 		}
 	default:
 		self.takeDraft(draftPath, draftOriginal, draftPurpose)
@@ -341,7 +342,7 @@ func (self *App) takeDraft(draftPath string, draftOriginal string, draftPurpose 
 
 	content, err := os.ReadFile(draftPath) //nolint:gosec // the draft this session wrote
 	if err != nil {
-		self.showEditorFailure(draftPurpose.FailureLead() + err.Error())
+		self.showEditorFailure(draftPurpose.FailureMessage(err.Error()))
 		return
 	}
 

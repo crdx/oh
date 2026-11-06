@@ -503,8 +503,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -515,8 +515,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -527,8 +527,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -539,8 +539,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -551,8 +551,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -566,8 +566,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -578,8 +578,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -590,8 +590,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -602,8 +602,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -616,8 +616,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -628,8 +628,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -640,8 +640,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -652,8 +652,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -664,8 +664,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -679,8 +679,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -695,8 +695,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -711,8 +711,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -726,8 +726,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -741,8 +741,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -756,8 +756,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -768,8 +768,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -780,8 +780,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -792,8 +792,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -808,8 +808,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -823,8 +823,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -839,8 +839,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -851,8 +851,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -863,8 +863,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r
@@ -875,8 +875,8 @@
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m              edit the config and system prompt\e[0m\e[K\r
   /copy <target>\e[38;2;150;152;150m     copy a target to the clipboard\e[0m\e[K\r
-  /ctx\e[38;2;150;152;150m               list sources contributing to model con…\e[0m\r
-  /edit <target>\e[38;2;150;152;150m     open a target in your editor\e[0m\e[K\r
+  /ctx\e[38;2;150;152;150m               list the sources of the model context\e[0m\e[K\r
+  /edit <target>\e[38;2;150;152;150m     open a target in the editor\e[0m\e[K\r
   /fork [<options>]\e[38;2;150;152;150m  fork this session\e[0m\e[K\r
   /help\e[38;2;150;152;150m              list the commands and targets\e[0m\e[K\r
   /info\e[38;2;150;152;150m              show every bar segment with its curren…\e[0m\r

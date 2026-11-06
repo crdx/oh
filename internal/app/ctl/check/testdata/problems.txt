@@ -1,5 +1,5 @@
 === screen ===
-[38;2;76;154;44mok[0m configuration
+[38;2;76;154;44mok[0m config
 [38;2;150;152;150mchecked 5 sessions[0m
 === failure ===
 [38;2;204;102;102mfailed[0m 000-unfinished.tgz: unrecognised entry in the session store

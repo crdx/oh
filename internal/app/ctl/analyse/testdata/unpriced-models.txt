@@ -1,6 +1,6 @@
 Cache
 
-Provider    Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Provider    Sessions  Requests  Hits  Misses  Hit rate  Input cached  Tokens read
 Codex              1         3     3       0    100.0%         80.0%         24Kt
 Ollama             1         3     0       3      0.0%          0.0%           0t
 Openrouter         1         2     0       2      0.0%          0.0%           0t
@@ -8,7 +8,7 @@ Total              3         8     3       5     37.5%         55.8%         24K
 
 Tokens
 
-Provider    Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Provider    Average input  Peak input  Total input  Cache reads  Cache writes  Fresh input  Output
 Codex                10Kt          0t         30Kt         24Kt            0t          6Kt    900t
 Ollama                3Kt          0t          9Kt           0t            0t          9Kt    600t
 Openrouter            2Kt          0t          4Kt           0t            0t          4Kt    300t
@@ -16,7 +16,7 @@ Total               5.4Kt          0t         43Kt         24Kt            0t   
 
 Models
 
-Provider    Model             Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend
+Provider    Model             Sessions  Requests  Fresh input  Cache reads  Cache writes  Output  Spend
 Codex       gpt-5.6-sol              1         3          6Kt         24Kt            0t    900t  $0.02
 Ollama      qwen3.8:27b              1         3          9Kt           0t            0t    600t      —
 Openrouter  kimi-k2-thinking         1         2          4Kt           0t            0t    300t      —
@@ -25,7 +25,7 @@ Total                                3         8         19Kt         24Kt      
 
 Conversation
 
-Provider    Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
+Provider    Sessions  Turns  Prompts  Replies  Reasoning  Tool calls  Average turn  Longest turn  Open for
 Codex              1      3        3        0          0           0           30s           45s        0s
 Ollama             1      2        2        0          0           0           25s           40s        0s
 Openrouter         1      1        1        0          0           0           30s           30s        0s

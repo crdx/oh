@@ -26,6 +26,7 @@ import (
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 
 	"crdx.org/oh/internal/format"
 	"crdx.org/oh/internal/util/pathutil"
@@ -61,6 +62,9 @@ const (
 	agentSetting        = "agent"
 	modelSetting        = "model"
 	roundRobinSetting   = "round_robin"
+
+	forwardHostnameSetting = experimentalSetting + "." + string(experimental.ForwardHostname)
+	migrateCommand         = "oh --ctl migrate"
 )
 
 type Config struct {
@@ -181,14 +185,14 @@ func (self *RoundRobin) UnmarshalTOML(value any) error {
 		for i, selection := range configuredValue {
 			text, isText := selection.(string)
 			if !isText {
-				return fmt.Errorf("model selection %d is not a string", i+1)
+				return fmt.Errorf(tr.SelectionNotText, i+1)
 			}
 			selections[i] = text
 		}
 		*self = selections
 		return nil
 	default:
-		return errors.New("round_robin is not a path or array of model selections")
+		return fmt.Errorf(tr.RoundRobinShape, roundRobinSetting)
 	}
 }
 
@@ -368,7 +372,7 @@ func (self Config) BuildLayout(registry segment.Registry) (segment.Layout, error
 				case "important":
 					priority = segment.Important
 				default:
-					return nil, fmt.Errorf("%s: %s: priority must be normal or important", position, namedFields.Segment)
+					return nil, fmt.Errorf("%s: %s: %s", position, namedFields.Segment, fmt.Sprintf(tr.PriorityChoice, "normal", "important"))
 				}
 			}
 
@@ -437,7 +441,7 @@ func refuseUndrawableValue(name string, setting reflect.Value) error {
 		for _, character := range setting.String() {
 			if unicode.IsControl(character) {
 				return fmt.Errorf(
-					"%s holds %q, which the terminal would read as an instruction rather than text",
+					tr.ControlCharacter,
 					name, character,
 				)
 			}
@@ -505,7 +509,7 @@ func (self Config) UnknownSettings() []string {
 			}
 		}
 
-		reports = append(reports, fmt.Sprintf("%s: unknown: %s", source.path, strings.Join(unique, ", ")))
+		reports = append(reports, source.path+": "+fmt.Sprintf(tr.UnknownSettingNames, strings.Join(unique, ", ")))
 	}
 
 	return append(reports, self.experimentalReports()...)
@@ -633,7 +637,7 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 
 	defaults, err := toml.Decode(defaultsTOML, &config)
 	if err != nil {
-		return config, fmt.Errorf("the built-in defaults are broken: %w", err)
+		return config, fmt.Errorf("%s: %w", tr.BrokenDefaults, err)
 	}
 
 	config.fallback = &defaults
@@ -683,11 +687,11 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	case err != nil:
 		return fmt.Errorf("%s: %w", displayPath, err)
 	case version < Format:
-		return fmt.Errorf("%s: config format %d needs migrating: run oh --ctl migrate", displayPath, version)
+		return fmt.Errorf("%s: %s", displayPath, fmt.Sprintf(tr.ConfigNeedsMigration, version, migrateCommand))
 	}
 
 	if err := format.Check(version, Format); err != nil {
-		return fmt.Errorf("%s: config %w: upgrade oh", displayPath, err)
+		return fmt.Errorf("%s: %w", displayPath, fmt.Errorf(tr.ConfigTooNew, err))
 	}
 
 	previousVersion := config.Version
@@ -719,15 +723,15 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		return err
 	}
 	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
-		return fmt.Errorf("%s: subagent.concurrency must be at least 1, got %d", displayPath, config.Subagent.Concurrency)
+		return fmt.Errorf("%s: %s", displayPath, fmt.Sprintf(tr.SettingMinimum, "subagent.concurrency", 1, config.Subagent.Concurrency))
 	}
 	if err := validateExperimentalMinimums(config, meta); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 	if meta.IsDefined(defaultSetting, "tool_output") && config.Defaults.ToolOutput.Bytes < minimumToolOutputBytes {
 		return fmt.Errorf(
-			"%s: %s.tool_output is too small to say anything with; write at least %d bytes",
-			displayPath, defaultSetting, minimumToolOutputBytes,
+			"%s: %s",
+			displayPath, fmt.Sprintf(tr.ToolOutputTooSmall, defaultSetting+".tool_output", minimumToolOutputBytes),
 		)
 	}
 	for _, name := range slices.Sorted(maps.Keys(config.Snippets)) {
@@ -753,10 +757,10 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 			config.snippetFileSnapshots[resolvedPath] = current
 			if current.failure != nil {
 				return fmt.Errorf(
-					"%s: snippet.%s: could not read %s: %w",
+					"%s: snippet.%s: %s: %w",
 					displayPath,
 					name,
-					resolvedPath,
+					fmt.Sprintf(tr.FileReadFailure, resolvedPath),
 					current.failure,
 				)
 			}
@@ -796,8 +800,8 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	for _, mappedPath := range config.Grants.Home {
 		if _, below := shell.HomeRelativePath(mappedPath); !below {
 			return fmt.Errorf(
-				"%s: grants.home: %s is not below the home directory, so it has nowhere to land",
-				displayPath, mappedPath,
+				"%s: grants.home: %s",
+				displayPath, fmt.Sprintf(tr.HomeGrantOutside, mappedPath),
 			)
 		}
 	}
@@ -875,11 +879,11 @@ func applyModelChoice(choice *ModelChoice, table string, meta toml.MetaData, sou
 	hasRoundRobin := meta.IsDefined(table, roundRobinSetting)
 	switch {
 	case hasModel && hasRoundRobin:
-		return fmt.Errorf("%s and %s cannot both be set", modelName, roundRobinName)
+		return fmt.Errorf(tr.SettingsInConflict, modelName, roundRobinName)
 	case hasModel:
 		choice.Model = strings.TrimSpace(choice.Model)
 		if choice.Model == "" {
-			return fmt.Errorf("%s is empty", modelName)
+			return fmt.Errorf(tr.SettingEmpty, modelName)
 		}
 		choice.RoundRobin = nil
 		choice.rotationFile = nil
@@ -898,11 +902,11 @@ func applyRoundRobin(choice *ModelChoice, sourcePath string, name string) error 
 		}
 	}
 	if len(choice.RoundRobin) == 0 {
-		return fmt.Errorf("%s is empty, so there is nothing to ask", name)
+		return fmt.Errorf(tr.RoundRobinEmpty, name)
 	}
 	for _, selection := range choice.RoundRobin {
 		if strings.TrimSpace(selection) == "" {
-			return fmt.Errorf("%s contains an empty selection", name)
+			return fmt.Errorf(tr.EmptySelection, name)
 		}
 	}
 	return nil
@@ -916,7 +920,7 @@ func loadRoundRobinFile(choice *ModelChoice, sourcePath string, writtenPath stri
 	current := readSnapshot(resolvedPath)
 	choice.rotationFile = map[string]snapshot{resolvedPath: current}
 	if current.failure != nil {
-		return fmt.Errorf("could not read %s: %w", resolvedPath, current.failure)
+		return fmt.Errorf("%s: %w", fmt.Sprintf(tr.FileReadFailure, resolvedPath), current.failure)
 	}
 	choice.RoundRobin, err = parseRoundRobinFile(current.data)
 	if err != nil {
@@ -945,7 +949,7 @@ func parseRoundRobinFile(data []byte) (RoundRobin, error) {
 		selections = append(selections, selection)
 	}
 	if len(selections) == 0 {
-		return nil, errors.New("file contains no model selections, so there is nothing to ask")
+		return nil, errors.New(tr.RoundRobinFileEmpty)
 	}
 	return selections, nil
 }
@@ -953,7 +957,7 @@ func parseRoundRobinFile(data []byte) (RoundRobin, error) {
 func normaliseInput(config *Config, meta toml.MetaData, displayPath string) error {
 	config.Input.Nudge = strings.TrimSpace(config.Input.Nudge)
 	if meta.IsDefined("input", "nudge") && config.Input.Nudge == "" {
-		return fmt.Errorf("%s: input.nudge is empty", displayPath)
+		return fmt.Errorf("%s: %s", displayPath, fmt.Sprintf(tr.SettingEmpty, "input.nudge"))
 	}
 	if !meta.IsDefined("input", "speed_dial") {
 		return nil
@@ -962,7 +966,7 @@ func normaliseInput(config *Config, meta toml.MetaData, displayPath string) erro
 	for i, entry := range config.Input.SpeedDial {
 		config.Input.SpeedDial[i] = strings.TrimSpace(entry)
 		if config.Input.SpeedDial[i] == "" {
-			return fmt.Errorf("%s: input.speed_dial contains an empty entry", displayPath)
+			return fmt.Errorf("%s: %s", displayPath, fmt.Sprintf(tr.EmptyEntry, "input.speed_dial"))
 		}
 	}
 
@@ -998,10 +1002,7 @@ func refuseWorkspaceSettings(meta toml.MetaData) error {
 		}
 
 		if slices.Contains(settingsAWorkspaceMayNotSet, key[0]) {
-			return fmt.Errorf(
-				"%s cannot be overridden in oh.toml",
-				key.String(),
-			)
+			return fmt.Errorf(tr.WorkspaceOverride, key.String(), "oh.toml")
 		}
 	}
 
@@ -1011,10 +1012,10 @@ func refuseWorkspaceSettings(meta toml.MetaData) error {
 func refuseEmptySettings(config *Config, meta toml.MetaData) error {
 	config.Ui.Currency = strings.TrimSpace(config.Ui.Currency)
 	if meta.IsDefined(uiSetting, "currency") && config.Ui.Currency == "" {
-		return errors.New("ui.currency is empty; leave it out to count in dollars")
+		return fmt.Errorf(tr.CurrencyEmpty, uiSetting+".currency")
 	}
 	if meta.IsDefined("editor", "command") && (len(config.Editor.Command) == 0 || config.Editor.Command[0] == "") {
-		return errors.New("editor.command is empty; leave it out to find an editor automatically")
+		return fmt.Errorf(tr.EditorCommandEmpty, "editor.command")
 	}
 	return nil
 }
@@ -1039,7 +1040,7 @@ func validateExperimentalMinimums(config *Config, meta toml.MetaData) error {
 func validateExperimentalMinimum(config *Config, meta toml.MetaData, name experimental.Name, minimum int64) error {
 	value, isWholeNumber := config.Experimental[string(name)].(int64)
 	if meta.IsDefined(experimentalSetting, string(name)) && isWholeNumber && value < minimum {
-		return fmt.Errorf("%s.%s must be at least %d, got %d", experimentalSetting, name, minimum, value)
+		return fmt.Errorf(tr.SettingMinimum, experimentalSetting+"."+string(name), minimum, value)
 	}
 	return nil
 }
@@ -1061,16 +1062,16 @@ func normaliseHosts(config *Config, meta toml.MetaData) error {
 
 func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string, isHostnameEmpty bool) error {
 	if hasOllamaHost && ollamaHost == "" {
-		return errors.New("provider.ollama.host is empty")
+		return fmt.Errorf(tr.SettingEmpty, "provider.ollama.host")
 	}
 	if isHostnameEmpty {
-		return errors.New("experimental.forward_hostname is empty; leave it out to use the numeric address")
+		return fmt.Errorf(tr.HostnameEmpty, forwardHostnameSetting)
 	}
 	if hostname == "" {
 		return nil
 	}
 	if strings.Count(hostname, sessionPlaceholder) != 1 {
-		return errors.New("experimental.forward_hostname must contain {session} exactly once")
+		return fmt.Errorf(tr.HostnamePlaceholder, forwardHostnameSetting, sessionPlaceholder)
 	}
 	return validateHostname(hostname)
 }
@@ -1078,16 +1079,16 @@ func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string
 func validateHostname(hostname string) error {
 	if len(hostname) > hostnameLimit {
 		return fmt.Errorf(
-			"experimental.forward_hostname is %d characters long, and a hostname is at most %d",
-			len(hostname), hostnameLimit,
+			tr.HostnameTooLong,
+			forwardHostnameSetting, len(hostname), hostnameLimit,
 		)
 	}
 
 	for _, character := range strings.ReplaceAll(hostname, sessionPlaceholder, "") {
 		if !isHostnameCharacter(character) {
 			return fmt.Errorf(
-				"experimental.forward_hostname holds %q, and a hostname is letters, digits, dots, and dashes",
-				character,
+				tr.HostnameCharacter,
+				forwardHostnameSetting, character,
 			)
 		}
 	}
@@ -1110,12 +1111,12 @@ func isHostnameCharacter(character rune) bool {
 
 func resolveConfigPath(configPath string, writtenPath string) (string, error) {
 	if writtenPath == "" {
-		return "", errors.New("path is empty")
+		return "", fmt.Errorf(tr.SettingEmpty, "path")
 	}
 
 	path, err := pathutil.Expand(writtenPath)
 	if err != nil {
-		return "", fmt.Errorf("could not expand %q: %w", writtenPath, err)
+		return "", fmt.Errorf("%s: %w", fmt.Sprintf(tr.PathExpandFailure, writtenPath), err)
 	}
 	if !filepath.IsAbs(path) {
 		path = filepath.Join(filepath.Dir(configPath), path)

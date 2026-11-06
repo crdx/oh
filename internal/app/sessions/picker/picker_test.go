@@ -2,12 +2,15 @@ package picker
 
 import (
 	"errors"
+	"fmt"
 	"slices"
 	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
+	"crdx.org/oh/internal/app/width"
 )
 
 func TestARunningSessionIsColouredWithoutAMarker(t *testing.T) {
@@ -87,7 +90,7 @@ func TestAnUntitledSessionDoesNotPutAnEscapeSequenceThroughTheClipper(t *testing
 		t.Errorf("expected an unpainted title, got %q", got)
 	}
 
-	if style.Width(got) != len("(untitled)") {
+	if style.Width(got) != width.Of(tr.UntitledSession) {
 		t.Errorf("expected the placeholder title, got %q", got)
 	}
 }
@@ -105,7 +108,7 @@ func TestOnlyASessionThatIsNotRunningCanBeArchived(t *testing.T) {
 	if _, isBound := self.Removal(0, archiveKeypress()); isBound {
 		t.Error("expected a running session to be left alone")
 	}
-	if got, isBound := self.Removal(1, archiveKeypress()); !isBound || got.Prompt != "Press a again to archive thick-poodle" {
+	if got, isBound := self.Removal(1, archiveKeypress()); !isBound || got.Prompt != fmt.Sprintf(tr.ArchivePrompt, string(archiveKey), "thick-poodle") {
 		t.Errorf("unexpected archival: %q and %t", got.Prompt, isBound)
 	}
 
@@ -216,8 +219,8 @@ func TestAnotherWorkspacesSessionIsReadButNeverOpened(t *testing.T) {
 		t.Error("expected another workspace's session to refuse direct opening")
 	}
 	preview, isBound := self.Preview(0, key.Key{Code: key.Enter})
-	if !isBound || preview.UnavailableLabel != "other workspace" ||
-		preview.UnavailableMessage != "Session belongs to /home/alice/another" {
+	if !isBound || preview.UnavailableLabel != tr.OtherWorkspaceLabel ||
+		preview.UnavailableMessage != fmt.Sprintf(tr.OtherWorkspaceMessage, "/home/alice/another") {
 		t.Errorf("unexpected preview: %+v, bound %t", preview, isBound)
 	}
 }
@@ -253,11 +256,11 @@ func TestAnotherWorkspacesSessionIsArchivedRestoredAndDeleted(t *testing.T) {
 		removal.Apply()
 	}
 
-	perform(archiveKeypress(), "Press a again to archive wiry-turtle")
+	perform(archiveKeypress(), fmt.Sprintf(tr.ArchivePrompt, string(archiveKey), "wiry-turtle"))
 	self.Switch(1)
-	perform(archiveKeypress(), "Press a again to restore wiry-turtle")
+	perform(archiveKeypress(), fmt.Sprintf(tr.RestorePrompt, string(archiveKey), "wiry-turtle"))
 	self.Switch(-1)
-	perform(deleteKeypress(), "Press delete again to delete wiry-turtle")
+	perform(deleteKeypress(), fmt.Sprintf(tr.DeletePrompt, deletePromptKeyName, "wiry-turtle"))
 
 	if !slices.Equal(moved, []string{"wiry-turtle", "wiry-turtle", "wiry-turtle"}) {
 		t.Errorf("got the sessions moved as %v", moved)
@@ -273,7 +276,7 @@ func TestTheViewSwitchesBetweenTheStoredSessionsAndTheArchivedOnes(t *testing.T)
 	if got := self.at(0).Name; got != "thick-poodle" {
 		t.Errorf("expected the stored sessions first, got %q", got)
 	}
-	if got := self.ColumnHeader(120); !strings.Contains(got, "Agent ") || strings.Contains(got, "archived") {
+	if got := self.ColumnHeader(120); !strings.Contains(got, tr.AgentColumn+" ") || strings.Contains(got, tr.ArchivedQualifier) {
 		t.Errorf("expected the stored header, got %q", got)
 	}
 
@@ -283,10 +286,10 @@ func TestTheViewSwitchesBetweenTheStoredSessionsAndTheArchivedOnes(t *testing.T)
 	if got := self.at(0).Name; got != "tame-impala" {
 		t.Errorf("expected the archived sessions, got %q", got)
 	}
-	if got := self.ColumnHeader(120); !strings.Contains(got, "Agent (archived)") {
+	if got := self.ColumnHeader(120); !strings.Contains(got, fmt.Sprintf(tr.AgentColumnQualified, tr.ArchivedQualifier)) {
 		t.Errorf("expected the archived header, got %q", got)
 	}
-	if got, _ := self.Removal(0, archiveKeypress()); got.Prompt != "Press a again to restore tame-impala" {
+	if got, _ := self.Removal(0, archiveKeypress()); got.Prompt != fmt.Sprintf(tr.RestorePrompt, string(archiveKey), "tame-impala") {
 		t.Errorf("unexpected prompt: %q", got.Prompt)
 	}
 
@@ -374,7 +377,7 @@ func TestDeletingTakesTheSessionOutOfWhicheverViewItIsIn(t *testing.T) {
 	if !isBound {
 		t.Fatal("expected a stored session to be deletable")
 	}
-	if removal.Prompt != "Press delete again to delete thick-poodle" {
+	if removal.Prompt != fmt.Sprintf(tr.DeletePrompt, deletePromptKeyName, "thick-poodle") {
 		t.Errorf("unexpected prompt: %q", removal.Prompt)
 	}
 	if err := removal.Perform(); err != nil {

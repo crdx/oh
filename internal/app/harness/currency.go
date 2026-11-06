@@ -2,10 +2,12 @@ package harness
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 )
@@ -74,7 +76,7 @@ func (self *App) currencyRefreshed(refresh money.Refresh) {
 	self.display.tariff.Currency = refresh.Currency
 	if refresh.Failure != nil {
 		self.showFeedback(feedback.Config, feedback.Message{
-			Text:   "The exchange rate for " + refresh.Code + " could not be refreshed: " + refresh.Failure.Error(),
+			Text:   fmt.Sprintf(tr.ExchangeRateFailure, refresh.Code, refresh.Failure.Error()),
 			Status: agent.WarningStatus,
 		})
 	}

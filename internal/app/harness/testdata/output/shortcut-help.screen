@@ -8,12 +8,12 @@ Keyboard shortcuts
 Shift+Enter / ^J    Insert a newline
 Enter / Alt+Enter   Send the draft
 ^Z                  Take back the last turn
-Enter twice         Continue or send pending notices
+Enter twice         Continue, or send the pending notices
 
 Editing
 Tab                 Complete a word or choose a suggestion
-Up / Down           Move by line or recall history
-^R                  Search input history
+Up / Down           Move by line or recall the history
+^R                  Search the input history
 Home / ^A           Move to the start of the line
 End / ^E            Move to the end of the line
 ^Left / ^Right      Move by word
@@ -45,7 +45,7 @@ Keyboard shortcuts
 Escape / ^C         Cancel the question
 Enter               Choose the selected answer
 Left / Right / Tab  Select an answer
-Up / Down           Scroll question details
+Up / Down           Scroll the question details
 y                   Yes
 n                   No
 
@@ -68,7 +68,7 @@ Keyboard shortcuts
 Escape / ^C         Cancel the question
 Enter               Choose the selected answer
 Left / Right / Tab  Select an answer
-Up / Down           Scroll question details
+Up / Down           Scroll the question details
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ Keyboard shortcuts
 ^/ or ^?            Show or close this reference
 Escape              Leave the search
 ^R                  Find the previous match
-^C twice            Clear search and draft
+^C twice            Clear the search and the draft
 Backspace           Shorten the search
 
 ^/ or ^C closes · ↑/↓ scrolls
@@ -109,7 +109,7 @@ Keyboard shortcuts
 ^C twice / ^U
   Clear the draft without stopping
   work
-⋮ 57 more lines
+⋮ 58 more lines
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────
@@ -127,8 +127,8 @@ Alt+Enter           Stop the turn and send the draft
 
 Editing
 Tab                 Complete a word or choose a suggestion
-Up / Down           Move by line or recall history
-^R                  Search input history
+Up / Down           Move by line or recall the history
+^R                  Search the input history
 Home / ^A           Move to the start of the line
 End / ^E            Move to the end of the line
 ^Left / ^Right      Move by word
@@ -141,7 +141,7 @@ End / ^E            Move to the end of the line
 ──────────────────────────────────────
 Keyboard shortcuts
 
-⋮ 58 more lines
+⋮ 59 more lines
 g
   Toggle repository history
 s
@@ -161,7 +161,7 @@ Keyboard shortcuts
   Quit from an empty draft
 ^C twice / ^U
   Clear the draft without stopping
-⋮ 58 more lines
+⋮ 59 more lines
 
 ^/ or ^C closes · ↑/↓ scrolls
 ──────────────────────────────────────

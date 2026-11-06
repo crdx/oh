@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -94,17 +95,18 @@ func TestAnInteractiveConfigRecoveryRemovesTheErrorWithoutAnotherEdit(t *testing
 	write(original)
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "wait for config changes")
 	session.waitFor("Ready for config changes.")
+	reloadFailureLead := strings.TrimSuffix(tr.ReloadFailure, ": %s")
 	write("<<<<<<< HEAD\n")
-	session.waitFor("The configuration could not be reloaded")
-	session.requireShown("The configuration could not be reloaded")
+	session.waitFor(reloadFailureLead)
+	session.requireShown(reloadFailureLead)
 	before := session.Len()
 	write(original)
 	if !session.WaitForGrowth(before, interactiveDeadline) {
 		t.Fatal("restoring the original config did not repaint the screen")
 	}
 	session.waitToSettle()
-	session.requireHidden("The configuration could not be reloaded")
-	session.requireHidden("Configuration reloaded automatically")
+	session.requireHidden(reloadFailureLead)
+	session.requireHidden(tr.ReloadConfirmation)
 	session.requireShown("Ready for config changes.")
 	session.quit()
 }

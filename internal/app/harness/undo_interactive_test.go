@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
 )
@@ -93,7 +94,7 @@ func TestTakingBackAQueuedMessageThroughTheBinaryDoesNotStopTheTurn(t *testing.T
 	if !conversation.WaitForCount("queued correction", previousDraws+1, interactiveDeadline) {
 		t.Fatalf("queued message did not return to the input:\n%s", conversation.String())
 	}
-	conversation.requireHidden("undoing…")
+	conversation.requireHidden(tr.UndoProgress)
 	release()
 	conversation.waitFor("Still running after recall.")
 	conversation.requireShown("queued correction")
@@ -155,7 +156,7 @@ func TestTurnUndoFailureThroughTheBinaryExplainsTheStopWithoutASecondNotice(t *t
 		t.Fatal(err)
 	}
 	conversation.typeText(pressCtrlZ)
-	conversation.waitFor("undo failed; the turn remains stopped:")
+	conversation.waitFor(strings.TrimSuffix(tr.UndoFailureStopped, " %s"))
 	conversation.requireShown("keep this draft")
 	if strings.Contains(conversation.String(), "Turn stopped because the user pressed ctrl+z.") {
 		t.Fatal("failed undo emitted a duplicate stop notice")

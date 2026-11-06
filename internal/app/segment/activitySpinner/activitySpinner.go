@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/spinner"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 )
 
 var _ segment.Refresher = state{}
@@ -49,14 +50,14 @@ func New(isRunning func() bool, now func() time.Time) segment.Factory {
 			rate = *args.Rate
 		}
 		if rate <= 0 {
-			return nil, fmt.Errorf("rate must be positive (got %s)", rate)
+			return nil, fmt.Errorf(tr.RateNotPositive, rate)
 		}
 
 		width := style.Width(idle)
 		for _, frame := range frames {
 			if style.Width(frame) != width {
 				return nil, fmt.Errorf(
-					"%q is %d cells wide and %q is %d, so the rule beside them would shift",
+					tr.SpinnerFrameMismatch,
 					frame, style.Width(frame), idle, width,
 				)
 			}
@@ -79,7 +80,7 @@ func chosenFrames(writtenFrames *[]string, writtenIdle *string) ([]string, strin
 		return defaultFrames, *writtenIdle, nil
 	}
 	if len(*writtenFrames) == 0 {
-		return nil, "", errors.New("frames must not be empty; leave them out for the default spinner")
+		return nil, "", errors.New(tr.SpinnerFramesEmpty)
 	}
 	if writtenIdle == nil {
 		return *writtenFrames, strings.Repeat(" ", style.Width((*writtenFrames)[0])), nil

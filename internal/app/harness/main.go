@@ -16,6 +16,7 @@ import (
 
 	"golang.org/x/term"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/sandbox/keeper"
@@ -118,20 +119,20 @@ type approval struct {
 var (
 	hostNetworkApproval = approval{
 		key:      "network:host",
-		label:    "Run this command in the sandbox with host networking?",
+		label:    tr.HostNetworkQuestion,
 		language: "bash",
 		action:   "host-network access",
 		outcome:  "command did not run",
 	}
 	lookupApproval = approval{
 		key:     "tool:lookup",
-		label:   "Look this up on the web?",
+		label:   tr.LookupQuestion,
 		action:  "lookup",
 		outcome: "lookup did not run",
 	}
 	fetchApproval = approval{
 		key:     "tool:fetch",
-		label:   "Fetch this page?",
+		label:   tr.FetchQuestion,
 		action:  "fetch",
 		outcome: "fetch did not run",
 	}
@@ -140,7 +141,7 @@ var (
 func customToolApproval(name string) approval {
 	return approval{
 		key:     "tool:" + name,
-		label:   "Run the " + name + " tool?",
+		label:   fmt.Sprintf(tr.CustomToolQuestion, name),
 		action:  name,
 		outcome: name + " did not run",
 	}
@@ -174,13 +175,13 @@ func (self approval) question(subject string) question.Question {
 		Label:    self.label,
 		Detail:   subject,
 		Language: self.language,
-		Lapse:    "auto-denies",
+		Lapse:    tr.ApprovalLapse,
 		Default:  onceApprovalIndex,
 		Options: []question.Option{
-			{Label: "Deny"},
-			{Label: "Allow once"},
-			{Label: "Allow for 5 mins", RememberFor: approvalRememberFor},
-			{Label: "Allow for session", RememberForSession: true},
+			{Label: tr.DenyOption},
+			{Label: tr.AllowOnceOption},
+			{Label: tr.AllowForMinutesOption, RememberFor: approvalRememberFor},
+			{Label: tr.AllowForSessionOption, RememberForSession: true},
 		},
 	}
 }
@@ -1814,7 +1815,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		}
 		app.pendingNotices.add(correction)
 		app.notifyFailure(fmt.Sprintf(
-			"Port %d could not be forwarded again: %v", failure.Port, failure.Err,
+			tr.PortForwardFailure, failure.Port, failure.Err,
 		))
 	}
 	for _, failure := range pathGrantRestoreResult.Failures {
@@ -1824,7 +1825,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		}
 		app.queuePathGrantChange(correction)
 		app.notifyFailure(fmt.Sprintf(
-			"Temporary access to %s could not be restored: %v",
+			tr.PathGrantRestoreFailure,
 			failure.Grant.Path,
 			failure.Err,
 		))

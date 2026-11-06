@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -166,13 +167,13 @@ func selectNames(directory string, requestedNames []string) ([]string, error) {
 
 	for _, name := range requestedNames {
 		if slices.Contains(archivedNames, name) {
-			return nil, fmt.Errorf("the session %q is archived", name)
+			return nil, fmt.Errorf(tr.ArchivedAnalysis, name)
 		}
 		if !slices.Contains(storedNames, name) {
-			return nil, fmt.Errorf("there is no stored session named %q", name)
+			return nil, fmt.Errorf(tr.NoStoredSessionNamed, name)
 		}
 		if _, err := session.HeadSummary(directory, name); err != nil {
-			return nil, fmt.Errorf("there is no stored session named %q", name)
+			return nil, fmt.Errorf(tr.NoStoredSessionNamed, name)
 		}
 	}
 
@@ -492,7 +493,7 @@ func analyseSessionWithCache(
 		if _, headError := session.HeadSummary(directory, name); headError != nil {
 			return sessionAnalysis{ignore: true}
 		}
-		return sessionAnalysis{err: fmt.Errorf("could not read %s: %w", name, err)}
+		return sessionAnalysis{err: fmt.Errorf("%s: %w", fmt.Sprintf(tr.FileReadFailure, name), err)}
 	}
 
 	if hasCached && cachedStatistics.matches(files) {

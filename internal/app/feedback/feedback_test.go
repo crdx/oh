@@ -1,6 +1,7 @@
 package feedback
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -8,6 +9,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 )
@@ -164,12 +166,12 @@ func TestAMessageCountsDownInWholeSeconds(t *testing.T) {
 	base := time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC)
 	self.Show(Confirmation, Message{Text: "done", Status: agent.SuccessStatus, DismissAfter: testDismissAfter}, base)
 
-	if got, want := renderedText(self.Render(80, base)), "(dismissing in 4s)"; !strings.Contains(got, want) {
+	if got, want := renderedText(self.Render(80, base)), fmt.Sprintf(tr.DismissCountdown, 4); !strings.Contains(got, want) {
 		t.Errorf("rendered = %q, want it to contain %q", got, want)
 	}
 
 	afterThreeAndAHalfSeconds := base.Add(3500 * time.Millisecond)
-	if got, want := renderedText(self.Render(80, afterThreeAndAHalfSeconds)), "(dismissing in 1s)"; !strings.Contains(got, want) {
+	if got, want := renderedText(self.Render(80, afterThreeAndAHalfSeconds)), fmt.Sprintf(tr.DismissCountdown, 1); !strings.Contains(got, want) {
 		t.Errorf("rendered = %q, want it to contain %q", got, want)
 	}
 }

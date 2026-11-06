@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
 )
@@ -52,14 +53,14 @@ func subagentCommands(subagents Subagents) []slash.Command {
 func subagentsCommand(subagents Subagents) slash.Command {
 	return slash.Command{
 		Name:        "subs",
-		Description: "list this session's running and latest finished subagents",
+		Description: tr.SubagentsDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" && arguments.Text != subagentsAllArgument {
 				return slash.Usage()
 			}
 			progress := subagents.Progress()
 			if len(progress) == 0 {
-				context.Notice("No subagents.")
+				context.Notice(tr.NoSubagents)
 				return nil
 			}
 			shownFinished := shownFinishedSubagents
@@ -79,7 +80,7 @@ const catSubagentAction = "cat"
 func subagentCommand(subagents Subagents) slash.Command {
 	return slash.Command{
 		Name:        "sub",
-		Description: "read a subagent's conversation",
+		Description: tr.SubagentDescription,
 		Run: func(_ slash.Context, arguments slash.Arguments) error {
 			action, name, isNamed := strings.Cut(arguments.Text, " ")
 			name = strings.TrimSpace(name)
@@ -87,7 +88,7 @@ func subagentCommand(subagents Subagents) slash.Command {
 				return slash.Usage()
 			}
 			if !slices.ContainsFunc(subagents.List(), func(child SubagentListing) bool { return child.Name == name }) {
-				return fmt.Errorf("no subagent named %s", name)
+				return fmt.Errorf(tr.NoSubagentNamed, name)
 			}
 			return subagents.Show(name)
 		},
@@ -126,11 +127,11 @@ func formatSubagents(progress []SubagentProgress, shownFinished int) string {
 	finishedChildren = finishedChildren[len(earlierChildren):]
 	var lines []string
 	if len(runningChildren) > 0 {
-		lines = append(lines, style.Info("Running subagents:"))
+		lines = append(lines, style.Info(tr.RunningSubagentsHeading))
 		lines = append(lines, subagentRows(runningChildren)...)
 	}
 	if len(finishedChildren) > 0 {
-		lines = append(lines, style.Info("Finished subagents:"))
+		lines = append(lines, style.Info(tr.FinishedSubagentsHeading))
 		lines = append(lines, subagentRows(finishedChildren)...)
 	}
 	if summary := earlierSummary(earlierChildren); summary != "" {
@@ -153,7 +154,7 @@ func earlierSummary(earlierChildren []SubagentProgress) string {
 			parts = append(parts, fmt.Sprintf("%d %s", counts[state], state))
 		}
 	}
-	return fmt.Sprintf("and %d earlier: %s; /subs all lists them.", len(earlierChildren), strings.Join(parts, ", "))
+	return fmt.Sprintf(tr.EarlierSubagents, len(earlierChildren), strings.Join(parts, ", "), "/subs "+subagentsAllArgument)
 }
 
 func subagentRows(children []SubagentProgress) []string {
@@ -187,18 +188,18 @@ func subagentOutcome(child SubagentProgress) string {
 	}
 	duration := util.CompactDuration(child.Duration.Round(time.Second))
 	if child.IsLive {
-		return child.State + " for " + duration
+		return fmt.Sprintf(tr.StateForDuration, child.State, duration)
 	}
-	return child.State + " after " + duration
+	return fmt.Sprintf(tr.StateAfterDuration, child.State, duration)
 }
 
 func subagentActivity(child SubagentProgress) string {
 	if !child.IsTimed {
 		return ""
 	}
-	activity := util.Plural(child.ToolCalls, "tool call")
+	activity := util.Plural(child.ToolCalls, tr.ToolCallNoun)
 	if child.IsLive && child.LastIntent != "" {
-		activity += ", last: " + strutil.Flatten(child.LastIntent)
+		activity = fmt.Sprintf(tr.LastIntent, activity, strutil.Flatten(child.LastIntent))
 	}
 	return activity
 }

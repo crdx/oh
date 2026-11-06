@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/tr"
 )
 
 const watchTestTimeout = 2 * time.Second
@@ -844,11 +845,11 @@ func TestClosingAnObserverClosesItsChanges(t *testing.T) {
 
 func TestAFileThatIsNotOrdinaryIsNamedForWhatItIs(t *testing.T) {
 	for mode, want := range map[fs.FileMode]string{
-		fs.ModeDir:                        "a directory",
-		fs.ModeNamedPipe:                  "a named pipe",
-		fs.ModeSocket:                     "a socket",
-		fs.ModeDevice | fs.ModeCharDevice: "a device",
-		fs.ModeSymlink:                    "not an ordinary file",
+		fs.ModeDir:                        tr.DirectoryKind,
+		fs.ModeNamedPipe:                  tr.NamedPipeKind,
+		fs.ModeSocket:                     tr.SocketKind,
+		fs.ModeDevice | fs.ModeCharDevice: tr.DeviceKind,
+		fs.ModeSymlink:                    tr.OtherFileKind,
 	} {
 		if got := namedFileKind(mode); got != want {
 			t.Errorf("%s was named %q, want %q", mode, got, want)

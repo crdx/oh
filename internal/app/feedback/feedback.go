@@ -7,6 +7,7 @@ import (
 
 	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/pkg/agent"
 )
@@ -136,7 +137,7 @@ func (self *State) countdown(now time.Time) string {
 		return ""
 	}
 
-	return style.Subtle(fmt.Sprintf("(dismissing in %ds)", self.secondsLeft(now)))
+	return style.Subtle(fmt.Sprintf(tr.DismissCountdown, self.secondsLeft(now)))
 }
 
 func (self *State) secondsLeft(at time.Time) int {

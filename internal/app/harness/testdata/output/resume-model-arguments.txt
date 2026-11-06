@@ -2,12 +2,12 @@
 "-r chosen-lobster"                                      allowed
 "-m"                                                     allowed
 "-m codex/gpt-5.3-codex@high"                            allowed
-"-r -m"                                                  a resumed conversation preserves its model; start a new session to choose another
-"-r -m codex/gpt-5.3-codex@high"                         a resumed conversation preserves its model; start a new session to choose another
-"-r chosen-lobster -m"                                   a resumed conversation preserves its model; start a new session to choose another
-"-r chosen-lobster -m codex/gpt-5.3-codex@high"          a resumed conversation preserves its model; start a new session to choose another
-"--resume chosen-lobster --model codex/gpt-5.3-codex@high" a resumed conversation preserves its model; start a new session to choose another
+"-r -m"                                                  a resumed session keeps its model; start a new session to choose another
+"-r -m codex/gpt-5.3-codex@high"                         a resumed session keeps its model; start a new session to choose another
+"-r chosen-lobster -m"                                   a resumed session keeps its model; start a new session to choose another
+"-r chosen-lobster -m codex/gpt-5.3-codex@high"          a resumed session keeps its model; start a new session to choose another
+"--resume chosen-lobster --model codex/gpt-5.3-codex@high" a resumed session keeps its model; start a new session to choose another
 "--from chosen-lobster -m codex/gpt-5.3-codex@high"      allowed
 "-t Read"                                                allowed
-"-r chosen-lobster -t Read"                              a resumed conversation preserves its toolbox; start a new session to change them
+"-r chosen-lobster -t Read"                              a resumed session keeps its toolbox; start a new session to change it
 "--from chosen-lobster -t Read"                          allowed

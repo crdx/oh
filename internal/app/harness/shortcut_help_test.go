@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/question"
 )
@@ -57,7 +58,7 @@ func TestShortcutHelpNamesOnlyTheUndoTargetThatIsAvailable(t *testing.T) {
 	self.recordedEvents = append(self.recordedEvents, agent.Event{Kind: agent.ToolCallRequestEvent})
 	self.handleKeypressAndShowInput(inputLine, history, shortcutHelpKey())
 	for _, shortcut := range self.keyboardShortcuts(inputLine) {
-		if shortcut.keys == "^Z" && strings.Contains(shortcut.action, "last turn") {
+		if shortcut.keys == "^Z" && shortcut.action == tr.TakeBackLastTurn {
 			t.Fatal("help offered undo after a tool call")
 		}
 	}
@@ -65,7 +66,7 @@ func TestShortcutHelpNamesOnlyTheUndoTargetThatIsAvailable(t *testing.T) {
 	isFound := false
 	for _, shortcut := range self.keyboardShortcuts(inputLine) {
 		if strings.HasPrefix(shortcut.keys, "^Z") {
-			isFound = strings.Contains(shortcut.action, "queued")
+			isFound = shortcut.action == tr.TakeBackQueuedMessage
 		}
 	}
 	if !isFound {
@@ -165,10 +166,10 @@ func TestShortcutHelpThroughTheBinaryAcceptsBothSlashAndQuestionMark(t *testing.
 	conversation.waitFor(readyBanner)
 	conversation.typeAndSettle("keep this draft")
 	for _, sequence := range []string{"\x1f", "\x1b[47;5u", "\x1b[63;5u", "\x1b[47;6u"} {
-		before := conversation.Count("Keyboard shortcuts")
+		before := conversation.Count(tr.ShortcutHelpTitle)
 		conversation.typeText(sequence)
-		conversation.waitForCount("Keyboard shortcuts", before+1)
-		conversation.requireShown("Quit from an empty draft")
+		conversation.waitForCount(tr.ShortcutHelpTitle, before+1)
+		conversation.requireShown(tr.QuitFromEmptyDraft)
 		conversation.typeAndSettle(pressEnter + "\x1f")
 		conversation.requireShown("keep this draft")
 	}

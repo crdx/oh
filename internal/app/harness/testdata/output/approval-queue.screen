@@ -1,24 +1,24 @@
 === after the first is answered ===
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
 Fetch this page?
 
 ❯ second page
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === after the first is cancelled with ^C ===
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
 Fetch this page?
 
 ❯ second page
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === after the first lapses ===
-──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+─────────────────────────────────────────── denies in 5m ───────────────────────────────────────────
 Fetch this page?
 
 ❯ second page
 
- Deny  [Allow once]  Allow for 5 mins   Allow for session
+ Deny  [Allow]  Allow for 5m   Allow for session
 ────────────────────────────────────────────────────────────────────────────────────────────────────

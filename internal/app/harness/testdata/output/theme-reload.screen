@@ -365,9 +365,9 @@ harness background
 
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ The configuration could not be reloaded: config.toml:    │
- │ toml: line 3 (last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write     │
- │ #rrggbb, "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",      │
+ │ Could not reload the config: config.toml: toml: line 3   │
+ │ (last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write #rrggbb,         │
+ │ "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",               │
  │ "strikethrough", "overline", or a shaped or coloured underline such as "underline:curly"       │
 ─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
 
@@ -380,7 +380,7 @@ harness background
 still thinking
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ Configuration reloaded automatically                                                           │
+ │ Reloaded the config:                                                                           │
  │ config.toml: ui.theme (dismissing in 10s)                                                      │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 half written

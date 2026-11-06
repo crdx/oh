@@ -19,6 +19,7 @@ import (
 	"golang.org/x/sys/unix"
 
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/util"
 )
 
@@ -47,7 +48,7 @@ func readWrittenFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	if !info.Mode().IsRegular() {
-		return nil, fmt.Errorf("expected normal file, not %s", namedFileKind(info.Mode()))
+		return nil, fmt.Errorf(tr.NotNormalFile, namedFileKind(info.Mode()))
 	}
 
 	data, err := io.ReadAll(io.LimitReader(file, readableBytes+1))
@@ -56,7 +57,7 @@ func readWrittenFile(path string) ([]byte, error) {
 	}
 	if len(data) > readableBytes {
 		return nil, fmt.Errorf(
-			"is larger than %s, which is more than a config is ever written by hand",
+			tr.ConfigTooLarge,
 			util.FormatBytes(readableBytes, 0),
 		)
 	}
@@ -67,15 +68,15 @@ func readWrittenFile(path string) ([]byte, error) {
 func namedFileKind(mode fs.FileMode) string {
 	switch {
 	case mode.IsDir():
-		return "a directory"
+		return tr.DirectoryKind
 	case mode&fs.ModeNamedPipe != 0:
-		return "a named pipe"
+		return tr.NamedPipeKind
 	case mode&fs.ModeSocket != 0:
-		return "a socket"
+		return tr.SocketKind
 	case mode&fs.ModeDevice != 0:
-		return "a device"
+		return tr.DeviceKind
 	default:
-		return "not an ordinary file"
+		return tr.OtherFileKind
 	}
 }
 
@@ -401,7 +402,7 @@ func (self Observable) Observe() (Config, *Observer, error) {
 
 	watcher, err := newFileWatcher(current.getPaths()...)
 	if err != nil {
-		return Config{}, nil, fmt.Errorf("could not watch config: %w", err)
+		return Config{}, nil, fmt.Errorf("%s: %w", tr.WatchFailure, err)
 	}
 
 	if current.isStillOnDisk(settings) {
@@ -492,17 +493,17 @@ func (self *Observer) refresh(watchFailure error) (Config, []SourceChange, error
 		return Config{}, nil, nil
 	}
 	if watchFailure != nil {
-		return Config{}, nil, fmt.Errorf("could not watch config: %w", watchFailure)
+		return Config{}, nil, fmt.Errorf("%s: %w", tr.WatchFailure, watchFailure)
 	}
 
 	settings, current, err := readRevision(self.sources)
 	if watchErr := self.watcher.addPaths(current.getPaths()...); watchErr != nil {
-		return Config{}, nil, fmt.Errorf("could not watch config: %w", watchErr)
+		return Config{}, nil, fmt.Errorf("%s: %w", tr.WatchFailure, watchErr)
 	}
 
 	latestSettings, latest, latestErr := readRevision(self.sources)
 	if watchErr := self.watcher.addPaths(latest.getPaths()...); watchErr != nil {
-		return Config{}, nil, fmt.Errorf("could not watch config: %w", watchErr)
+		return Config{}, nil, fmt.Errorf("%s: %w", tr.WatchFailure, watchErr)
 	}
 	if !latest.equal(current) {
 		settings = latestSettings
@@ -626,7 +627,7 @@ func deepestExistingDirectory(path string) (string, error) {
 		info, err := os.Stat(path)
 		if err == nil {
 			if !info.IsDir() {
-				return "", fmt.Errorf("%s is not a directory", path)
+				return "", fmt.Errorf(tr.NotDirectory, path)
 			}
 			return path, nil
 		}
@@ -674,7 +675,7 @@ func (self *fileWatcher) run() {
 			return
 		}
 		if pollDescriptors[0].Revents&(unix.POLLERR|unix.POLLHUP|unix.POLLNVAL) != 0 {
-			self.publishFailure(errors.New("inotify stopped unexpectedly"))
+			self.publishFailure(errors.New(tr.WatchStopped))
 			return
 		}
 		if pollDescriptors[0].Revents&unix.POLLIN == 0 {

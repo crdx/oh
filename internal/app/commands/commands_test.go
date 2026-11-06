@@ -2,6 +2,7 @@ package commands
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -11,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/dispatch"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -260,16 +262,15 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 	}
 
 	wantConfirmations := map[string]string{
-		"/copy last-message": "Copied last message to clipboard",
-		"/copy session-chat": "Copied session chat to clipboard",
-		"/copy session-name": "Copied session name to clipboard: tame-impala",
-		"/copy session-id":   "Copied session id to clipboard: session-id",
-		"/copy session-dir":  "Copied session dir to clipboard: " + sessionDirectory,
-		"/copy config-file":  "Copied config file to clipboard: " + configPath,
-		"/copy skills-dir": "Copied skills dir to clipboard: " +
-			strings.Join(skillDirectories[:2], ", "),
-		"/copy snippets-dir": "Copied snippets dir to clipboard: " + snippetsDirectory,
-		"/copy agents-file":  "Copied agents file to clipboard: " + projectContextPath,
+		"/copy last-message": fmt.Sprintf(tr.CopiedTarget, "last message"),
+		"/copy session-chat": fmt.Sprintf(tr.CopiedTarget, "session chat"),
+		"/copy session-name": fmt.Sprintf(tr.CopiedTargetValues, "session name", "tame-impala"),
+		"/copy session-id":   fmt.Sprintf(tr.CopiedTargetValues, "session id", "session-id"),
+		"/copy session-dir":  fmt.Sprintf(tr.CopiedTargetValues, "session dir", sessionDirectory),
+		"/copy config-file":  fmt.Sprintf(tr.CopiedTargetValues, "config file", configPath),
+		"/copy skills-dir":   fmt.Sprintf(tr.CopiedTargetValues, "skills dir", strings.Join(skillDirectories[:2], ", ")),
+		"/copy snippets-dir": fmt.Sprintf(tr.CopiedTargetValues, "snippets dir", snippetsDirectory),
+		"/copy agents-file":  fmt.Sprintf(tr.CopiedTargetValues, "agents file", projectContextPath),
 	}
 
 	for input, wantAction := range tests {
@@ -514,11 +515,11 @@ func TestCommandsReportTargetsThatDoNotExistYet(t *testing.T) {
 	})
 
 	for input, want := range map[string]string{
-		"/open skills-dir":        "Skills directory does not exist yet",
-		"/open session-dir":       "Session directory does not exist yet",
-		"/open session-log-file":  "Session log does not exist yet",
-		"/open session-chat-file": "Session chat does not exist yet",
-		"/copy session-chat":      "Session chat does not exist yet",
+		"/open skills-dir":        fmt.Sprintf(tr.TargetMissing, tr.SkillsDirLabel),
+		"/open session-dir":       fmt.Sprintf(tr.TargetMissing, tr.SessionDirLabel),
+		"/open session-log-file":  fmt.Sprintf(tr.TargetMissing, tr.SessionLogLabel),
+		"/open session-chat-file": fmt.Sprintf(tr.TargetMissing, tr.SessionChatLabel),
+		"/copy session-chat":      fmt.Sprintf(tr.TargetMissing, tr.SessionChatLabel),
 		"/copy last-message":      "no model message has been received yet",
 	} {
 		t.Run(input, func(t *testing.T) {

@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util"
 )
@@ -38,7 +39,6 @@ type presentation struct {
 }
 
 const (
-	totalName   = "Total"
 	unknownCell = "—"
 )
 
@@ -69,11 +69,8 @@ func drawText(analysis Analysis, report presentation, writer io.Writer) error {
 		return nil
 	}
 	_, err := fmt.Fprintf(writer, "\n%s\n", style.Subtle(fmt.Sprintf(
-		"%s %s gone, so only %s usage and spend are counted, from %s parent's record.",
+		pluralise(analysis.MissingSubagents, tr.MissingSubagentJournal, tr.MissingSubagentJournals),
 		util.FormatCount(analysis.MissingSubagents),
-		pluralise(analysis.MissingSubagents, "subagent's journal is", "subagents' journals are"),
-		pluralise(analysis.MissingSubagents, "its", "their"),
-		pluralise(analysis.MissingSubagents, "its", "their"),
 	)))
 	return err
 }
@@ -106,7 +103,7 @@ func writeSections(writer io.Writer, sections []section, skippedCount int, sessi
 	}
 
 	if isFirstSection {
-		if _, err := fmt.Fprintln(writer, style.Subtle("Nothing was recorded.")); err != nil {
+		if _, err := fmt.Fprintln(writer, style.Subtle(tr.NothingRecorded)); err != nil {
 			return err
 		}
 	}
@@ -125,13 +122,17 @@ func writeSkipped(writer io.Writer, skippedCount int, sessionCount int, isReport
 		}
 	}
 
+	pattern := tr.LegacySessions
+	switch {
+	case sessionCount == 1:
+		pattern = tr.LegacySession
+	case skippedCount == 1:
+		pattern = tr.LegacySessionOfMany
+	}
 	_, err := fmt.Fprintln(writer, style.Subtle(fmt.Sprintf(
-		"%s of %s %s %s in a legacy format and %s not considered.",
+		pattern,
 		util.FormatCount(skippedCount),
 		util.FormatCount(sessionCount),
-		pluralise(sessionCount, "session", "sessions"),
-		pluralise(skippedCount, "is", "are"),
-		pluralise(skippedCount, "was", "were"),
 	)))
 
 	return err
@@ -143,12 +144,12 @@ func cacheSection(analysis PromptCacheAnalysis) section {
 		rows = append(rows, cacheRow(model.ProviderName(statistics.Provider), statistics, style.Answer))
 	}
 	if len(analysis.Providers) > 1 {
-		rows = append(rows, cacheRow(totalName, analysis.Total, style.Info))
+		rows = append(rows, cacheRow(tr.TotalRow, analysis.Total, style.Info))
 	}
 
 	return section{
-		title:  "Cache",
-		header: []string{"Provider", "Sessions", "Requests", "Hits", "Misses", "Hit Rate", "Input Cached", "Tokens Read"},
+		title:  tr.CacheSection,
+		header: []string{tr.ProviderColumn, tr.SessionsColumn, tr.RequestsColumn, tr.HitsColumn, tr.MissesColumn, tr.HitRateColumn, tr.InputCachedColumn, tr.TokensReadColumn},
 		rows:   rows,
 	}
 }
@@ -175,20 +176,20 @@ func contextSection(analysis PromptCacheAnalysis) section {
 		rows = append(rows, contextRow(model.ProviderName(statistics.Provider), statistics, style.Answer))
 	}
 	if len(analysis.Providers) > 1 {
-		rows = append(rows, contextRow(totalName, analysis.Total, style.Info))
+		rows = append(rows, contextRow(tr.TotalRow, analysis.Total, style.Info))
 	}
 
 	return section{
-		title: "Tokens",
+		title: tr.TokensSection,
 		header: []string{
-			"Provider",
-			"Average Input",
-			"Peak Input",
-			"Total Input",
-			"Cache Reads",
-			"Cache Writes",
-			"Fresh Input",
-			"Output",
+			tr.ProviderColumn,
+			tr.AverageInputColumn,
+			tr.PeakInputColumn,
+			tr.TotalInputColumn,
+			tr.CacheReadsColumn,
+			tr.CacheWritesColumn,
+			tr.FreshInputColumn,
+			tr.OutputColumn,
 		},
 		rows: rows,
 	}
@@ -217,33 +218,31 @@ func modelSection(analysis ModelAnalysis, currency money.Currency) section {
 	}
 	if len(analysis.Models) > 1 {
 		total := analysis.Total
-		total.Provider = totalName
+		total.Provider = tr.TotalRow
 		total.Model = ""
 		rows = append(rows, modelRow(total, currency, style.Info))
 	}
 
 	models := section{
-		title:       "Models",
+		title:       tr.ModelsSection,
 		textColumns: 2,
 		header: []string{
-			"Provider",
-			"Model",
-			"Sessions",
-			"Requests",
-			"Fresh Input",
-			"Cache Reads",
-			"Cache Writes",
-			"Output",
-			"Spend",
+			tr.ProviderColumn,
+			tr.ModelColumn,
+			tr.SessionsColumn,
+			tr.RequestsColumn,
+			tr.FreshInputColumn,
+			tr.CacheReadsColumn,
+			tr.CacheWritesColumn,
+			tr.OutputColumn,
+			tr.SpendColumn,
 		},
 		rows: rows,
 	}
 	if analysis.UnpricedModels > 0 {
 		models.note = fmt.Sprintf(
-			"%s %s no listed price, so %s spend is unknown and missing from the total.",
+			pluralise(analysis.UnpricedModels, tr.UnpricedModel, tr.UnpricedModels),
 			util.FormatCount(analysis.UnpricedModels),
-			pluralise(analysis.UnpricedModels, "model has", "models have"),
-			pluralise(analysis.UnpricedModels, "its", "their"),
 		)
 	}
 
@@ -252,7 +251,7 @@ func modelSection(analysis ModelAnalysis, currency money.Currency) section {
 
 func modelRow(statistics ModelStatistics, currency money.Currency, appearance style.Style) reportRow {
 	providerName := statistics.Provider
-	if providerName != totalName {
+	if providerName != tr.TotalRow {
 		providerName = model.ProviderName(statistics.Provider)
 	}
 
@@ -278,22 +277,22 @@ func activitySection(analysis ActivityAnalysis) section {
 		rows = append(rows, activityRow(model.ProviderName(statistics.Provider), statistics, style.Answer))
 	}
 	if len(analysis.Providers) > 1 {
-		rows = append(rows, activityRow(totalName, analysis.Total, style.Info))
+		rows = append(rows, activityRow(tr.TotalRow, analysis.Total, style.Info))
 	}
 
 	return section{
-		title: "Conversation",
+		title: tr.ConversationSection,
 		header: []string{
-			"Provider",
-			"Sessions",
-			"Turns",
-			"Prompts",
-			"Replies",
-			"Reasoning",
-			"Tool Calls",
-			"Average Turn",
-			"Longest Turn",
-			"Open For",
+			tr.ProviderColumn,
+			tr.SessionsColumn,
+			tr.TurnsColumn,
+			tr.PromptsColumn,
+			tr.RepliesColumn,
+			tr.ReasoningColumn,
+			tr.ToolCallsColumn,
+			tr.AverageTurnColumn,
+			tr.LongestTurnColumn,
+			tr.OpenForColumn,
 		},
 		rows: rows,
 	}
@@ -330,21 +329,21 @@ func faultSection(analysis FaultAnalysis) section {
 		rows = append(rows, faultRow(model.ProviderName(statistics.Provider), statistics, style.Answer))
 	}
 	if len(rows) > 1 {
-		rows = append(rows, faultRow(totalName, analysis.Total, style.Info))
+		rows = append(rows, faultRow(tr.TotalRow, analysis.Total, style.Info))
 	}
 
 	return section{
-		title: "Faults",
+		title: tr.FaultsSection,
 		header: []string{
-			"Provider",
-			"Retries",
-			"Interruptions",
-			"Failures",
-			"Compression Rejections",
-			"Silent Turns",
-			"Rewrites",
-			"Rebuilds",
-			"Rebuilt Tokens",
+			tr.ProviderColumn,
+			tr.RetriesColumn,
+			tr.InterruptionsColumn,
+			tr.FailuresColumn,
+			tr.CompressionRejectionsColumn,
+			tr.SilentTurnsColumn,
+			tr.RewritesColumn,
+			tr.RebuildsColumn,
+			tr.RebuiltTokensColumn,
 		},
 		rows: rows,
 	}
@@ -373,12 +372,12 @@ func toolSection(analysis ToolAnalysis) section {
 		rows = append(rows, toolRow(statistics.Name, statistics, style.Answer))
 	}
 	if len(analysis.Tools) > 1 {
-		rows = append(rows, toolRow(totalName, analysis.Total, style.Info))
+		rows = append(rows, toolRow(tr.TotalRow, analysis.Total, style.Info))
 	}
 
 	return section{
-		title:  "Tools",
-		header: []string{"Tool", "Calls", "Failures", "Cancelled", "Failure Rate", "Total Time", "Average Call"},
+		title:  tr.ToolsSection,
+		header: []string{tr.ToolColumn, tr.CallsColumn, tr.FailuresColumn, tr.CancelledColumn, tr.FailureRateColumn, tr.TotalTimeColumn, tr.AverageCallColumn},
 		rows:   rows,
 	}
 }
@@ -405,19 +404,19 @@ func sessionSection(sessions []SessionStatistics, currency money.Currency) secti
 	}
 
 	return section{
-		title:       "Sessions",
+		title:       tr.SessionsSection,
 		textColumns: 2,
 		header: []string{
-			"Session",
-			"Model",
-			"Turns",
-			"Requests",
-			"Hit Rate",
-			"Input",
-			"Output",
-			"Tool Calls",
-			"Open For",
-			"Spend",
+			tr.SessionColumn,
+			tr.ModelColumn,
+			tr.TurnsColumn,
+			tr.RequestsColumn,
+			tr.HitRateColumn,
+			tr.InputColumn,
+			tr.OutputColumn,
+			tr.ToolCallsColumn,
+			tr.OpenForColumn,
+			tr.SpendColumn,
 		},
 		rows: rows,
 	}

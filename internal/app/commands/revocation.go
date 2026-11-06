@@ -5,6 +5,7 @@ import (
 
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/revocation"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -15,7 +16,7 @@ type pathRevocations struct {
 func (self pathRevocations) Targets() []revocation.Target {
 	var targets []revocation.Target
 	for _, grant := range self.grants.GetCurrent() {
-		targets = append(targets, revocation.Target{Key: grant.Path, Description: "temporary path grant"})
+		targets = append(targets, revocation.Target{Key: grant.Path, Description: tr.PathGrantTarget})
 	}
 	return targets
 }
@@ -43,7 +44,7 @@ type portRevocations struct {
 func (self portRevocations) Targets() []revocation.Target {
 	var targets []revocation.Target
 	for _, port := range self.forwards.GetCurrent() {
-		targets = append(targets, revocation.Target{Key: strconv.Itoa(int(port)), Description: "forwarded port"})
+		targets = append(targets, revocation.Target{Key: strconv.Itoa(int(port)), Description: tr.ForwardedPortTarget})
 	}
 	return targets
 }

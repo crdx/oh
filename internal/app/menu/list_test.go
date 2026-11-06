@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/paste"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 )
 
 type fakeList struct {
@@ -737,7 +738,7 @@ func TestKeyboardHelpOffersFilteringUntilItStarts(t *testing.T) {
 	}
 
 	self.apply(key.Key{Code: key.Rune, Value: '/'})
-	if got := style.Plain(self.promptLine(80)); got != filterPrompt {
+	if got := style.Plain(self.promptLine(80)); got != tr.MenuFilterPrompt {
 		t.Errorf("expected only the active filter, got %q", got)
 	}
 }

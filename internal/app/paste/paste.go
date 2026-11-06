@@ -7,11 +7,11 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/util"
 )
 
 const (
-	eventName     = "Paste event"
 	TextMediaType = "text/plain"
 	maxBytes      = 32 << 20
 )
@@ -95,7 +95,7 @@ func (self *Exchange) collect(report *key.ClipboardReport) Result {
 
 		return Result{
 			Kind:    Failed,
-			Message: "the clipboard holds more than " + util.FormatBytes(maxBytes, 0),
+			Message: fmt.Sprintf(tr.ClipboardTooLarge, util.FormatBytes(maxBytes, 0)),
 		}
 	}
 
@@ -141,7 +141,7 @@ func readSequence(location string, password string, mediaType string) string {
 	}
 
 	if password != "" {
-		metadata += ":pw=" + encode(password) + ":name=" + encode(eventName)
+		metadata += ":pw=" + encode(password) + ":name=" + encode(tr.PasteEventName)
 	}
 
 	return fmt.Sprintf("\x1b]%s;%s;%s\x1b\\", key.ClipboardCode, metadata, encode(mediaType))
@@ -154,12 +154,12 @@ func encode(text string) string {
 func failureMessage(failure string) string {
 	switch failure {
 	case "EPERM":
-		return "permission to read the clipboard was refused"
+		return tr.ClipboardRefused
 	case "ENOSYS":
-		return "the terminal has no clipboard to read"
+		return tr.ClipboardMissing
 	case "EBUSY":
-		return "another window is using the clipboard"
+		return tr.ClipboardBusy
 	}
 
-	return "the terminal refused the clipboard with " + failure
+	return fmt.Sprintf(tr.ClipboardFailure, failure)
 }

@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
@@ -247,7 +248,7 @@ func TestSubagentsReportBackThroughTheBinaryAndAreListed(t *testing.T) {
 	session.requireShown(secondChildAnswer)
 
 	session.typeText("/subs" + pressEnter)
-	session.waitFor("Finished subagents:")
+	session.waitFor(tr.FinishedSubagentsHeading)
 	session.typeAndSettle(pressEscape)
 	session.quit()
 

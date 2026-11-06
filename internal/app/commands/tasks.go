@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tasks"
@@ -45,7 +46,7 @@ func taskCommands(managedTasks Tasks) []slash.Command {
 func tasksCommand(managedTasks Tasks) slash.Command {
 	return slash.Command{
 		Name:        "tasks",
-		Description: "list this session's active background tasks",
+		Description: tr.TasksDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" {
 				return slash.Usage()
@@ -54,7 +55,7 @@ func tasksCommand(managedTasks Tasks) slash.Command {
 				return !isLiveTask(snapshot)
 			})
 			if len(listing) == 0 {
-				context.Notice("No active background tasks.")
+				context.Notice(tr.NoActiveTasks)
 				return nil
 			}
 			context.PlainNoticeListing(formatTasks(listing, managedTasks.DescribeCall))
@@ -67,7 +68,7 @@ func tasksCommand(managedTasks Tasks) slash.Command {
 func taskCommand(managedTasks Tasks) slash.Command {
 	return slash.Command{
 		Name:        "task",
-		Description: "inspect, stop, restart, or discard a background task, or prune finished ones",
+		Description: tr.TaskDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			action, name, isNamed := strings.Cut(arguments.Text, " ")
 			name = strings.TrimSpace(name)
@@ -148,7 +149,7 @@ func runTaskAction(context slash.Context, managedTasks Tasks, action string, nam
 		if err != nil {
 			return err
 		}
-		context.Success(fmt.Sprintf("Restarted %s as run %d.", snapshot.ID, snapshot.Run))
+		context.Success(fmt.Sprintf(tr.TaskRestarted, snapshot.ID, snapshot.Run))
 
 		return nil
 
@@ -164,7 +165,7 @@ func runTaskAction(context slash.Context, managedTasks Tasks, action string, nam
 		if isLiveTask(snapshot) {
 			context.Emit(caps.TaskStoppedByUserEvent(name))
 		}
-		context.Success("Discarded " + describeTask(discardedTask) + ".")
+		context.Success(fmt.Sprintf(tr.TaskDiscarded, describeTask(discardedTask)))
 
 		return nil
 
@@ -176,12 +177,12 @@ func runTaskAction(context slash.Context, managedTasks Tasks, action string, nam
 func pruneEveryFinishedTask(context slash.Context, managedTasks Tasks) error {
 	prunedNames := managedTasks.PruneFinished()
 	if len(prunedNames) == 0 {
-		context.Notice("No finished tasks to prune.")
+		context.Notice(tr.NoFinishedTasks)
 
 		return nil
 	}
 
-	context.Success("Pruned " + strings.Join(prunedNames, ", ") + ".")
+	context.Success(fmt.Sprintf(tr.TasksPruned, strings.Join(prunedNames, ", ")))
 
 	return nil
 }
@@ -206,7 +207,7 @@ func formatTasks(listing []tasks.Snapshot, describeCall func(tasks.Snapshot) str
 		lines[index] = "  " + taskTable.Row(row, 0)
 	}
 
-	return style.Info("Background tasks:") + "\n" + strings.Join(lines, "\n")
+	return style.Info(tr.TasksHeading) + "\n" + strings.Join(lines, "\n")
 }
 
 func styleTaskOutcome(snapshot tasks.Snapshot) string {
@@ -236,20 +237,20 @@ func taskOutcome(snapshot tasks.Snapshot, isSilent bool) string {
 	switch {
 	case snapshot.StartedAt.IsZero():
 	case isLiveTask(snapshot):
-		stateWithDuration += " for " + util.CompactDuration(time.Since(snapshot.StartedAt).Round(time.Second))
+		stateWithDuration = fmt.Sprintf(tr.StateForDuration, stateWithDuration, util.CompactDuration(time.Since(snapshot.StartedAt).Round(time.Second)))
 	case !snapshot.EndedAt.IsZero():
-		stateWithDuration += " after " + util.CompactDuration(snapshot.EndedAt.Sub(snapshot.StartedAt).Round(time.Second))
+		stateWithDuration = fmt.Sprintf(tr.StateAfterDuration, stateWithDuration, util.CompactDuration(snapshot.EndedAt.Sub(snapshot.StartedAt).Round(time.Second)))
 	}
 	if isSilent {
-		stateWithDuration += " with no output"
+		stateWithDuration = fmt.Sprintf(tr.SilentTask, stateWithDuration)
 	}
 
 	parts := []string{stateWithDuration}
 	if snapshot.Run > 1 {
-		parts = append(parts, fmt.Sprintf("run %d", snapshot.Run))
+		parts = append(parts, fmt.Sprintf(tr.TaskRun, snapshot.Run))
 	}
 	if snapshot.IsRespawning {
-		parts = append(parts, "respawns on exit")
+		parts = append(parts, tr.TaskRespawns)
 	}
 	if snapshot.IsRespawnLimitReached {
 		parts = append(parts, tasks.RespawnLimitReason())
@@ -264,7 +265,7 @@ func taskOutcome(snapshot tasks.Snapshot, isSilent bool) string {
 func withTaskOutput(snapshot tasks.Snapshot) string {
 	lines := []string{}
 	for _, previous := range snapshot.Previous {
-		line := fmt.Sprintf("run %d: %s", previous.Run, previous.State)
+		line := fmt.Sprintf(tr.PreviousTaskRun, previous.Run, previous.State)
 		if previous.Failure != "" {
 			line += ", " + previous.Failure
 		}

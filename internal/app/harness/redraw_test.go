@@ -2,6 +2,7 @@ package harness
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 	"testing"
 	"testing/synctest"
@@ -14,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/permission"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/question"
 )
@@ -188,7 +190,7 @@ func TestControlLReportsCompletedRedrawTimeAndDismissesIt(t *testing.T) {
 	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 
 	pressControlL(self)
-	if got := self.feedback.Message().Text; got != "Redrawn in 0ms" {
+	if got := self.feedback.Message().Text; got != fmt.Sprintf(tr.RedrawTime, "0ms") {
 		t.Errorf("ctrl+l feedback = %q, want redraw time", got)
 	}
 	if got := self.nextRefresh(base); !got.Equal(base.Add(time.Second)) {
@@ -257,7 +259,7 @@ func TestControlLMeasuresThroughTheTerminalWrite(t *testing.T) {
 	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 
 	pressControlL(self)
-	if got := self.feedback.Message().Text; got != "Redrawn in 42ms" {
+	if got := self.feedback.Message().Text; got != fmt.Sprintf(tr.RedrawTime, "42ms") {
 		t.Errorf("feedback = %q, want time through the terminal write", got)
 	}
 }
@@ -288,7 +290,7 @@ func controlLFeedbackStream(t *testing.T, columns int) string {
 	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 	self.show(self.inputLine)
 	pressControlL(self)
-	if got := self.feedback.Message().Text; got != "Redrawn in 0ms" {
+	if got := self.feedback.Message().Text; got != fmt.Sprintf(tr.RedrawTime, "0ms") {
 		t.Errorf("redraw feedback = %q", got)
 	}
 	requireNothingDrawnAboveTheScreen(t, "ctrl+l feedback", screenOutput.String(), replayLines)

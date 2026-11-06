@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/ctl/console"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 )
@@ -215,7 +216,7 @@ func TestAnUnfinishedTurnIsARecoverableWarning(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(screen.String(), "warning") || !strings.Contains(screen.String(), "unfinished turn is recoverable") {
+	if !strings.Contains(screen.String(), tr.CheckWarning) || !strings.Contains(screen.String(), tr.RecoverableTurn) {
 		t.Errorf("recovery warning was not shown: %q", screen.String())
 	}
 	if failure.Len() != 0 {
@@ -242,7 +243,7 @@ func TestFixRecoversAnUnfinishedTurnAndKeepsACopy(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(directory+"_pre_check", name, "session.jsonl")); err != nil {
 		t.Errorf("no backup was kept: %v", err)
 	}
-	if !strings.Contains(screen.String(), "fixed") || !strings.Contains(screen.String(), "abandon an unfinished turn") {
+	if !strings.Contains(screen.String(), tr.CheckFixed) || !strings.Contains(screen.String(), tr.AbandonTurn) {
 		t.Errorf("fix was not reported: %q", screen.String())
 	}
 }
@@ -266,7 +267,7 @@ func TestDryRunReportsButDoesNotRepair(t *testing.T) {
 	if _, err := os.Stat(directory + "_pre_check"); !os.IsNotExist(err) {
 		t.Errorf("dry run created a backup: %v", err)
 	}
-	if !strings.Contains(screen.String(), "would fix") {
+	if !strings.Contains(screen.String(), tr.CheckPlanned) {
 		t.Errorf("dry run did not report the repair: %q", screen.String())
 	}
 }
@@ -322,7 +323,7 @@ func TestFixSkipsASessionThatIsInUse(t *testing.T) {
 	if err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(screen.String(), "skipped") || !strings.Contains(screen.String(), "in use") {
+	if !strings.Contains(screen.String(), fmt.Sprintf(tr.SkippedInUse, name)) {
 		t.Errorf("running session was not skipped: %q", screen.String())
 	}
 	if _, err := os.Stat(directory + "_pre_check"); !os.IsNotExist(err) {

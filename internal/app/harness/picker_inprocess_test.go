@@ -1,6 +1,7 @@
 package harness
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -12,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/ptytest"
 	"crdx.org/oh/internal/app/sessions"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/session"
@@ -66,7 +68,7 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 		pressLeft      = "\x1b[D"
 		pressDelete    = "\x1b[3~"
 		pressArchive   = "a"
-		keyHint        = "archive/restore"
+		keyHint        = tr.PickerArchiveAction
 		workspaceName  = "able-ant"
 		otherName      = "far-fox"
 		runningName    = "busy-bee"
@@ -141,7 +143,7 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 
 	picker, closePicker := runInProcessPicker(t, sessionsDirectory, workspace)
 	defer closePicker()
-	belongsTo := regexp.MustCompile(`(Session belongs to ).*`)
+	belongsTo := regexp.MustCompile("(" + regexp.QuoteMeta(strings.TrimSuffix(tr.OtherWorkspaceMessage, "%s")) + ").*")
 	passes := map[string]func() string{}
 	record := func(pass string) {
 		t.Helper()
@@ -166,13 +168,13 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 	record("01 this workspace alone")
 
 	picker.typeAndSettle(t, pressTab)
-	waitForPTYText(t, picker, "Agent (all)")
+	waitForPTYText(t, picker, fmt.Sprintf(tr.AgentColumnQualified, tr.AllWorkspacesQualifier))
 	picker.typeAndSettle(t, pressHome)
 	if _, err := picker.typing.WriteString(pressArchive + pressArchive + pressDelete + pressDelete); err != nil {
 		t.Fatal(err)
 	}
 	picker.typeAndSettle(t, pressDown)
-	for _, prompt := range []string{"again to archive " + runningName, "again to delete " + runningName} {
+	for _, prompt := range []string{fmt.Sprintf(tr.ArchivePrompt, pressArchive, runningName), fmt.Sprintf(tr.DeletePrompt, "delete", runningName)} {
 		if picker.Count(prompt) != 0 {
 			t.Errorf("another workspace's running session was offered %q", prompt)
 		}
@@ -180,7 +182,7 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 	record("02 another workspace's running session is offered neither archiving nor deletion")
 
 	picker.typeAndSettle(t, pressArchive)
-	waitForPTYText(t, picker, "Press a again to archive "+otherName)
+	waitForPTYText(t, picker, fmt.Sprintf(tr.ArchivePrompt, pressArchive, otherName))
 	record("03 archiving another workspace's session asks first")
 	confirm(pressArchive, func() bool { return isPresent(archivePath) && !isPresent(storedPath) })
 	record("04 another workspace's session archived")
@@ -188,14 +190,14 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 	picker.typeAndSettle(t, pressRight)
 	picker.typeAndSettle(t, pressHome)
 	picker.typeAndSettle(t, pressArchive)
-	waitForPTYText(t, picker, "Press a again to restore "+otherName)
+	waitForPTYText(t, picker, fmt.Sprintf(tr.RestorePrompt, pressArchive, otherName))
 	record("05 restoring another workspace's archive asks first")
 	confirm(pressArchive, func() bool { return !isPresent(archivePath) && isPresent(storedPath) })
 	record("06 another workspace's archive restored")
 
 	picker.typeAndSettle(t, pressHome)
 	picker.typeAndSettle(t, pressDelete)
-	waitForPTYText(t, picker, "Press delete again to delete "+archivedName)
+	waitForPTYText(t, picker, fmt.Sprintf(tr.DeletePrompt, "delete", archivedName))
 	record("07 deleting another workspace's archive asks first")
 	confirm(pressDelete, func() bool {
 		return !isPresent(otherArchivePath) && !isPresent(filepath.Join(farmDirectory, archivedName))
@@ -206,14 +208,14 @@ func TestGoldenThePickerArchivesRestoresAndDeletesAnotherWorkspacesSessionInProc
 	picker.typeAndSettle(t, pressHome)
 	picker.typeAndSettle(t, pressDown)
 	picker.typeAndSettle(t, pressEnter)
-	waitForPTYText(t, picker, "Session belongs to")
+	waitForPTYText(t, picker, strings.TrimSuffix(tr.OtherWorkspaceMessage, "%s"))
 	record("09 another workspace's session is read but not opened")
 	picker.typeAndSettle(t, pressEnter)
 	record("10 another workspace's session stays closed to a second enter")
 	picker.typeAndSettle(t, pressEscape)
 
 	picker.typeAndSettle(t, pressDelete)
-	waitForPTYText(t, picker, "Press delete again to delete "+otherName)
+	waitForPTYText(t, picker, fmt.Sprintf(tr.DeletePrompt, "delete", otherName))
 	record("11 deleting another workspace's session asks first")
 	confirm(pressDelete, func() bool {
 		return !isPresent(storedPath) && !isPresent(filepath.Join(farmDirectory, otherName))

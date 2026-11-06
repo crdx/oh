@@ -13,6 +13,7 @@ import (
 	"unicode/utf8"
 
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/tr"
 )
 
 const (
@@ -109,7 +110,7 @@ func New(configuredDefinitions map[string]Definition) (slash.CommandSet, error) 
 	var help slash.Command
 	help = slash.Command{
 		Name:        helpCommandName,
-		Description: "list the configured snippets",
+		Description: tr.SnippetsDescription,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -129,9 +130,9 @@ func New(configuredDefinitions map[string]Definition) (slash.CommandSet, error) 
 func helpText(entries []slash.HelpEntry, hiddenUsage string) string {
 	visible := slices.DeleteFunc(entries, func(entry slash.HelpEntry) bool { return entry.Usage == hiddenUsage })
 	if len(visible) == 0 {
-		return "No snippets are configured."
+		return tr.NoSnippets
 	}
-	return "Snippets:\n" + strings.Join(slash.FormatHelp(visible), "\n")
+	return tr.SnippetsHeading + "\n" + strings.Join(slash.FormatHelp(visible), "\n")
 }
 
 func getArgumentName(tree *parse.Tree) (string, error) {

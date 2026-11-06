@@ -1,6 +1,6 @@
 \e[1m\e[38;2;207;173;0mCache\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider    Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mProvider    Sessions  Requests  Hits  Misses  Hit rate  Input cached  Tokens read\e[0m\e[0m
 Anthropic          2         8     6       2     75.0%         90.0%        450Kt
 Codex              1        10     7       3     70.0%         70.0%        175Kt
 Ollama             1         4     0       4      0.0%          0.0%           0t
@@ -9,7 +9,7 @@ Openrouter         1         1     0       1      0.0%          0.0%           0
 
 \e[1m\e[38;2;207;173;0mTokens\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider    Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mProvider    Average input  Peak input  Total input  Cache reads  Cache writes  Fresh input  Output\e[0m\e[0m
 Anthropic            62Kt       100Kt        500Kt        450Kt          25Kt         25Kt    13Kt
 Codex                25Kt        40Kt        250Kt        175Kt          10Kt         65Kt    22Kt
 Ollama               15Kt        20Kt         60Kt           0t            0t         60Kt   2.5Kt
@@ -18,7 +18,7 @@ Openrouter           12Kt        12Kt         12Kt           0t            0t   
 
 \e[1m\e[38;2;207;173;0mModels\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider    Model              Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mProvider    Model              Sessions  Requests  Fresh input  Cache reads  Cache writes  Output  Spend\e[0m\e[0m
 Anthropic   claude-sonnet-4-6         2         8         25Kt        450Kt          25Kt    13Kt  $0.50
 Codex       gpt-5.6-sol               1        10         65Kt        175Kt          10Kt    22Kt  $0.32
 Ollama      qwen3.8:27b               1         4         60Kt           0t            0t   2.5Kt      —
@@ -28,7 +28,7 @@ Openrouter  kimi-k2-thinking          1         1         12Kt           0t     
 
 \e[1m\e[38;2;207;173;0mConversation\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider    Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mProvider    Sessions  Turns  Prompts  Replies  Reasoning  Tool calls  Average turn  Longest turn  Open for\e[0m\e[0m
 Anthropic          2      8        8        8         12          35           56s            2m       50m
 Codex              1     10       11        9         44         120        2m 30s            5m    1h 35m
 Ollama             1      4        4        4          0           6           30s           45s       12m
@@ -37,7 +37,7 @@ Openrouter         1      0        1        0          0           0            
 
 \e[1m\e[38;2;207;173;0mFaults\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider    Retries  Interruptions  Failures  Compression Rejections  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mProvider    Retries  Interruptions  Failures  Compression rejections  Silent turns  Rewrites  Rebuilds  Rebuilt tokens\e[0m\e[0m
 Anthropic         1              2         0                       2             1         0         1            15Kt
 Codex             3              0         1                       1             0         2         3            30Kt
 Openrouter        0              0         1                       0             0         0         0              0t
@@ -45,7 +45,7 @@ Openrouter        0              0         1                       0            
 
 \e[1m\e[38;2;207;173;0mTools\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mTool   Calls  Failures  Cancelled  Failure Rate  Total Time  Average Call\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mTool   Calls  Failures  Cancelled  Failure rate  Total time  Average call\e[0m\e[0m
 bash      72         6          1          8.3%      9m 40s            8s
 read      49         0          0          0.0%          8s          0.2s
 edit      40         1          0          2.5%         20s          0.5s
@@ -53,7 +53,7 @@ edit      40         1          0          2.5%         20s          0.5s
 
 \e[1m\e[38;2;207;173;0mSessions\e[0m\e[0m
 
-\e[4m\e[38;2;150;152;150mSession         Model              Turns  Requests  Hit Rate  Input  Output  Tool Calls  Open For  Spend\e[0m\e[0m
+\e[4m\e[38;2;150;152;150mSession         Model              Turns  Requests  Hit rate  Input  Output  Tool calls  Open for  Spend\e[0m\e[0m
 amber-wolf      claude-sonnet-4-6      5         5     80.0%  300Kt     9Kt          31       42m  $0.32
 quiet-otter     claude-sonnet-4-6      3         3     66.7%  200Kt     4Kt           4        8m  $0.18
 rustic-giraffe  gpt-5.6-sol           10        10     70.0%  250Kt    22Kt         120    1h 35m  $0.32

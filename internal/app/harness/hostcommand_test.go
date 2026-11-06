@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/pkg/agent"
 )
@@ -74,7 +75,7 @@ func TestAHostCommandRunsWithoutHoldingTheInterface(t *testing.T) {
 	}
 
 	rows := self.hostCommandRows(replayColumns)
-	if len(rows) != 1 || !strings.Contains(style.Plain(rows[0]), "git push") || !strings.Contains(style.Plain(rows[0]), "esc to stop") {
+	if len(rows) != 1 || !strings.Contains(style.Plain(rows[0]), "git push") || !strings.Contains(style.Plain(rows[0]), fmt.Sprintf(tr.StopHint, "esc")) {
 		t.Errorf("got rows %q, want the running command and how to stop it", rows)
 	}
 	if err := self.startHostCommand(t.TempDir(), "ls"); !errors.Is(err, errHostCommandUnderway) {

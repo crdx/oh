@@ -56,6 +56,7 @@ import (
 	"crdx.org/oh/internal/app/taskrecord"
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
@@ -432,7 +433,7 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 		self.redraw()
 		if isRedrawTimingEnabled && self.feedback.IsEmpty() && !self.isAwaitingAnswer() {
 			self.showFeedback(feedback.Command, feedback.Message{
-				Text:         "Redrawn in " + redrawElapsed(self.getNow().Sub(startedAt)),
+				Text:         fmt.Sprintf(tr.RedrawTime, redrawElapsed(self.getNow().Sub(startedAt))),
 				Status:       agent.InfoStatus,
 				DismissAfter: redrawFeedbackDuration,
 			})
@@ -608,7 +609,7 @@ func (self *App) stashDraft(inputLine *edit.Input) {
 
 	if _, err := self.getDraftStash().Push(inputLine.Text()); err != nil {
 		self.showFeedback(feedback.Command, feedback.Message{
-			Text:   "Could not stash input: " + err.Error(),
+			Text:   fmt.Sprintf(tr.StashFailure, err.Error()),
 			Status: agent.ErrorStatus,
 		})
 		return
@@ -622,7 +623,7 @@ func (self *App) popStash(inputLine *edit.Input, doesReportEmpty bool) {
 	restoredDraft, _, isFound, err := self.getDraftStash().Exchange(inputLine.Text())
 	if err != nil {
 		self.showFeedback(feedback.Command, feedback.Message{
-			Text:   "Could not restore stashed input: " + err.Error(),
+			Text:   fmt.Sprintf(tr.StashRestoreFailure, err.Error()),
 			Status: agent.ErrorStatus,
 		})
 		return
@@ -630,7 +631,7 @@ func (self *App) popStash(inputLine *edit.Input, doesReportEmpty bool) {
 	if !isFound {
 		if doesReportEmpty {
 			self.showFeedback(feedback.Command, feedback.Message{
-				Text:   "Stash is empty",
+				Text:   tr.StashEmpty,
 				Status: agent.InfoStatus,
 			})
 		}
@@ -720,7 +721,7 @@ func isWhitespaceAtCursor(inputLine *edit.Input) bool {
 
 func (self *App) showPasteFailure(message string) {
 	self.showFeedback(feedback.Command, feedback.Message{
-		Text:   "Could not paste: " + message,
+		Text:   fmt.Sprintf(tr.PasteFailure, message),
 		Status: agent.ErrorStatus,
 	})
 }
@@ -1785,14 +1786,14 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		return true
 	case config.ReloadFailed:
 		self.showFeedback(feedback.Config, feedback.Message{
-			Text:   "The configuration could not be reloaded: " + result.Failure.Error(),
+			Text:   fmt.Sprintf(tr.ReloadFailure, result.Failure.Error()),
 			Status: agent.ErrorStatus,
 		})
 		return true
 	case config.ReloadApplied:
 		if err := self.commands.ReplaceCommandSet(result.LiveConfig.SnippetCommandSet); err != nil {
 			self.showFeedback(feedback.Config, feedback.Message{
-				Text:   "The configuration could not be reloaded: could not replace snippets: " + err.Error(),
+				Text:   fmt.Sprintf(tr.SnippetReloadFailure, err.Error()),
 				Status: agent.ErrorStatus,
 			})
 			return true
@@ -1822,7 +1823,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		self.followCurrency(result.LiveConfig.Currency)
 		if err := self.children.reconfigure(result.LiveConfig); err != nil {
 			self.showFeedback(feedback.Config, feedback.Message{
-				Text:   "The subagent settings could not be reloaded, so the earlier ones stand: " + err.Error(),
+				Text:   fmt.Sprintf(tr.SubagentReloadFailure, err.Error()),
 				Status: agent.ErrorStatus,
 			})
 		}
@@ -1843,16 +1844,16 @@ func (self *App) reloadConfig(watchFailure error) bool {
 
 func reloadConfirmation(changes []config.SourceChange, reachOf func(string) config.Reach) string {
 	rows := make([]string, 0, len(changes)+1)
-	rows = append(rows, "Configuration reloaded automatically")
+	rows = append(rows, tr.ReloadConfirmation)
 
 	for _, change := range changes {
 		switch {
 		case change.IsRemoved && len(change.Settings) > 0:
-			rows = append(rows, change.Path+": gone, dropping "+strings.Join(change.Settings, ", "))
+			rows = append(rows, fmt.Sprintf(tr.RemovedSourceDropping, change.Path, strings.Join(change.Settings, ", ")))
 		case change.IsRemoved:
-			rows = append(rows, change.Path+": gone")
+			rows = append(rows, fmt.Sprintf(tr.RemovedSource, change.Path))
 		case len(change.Settings) == 0:
-			rows = append(rows, change.Path+": no setting changed")
+			rows = append(rows, fmt.Sprintf(tr.UnchangedSource, change.Path))
 		default:
 			rows = append(rows, change.Path+": "+strings.Join(change.Settings, ", "))
 		}
@@ -1862,8 +1863,8 @@ func reloadConfirmation(changes []config.SourceChange, reachOf func(string) conf
 }
 
 var reachDescriptions = map[config.Reach]string{
-	config.ReachNextRun:     "applies when oh next starts",
-	config.ReachNextSession: "applies to new sessions",
+	config.ReachNextRun:     tr.NextRunReach,
+	config.ReachNextSession: tr.NextSessionReach,
 }
 
 func reachRows(changes []config.SourceChange, reachOf func(string) config.Reach) []string {
@@ -1901,7 +1902,7 @@ func (self *App) notifyUnknownSettings(reports []string) {
 	}
 
 	self.showFeedback(feedback.UnknownSettings, feedback.Message{
-		Text:   "Unknown settings were ignored.\n" + strings.Join(reports, "\n"),
+		Text:   tr.UnknownSettings + "\n" + strings.Join(reports, "\n"),
 		Status: agent.WarningStatus,
 	})
 }
@@ -2100,11 +2101,11 @@ func (self *App) restore(storedSession *store.Session) {
 	self.settledCaps, _ = caps.LastRecordedMode(storedSession.Events)
 
 	if err := self.agent.RestoreState(storedSession.Events); err != nil {
-		self.notifyFailure("The state could not be restored: " + err.Error())
+		self.notifyFailure(fmt.Sprintf(tr.StateRestoreFailure, err.Error()))
 		return
 	}
 	if err := self.agent.Load(storedSession.Items); err != nil {
-		self.notifyFailure("The conversation could not be restored: " + err.Error())
+		self.notifyFailure(fmt.Sprintf(tr.ConversationRestoreFailure, err.Error()))
 		return
 	}
 
@@ -2478,7 +2479,7 @@ func (self *App) carryOver(forkSource *sessions.ForkSource) {
 			err = pathError.Err
 		}
 		if err != nil {
-			self.notifyFailure(fmt.Sprintf("Temporary access to %s could not be carried over: %v", grant.Path, err))
+			self.notifyFailure(fmt.Sprintf(tr.PathGrantCarryFailure, grant.Path, err))
 			continue
 		}
 		self.queuePathGrantChange(event)
@@ -2488,7 +2489,7 @@ func (self *App) carryOver(forkSource *sessions.ForkSource) {
 	for _, route := range recordedRoutes {
 		event, err := self.forwards.ForwardRoute(route)
 		if err != nil {
-			self.notifyFailure(fmt.Sprintf("Port %d could not be forwarded again: %v", route.Port, err))
+			self.notifyFailure(fmt.Sprintf(tr.PortForwardFailure, route.Port, err))
 			continue
 		}
 		self.pendingNotices.add(event)
@@ -2586,7 +2587,7 @@ func (self *App) recordEvent(event agent.Event) {
 
 func (self *App) storeEvent(event agent.Event) {
 	if err := self.recorder.Event(event); err != nil {
-		self.notifyFailure("The conversation could not be stored: " + err.Error())
+		self.notifyFailure(fmt.Sprintf(tr.ConversationStoreFailure, err.Error()))
 	}
 	self.showStorageWarnings()
 }
@@ -2679,7 +2680,7 @@ func (self *App) finish() {
 
 	if self.storeProviderState() {
 		if err := self.recorder.CompleteTurn(self.turnSummary()); err != nil {
-			self.notifyFailure("The turn completion could not be stored: " + err.Error())
+			self.notifyFailure(fmt.Sprintf(tr.TurnStoreFailure, err.Error()))
 		}
 	}
 	self.showStorageWarnings()
@@ -2746,7 +2747,7 @@ func (self *App) finish() {
 func (self *App) storeProviderState() bool {
 	items, err := self.agent.Dump()
 	if err != nil {
-		self.notifyFailure("The conversation state could not be stored: " + err.Error())
+		self.notifyFailure(fmt.Sprintf(tr.ConversationStateFailure, err.Error()))
 		return false
 	}
 

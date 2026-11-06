@@ -3,6 +3,7 @@ package sessions
 import (
 	"fmt"
 
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/format"
 	"crdx.org/oh/pkg/session"
 )
@@ -48,28 +49,20 @@ func explainFormat(name string, err error) error {
 	}
 }
 
-func aheadError(names []string) error {
-	subject, _ := nameSessions(names)
+const migrateCommand = "oh --ctl migrate"
 
-	return fmt.Errorf(
-		"%s written in a newer journal format than this oh reads (format %d): upgrade oh",
-		subject, session.JournalFormat,
-	)
+func aheadError(names []string) error {
+	if len(names) == 1 {
+		return fmt.Errorf(tr.NewerFormatSession, names[0], session.JournalFormat)
+	}
+
+	return fmt.Errorf(tr.NewerFormatSessions, len(names), session.JournalFormat)
 }
 
 func outdatedError(names []string) error {
-	subject, object := nameSessions(names)
-
-	return fmt.Errorf(
-		"%s written in an older journal format: run `oh --ctl migrate` to bring %s up to format %d",
-		subject, object, session.JournalFormat,
-	)
-}
-
-func nameSessions(names []string) (string, string) {
 	if len(names) == 1 {
-		return names[0] + " is", "it"
+		return fmt.Errorf(tr.OlderFormatSession, names[0], migrateCommand, session.JournalFormat)
 	}
 
-	return fmt.Sprintf("%d sessions are", len(names)), "them"
+	return fmt.Errorf(tr.OlderFormatSessions, len(names), migrateCommand, session.JournalFormat)
 }

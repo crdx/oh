@@ -2,6 +2,7 @@ package sessions
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 )
 
@@ -388,7 +390,7 @@ func TestLoadingARunningSessionReportsThatItIsRunning(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name(), false); err == nil || !strings.Contains(err.Error(), "is running") {
+	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name(), false); err == nil || err.Error() != fmt.Sprintf(tr.SessionRunning, writer.Name()) {
 		t.Fatalf("expected the running session to be identified, got %v", err)
 	}
 }
@@ -418,7 +420,7 @@ func TestLoadingACompletedSessionSucceeds(t *testing.T) {
 	}
 
 	if _, err := LoadForResume(directory, work.At(t.TempDir()), writer.Name(), false); err == nil ||
-		!strings.Contains(err.Error(), "can only be opened there") {
+		err.Error() != fmt.Sprintf(tr.SessionElsewhere, writer.Name(), workspaceDir) {
 		t.Fatalf("expected a session of another workspace to be refused, got %v", err)
 	}
 }
@@ -448,7 +450,7 @@ func TestLoadingAnArchivedSessionRestoresItOnlyWhenForced(t *testing.T) {
 	}
 
 	if _, err := LoadForResume(directory, work.At(workspaceDir), name, false); err == nil ||
-		!strings.Contains(err.Error(), "is archived; pass -f to restore and resume") {
+		err.Error() != fmt.Sprintf(tr.SessionArchived, name, forceFlag) {
 		t.Fatalf("expected an archived session to be refused without --force, got %v", err)
 	}
 	if !session.IsArchived(directory, name) {
@@ -456,7 +458,7 @@ func TestLoadingAnArchivedSessionRestoresItOnlyWhenForced(t *testing.T) {
 	}
 
 	if _, err := LoadForResume(directory, work.At(t.TempDir()), name, true); err == nil ||
-		!strings.Contains(err.Error(), "can only be opened there") {
+		err.Error() != fmt.Sprintf(tr.SessionElsewhere, name, workspaceDir) {
 		t.Fatalf("expected a session of another workspace to be refused, got %v", err)
 	}
 	if !session.IsArchived(directory, name) {
@@ -515,7 +517,8 @@ func TestASessionRecordedThroughALinkResumesInTheWorkspaceItNames(t *testing.T) 
 
 func TestAForkSourceOfAnotherWorkspaceIsRefused(t *testing.T) {
 	directory := t.TempDir()
-	writer, err := store.Create(directory, store.Meta{WorkspaceDir: t.TempDir()})
+	workspaceDir := t.TempDir()
+	writer, err := store.Create(directory, store.Meta{WorkspaceDir: workspaceDir})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -526,7 +529,7 @@ func TestAForkSourceOfAnotherWorkspaceIsRefused(t *testing.T) {
 	}
 
 	if _, err := GetForkSource(directory, work.At(t.TempDir()), writer.Name(), ""); err == nil ||
-		!strings.Contains(err.Error(), "can only be opened there") {
+		err.Error() != fmt.Sprintf(tr.SessionElsewhere, writer.Name(), workspaceDir) {
 		t.Fatalf("expected a session of another workspace to be refused, got %v", err)
 	}
 }
@@ -552,7 +555,7 @@ func TestARunningSessionIsRefused(t *testing.T) {
 	}
 
 	resumedSession := &store.Session{Name: writer.Name()}
-	if _, err := OpenWriter(directory, resumedSession, store.Meta{}); err == nil || !strings.Contains(err.Error(), "is running") {
+	if _, err := OpenWriter(directory, resumedSession, store.Meta{}); err == nil || err.Error() != fmt.Sprintf(tr.SessionRunning, writer.Name()) {
 		t.Fatalf("expected the running session to be refused, got %v", err)
 	}
 

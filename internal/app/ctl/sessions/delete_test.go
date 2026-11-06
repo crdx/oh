@@ -2,6 +2,7 @@ package sessions
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -11,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/console"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 )
@@ -43,7 +45,7 @@ func TestDeletingASessionByExactLabel(t *testing.T) {
 	if err := run(&inputOpts{Delete: true, Label: "tame-impala"}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
 		t.Fatal(err)
 	}
-	if got := screen.String(); got != "deleted session \"tame-impala\"\n" {
+	if got := screen.String(); got != fmt.Sprintf(tr.SessionDeleted+"\n", "tame-impala") {
 		t.Errorf("unexpected output: %q", got)
 	}
 	if session.Exists(directory, "tame-impala") || !session.Exists(directory, "tame-otter") {
@@ -68,7 +70,7 @@ func TestDeletingAnArchiveByExactLabel(t *testing.T) {
 
 func TestDeletingAnUnknownSessionRefusesIt(t *testing.T) {
 	t.Setenv(location.StateDirVariable, t.TempDir())
-	if err := run(&inputOpts{Delete: true, Label: "missing-otter"}, console.Output{Screen: &strings.Builder{}}); err == nil || !strings.Contains(err.Error(), "no stored or archived session") {
+	if err := run(&inputOpts{Delete: true, Label: "missing-otter"}, console.Output{Screen: &strings.Builder{}}); err == nil || err.Error() != fmt.Sprintf(tr.NoSessionToDelete, "missing-otter") {
 		t.Errorf("expected a missing-session error, got %v", err)
 	}
 }

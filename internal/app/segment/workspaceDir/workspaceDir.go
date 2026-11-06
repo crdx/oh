@@ -8,6 +8,7 @@ import (
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tr"
 	"crdx.org/oh/internal/app/work"
 )
 
@@ -45,7 +46,7 @@ func New(workspace *work.Space) segment.Factory {
 			value = workspace.GetDir()
 		default:
 			return nil, fmt.Errorf(
-				"type must be omitted, %q, %q, or %q (got %q)",
+				tr.SegmentTypeChoice,
 				base,
 				short,
 				full,
