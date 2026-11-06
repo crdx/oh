@@ -13,6 +13,7 @@ type Picture struct {
 	CellWidth  int
 	CellHeight int
 	IsLocal    bool
+	Cache      *graphics.Cache
 }
 
 type pictureRows struct {
@@ -52,13 +53,15 @@ func (self *pictureRows) place(columns int) []string {
 		return []string{}
 	}
 
+	size := graphics.Size{Width: self.picture.Width, Height: self.picture.Height}
+
 	if self.picture.IsLocal {
-		if rows, isPlaced := graphics.PlaceFile(self.picture.Path, box); isPlaced {
+		if rows, isPlaced := self.picture.Cache.PlaceFile(self.picture.Path, size, box); isPlaced {
 			return rows
 		}
 	}
 
-	if rows, isPlaced := graphics.PlacePNG(self.picture.Data, box); isPlaced {
+	if rows, isPlaced := self.picture.Cache.PlacePNG(self.picture.Data, size, box); isPlaced {
 		return rows
 	}
 

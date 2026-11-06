@@ -63,37 +63,26 @@ func (self Box) isDrawable() bool {
 	return self.Cells > 0 && self.Rows > 0 && self.Rows <= MaxRows
 }
 
-func PlacePNG(data []byte, box Box) ([]string, bool) {
-	if len(data) == 0 {
-		return nil, false
-	}
-
-	return place(formatPNG, mediumDirect, base64.StdEncoding.EncodeToString(data), box)
-}
-
-func PlaceFile(path string, box Box) ([]string, bool) {
-	if path == "" {
-		return nil, false
-	}
-
-	return place(formatPNG, mediumFile, base64.StdEncoding.EncodeToString([]byte(path)), box)
-}
-
-func place(format string, medium string, payload string, box Box) ([]string, bool) {
+func place(imageID int, isHeld bool, format string, medium string, payload string, box Box) ([]string, bool) {
 	if !box.isDrawable() {
 		return nil, false
 	}
 
-	imageID := nextImageID()
 	rows := make([]string, box.Rows)
 
 	for row := range box.Rows {
 		rows[row] = placementRow(imageID, box.Cells, row)
 	}
 
-	rows[0] = transmission(imageID, format, medium, payload, box) + rows[0]
+	if !isHeld {
+		rows[0] = transmission(imageID, format, medium, payload, box) + rows[0]
+	}
 
 	return rows, true
+}
+
+func encodeBase64(data []byte) string {
+	return base64.StdEncoding.EncodeToString(data)
 }
 
 func transmission(imageID int, format string, medium string, payload string, box Box) string {

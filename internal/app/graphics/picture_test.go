@@ -9,7 +9,7 @@ import (
 )
 
 func TestAPictureIsPlacedAsOneRowOfCellsForEachRowItOccupies(t *testing.T) {
-	rows, isPlaced := PlacePNG([]byte("\x89PNG"), Box{Cells: 12, Rows: 3})
+	rows, isPlaced := NewCache().PlacePNG([]byte("\x89PNG"), Size{}, Box{Cells: 12, Rows: 3})
 	if !isPlaced {
 		t.Fatal("the picture was not placed")
 	}
@@ -26,7 +26,7 @@ func TestAPictureIsPlacedAsOneRowOfCellsForEachRowItOccupies(t *testing.T) {
 }
 
 func TestOnlyTheFirstRowCarriesThePicture(t *testing.T) {
-	rows, _ := PlacePNG([]byte("\x89PNG"), Box{Cells: 4, Rows: 2})
+	rows, _ := NewCache().PlacePNG([]byte("\x89PNG"), Size{}, Box{Cells: 4, Rows: 2})
 
 	if !strings.Contains(rows[0], openCommand) {
 		t.Error("the first row does not transmit the picture")
@@ -37,7 +37,7 @@ func TestOnlyTheFirstRowCarriesThePicture(t *testing.T) {
 }
 
 func TestEachRowIsMarkedWithItsOwnPositionInThePicture(t *testing.T) {
-	rows, _ := PlacePNG([]byte("\x89PNG"), Box{Cells: 4, Rows: 3})
+	rows, _ := NewCache().PlacePNG([]byte("\x89PNG"), Size{}, Box{Cells: 4, Rows: 3})
 
 	for at, row := range rows {
 		if !strings.Contains(row, placeholder+string(rowMarks[at])+string(rowMarks[0])) {
@@ -49,7 +49,7 @@ func TestEachRowIsMarkedWithItsOwnPositionInThePicture(t *testing.T) {
 func TestAPNGIsSentAsItIsRatherThanDecodedFirst(t *testing.T) {
 	data := []byte("\x89PNG\r\n\x1a\n and some more bytes")
 
-	rows, _ := PlacePNG(data, Box{Cells: 4, Rows: 1})
+	rows, _ := NewCache().PlacePNG(data, Size{}, Box{Cells: 4, Rows: 1})
 
 	if !strings.Contains(rows[0], "f=100") || !strings.Contains(rows[0], "t=d") {
 		t.Errorf("transmission is %q, want a direct PNG", rows[0])
@@ -62,7 +62,7 @@ func TestAPNGIsSentAsItIsRatherThanDecodedFirst(t *testing.T) {
 func TestAPictureOnDiskIsSentAsItsPathRatherThanItsBytes(t *testing.T) {
 	const path = "/state/sessions/tame-impala/images/abc.png"
 
-	rows, isPlaced := PlaceFile(path, Box{Cells: 4, Rows: 1})
+	rows, isPlaced := NewCache().PlaceFile(path, Size{}, Box{Cells: 4, Rows: 1})
 	if !isPlaced {
 		t.Fatal("the picture was not placed")
 	}
@@ -85,7 +85,7 @@ func TestABoxThatCannotBeDrawnIsRefused(t *testing.T) {
 		"too many rows": {Cells: 4, Rows: MaxRows + 1},
 	} {
 		t.Run(name, func(t *testing.T) {
-			if _, isPlaced := PlacePNG([]byte("\x89PNG"), box); isPlaced {
+			if _, isPlaced := NewCache().PlacePNG([]byte("\x89PNG"), Size{}, box); isPlaced {
 				t.Error("the picture was placed anyway")
 			}
 		})
@@ -93,10 +93,10 @@ func TestABoxThatCannotBeDrawnIsRefused(t *testing.T) {
 }
 
 func TestAnEmptyPictureIsRefused(t *testing.T) {
-	if _, isPlaced := PlacePNG(nil, Box{Cells: 4, Rows: 1}); isPlaced {
+	if _, isPlaced := NewCache().PlacePNG(nil, Size{}, Box{Cells: 4, Rows: 1}); isPlaced {
 		t.Error("an empty PNG was placed")
 	}
-	if _, isPlaced := PlaceFile("", Box{Cells: 4, Rows: 1}); isPlaced {
+	if _, isPlaced := NewCache().PlaceFile("", Size{}, Box{Cells: 4, Rows: 1}); isPlaced {
 		t.Error("an empty path was placed")
 	}
 }

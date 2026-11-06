@@ -8,7 +8,7 @@ import (
 )
 
 func TestOneVisiblePictureRowStillTransmitsItsImage(t *testing.T) {
-	pictureRows, isPlaced := graphics.PlacePNG([]byte("picture"), graphics.Box{Cells: 3, Rows: 3})
+	pictureRows, isPlaced := graphics.NewCache().PlacePNG([]byte("picture"), graphics.Size{}, graphics.Box{Cells: 3, Rows: 3})
 	if !isPlaced {
 		t.Fatal("picture was not placed")
 	}

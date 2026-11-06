@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"crdx.org/oh/internal/app/escape"
+	"crdx.org/oh/internal/app/graphics"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/tty"
@@ -54,6 +55,8 @@ type Screen struct {
 
 	live   liveRegion
 	blocks []groupedBlock
+
+	pictures *graphics.Cache
 }
 
 func New(writer io.Writer) *Screen {
@@ -63,6 +66,7 @@ func New(writer io.Writer) *Screen {
 		isTerminal:    isTerminal,
 		canRepaint:    isTerminal,
 		marksMessages: isTerminal,
+		pictures:      graphics.NewCache(),
 	}
 
 	self.measureTerminal()
@@ -78,6 +82,7 @@ func NewTerminalOfSize(writer io.Writer, columns int, lines int) *Screen {
 		marksMessages: true,
 		columns:       columns,
 		lines:         lines,
+		pictures:      graphics.NewCache(),
 	}
 }
 
@@ -108,6 +113,10 @@ func (self *Screen) IsTextSizingSupported() bool {
 
 func (self *Screen) IsTerminal() bool {
 	return self.isTerminal
+}
+
+func (self *Screen) PictureCache() *graphics.Cache {
+	return self.pictures
 }
 
 func (self *Screen) LinkRoots() link.Roots {
@@ -363,5 +372,5 @@ func (self *Screen) raw(text string) {
 }
 
 func (self *Screen) writeRaw(text string) {
-	_, _ = io.WriteString(self.writer, text)
+	_, _ = io.WriteString(self.writer, text+self.pictures.Observe(text))
 }

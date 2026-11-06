@@ -11,6 +11,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/graphics"
 	"crdx.org/oh/internal/app/pictures"
 	"crdx.org/oh/internal/app/width"
 )
@@ -69,7 +70,7 @@ func newDrawer(isLocal bool, root string) *pictures.Drawer {
 		CellWidth:  cellWidth,
 		CellHeight: cellHeight,
 		IsLocal:    isLocal,
-	}, root)
+	}, root, graphics.NewCache())
 }
 
 func newScratchDrawer(scratchDirectory string) *pictures.Drawer {
@@ -77,7 +78,7 @@ func newScratchDrawer(scratchDirectory string) *pictures.Drawer {
 		ScratchDirectory: scratchDirectory,
 		CellWidth:        cellWidth,
 		CellHeight:       cellHeight,
-	}, "")
+	}, "", graphics.NewCache())
 }
 
 func TestAPictureTheModelNamedUnderItsOwnScratchIsFoundOnTheHost(t *testing.T) {
@@ -105,7 +106,7 @@ func TestAPictureNamedRelativelyIsStillSoughtUnderTheWorkspace(t *testing.T) {
 		ScratchDirectory: t.TempDir(),
 		CellWidth:        cellWidth,
 		CellHeight:       cellHeight,
-	}, filepath.Dir(path))
+	}, filepath.Dir(path), graphics.NewCache())
 
 	if _, isDrawn := drawer.DrawPicture("chart.png", 100); !isDrawn {
 		t.Error("a relative name was taken for the scratch rather than the workspace")

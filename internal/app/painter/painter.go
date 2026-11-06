@@ -132,7 +132,7 @@ func (self *Picasso) RenderReasoningAs(rendering output.ReasoningRendering) {
 
 func (self *Picasso) DrawPicturesFrom(display pictures.Display) {
 	self.pictures = display
-	self.pictureDrawer = pictures.NewDrawer(display, self.workspace.GetDir())
+	self.pictureDrawer = pictures.NewDrawer(display, self.workspace.GetDir(), self.screen.PictureCache())
 }
 
 func (self *Picasso) LinkToolResults(sessionName string) {
@@ -1062,6 +1062,7 @@ func (self *Picasso) holdPicture(index int, event agent.Event) {
 		CellWidth:  self.pictures.CellWidth,
 		CellHeight: self.pictures.CellHeight,
 		IsLocal:    self.pictures.IsLocal,
+		Cache:      self.screen.PictureCache(),
 	}
 
 	if !self.pictures.IsLocal {

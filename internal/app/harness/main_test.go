@@ -24200,6 +24200,42 @@ func TestAPictureRedrawnAtTheSameWidthIsNeverSentTwice(t *testing.T) {
 	}
 }
 
+func redrawnPictureStreams(t *testing.T) (string, string) {
+	t.Helper()
+
+	sessionDirectory, reference := storedPictureFor(t, 400, 200)
+
+	rig := newWideRig(t)
+	rig.chat.display.pictures = goldenPictureDisplay(sessionDirectory, true)
+	rig.chat.recordedEvents = append(rig.chat.recordedEvents, pictureCallEvents(reference)...)
+
+	rig.chat.replay()
+	replayed := rig.drawn()
+
+	rig.written.Reset()
+	rig.chat.redraw()
+
+	return replayed, rig.drawn()
+}
+
+func TestARedrawDrawsAPictureTheTerminalHoldsWithoutSendingItAgain(t *testing.T) {
+	replayed, redrawn := redrawnPictureStreams(t)
+
+	if !strings.Contains(replayed, "\x1b_Ga=T,") {
+		t.Fatal("the replay never sent the picture")
+	}
+	if strings.Contains(redrawn, "\x1b_G") {
+		t.Errorf("the redraw spoke to the terminal about pictures again:\n%s", strutil.VisibleEscapes(redrawn))
+	}
+
+	replayedColour := pictureColour.FindString(replayed)
+	if replayedColour == "" || replayedColour != pictureColour.FindString(redrawn) {
+		t.Error("the redraw names a different picture from the one the terminal holds")
+	}
+
+	requireSameVisibleScreen(t, "a redraw drew the held picture differently", replayed, redrawn)
+}
+
 func TestAPictureNamedInAnAnswerIsDrawnTheSameStreamedAsReplayed(t *testing.T) {
 	requireSameVisibleScreen(
 		t,
@@ -24288,6 +24324,10 @@ func TestGoldenAPictureIsDrawnUnderTheCallThatReadIt(t *testing.T) {
 		},
 		"b6 a picture named under /tmp that the scratch does not hold": func() string {
 			return writtenAnswerPictureStream(t, answerNaming("/tmp/absent.png"), true)
+		},
+		"b7 a picture the terminal holds drawn again by a redraw": func() string {
+			replayed, redrawn := redrawnPictureStreams(t)
+			return replayed + redrawn
 		},
 	}
 

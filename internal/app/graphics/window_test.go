@@ -6,8 +6,8 @@ import (
 )
 
 func TestHiddenPictureTransmissions(t *testing.T) {
-	first, _ := PlacePNG([]byte("first"), Box{Cells: 3, Rows: 3})
-	second, _ := PlacePNG([]byte("second"), Box{Cells: 3, Rows: 3})
+	first, _ := NewCache().PlacePNG([]byte("first"), Size{}, Box{Cells: 3, Rows: 3})
+	second, _ := NewCache().PlacePNG([]byte("second"), Size{}, Box{Cells: 3, Rows: 3})
 
 	for _, testCase := range []struct {
 		name        string

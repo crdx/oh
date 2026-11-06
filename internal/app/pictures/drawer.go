@@ -32,6 +32,7 @@ type Drawer struct {
 	isLocal bool
 	root    string
 	scratch string
+	cache   *graphics.Cache
 
 	mutex      sync.Mutex
 	placements map[placementKey][]string
@@ -51,12 +52,13 @@ type source struct {
 	isByPath bool
 }
 
-func NewDrawer(display Display, root string) *Drawer {
+func NewDrawer(display Display, root string, cache *graphics.Cache) *Drawer {
 	return &Drawer{
 		cell:       graphics.Size{Width: display.CellWidth, Height: display.CellHeight},
 		isLocal:    display.IsLocal,
 		root:       root,
 		scratch:    display.ScratchDirectory,
+		cache:      cache,
 		placements: map[placementKey][]string{},
 	}
 }
@@ -103,10 +105,10 @@ func (self *Drawer) place(path string, columns int) ([]string, bool) {
 	}
 
 	if picture.isByPath {
-		return graphics.PlaceFile(picture.path, box)
+		return self.cache.PlaceFile(picture.path, picture.size, box)
 	}
 
-	return graphics.PlacePNG(picture.data, box)
+	return self.cache.PlacePNG(picture.data, picture.size, box)
 }
 
 func (self *Drawer) open(path string) (source, bool) {

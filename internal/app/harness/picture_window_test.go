@@ -171,7 +171,7 @@ func pictureWithOnlyOneRowVisible(t *testing.T, isPictureVisible bool) string {
 		[]string{"─", "Fetch this page?", "", "https://example.com", "", "[Yes]  No", "─"},
 		5, output.Pins{Head: 2, Tail: 2}, 0,
 	)
-	pictureRows, isPlaced := graphics.PlacePNG(drawnPNGFor(t, 400, 200), graphics.Box{Cells: 40, Rows: 10})
+	pictureRows, isPlaced := graphics.NewCache().PlacePNG(drawnPNGFor(t, 400, 200), graphics.Size{Width: 400, Height: 200}, graphics.Box{Cells: 40, Rows: 10})
 	if !isPlaced {
 		t.Fatal("picture was not placed")
 	}
