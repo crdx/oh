@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.31.1] — 2026-11-06
+
 - Tell the model the relevant line numbers on truncate
 
 ## [0.31.0] — 2026-11-06
