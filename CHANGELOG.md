@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.31.0] — 2026-11-06
+
 - Default to interruption as the risk is now low due to async
 - Improve performance when rendering sessions with lots of images
 
