@@ -87,7 +87,7 @@ func TestTakingBackAQueuedMessageThroughTheBinaryDoesNotStopTheTurn(t *testing.T
 	case <-time.After(interactiveDeadline):
 		t.Fatal("the provider request never arrived")
 	}
-	conversation.typeText("queued correction" + pressEnter)
+	conversation.typeText("queued correction" + pressAltEnter)
 	conversation.waitFor("⏳ queued correction")
 	previousDraws := conversation.Count("queued correction")
 	conversation.typeText(pressCtrlZ)

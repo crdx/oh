@@ -31,6 +31,7 @@ const (
 	interactiveSettle   = time.Second
 	endOfTransmission   = "\x04"
 	pressEnter          = "\r"
+	pressAltEnter       = "\x1b\r"
 	pressEscape         = "\x1b"
 	clearInput          = "\x15"
 	readyBanner         = "ready in "

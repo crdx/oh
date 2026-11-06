@@ -16,7 +16,7 @@ func TestControlDTakesBackThenStopsThenQuitsWithoutSendingQueuedMessages(t *test
 	case <-time.After(interactiveDeadline):
 		t.Fatal("the provider request never arrived")
 	}
-	session.typeText("must never be delivered" + pressEnter)
+	session.typeText("must never be delivered" + pressAltEnter)
 	session.waitFor("⏳ must never be delivered")
 	previousDraws := session.Count("must never be delivered")
 	session.typeText(endOfTransmission)
