@@ -548,3 +548,23 @@ func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
 		},
 	})
 }
+
+func TestGoldenACommandLineSettingTurnsOffOneCustomTool(t *testing.T) {
+	const twoTools = "[tool.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngranted = true\n\n" +
+		"[tool.tide]\ndescription = \"report the tide\"\ncommand = [\"true\"]\npermission = \"allow\"\ngranted = true\n"
+	interactiveTools := func(arguments ...string) string {
+		run := newStartupRun(t, twoTools, "Tool answer.")
+		session := run.rig.start(append([]string{"--yolo", "-m", "opencode-go/fake"}, arguments...)...)
+		session.waitFor("Tool answer.")
+		session.quit()
+		return fmt.Sprintf("$ oh %s\n%s", strings.Join(arguments, " "), run.sessionTools(t))
+	}
+	compareWithGolden(t, "command-line-tools", ".txt", map[string]func() string{
+		"every configured custom tool": func() string {
+			return interactiveTools("a question")
+		},
+		"one custom tool turned off on the command line": func() string {
+			return interactiveTools("-s", "tool.tide.enabled=false", "a question")
+		},
+	})
+}

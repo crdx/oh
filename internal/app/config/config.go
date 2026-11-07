@@ -644,20 +644,15 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 	config.fallback = &defaults
 
 	for _, source := range sources {
-		if source.snapshot.isMissing {
-			continue
+		if !source.snapshot.isMissing {
+			if err := applySnapshot(&config, source); err != nil {
+				return config, err
+			}
 		}
-		if err := applySnapshot(&config, source); err != nil {
-			return config, err
-		}
-	}
-
-	for _, source := range sources {
-		if !source.source.isVersioned() {
-			continue
-		}
-		if err := discoverSnippets(&config, source.source.Path); err != nil {
-			return config, err
+		if source.source.isVersioned() {
+			if err := discoverSnippets(&config, source.source.Path); err != nil {
+				return config, err
+			}
 		}
 	}
 
@@ -705,8 +700,12 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 func applyDocument(config *Config, source Source, displayPath string, data []byte) error {
 	previousVersion := config.Version
 	previousSnippets := maps.Clone(config.Snippets)
+	previousEntries := namedEntries(config).clone()
 	meta, err := toml.Decode(string(data), config)
 	if err != nil {
+		return fmt.Errorf("%s: %w", displayPath, err)
+	}
+	if err := mergeNamedEntries(config, previousEntries, data); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 
@@ -753,6 +752,9 @@ func applyDocument(config *Config, source Source, displayPath string, data []byt
 			delete(config.snippetFileSnapshots, previous.File)
 		}
 		definition := config.Snippets[name]
+		if err := definition.CheckSource(); err != nil {
+			return fmt.Errorf("%s: snippet.%s: %w", displayPath, name, err)
+		}
 		if definition.File != "" {
 			resolvedPath, err := resolveConfigPath(source.directory(), definition.File)
 			if err != nil {

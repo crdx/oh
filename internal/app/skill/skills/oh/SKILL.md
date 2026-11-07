@@ -61,6 +61,8 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 Scalars replace. An array replaces rather than merges, so overriding one bar position means restating every segment in it.
 
+A table merges: a later source changes only the keys it sets. This holds for a named entry such as `[tool.<name>]` or `[snippet.<name>]` too, so `--set tool.notify.enabled=false` keeps the rest of `notify`. A snippet's `prompt` and `file` replace each other, and a snippet written as text replaces the whole snippet.
+
 A workspace file comes with whatever repository you cloned, so it may not set what decides where the agent may reach or what runs on your machine. Setting one of these fails at startup, naming the file and the setting:
 
 - `[editor]`, whose `command` runs on your machine

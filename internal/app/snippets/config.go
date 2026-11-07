@@ -22,6 +22,8 @@ const (
 	ArgumentsNone     ArgumentPolicy = "none"
 )
 
+const onePromptSource = "set exactly one of prompt or file"
+
 type Definition struct {
 	Prompt      string
 	File        string
@@ -32,7 +34,7 @@ type Definition struct {
 func (self *Definition) UnmarshalTOML(value any) error {
 	switch configuredValue := value.(type) {
 	case string:
-		self.Prompt = strings.TrimSpace(configuredValue)
+		*self = Definition{Prompt: strings.TrimSpace(configuredValue)}
 		if self.Prompt == "" {
 			return errors.New("prompt is empty")
 		}
@@ -76,6 +78,13 @@ func (self *Definition) LoadFileContents(path string, contents []byte) error {
 	return self.validate()
 }
 
+func (self *Definition) CheckSource() error {
+	if self.Prompt == "" && self.File == "" {
+		return errors.New(onePromptSource)
+	}
+	return nil
+}
+
 func (self *Definition) unmarshalTable(configuredTable map[string]any) error {
 	knownFields := map[string]bool{
 		"arguments":   true,
@@ -94,25 +103,31 @@ func (self *Definition) unmarshalTable(configuredTable map[string]any) error {
 		return fmt.Errorf("unknown: %s", strings.Join(unknown, ", "))
 	}
 
-	var err error
-	if self.Prompt, err = getString(configuredTable, "prompt"); err != nil {
+	_, hasPrompt := configuredTable["prompt"]
+	_, hasFile := configuredTable["file"]
+	if hasPrompt && hasFile {
+		return errors.New(onePromptSource)
+	}
+	if hasPrompt {
+		self.File = ""
+		if err := setString(configuredTable, "prompt", &self.Prompt); err != nil {
+			return err
+		}
+	}
+	if hasFile {
+		self.Prompt = ""
+		if err := setString(configuredTable, "file", &self.File); err != nil {
+			return err
+		}
+	}
+	if err := setString(configuredTable, "description", &self.Description); err != nil {
 		return err
 	}
-	if self.File, err = getString(configuredTable, "file"); err != nil {
-		return err
-	}
-	if self.Description, err = getString(configuredTable, "description"); err != nil {
-		return err
-	}
-	arguments, err := getString(configuredTable, "arguments")
-	if err != nil {
+	arguments := string(self.Arguments)
+	if err := setString(configuredTable, "arguments", &arguments); err != nil {
 		return err
 	}
 	self.Arguments = ArgumentPolicy(arguments)
-
-	if (self.Prompt == "") == (self.File == "") {
-		return errors.New("set exactly one of prompt or file")
-	}
 	return self.validate()
 }
 
@@ -135,14 +150,15 @@ func (self *Definition) subject(name string) string {
 	return fmt.Sprintf("%s (%s)", name, pathutil.Shorten(self.File))
 }
 
-func getString(configuredTable map[string]any, name string) (string, error) {
+func setString(configuredTable map[string]any, name string, target *string) error {
 	value, isFound := configuredTable[name]
 	if !isFound {
-		return "", nil
+		return nil
 	}
 	text, ok := value.(string)
 	if !ok {
-		return "", fmt.Errorf("%s is not a string", name)
+		return fmt.Errorf("%s is not a string", name)
 	}
-	return strings.TrimSpace(text), nil
+	*target = strings.TrimSpace(text)
+	return nil
 }

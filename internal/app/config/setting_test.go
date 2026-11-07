@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/tr"
 )
 
@@ -81,6 +82,160 @@ func TestACommandLineSettingMaySetWhatAWorkspaceMayNot(t *testing.T) {
 
 	if command := settings.Tools["weather"].Command; !slices.Equal(command, []string{"forecast"}) {
 		t.Errorf("got weather command %#v", command)
+	}
+}
+
+func TestACommandLineSettingKeepsTheRestOfACustomTool(t *testing.T) {
+	global := strings.Join([]string{
+		"[tool.notify]",
+		`description = "Send a notification."`,
+		`command = ["notify", "--quiet"]`,
+		`permission = "allow"`,
+		"granted = true",
+		"",
+	}, "\n")
+
+	settings, _, err := loadWithSettings(t, global, "tool.notify.enabled=false", "tool.notify.concurrency=2")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	notify := settings.Tools["notify"]
+	if notify.Description != "Send a notification." {
+		t.Errorf("got description %q", notify.Description)
+	}
+	if !slices.Equal(notify.Command, []string{"notify", "--quiet"}) {
+		t.Errorf("got command %#v", notify.Command)
+	}
+	if !notify.IsGranted {
+		t.Error("lost granted = true")
+	}
+	if notify.Concurrency != 2 {
+		t.Errorf("got concurrency %d", notify.Concurrency)
+	}
+	if notify.offered() {
+		t.Error("still offered")
+	}
+	if _, err := settings.ToolGroups(); err != nil {
+		t.Errorf("got tool groups error %v", err)
+	}
+	if names := settings.CustomToolNames(); slices.Contains(names, "notify") {
+		t.Errorf("got custom tools %q", names)
+	}
+}
+
+func loadSnippetLayers(t *testing.T, global string, workspace string, settings ...string) (Config, string, error) {
+	t.Helper()
+
+	directory := t.TempDir()
+	writeSnippetFile(t, directory, "review.md", "---\ndescription: from the file\n---\nReview from the file.")
+	writeSnippetFile(t, directory, "other.md", "Other from the file.")
+	globalPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(globalPath, global); err != nil {
+		t.Fatal(err)
+	}
+	workspaceDir := filepath.Join(directory, "workspace")
+	if err := os.MkdirAll(workspaceDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	workspacePath := filepath.Join(workspaceDir, "oh.toml")
+	if err := os.WriteFile(workspacePath, []byte(workspace), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	sources := []Source{{Path: globalPath}, {Path: workspacePath, IsOverride: true}}
+	for _, setting := range settings {
+		sources = append(sources, CommandLineSetting(workspaceDir, setting))
+	}
+	config, err := LoadSources(sources...)
+	return config, directory, err
+}
+
+func TestACommandLineSettingKeepsTheRestOfASnippet(t *testing.T) {
+	global := "[snippet.check]\nprompt = \"Check it.\"\narguments = \"none\"\n"
+
+	settings, _, err := loadSnippetLayers(t, global, "", "snippet.check.description=check the work")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := snippets.Definition{Prompt: "Check it.", Description: "check the work", Arguments: snippets.ArgumentsNone}
+	if got := settings.Snippets["check"]; got != want {
+		t.Errorf("got %#v, want %#v", got, want)
+	}
+}
+
+func TestACommandLineSettingChangesADiscoveredSnippet(t *testing.T) {
+	settings, directory, err := loadSnippetLayers(t, "", "", "snippet.review.arguments=none")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := snippets.Definition{
+		Prompt:      "Review from the file.",
+		File:        filepath.Join(directory, snippetDirectoryName, "review.md"),
+		Description: "from the file",
+		Arguments:   snippets.ArgumentsNone,
+	}
+	if got := settings.Snippets["review"]; got != want {
+		t.Errorf("got %#v, want %#v", got, want)
+	}
+}
+
+func TestASnippetPromptAndFileReplaceEachOther(t *testing.T) {
+	global := "[snippet.inline]\nprompt = \"Inline.\"\ndescription = \"kept\"\n\n" +
+		"[snippet.filed]\nfile = \"snippets/other.md\"\ndescription = \"kept\"\n"
+
+	settings, directory, err := loadSnippetLayers(t, global, "", "snippet.filed.prompt=Now inline.")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := settings.Snippets["filed"], (snippets.Definition{Prompt: "Now inline.", Description: "kept"}); got != want {
+		t.Errorf("got %#v, want %#v", got, want)
+	}
+
+	otherPath := filepath.Join(directory, snippetDirectoryName, "other.md")
+	settings, _, err = loadSnippetLayers(t, global, "", "snippet.inline.file="+otherPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := settings.Snippets["inline"]; got.Prompt != "Other from the file." || got.Description != "kept" {
+		t.Errorf("got %#v", got)
+	}
+}
+
+func TestASnippetGivenBothPromptAndFileIsRefused(t *testing.T) {
+	global := "[snippet.check]\nprompt = \"Check it.\"\n"
+
+	_, _, err := loadSnippetLayers(t, global, "", `snippet.check={ prompt = "Again.", file = "snippets/other.md" }`)
+	if err == nil || !strings.Contains(err.Error(), "set exactly one of prompt or file") {
+		t.Errorf("got error %v", err)
+	}
+}
+
+func TestATextSnippetReplacesTheWholeSnippet(t *testing.T) {
+	global := "[snippet.check]\nprompt = \"Check it.\"\ndescription = \"old\"\narguments = \"none\"\n"
+
+	settings, _, err := loadSnippetLayers(t, global, "", "snippet.check=Check again.")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := settings.Snippets["check"], (snippets.Definition{Prompt: "Check again."}); got != want {
+		t.Errorf("got %#v, want %#v", got, want)
+	}
+}
+
+func TestAWorkspaceSnippetTableChangesOnlyWhatItSets(t *testing.T) {
+	global := "[snippet.check]\nprompt = \"Check it.\"\narguments = \"none\"\n"
+
+	settings, _, err := loadSnippetLayers(t, global, "[snippet.check]\ndescription = \"from the workspace\"\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := snippets.Definition{Prompt: "Check it.", Description: "from the workspace", Arguments: snippets.ArgumentsNone}
+	if got := settings.Snippets["check"]; got != want {
+		t.Errorf("got %#v, want %#v", got, want)
 	}
 }
 

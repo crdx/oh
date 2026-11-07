@@ -1,0 +1,7 @@
+=== every configured custom tool ===
+$ oh a question
+session tools: read, ls, find, grep, write, edit, subagent, task, bash, title, lookup, fetch, tide, weather
+
+=== one custom tool turned off on the command line ===
+$ oh -s tool.tide.enabled=false a question
+session tools: read, ls, find, grep, write, edit, subagent, task, bash, title, lookup, fetch, weather
