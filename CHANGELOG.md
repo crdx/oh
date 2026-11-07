@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.31.2] — 2026-11-07
+
 - Add `--set`/`-s` for clearing or overriding any config value
 
 ## [0.31.1] — 2026-11-06
