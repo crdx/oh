@@ -1,16 +1,21 @@
 package file
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"path/filepath"
 	"sync"
 )
 
 const FileReadState = "file_read"
+
+const hashChunkBytes = 1 << 20
 
 var ErrNotRead = errors.New("read the file first")
 
@@ -110,4 +115,34 @@ func snapshotKey(root *Root, name string) string {
 func Hash(content []byte) string {
 	hash := sha256.Sum256(content)
 	return hex.EncodeToString(hash[:])
+}
+
+func HashFile(ctx context.Context, root *Root, name string) (string, error) {
+	openedFile, err := root.Open(name)
+	if err != nil {
+		return "", err
+	}
+	defer func() { _ = openedFile.Close() }()
+
+	return hashOpenedFile(ctx, openedFile)
+}
+
+func hashOpenedFile(ctx context.Context, openedFile *os.File) (string, error) {
+	contentHash := sha256.New()
+	chunk := make([]byte, hashChunkBytes)
+
+	for {
+		if err := ctx.Err(); err != nil {
+			return "", err
+		}
+
+		count, err := openedFile.Read(chunk)
+		_, _ = contentHash.Write(chunk[:count])
+		if errors.Is(err, io.EOF) {
+			return hex.EncodeToString(contentHash.Sum(nil)), nil
+		}
+		if err != nil {
+			return "", err
+		}
+	}
 }

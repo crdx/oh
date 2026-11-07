@@ -63,7 +63,7 @@ func NewWithRunner(root *file.Root, snapshots *file.Snapshots, runner sandbox.Ar
 			return tool.ToolCallResult{
 				Output:  output,
 				Metrics: metrics,
-				State:   readStateForMatches(root, args, output),
+				State:   readStateForMatches(ctx, root, args, output),
 			}, err
 		})
 }
@@ -191,7 +191,7 @@ func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRun
 	return answer, metrics, nil
 }
 
-func readStateForMatches(root *file.Root, args Args, output string) json.RawMessage {
+func readStateForMatches(ctx context.Context, root *file.Root, args Args, output string) json.RawMessage {
 	searchRoot, _, err := root.Resolve(args.Path)
 	if err != nil {
 		return nil
@@ -200,7 +200,7 @@ func readStateForMatches(root *file.Root, args Args, output string) json.RawMess
 	seen := map[string]bool{}
 	var readSnapshots []file.ReadSnapshot
 	for line := range strings.Lines(output) {
-		path, content, isFound := readMatchedFile(searchRoot, line, seen)
+		path, hash, isFound := hashMatchedFile(ctx, searchRoot, line, seen)
 		if !isFound {
 			continue
 		}
@@ -208,7 +208,7 @@ func readStateForMatches(root *file.Root, args Args, output string) json.RawMess
 		if searchRoot != root {
 			path = filepath.Join(searchRoot.Name(), path)
 		}
-		readSnapshots = append(readSnapshots, file.NewReadSnapshot(path, content))
+		readSnapshots = append(readSnapshots, file.ReadSnapshot{Path: path, Hash: hash})
 	}
 
 	if len(readSnapshots) == 0 {
@@ -217,7 +217,7 @@ func readStateForMatches(root *file.Root, args Args, output string) json.RawMess
 	return file.EncodeReadState(readSnapshots...)
 }
 
-func readMatchedFile(root *file.Root, line string, seen map[string]bool) (string, []byte, bool) {
+func hashMatchedFile(ctx context.Context, root *file.Root, line string, seen map[string]bool) (string, string, bool) {
 	for at := strings.IndexByte(line, ':'); at > 0; at = nextColon(line, at) {
 		if !lineNumberPattern.MatchString(line[at+1:]) {
 			continue
@@ -225,19 +225,19 @@ func readMatchedFile(root *file.Root, line string, seen map[string]bool) (string
 
 		path := line[:at]
 		if seen[path] {
-			return "", nil, false
+			return "", "", false
 		}
 
-		content, err := root.ReadFile(path)
+		hash, err := file.HashFile(ctx, root, path)
 		if err != nil {
 			continue
 		}
 
 		seen[path] = true
-		return path, content, true
+		return path, hash, true
 	}
 
-	return "", nil, false
+	return "", "", false
 }
 
 func nextColon(line string, after int) int {

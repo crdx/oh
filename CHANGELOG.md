@@ -3,6 +3,7 @@
 ## [Next]
 
 - Refuse to read a FIFO or device, rather than hang
+- Hash the files grep matches without loading them
 
 ## [0.31.3] — 2026-11-07
 
