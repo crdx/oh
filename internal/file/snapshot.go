@@ -8,9 +8,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"sync"
+	"syscall"
 )
 
 const FileReadState = "file_read"
@@ -85,6 +87,39 @@ func (self *Snapshots) Check(root *Root, name string, content []byte) error {
 		return ErrNotRead
 	}
 	if hash != Hash(content) {
+		return ErrChangedSinceRead
+	}
+
+	return nil
+}
+
+func (self *Snapshots) CheckFile(ctx context.Context, root *Root, name string) error {
+	openedFile, err := root.Open(name)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = openedFile.Close() }()
+
+	info, err := openedFile.Stat()
+	if err != nil {
+		return err
+	}
+	if info.IsDir() {
+		return &fs.PathError{Op: "read", Path: name, Err: syscall.EISDIR}
+	}
+
+	self.mutex.RLock()
+	recordedHash, isRecorded := self.hashes[snapshotKey(root, name)]
+	self.mutex.RUnlock()
+	if !isRecorded {
+		return ErrNotRead
+	}
+
+	hash, err := hashOpenedFile(ctx, openedFile)
+	if err != nil {
+		return err
+	}
+	if hash != recordedHash {
 		return ErrChangedSinceRead
 	}
 

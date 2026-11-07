@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/file"
@@ -191,5 +193,64 @@ func TestAWriteUpdatesTheReadSnapshot(t *testing.T) {
 	}
 	if err := runTool(t, writeTool, `{"path":"a.txt","content":"three\n"}`); err != nil {
 		t.Fatalf("unexpected second write error: %v", err)
+	}
+}
+
+const largeFileBytes = 32 << 20
+
+func allocatedWhile(run func()) uint64 {
+	var before, after runtime.MemStats
+	runtime.ReadMemStats(&before)
+	run()
+	runtime.ReadMemStats(&after)
+	return after.TotalAlloc - before.TotalAlloc
+}
+
+func TestAnUnreadLargeFileIsRefusedBeforeItIsLoaded(t *testing.T) {
+	root := testRoot(t, true)
+	path := filepath.Join(root.Name(), "large.log")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(path, largeFileBytes); err != nil {
+		t.Fatal(err)
+	}
+	tools := Rummage(root, file.NewSnapshots())
+
+	for name, arguments := range map[string]string{
+		"write": `{"path":"large.log","content":"text"}`,
+		"edit":  `{"path":"large.log","old_text":"old","new_text":"new"}`,
+	} {
+		var err error
+		allocated := allocatedWhile(func() { err = runTool(t, toolNamed(t, tools, name), arguments) })
+		if !errors.Is(err, file.ErrNotRead) {
+			t.Errorf("%s got %v, want the unread file refused", name, err)
+		}
+		if allocated > largeFileBytes/8 {
+			t.Errorf("%s allocated %d bytes to refuse a %d byte file", name, allocated, largeFileBytes)
+		}
+	}
+}
+
+func TestOverwritingALargeFileReadByRangeNeverLoadsItWhole(t *testing.T) {
+	root := testRoot(t, true)
+	path := filepath.Join(root.Name(), "large.log")
+	if err := os.WriteFile(path, []byte(strings.Repeat("a line\n", largeFileBytes/7)), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	tools := Rummage(root, file.NewSnapshots())
+	if err := runTool(t, toolNamed(t, tools, "read"), `{"path":"large.log","offset":1,"limit":1}`); err != nil {
+		t.Fatalf("unexpected read error: %v", err)
+	}
+
+	var err error
+	allocated := allocatedWhile(func() {
+		err = runTool(t, toolNamed(t, tools, "write"), `{"path":"large.log","content":"text"}`)
+	})
+	if err != nil {
+		t.Fatalf("unexpected write error: %v", err)
+	}
+	if allocated > largeFileBytes/8 {
+		t.Errorf("allocated %d bytes to overwrite a %d byte file", allocated, largeFileBytes)
 	}
 }

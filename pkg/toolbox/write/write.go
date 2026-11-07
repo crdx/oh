@@ -62,12 +62,7 @@ func exec(ctx context.Context, root *file.Root, snapshots *file.Snapshots, args 
 		return "", tool.ToolCallMetrics{}, err
 	}
 
-	currentContent, err := root.ReadFile(name)
-	if err == nil {
-		if err := snapshots.Check(root, name, currentContent); err != nil {
-			return "", tool.ToolCallMetrics{}, err
-		}
-	} else if !errors.Is(err, fs.ErrNotExist) {
+	if err := snapshots.CheckFile(ctx, root, name); err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return "", tool.ToolCallMetrics{}, err
 	}
 
