@@ -250,6 +250,7 @@ type App struct {
 	commands             slash.Registry
 	completer            *trigger.Completer
 	question             questionState
+	isDiscardingPaste    bool
 	transition           cycle.Transition
 	queuedTurn           turn.Queue
 	queueRevealAt        time.Time
@@ -423,6 +424,10 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 		return true
 	}
 
+	if self.discardPastedKey(inputLine, keypress) {
+		return true
+	}
+
 	if isRedrawKey(keypress) && !inputLine.IsPasting() {
 		self.feedback.Dismiss()
 		isRedrawTimingEnabled := self.experimental.IsEnabled(experimental.RedrawTimingFeedback)
@@ -447,7 +452,7 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 		return true
 	}
 
-	if self.isAwaitingAnswer() {
+	if self.isAwaitingAnswer() && !inputLine.IsPasting() {
 		self.screen.Sync(func() {
 			self.answerQuestion(keypress)
 			self.show(inputLine)
@@ -479,6 +484,19 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 		}
 	})
 	return shouldContinue
+}
+
+func (self *App) discardPastedKey(inputLine *edit.Input, keypress key.Key) bool {
+	switch {
+	case self.isDiscardingPaste:
+		self.isDiscardingPaste = keypress.Code != key.PasteEnd
+		return true
+	case keypress.Code == key.PasteStart && self.isAwaitingAnswer() && !inputLine.IsPasting():
+		self.isDiscardingPaste = true
+		return true
+	default:
+		return false
+	}
 }
 
 func (self *App) answerQuestion(keypress key.Key) {
