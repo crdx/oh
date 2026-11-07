@@ -75,6 +75,7 @@ func FuzzGraphemesMatchTheSegmenter(fuzzer *testing.F) {
 		"👨‍👩‍👧‍👦",
 		"日本ｆ",
 		"\x1b[31mred\x1b[0m",
+		"\x1b[9C",
 	} {
 		fuzzer.Add(text)
 	}
@@ -96,17 +97,13 @@ func FuzzGraphemesMatchTheSegmenter(fuzzer *testing.F) {
 			t.Fatalf("Graphemes(%q) took %v cells, want %v", text, gotCells, wantCells)
 		}
 
-		if taken, _ := Cut(text, len(text)*2); taken != text {
-			t.Fatalf("Cut(%q, all) = %q, want the whole of it", text, taken)
+		whole := Of(text)
+		if taken, took := Cut(text, whole); taken != text || took != whole {
+			t.Fatalf("Cut(%q, %d) = %q in %d cells, want the whole of it", text, whole, taken, took)
 		}
 
-		if !strings.ContainsRune(text, '\x1b') {
-			if got := Of(text); got != sum(wantCells) {
-				t.Fatalf("Of(%q) = %d, want %d", text, got, sum(wantCells))
-			}
-			if _, took := Cut(text, len(text)*2); took != sum(wantCells) {
-				t.Fatalf("Cut(%q, all) took %d cells, want %d", text, took, sum(wantCells))
-			}
+		if !strings.ContainsRune(text, '\x1b') && whole != sum(wantCells) {
+			t.Fatalf("Of(%q) = %d, want %d", text, whole, sum(wantCells))
 		}
 	})
 }
