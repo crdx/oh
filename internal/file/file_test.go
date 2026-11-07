@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 
 	"crdx.org/oh/internal/file"
@@ -674,5 +675,42 @@ func TestOnlyALazyRootIsClosedThroughTheTree(t *testing.T) {
 	}
 	if _, err := root.ReadFile("note"); err != nil {
 		t.Errorf("expected the borrowed root to stay open, got %v", err)
+	}
+}
+
+func TestAFIFOIsRefusedWithoutWaitingForAWriter(t *testing.T) {
+	isWritable := true
+	root, directory := testRoot(t, &isWritable)
+	fifoPath := filepath.Join(directory, "pipe")
+	if err := syscall.Mkfifo(fifoPath, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	exactRoot := file.NewExactFile(fifoPath, func(string) error { return nil })
+
+	for operation, run := range map[string]func() error{
+		"open":       func() error { _, err := root.Open("pipe"); return err },
+		"read":       func() error { _, err := root.ReadFile("pipe"); return err },
+		"filesystem": func() error { _, err := fs.ReadFile(root.FS(), "pipe"); return err },
+		"exact open": func() error { _, err := exactRoot.Open("pipe"); return err },
+		"exact read": func() error { _, err := exactRoot.ReadFile("pipe"); return err },
+	} {
+		if err := run(); !errors.Is(err, file.ErrSpecialFile) {
+			t.Errorf("%s got %v, want a special file refusal", operation, err)
+		}
+	}
+}
+
+func TestADirectoryStillOpensButCannotBeReadAsAFile(t *testing.T) {
+	isWritable := true
+	root, directory := testRoot(t, &isWritable)
+	if err := os.Mkdir(filepath.Join(directory, "folder"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	if entries, err := root.ReadDir("folder"); err != nil || len(entries) != 0 {
+		t.Errorf("listing got %v and %v", entries, err)
+	}
+	if _, err := root.ReadFile("folder"); !errors.Is(err, syscall.EISDIR) {
+		t.Errorf("read got %v, want is a directory", err)
 	}
 }

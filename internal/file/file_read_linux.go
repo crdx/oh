@@ -1,8 +1,9 @@
 package file
 
 import (
+	"bytes"
 	"errors"
-	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -33,16 +34,8 @@ func openRootFileNoSymlink(root *os.Root, name string, flag int, permission os.F
 	return os.NewFile(uintptr(descriptor), name), nil
 }
 
-func readRootFileNoSymlink(root *os.Root, name string) ([]byte, error) {
-	file, err := openRootFileNoSymlink(root, name, syscall.O_RDONLY, 0)
-	if err != nil {
-		return nil, err
-	}
-	return readOpenedFileNoSymlink(file)
-}
-
 func openExactFileNoSymlink(path string) (*os.File, error) {
-	descriptor, err := syscall.Open(path, syscall.O_RDONLY|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
+	descriptor, err := syscall.Open(path, syscall.O_RDONLY|syscall.O_NONBLOCK|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
 	if errors.Is(err, syscall.ELOOP) {
 		return nil, ErrOutsideRoot
 	}
@@ -52,15 +45,28 @@ func openExactFileNoSymlink(path string) (*os.File, error) {
 	return os.NewFile(uintptr(descriptor), filepath.Base(path)), nil
 }
 
-func readExactFileNoSymlink(path string) ([]byte, error) {
-	file, err := openExactFileNoSymlink(path)
+func refuseSpecialFile(openedFile *os.File, name string) (*os.File, error) {
+	info, err := openedFile.Stat()
 	if err != nil {
+		_ = openedFile.Close()
 		return nil, err
 	}
-	return readOpenedFileNoSymlink(file)
+	if !info.Mode().IsRegular() && !info.IsDir() {
+		_ = openedFile.Close()
+		return nil, &fs.PathError{Op: "open", Path: name, Err: ErrSpecialFile}
+	}
+	return openedFile, nil
 }
 
-func readOpenedFileNoSymlink(file *os.File) ([]byte, error) {
-	defer func() { _ = file.Close() }()
-	return io.ReadAll(file)
+func readOpenedFile(openedFile *os.File) ([]byte, error) {
+	defer func() { _ = openedFile.Close() }()
+
+	var content bytes.Buffer
+	if info, err := openedFile.Stat(); err == nil && info.Mode().IsRegular() {
+		content.Grow(int(info.Size()) + bytes.MinRead)
+	}
+	if _, err := content.ReadFrom(openedFile); err != nil {
+		return nil, err
+	}
+	return content.Bytes(), nil
 }

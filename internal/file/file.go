@@ -19,6 +19,7 @@ var (
 	ErrMultipleHardLinks = errors.New("refusing to overwrite a file with multiple hard links")
 	ErrMountChanged      = errors.New("mounted directory changed since it was granted")
 	ErrOutsideRoot       = errors.New("path is outside the root")
+	ErrSpecialFile       = errors.New("refusing to open a FIFO, socket, or device")
 )
 
 func InGitDir(name string) bool {
@@ -265,43 +266,19 @@ func (self *Root) FS() fs.FS {
 }
 
 func (self *Root) Open(name string) (*os.File, error) {
-	if err := self.refuseAccess(name); err != nil {
-		return nil, err
-	}
-	if err := self.refuseOtherExactFile(name); err != nil {
-		return nil, err
-	}
-	if self.exactPath != "" {
-		return openExactFileNoSymlink(self.exactPath)
-	}
-	root, err := self.getRoot()
+	openedFile, err := self.open(name)
 	if err != nil {
 		return nil, err
 	}
-	if self.exactName != "" {
-		return openRootFileNoSymlink(root, name, syscall.O_RDONLY, 0)
-	}
-	return root.Open(name)
+	return refuseSpecialFile(openedFile, name)
 }
 
 func (self *Root) ReadFile(name string) ([]byte, error) {
-	if err := self.refuseAccess(name); err != nil {
-		return nil, err
-	}
-	if err := self.refuseOtherExactFile(name); err != nil {
-		return nil, err
-	}
-	if self.exactPath != "" {
-		return readExactFileNoSymlink(self.exactPath)
-	}
-	root, err := self.getRoot()
+	openedFile, err := self.Open(name)
 	if err != nil {
 		return nil, err
 	}
-	if self.exactName != "" {
-		return readRootFileNoSymlink(root, name)
-	}
-	return root.ReadFile(name)
+	return readOpenedFile(openedFile)
 }
 
 func (self *Root) Stat(name string) (os.FileInfo, error) {
@@ -478,6 +455,26 @@ func (self *Root) governWrite(path string, fallback func() error) error {
 		return nil
 	}
 	return ErrReadOnly
+}
+
+func (self *Root) open(name string) (*os.File, error) {
+	if err := self.refuseAccess(name); err != nil {
+		return nil, err
+	}
+	if err := self.refuseOtherExactFile(name); err != nil {
+		return nil, err
+	}
+	if self.exactPath != "" {
+		return openExactFileNoSymlink(self.exactPath)
+	}
+	root, err := self.getRoot()
+	if err != nil {
+		return nil, err
+	}
+	if self.exactName != "" {
+		return openRootFileNoSymlink(root, name, syscall.O_RDONLY|syscall.O_NONBLOCK, 0)
+	}
+	return root.OpenFile(name, os.O_RDONLY|syscall.O_NONBLOCK, 0)
 }
 
 func (self *Root) getRoot() (*os.Root, error) {

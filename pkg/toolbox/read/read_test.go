@@ -13,6 +13,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"syscall"
 	"testing"
 
 	"crdx.org/oh/internal/file"
@@ -660,3 +661,17 @@ func TestRenderSaysNothingAboutAWholeFile(t *testing.T) {
 }
 
 func allowAll(string) error { return nil }
+
+func TestAFIFOIsRefusedByName(t *testing.T) {
+	root := testRoot(t, "notes.txt", "one\n")
+	if err := syscall.Mkfifo(filepath.Join(root.Name(), "pipe"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := exec(t, root, `{"path":"pipe"}`)
+
+	const expected = "pipe: refusing to open a FIFO, socket, or device"
+	if err == nil || err.Error() != expected {
+		t.Errorf("expected %q, got %v", expected, err)
+	}
+}
