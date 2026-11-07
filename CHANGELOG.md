@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.31.3] — 2026-11-07
+
 - Fix `--set` semantics for overriding keys of custom tool definitions
 
 ## [0.31.2] — 2026-11-07
