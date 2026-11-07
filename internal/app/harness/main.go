@@ -334,13 +334,14 @@ func Main() {
 			os.Exit(1)
 		}
 	}
-	startupConfig := readConfig()
+	inputArgs := cli.Bind()
+	startupConfig := readConfig(inputArgs.Settings)
 
 	hooks := cycle.NewHooks(func(err error) {
 		fmt.Fprintln(os.Stderr, style.Error(fmt.Errorf("session hook: %w", err)))
 	})
 	transition := cycle.Transition{}
-	chosenSession, err := run(hooks, &transition, startupConfig)
+	chosenSession, err := run(hooks, &transition, inputArgs, startupConfig)
 	if err != nil {
 		if interruption, isSignal := errors.AsType[terminationSignalError](err); isSignal {
 			tty.Reraise(interruption.signal)
@@ -389,11 +390,15 @@ func shadowedScratch(tmpDir string, isYolo bool) string {
 	return tmpDir
 }
 
-func getConfigSources(workspaceDir string) []config.Source {
-	return []config.Source{
+func getConfigSources(workspaceDir string, settings []string) []config.Source {
+	sources := []config.Source{
 		{Path: location.GetConfigFile()},
 		{Path: filepath.Join(workspaceDir, "oh.toml"), IsOverride: true},
 	}
+	for _, setting := range settings {
+		sources = append(sources, config.CommandLineSetting(workspaceDir, setting))
+	}
+	return sources
 }
 
 type initialConfig struct {
@@ -401,12 +406,12 @@ type initialConfig struct {
 	err        error
 }
 
-func readConfig() initialConfig {
+func readConfig(settings []string) initialConfig {
 	workspace, err := work.Current()
 	if err != nil {
 		return initialConfig{err: err}
 	}
-	observable, err := config.Read(getConfigSources(workspace.GetDir())...)
+	observable, err := config.Read(getConfigSources(workspace.GetDir(), settings)...)
 	if err == nil {
 		style.ApplyTheme(observable.Config.Ui.Theme)
 	}
@@ -766,7 +771,12 @@ func applySimulationOptions(options *cli.Options) {
 }
 
 //nolint:gocyclo // lol no
-func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial initialConfig) (string, error) {
+func run(
+	hooks *cycle.Hooks,
+	requestedTransition *cycle.Transition,
+	inputArgs *cli.Input,
+	initial initialConfig,
+) (string, error) {
 	ctx := context.Background()
 	var sessionInfo cycle.Session
 	hasStarted := false
@@ -776,8 +786,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			hooks.EmitSessionStopped(ctx, cycle.SessionStopped{Session: sessionInfo, Reason: stopReason})
 		}
 	}()
-
-	inputArgs := cli.Bind()
 
 	isPromptPiped := !tty.Is(os.Stdin)
 
@@ -1537,7 +1545,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	isYoloInherited := cli.IsYoloInherited(os.Args[1:])
 	starter := sessionStarter{
 		toolboxTools:      toolboxTools,
-		getCustomCapFlags: func() string { return currentCustomCapFlags(getConfigSources(workspaceDir)) },
+		getCustomCapFlags: func() string { return currentCustomCapFlags(getConfigSources(workspaceDir, inputArgs.Settings)) },
 		isYoloInherited:   isYoloInherited,
 		getModelChoices:   func() []model.Choice { return model.Choices(modelCachePath) },
 		defaults:          sessionDefaults(selection),
@@ -1850,6 +1858,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		Snippets:      len(settings.Snippets),
 		ToolBytes:     toolContextBytes,
 		LocalConfig:   localConfig,
+		CommandLine:   settings.CommandLineSettings(),
 	}
 	if resumedSession == nil {
 		app.notify(startup.NewEvent(startupElapsed, startupInfo))

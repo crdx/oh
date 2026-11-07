@@ -464,14 +464,7 @@ func (self Config) GetOverride() (Override, bool) {
 			continue
 		}
 
-		settings := make(map[string]struct{})
-		for _, key := range source.meta.Keys() {
-			if !source.meta.IsDefined(key...) || source.meta.Type(key...) == "Hash" || key.String() == "version" {
-				continue
-			}
-			settings[leafTableOf(key).String()] = struct{}{}
-		}
-		return Override{Path: source.source.Path, Settings: slices.Sorted(maps.Keys(settings))}, true
+		return Override{Path: source.source.Path, Settings: slices.Sorted(slices.Values(definedSettings(source.meta)))}, true
 	}
 	return Override{}, false
 }
@@ -582,10 +575,10 @@ func (self Config) getSourceType(keys ...string) string {
 	return ""
 }
 
-func (self Config) getSourceFile(keys ...string) string {
+func (self Config) getSourceDirectory(keys ...string) string {
 	for _, source := range slices.Backward(self.sources) {
 		if source.meta.IsDefined(keys...) {
-			return source.source.Path
+			return source.source.directory()
 		}
 	}
 	return ""
@@ -610,6 +603,14 @@ func readConfigVersion(data []byte, isOverride bool) (int, error) {
 type Source struct {
 	Path       string
 	IsOverride bool
+	Setting    string
+}
+
+func (self Source) directory() string {
+	if self.isSetting() {
+		return self.Path
+	}
+	return filepath.Dir(self.Path)
 }
 
 func Load(path string) (Config, error) {
@@ -622,7 +623,7 @@ func Load(path string) (Config, error) {
 func LoadSources(sources ...Source) (Config, error) {
 	snapshots := make([]sourceSnapshot, 0, len(sources))
 	for _, source := range sources {
-		snapshots = append(snapshots, sourceSnapshot{source: source, snapshot: readSnapshot(source.Path)})
+		snapshots = append(snapshots, sourceSnapshot{source: source, snapshot: readSource(source)})
 	}
 	return loadSnapshots(snapshots)
 }
@@ -652,7 +653,7 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 	}
 
 	for _, source := range sources {
-		if source.source.IsOverride {
+		if !source.source.isVersioned() {
 			continue
 		}
 		if err := discoverSnippets(&config, source.source.Path); err != nil {
@@ -676,7 +677,11 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 }
 
 func applySnapshot(config *Config, source sourceSnapshot) error {
-	displayPath := pathutil.Shorten(source.source.Path)
+	if source.source.isSetting() {
+		return applySetting(config, source.source)
+	}
+
+	displayPath := source.source.displayPath()
 
 	if source.snapshot.failure != nil {
 		return fmt.Errorf("%s: %w", displayPath, source.snapshot.failure)
@@ -694,23 +699,29 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		return fmt.Errorf("%s: %w", displayPath, fmt.Errorf(tr.ConfigTooNew, err))
 	}
 
+	return applyDocument(config, source.source, displayPath, source.snapshot.data)
+}
+
+func applyDocument(config *Config, source Source, displayPath string, data []byte) error {
 	previousVersion := config.Version
 	previousSnippets := maps.Clone(config.Snippets)
-	meta, err := toml.Decode(string(source.snapshot.data), config)
+	meta, err := toml.Decode(string(data), config)
 	if err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 
-	if source.source.IsOverride {
+	if !source.isVersioned() {
 		config.Version = previousVersion
+	}
+	if source.IsOverride {
 		if err := refuseWorkspaceSettings(meta); err != nil {
 			return fmt.Errorf("%s: %w", displayPath, err)
 		}
 	}
 
-	config.sources = append(config.sources, sourceMetadata{source: source.source, path: displayPath, meta: &meta})
+	config.sources = append(config.sources, sourceMetadata{source: source, path: displayPath, meta: &meta})
 
-	if err := applyModelChoice(&config.Agent.ModelChoice, agentSetting, meta, source.source.Path); err != nil {
+	if err := applyModelChoice(&config.Agent.ModelChoice, agentSetting, meta, source.directory()); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 	if err := normaliseHosts(config, meta); err != nil {
@@ -743,7 +754,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		}
 		definition := config.Snippets[name]
 		if definition.File != "" {
-			resolvedPath, err := resolveConfigPath(source.source.Path, definition.File)
+			resolvedPath, err := resolveConfigPath(source.directory(), definition.File)
 			if err != nil {
 				return fmt.Errorf("%s: snippet.%s.file: %w", displayPath, name, err)
 			}
@@ -788,7 +799,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 			continue
 		}
 		for i, writtenPath := range *list.values {
-			resolvedPath, err := resolveConfigPath(source.source.Path, writtenPath)
+			resolvedPath, err := resolveConfigPath(source.directory(), writtenPath)
 			if err != nil {
 				return fmt.Errorf("%s: %s: %w", displayPath, list.name, err)
 			}
@@ -872,7 +883,7 @@ func snippetPattern(directory string) string {
 	return filepath.Join(directory, "*"+snippetExtension)
 }
 
-func applyModelChoice(choice *ModelChoice, table string, meta toml.MetaData, sourcePath string) error {
+func applyModelChoice(choice *ModelChoice, table string, meta toml.MetaData, directory string) error {
 	modelName := table + "." + modelSetting
 	roundRobinName := table + "." + roundRobinSetting
 	hasModel := meta.IsDefined(table, modelSetting)
@@ -890,14 +901,14 @@ func applyModelChoice(choice *ModelChoice, table string, meta toml.MetaData, sou
 	case hasRoundRobin:
 		choice.Model = ""
 		choice.rotationFile = nil
-		return applyRoundRobin(choice, sourcePath, roundRobinName)
+		return applyRoundRobin(choice, directory, roundRobinName)
 	}
 	return nil
 }
 
-func applyRoundRobin(choice *ModelChoice, sourcePath string, name string) error {
+func applyRoundRobin(choice *ModelChoice, directory string, name string) error {
 	if writtenPath, isFile := choice.RoundRobin.filePath(); isFile {
-		if err := loadRoundRobinFile(choice, sourcePath, writtenPath); err != nil {
+		if err := loadRoundRobinFile(choice, directory, writtenPath); err != nil {
 			return fmt.Errorf("%s: %w", name, err)
 		}
 	}
@@ -912,8 +923,8 @@ func applyRoundRobin(choice *ModelChoice, sourcePath string, name string) error 
 	return nil
 }
 
-func loadRoundRobinFile(choice *ModelChoice, sourcePath string, writtenPath string) error {
-	resolvedPath, err := resolveConfigPath(sourcePath, writtenPath)
+func loadRoundRobinFile(choice *ModelChoice, directory string, writtenPath string) error {
+	resolvedPath, err := resolveConfigPath(directory, writtenPath)
 	if err != nil {
 		return err
 	}
@@ -1109,7 +1120,7 @@ func isHostnameCharacter(character rune) bool {
 	}
 }
 
-func resolveConfigPath(configPath string, writtenPath string) (string, error) {
+func resolveConfigPath(directory string, writtenPath string) (string, error) {
 	if writtenPath == "" {
 		return "", fmt.Errorf(tr.SettingEmpty, "path")
 	}
@@ -1119,7 +1130,7 @@ func resolveConfigPath(configPath string, writtenPath string) (string, error) {
 		return "", fmt.Errorf("%s: %w", fmt.Sprintf(tr.PathExpandFailure, writtenPath), err)
 	}
 	if !filepath.IsAbs(path) {
-		path = filepath.Join(filepath.Dir(configPath), path)
+		path = filepath.Join(directory, path)
 	}
 
 	return filepath.Clean(path), nil

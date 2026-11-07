@@ -61,6 +61,7 @@ function _oh {
         -L | --login) KIND=provider ;;
         -c | --caps) KIND=caps ;;
         -t | --tool) KIND=tool ;;
+        -s | --set) return ;;
         -m | --model)
             if [[ $WORD == *+* ]]; then
                 KIND=model

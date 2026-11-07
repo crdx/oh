@@ -330,6 +330,15 @@ const (
 	DirectionChoice      = "direction must be %s or %s, got %q"                                    // when the scroll segment has an unknown direction
 )
 
+// The errors in a --set setting on the command line. The flag and the setting come first, as in
+// "--set ui.currency+=GBP: ui.currency does not hold a list of text, …".
+const (
+	SettingShape       = "write %s as setting=value or setting+=value"                       // as in "write --set as setting=value or setting+=value"
+	SettingNameInvalid = "%q does not name one setting"                                      // as in `"grants read" does not name one setting`
+	AppendedNotText    = "%s takes text or a list of text"                                   // after +=, as in "grants.read takes text or a list of text"
+	AppendedNotList    = "%s does not hold a list of text, so nothing can be appended to it" // after +=, as in "ui.currency does not hold a list of text, …"
+)
+
 // The errors in a config file. The file and the setting come first, as in "oh.toml: input.nudge is
 // empty". The code passes in each setting name.
 const (

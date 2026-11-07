@@ -265,7 +265,7 @@ func (self Config) declare(name string) (command.Declaration, error) {
 }
 
 func (self Config) resolveCommand(name string, writtenCommand []string) ([]string, error) {
-	sourcePath := self.getSourceFile(toolsSetting, name)
+	sourceDirectory := self.getSourceDirectory(toolsSetting, name)
 	resolvedCommand := slices.Clone(writtenCommand)
 
 	for at, word := range resolvedCommand {
@@ -273,7 +273,7 @@ func (self Config) resolveCommand(name string, writtenCommand []string) ([]strin
 			continue
 		}
 
-		path, err := resolveConfigPath(sourcePath, word)
+		path, err := resolveConfigPath(sourceDirectory, word)
 		if err != nil {
 			return nil, fmt.Errorf("command: %w", err)
 		}

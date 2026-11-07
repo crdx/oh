@@ -76,6 +76,28 @@ func TestAnEmptyLocalConfigShowsAsEmpty(t *testing.T) {
 	}
 }
 
+func TestCommandLineSettingsFollowTheLocalConfig(t *testing.T) {
+	info := Info{
+		LocalConfig: &LocalConfig{Name: "oh.toml", Settings: []string{"ui.currency"}},
+		CommandLine: []string{"grants.read", "ui.currency"},
+	}
+
+	event := NewEvent(time.Millisecond, info)
+	if fact := `"command_line":["grants.read","ui.currency"]`; !strings.Contains(string(event.State), fact) {
+		t.Errorf("startup facts %s did not contain %s", event.State, fact)
+	}
+	got := style.Plain(RenderEvent(event, 80, false))
+	want := "Agent ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context ⧸ oh.toml: ui.currency ⧸ --set: grants.read, ui.currency."
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+
+	alone := style.Plain(RenderBanner(time.Millisecond, false, Info{CommandLine: []string{"grants.read"}}, 80, false))
+	if want := "Agent ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context ⧸ --set: grants.read."; alone != want {
+		t.Errorf("got %q, want %q", alone, want)
+	}
+}
+
 func TestMalformedStartupFactsRenderNothing(t *testing.T) {
 	event := agent.Event{Kind: agent.StartupEvent, State: json.RawMessage("{")}
 	if got := RenderEvent(event, 80, false); got != "" {

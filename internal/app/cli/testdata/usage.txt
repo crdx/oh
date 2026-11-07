@@ -1,5 +1,5 @@
 Usage:
-    oh [options] [-t <tool>]... [<prompt>...]
+    oh [options] [-t <tool>]... [-s <setting>]... [<prompt>...]
     oh --login [<provider>]
     oh --usage [--json]
     oh --list [--ignored]
@@ -11,6 +11,7 @@ Options:
     -m, --model [<model>]       Pick which model to use
     -c, --caps <flags>          Configure access rights
     -t, --tool <tool>           Replace current toolbox
+    -s, --set <setting>         Override config setting
     -p, --print                 Stream in headless mode
         --from <session>        Fork a previous session
         --ctl                   Run maintenance command

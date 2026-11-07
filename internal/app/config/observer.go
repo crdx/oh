@@ -31,6 +31,13 @@ type snapshot struct {
 
 const readableBytes = 256 << 10
 
+func readSource(source Source) snapshot {
+	if source.isSetting() {
+		return snapshot{}
+	}
+	return readSnapshot(source.Path)
+}
+
 func readSnapshot(path string) snapshot {
 	data, err := readWrittenFile(path)
 	return snapshot{data: data, failure: err, isMissing: errors.Is(err, fs.ErrNotExist)}
@@ -292,7 +299,9 @@ func (self revision) getPaths() []string {
 			len(self.snippetDirectories),
 	)
 	for _, source := range self.sourceSnapshots {
-		paths = append(paths, source.source.Path)
+		if !source.source.isSetting() {
+			paths = append(paths, source.source.Path)
+		}
 	}
 	paths = append(paths, slices.Sorted(maps.Keys(self.roundRobinFileSnapshots))...)
 	paths = append(paths, slices.Sorted(maps.Keys(self.snippetFileSnapshots))...)
@@ -304,7 +313,7 @@ func (self revision) getPaths() []string {
 
 func (self revision) isStillOnDisk(settings Config) bool {
 	for _, source := range self.sourceSnapshots {
-		if !readSnapshot(source.source.Path).equal(source.snapshot) {
+		if !readSource(source.source).equal(source.snapshot) {
 			return false
 		}
 	}
@@ -341,7 +350,7 @@ func (self revision) isStillOnDisk(settings Config) bool {
 func readRevision(sources []Source) (Config, revision, error) {
 	snapshots := make([]sourceSnapshot, 0, len(sources))
 	for _, source := range sources {
-		snapshots = append(snapshots, sourceSnapshot{source: source, snapshot: readSnapshot(source.Path)})
+		snapshots = append(snapshots, sourceSnapshot{source: source, snapshot: readSource(source)})
 	}
 	settings, err := loadSnapshots(snapshots)
 	rotationSnapshots, rotationSettings := settings.rotationFiles()

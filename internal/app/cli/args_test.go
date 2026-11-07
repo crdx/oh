@@ -602,3 +602,30 @@ func TestForceIsInheritedAcrossSessionTransitions(t *testing.T) {
 		t.Errorf("duplicated force: %q", got)
 	}
 }
+
+func TestSettingsAreBoundInOrder(t *testing.T) {
+	input := bind(t, "-s", "grants.read=[]", "--set", "grants.read+=~/notes", "--set=ui.currency=GBP", "hello")
+	want := []string{"grants.read=[]", "grants.read+=~/notes", "ui.currency=GBP"}
+	if !slices.Equal(input.Settings, want) || strings.Join(input.Message, " ") != "hello" {
+		t.Errorf("got settings %q and prompt %q", input.Settings, input.Message)
+	}
+}
+
+func TestSettingsAreInheritedAcrossSessionTransitions(t *testing.T) {
+	arguments := []string{"-r", "-s", "grants.read=[]", "--set", "ui.currency=GBP", "--set=input.nudge=go", "-sui.grouping=[]", "hello"}
+	want := []string{"--set=grants.read=[]", "--set=ui.currency=GBP", "--set=input.nudge=go", "--set=ui.grouping=[]"}
+	for _, kind := range []cycle.TransitionKind{cycle.NewSession, cycle.ResumeSession, cycle.Restart} {
+		if got := InheritedOptions(arguments, cycle.Transition{Kind: kind}); !slices.Equal(got, want) {
+			t.Errorf("%v: inherited %q, want %q", kind, got, want)
+		}
+	}
+
+	for _, arguments := range [][]string{{"--", "-s", "ui.currency=GBP"}, {"-c", "-s"}, {"-m", "x", "--tool", "-s"}} {
+		if got := InheritedOptions(arguments, cycle.Transition{Kind: cycle.NewSession}); got != nil {
+			t.Errorf("inherited prompt/value %v as %q", arguments, got)
+		}
+	}
+	if got := InheritedOptions(arguments, cycle.Transition{Kind: cycle.Quit}); got != nil {
+		t.Errorf("a quit inherited %q", got)
+	}
+}

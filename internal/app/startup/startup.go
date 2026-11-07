@@ -39,6 +39,7 @@ type Info struct {
 	Snippets      int          `json:"snippets,omitempty"`
 	ToolBytes     int          `json:"tools,omitempty"`
 	LocalConfig   *LocalConfig `json:"local_config,omitempty"`
+	CommandLine   []string     `json:"command_line,omitempty"`
 }
 
 func NewEvent(elapsedTime time.Duration, info Info) agent.Event {
@@ -58,6 +59,7 @@ const (
 	textSizingMetadata      = "s=2:w=2"
 	startupDetailsSeparator = "⧸"
 	longDateLayout          = "Monday, 2 January 2006"
+	commandLineSource       = "--set"
 )
 
 func RenderEvent(event agent.Event, columns int, isTextSizingSupported bool) string {
@@ -128,20 +130,36 @@ func renderDetails(info Info, introduction string, conclusion string) string {
 	_, _ = line.WriteString(style.Normal(strconv.Itoa(info.Snippets)))
 	_, _ = line.WriteString(style.Subtle(" "+util.PluralNoun(info.Snippets, "snippet")+" ") + style.Accent(startupDetailsSeparator) + style.Subtle(" "))
 	_, _ = line.WriteString(startupContextTokens(info))
-	if info.LocalConfig == nil || info.LocalConfig.Name == "" {
+	sources := configSources(info)
+	if len(sources) == 0 {
 		_, _ = line.WriteString(style.Subtle(" context" + conclusion))
 		return line.String()
 	}
 
-	_, _ = line.WriteString(style.Subtle(" context ") + style.Accent(startupDetailsSeparator) + style.Subtle(" "))
-	_, _ = line.WriteString(style.Change(info.LocalConfig.Name) + style.Subtle(": "))
-	if len(info.LocalConfig.Settings) == 0 {
-		_, _ = line.WriteString(style.Subtle("(empty)"))
-	} else {
-		_, _ = line.WriteString(style.Normal(strings.Join(info.LocalConfig.Settings, ", ")))
+	lead := " context "
+	for _, source := range sources {
+		_, _ = line.WriteString(style.Subtle(lead) + style.Accent(startupDetailsSeparator) + style.Subtle(" "))
+		_, _ = line.WriteString(style.Change(source.Name) + style.Subtle(": "))
+		if len(source.Settings) == 0 {
+			_, _ = line.WriteString(style.Subtle("(empty)"))
+		} else {
+			_, _ = line.WriteString(style.Normal(strings.Join(source.Settings, ", ")))
+		}
+		lead = " "
 	}
 	_, _ = line.WriteString(style.Subtle(conclusion))
 	return line.String()
+}
+
+func configSources(info Info) []LocalConfig {
+	var sources []LocalConfig
+	if info.LocalConfig != nil && info.LocalConfig.Name != "" {
+		sources = append(sources, *info.LocalConfig)
+	}
+	if len(info.CommandLine) > 0 {
+		sources = append(sources, LocalConfig{Name: commandLineSource, Settings: info.CommandLine})
+	}
+	return sources
 }
 
 func sizedEmoji(emoji string) string {

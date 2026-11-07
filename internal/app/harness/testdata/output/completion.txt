@@ -12,6 +12,7 @@
 --model
 --print
 --resume
+--set
 --tool
 --update
 --usage

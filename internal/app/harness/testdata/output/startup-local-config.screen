@@ -1,3 +1,171 @@
+=== command line settings / ordinary / narrow ===
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ --set: grants.
+read, grants.write.
+=== command line settings / ordinary / one column ===
+A
+g
+e
+n
+t
+
+t
+a
+m
+e
+-
+i
+m
+p
+a
+l
+a
+
+🦌
+
+r
+e
+a
+d
+y
+
+i
+n
+
+2
+m
+s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
+
+w
+i
+t
+h
+
+4
+
+s
+k
+i
+l
+l
+s
+
+⧸
+
+2
+
+s
+n
+i
+p
+p
+e
+t
+s
+
+⧸
+
+~
+1
+.
+6
+K
+t
+
+c
+o
+n
+t
+e
+x
+t
+
+⧸
+
+-
+-
+s
+e
+t
+:
+
+g
+r
+a
+n
+t
+s
+.
+r
+e
+a
+d
+,
+
+g
+r
+a
+n
+t
+s
+.
+w
+r
+i
+t
+e
+.
+=== command line settings / ordinary / tiny ===
+Agent tame-i
+mpala 🦌 rea
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context ⧸ --
+set: grants.
+read, grants
+.write.
+=== command line settings / ordinary / wide ===
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext ⧸ --set: grants.read, grants.write.
+=== command line settings / sized / narrow ===
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ --set: grants.
+read, grants.write.
+=== command line settings / sized / wide ===
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
+       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ --set: grants.read, grants.write
 === empty local config / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
@@ -149,6 +317,216 @@ y).
 === empty local config / sized / wide ===
  🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: (empty)
+=== local and command line settings / ordinary / narrow ===
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: defau
+lt.caps, ui.currency ⧸ --set: grants.rea
+d, ui.currency.
+=== local and command line settings / ordinary / one column ===
+A
+g
+e
+n
+t
+
+t
+a
+m
+e
+-
+i
+m
+p
+a
+l
+a
+
+🦌
+
+r
+e
+a
+d
+y
+
+i
+n
+
+2
+m
+s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
+
+w
+i
+t
+h
+
+4
+
+s
+k
+i
+l
+l
+s
+
+⧸
+
+2
+
+s
+n
+i
+p
+p
+e
+t
+s
+
+⧸
+
+~
+1
+.
+6
+K
+t
+
+c
+o
+n
+t
+e
+x
+t
+
+⧸
+
+o
+h
+.
+t
+o
+m
+l
+:
+
+d
+e
+f
+a
+u
+l
+t
+.
+c
+a
+p
+s
+,
+
+u
+i
+.
+c
+u
+r
+r
+e
+n
+c
+y
+
+⧸
+
+-
+-
+s
+e
+t
+:
+
+g
+r
+a
+n
+t
+s
+.
+r
+e
+a
+d
+,
+
+u
+i
+.
+c
+u
+r
+r
+e
+n
+c
+y
+.
+=== local and command line settings / ordinary / tiny ===
+Agent tame-i
+mpala 🦌 rea
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context ⧸ oh
+.toml: defau
+lt.caps, ui.
+currency ⧸ -
+-set: grants
+.read, ui.cu
+rrency.
+=== local and command line settings / ordinary / wide ===
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext ⧸ oh.toml: default.caps, ui.currency ⧸ --set: grants.read, ui.currency.
+=== local and command line settings / sized / narrow ===
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: defau
+lt.caps, ui.currency ⧸ --set: grants.rea
+d, ui.currency.
+=== local and command line settings / sized / wide ===
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
+       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: default.caps, ui.currency ⧸ --set:
+       grants.read, ui.currency
 === many local settings / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn

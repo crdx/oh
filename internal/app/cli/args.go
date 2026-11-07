@@ -22,11 +22,12 @@ const (
 	optionTerminator = "--"
 	defaultCapFlags  = "rx"
 	yoloOption       = "--yolo"
+	settingOption    = "--set"
 )
 
 var usage = `
 Usage:
-    $0 [options] [-t <tool>]... [<prompt>...]
+    $0 [options] [-t <tool>]... [-s <setting>]... [<prompt>...]
     $0 --login [<provider>]
     $0 --usage [--json]
     $0 --list [--ignored]
@@ -38,6 +39,7 @@ Options:
     -m, --model [<model>]       Pick which model to use
     -c, --caps <flags>          Configure access rights
     -t, --tool <tool>           Replace current toolbox
+    -s, --set <setting>         Override config setting
     -p, --print                 Stream in headless mode
         --from <session>        Fork a previous session
         --ctl                   Run maintenance command
@@ -69,6 +71,7 @@ type inputFlags struct {
 	IsModelPicker    bool     `docopt:"-m"`
 	Caps             string   `docopt:"--caps"`
 	Tools            []string `docopt:"--tool"`
+	Settings         []string `docopt:"--set"`
 	IsPrinting       bool     `docopt:"--print"`
 	IsDemoing        bool     `docopt:"--demo"`
 	Usage            bool     `docopt:"--usage"`
@@ -345,7 +348,37 @@ func InheritedOptions(arguments []string, transition cycle.Transition) []string 
 	if isForceInherited(arguments) && !isForceInherited(transition.Arguments) {
 		inheritedOptions = append(inheritedOptions, "--force")
 	}
+	for _, setting := range inheritedSettings(arguments) {
+		inheritedOptions = append(inheritedOptions, settingOption+"="+setting)
+	}
 	return inheritedOptions
+}
+
+func inheritedSettings(arguments []string) []string {
+	arguments = splitShortFlagGroups(append([]string{"oh"}, arguments...))[1:]
+	var settings []string
+	for index := 0; index < len(arguments); index++ {
+		argument := arguments[index]
+		switch {
+		case argument == optionTerminator:
+			return settings
+		case argument == "-s" || argument == settingOption:
+			if index+1 < len(arguments) {
+				settings = append(settings, arguments[index+1])
+			}
+			index++
+		case strings.HasPrefix(argument, settingOption+"="):
+			settings = append(settings, strings.TrimPrefix(argument, settingOption+"="))
+		case strings.HasPrefix(argument, "-s"):
+			settings = append(settings, strings.TrimPrefix(argument, "-s"))
+		case slices.Contains(valuedOptions, argument):
+			index++
+		case slices.Contains(optionalValuedOptions, argument) && index+1 < len(arguments) &&
+			!strings.HasPrefix(arguments[index+1], "-"):
+			index++
+		}
+	}
+	return settings
 }
 
 func isForceInherited(arguments []string) bool {
@@ -356,12 +389,17 @@ func isForceInherited(arguments []string) bool {
 			return false
 		case "-f", "--force":
 			return true
-		case "-c", "--caps", "-t", "--tool", "--from":
+		case "-c", "--caps", "-t", "--tool", "-s", "--set", "--from":
 			index++
 		}
 	}
 	return false
 }
+
+var (
+	valuedOptions         = []string{"-c", "--caps", "-t", "--tool", "--from"}
+	optionalValuedOptions = []string{"-m", "--model", "-r", "--resume"}
+)
 
 func IsYoloInherited(arguments []string) bool {
 	return slices.Contains(arguments, yoloOption)

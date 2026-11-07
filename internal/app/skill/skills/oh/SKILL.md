@@ -11,13 +11,14 @@ This skill ships inside the binary and describes the version running.
 
 ## Configuration
 
-Three sources load in order, each overriding the last:
+Four sources load in order, each overriding the last:
 
-| Layer     | Path                                          | Scope                    |
-|-----------|-----------------------------------------------|--------------------------|
-| Defaults  | `internal/app/config/defaults.toml`, embedded | Every session            |
-| Global    | `~/.config/org.crdx/oh/config.toml`           | Every session            |
-| Workspace | `<workspace>/oh.toml`                         | Sessions in that project |
+| Layer        | Path                                          | Scope                    |
+|--------------|-----------------------------------------------|--------------------------|
+| Defaults     | `internal/app/config/defaults.toml`, embedded | Every session            |
+| Global       | `~/.config/org.crdx/oh/config.toml`           | Every session            |
+| Workspace    | `<workspace>/oh.toml`                         | Sessions in that project |
+| Command line | `--set` on the `oh` command line              | That run of oh           |
 
 Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, speed dial, tool output cap, task limits, and conversation timeouts. Everything else waits, and waits for one of two things:
 
@@ -72,6 +73,22 @@ A workspace file comes with whatever repository you cloned, so it may not set wh
 Those belong to the config that follows you between projects, and paths in them resolve relative to it, with `~` expanded.
 
 Text a workspace file supplies is refused wherever the terminal would obey it rather than draw it, so a bar segment's options hold no control characters.
+
+## Command-Line Settings
+
+`-s` or `--set` sets one setting for one run of oh, over every file. Repeat it for more, and each applies in the order written:
+
+```bash
+oh -s 'grants.read+=~/notes' 'summarise my notes'
+oh -s 'grants.read=[]' -s 'grants.write=[]' -s ui.currency=GBP
+```
+
+- `setting=value` replaces the value, as a file does, so `=[]` clears a list
+- `setting+=value` appends to a list of text; the value is one entry or a list of them
+- The value is read as TOML, and taken as plain text where it is not TOML, so `ui.currency=GBP` needs no quotes
+- The person typed it, so it may set anything, `[grants]` and `[tool]` included; relative paths resolve against the workspace
+- A reload keeps it on top of the files, and `/new`, `/fork`, and a resume carry it into the next session
+- The startup banner names the settings it sets after `--set:`
 
 ## Theme
 

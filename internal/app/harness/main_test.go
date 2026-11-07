@@ -7584,6 +7584,7 @@ var optionsThatOpenASession = []string{
 	"--model",
 	"--caps",
 	"--tool",
+	"--set",
 	"--print",
 	"--demo",
 	"--yolo",
@@ -8644,10 +8645,11 @@ func TestTheCurrentDirectoryConfigOverridesTheGlobalConfig(t *testing.T) {
 	workspaceDir := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", configRoot)
 
-	got := getConfigSources(workspaceDir)
+	got := getConfigSources(workspaceDir, []string{"grants.read+=notes"})
 	want := []config.Source{
 		{Path: filepath.Join(configRoot, "org.crdx", "oh", "config.toml")},
 		{Path: filepath.Join(workspaceDir, "oh.toml"), IsOverride: true},
+		config.CommandLineSetting(workspaceDir, "grants.read+=notes"),
 	}
 	if !slices.Equal(got, want) {
 		t.Errorf("got %#v, want %#v", got, want)
@@ -11047,6 +11049,13 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 				Name:     "oh.toml",
 				Settings: []string{"grants.write", "snippet.review", "ui.currency"},
 			},
+		},
+		"command line settings": {
+			CommandLine: []string{"grants.read", "grants.write"},
+		},
+		"local and command line settings": {
+			LocalConfig: &startup.LocalConfig{Name: "oh.toml", Settings: []string{"default.caps", "ui.currency"}},
+			CommandLine: []string{"grants.read", "ui.currency"},
 		},
 		"many local settings": {
 			LocalConfig: &startup.LocalConfig{
