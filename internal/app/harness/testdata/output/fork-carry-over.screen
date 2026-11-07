@@ -97,6 +97,23 @@ Model returned no reply.
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a grant whose path became a symbolic link ===
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Could not carry over temporary access to                                                       │
+ │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/moved: path now       │
+ │ resolves to /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a sandboxed source forked outside the sandbox ===
 
  🤖 Granted temporary read-only access to

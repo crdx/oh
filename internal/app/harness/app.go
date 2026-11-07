@@ -2474,7 +2474,7 @@ func (self *App) carryOver(forkSource *sessions.ForkSource) {
 
 	recordedGrants, _ := pathgrant.LastRecorded(events)
 	for _, grant := range recordedGrants {
-		event, err := self.pathGrants.Grant(grant.Path, grant.Access)
+		event, err := self.pathGrants.GrantRecorded(grant)
 		if pathError, isPathError := errors.AsType[*fs.PathError](err); isPathError {
 			err = pathError.Err
 		}

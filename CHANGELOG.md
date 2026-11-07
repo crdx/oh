@@ -5,6 +5,7 @@
 - Refuse to read a FIFO or device, rather than hang
 - Hash the files grep matches without loading them
 - Check a file was read before `write` or `edit` loads it
+- Refuse to carry a grant into a fork once its path has become a symlink
 
 ## [0.31.3] — 2026-11-07
 

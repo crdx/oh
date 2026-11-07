@@ -84,6 +84,7 @@ func storedGoldenForkSource(
 type forkGoldenPaths struct {
 	reference string
 	missing   string
+	moved     string
 }
 
 type forkGoldenSource struct {
@@ -134,6 +135,10 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 	paths := forkGoldenPaths{
 		reference: stableGoldenGrantPath(t, "reference", true),
 		missing:   stableGoldenGrantPath(t, "missing", false),
+		moved:     stableGoldenGrantPath(t, "moved", false),
+	}
+	if err := os.Symlink(paths.reference, paths.moved); err != nil {
+		t.Fatal(err)
 	}
 
 	var screenOutput bytes.Buffer
@@ -235,6 +240,11 @@ func TestGoldenAForkCarriesItsSourceOver(t *testing.T) {
 		"a grant that no longer resolves": {
 			events: func(paths forkGoldenPaths) []agent.Event {
 				return []agent.Event{forkGoldenGrant(t, paths.missing, pathgrant.ReadAccess)}
+			},
+		},
+		"a grant whose path became a symbolic link": {
+			events: func(paths forkGoldenPaths) []agent.Event {
+				return []agent.Event{forkGoldenGrant(t, paths.moved, pathgrant.ReadAccess|pathgrant.WriteAccess)}
 			},
 		},
 		"a grant revoked in the source": {

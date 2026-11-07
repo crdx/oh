@@ -409,6 +409,37 @@ func TestRestoreRefusesARecordedPathThatBecameASymlink(t *testing.T) {
 	}
 }
 
+func TestGrantingARecordedPathRefusesOneThatBecameASymlink(t *testing.T) {
+	grants, _, _ := newTestGrants(t)
+	recordedPath := filepath.Join(t.TempDir(), "reference")
+	if err := os.Symlink(t.TempDir(), recordedPath); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := grants.GrantRecorded(Grant{Path: recordedPath, Access: ReadAccess | WriteAccess}); err == nil ||
+		!strings.Contains(err.Error(), "now resolves") {
+		t.Errorf("got %v, want the moved path refused", err)
+	}
+	if current := grants.GetCurrent(); len(current) != 0 {
+		t.Errorf("the moved path was granted: %#v", current)
+	}
+}
+
+func TestGrantingARecordedPathKeepsOneThatStayedPut(t *testing.T) {
+	grants, _, _ := newTestGrants(t)
+	recordedPath, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := grants.GrantRecorded(Grant{Path: recordedPath, Access: ReadAccess}); err != nil {
+		t.Fatal(err)
+	}
+	if current := grants.GetCurrent(); len(current) != 1 || current[0].Path != recordedPath {
+		t.Errorf("got %#v, want the recorded path granted", current)
+	}
+}
+
 func TestRestoreReopensPresentPathsAndCorrectsMissingOnes(t *testing.T) {
 	workspace := openTestWorkspace(t)
 	mode := caps.NewMode(caps.Read)

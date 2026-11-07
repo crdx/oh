@@ -68,22 +68,7 @@ func NewRestored(
 	current := make([]Grant, 0, len(recordedGrants))
 	result := RestoreResult{}
 	for _, grant := range canonicalGrants(recordedGrants) {
-		var err error
-		if !filepath.IsAbs(grant.Path) || filepath.Clean(grant.Path) != grant.Path {
-			err = fmt.Errorf("invalid recorded path %q", grant.Path)
-		} else if !IsTemporaryAccess(grant.Access) {
-			err = fmt.Errorf("invalid recorded access %q", grant.Access.Flags())
-		}
-		canonicalPath := ""
-		if err == nil && !pathAccess.IsUnconfined() {
-			err = shell.RefuseHostTmpPath(grant.Path)
-		}
-		if err == nil {
-			canonicalPath, err = filepath.EvalSymlinks(grant.Path)
-		}
-		if err == nil && filepath.Clean(canonicalPath) != grant.Path {
-			err = fmt.Errorf("path now resolves to %s", filepath.Clean(canonicalPath))
-		}
+		err := refuseRecordedGrant(grant, pathAccess)
 		if err == nil {
 			_, err = pathAccess.Grant(grant.Path, grant.Access)
 		}
@@ -99,6 +84,28 @@ func NewRestored(
 		pathAccess: pathAccess,
 		state:      access.NewRestored(current, canonicalGrants(recordedGrants), definition()),
 	}, result
+}
+
+func refuseRecordedGrant(grant Grant, pathAccess *shell.PathAccess) error {
+	if !filepath.IsAbs(grant.Path) || filepath.Clean(grant.Path) != grant.Path {
+		return fmt.Errorf("invalid recorded path %q", grant.Path)
+	}
+	if !IsTemporaryAccess(grant.Access) {
+		return fmt.Errorf("invalid recorded access %q", grant.Access.Flags())
+	}
+	if !pathAccess.IsUnconfined() {
+		if err := shell.RefuseHostTmpPath(grant.Path); err != nil {
+			return err
+		}
+	}
+	canonicalPath, err := filepath.EvalSymlinks(grant.Path)
+	if err != nil {
+		return err
+	}
+	if filepath.Clean(canonicalPath) != grant.Path {
+		return fmt.Errorf("path now resolves to %s", filepath.Clean(canonicalPath))
+	}
+	return nil
 }
 
 func (self *Grants) GetCurrent() []Grant {
@@ -147,6 +154,13 @@ func (self *Grants) Grant(path string, access Access) (agent.Event, error) {
 	current = replaceGrant(current, Grant{Path: canonicalPath, Access: access})
 	self.state.Replace(current)
 	return ChangeEvent(canonicalPath, current)
+}
+
+func (self *Grants) GrantRecorded(grant Grant) (agent.Event, error) {
+	if err := refuseRecordedGrant(grant, self.pathAccess); err != nil {
+		return agent.Event{}, err
+	}
+	return self.Grant(grant.Path, grant.Access)
 }
 
 func (self *Grants) Revoke(path string) (agent.Event, error) {
