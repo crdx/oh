@@ -16,6 +16,8 @@ import (
 
 const limitBytes = 12 * 1024
 
+const savedDirectoryLength = 200
+
 func temporarySaver(t *testing.T) truncate.Saver {
 	t.Helper()
 
@@ -37,6 +39,21 @@ func newSaver(t *testing.T, directory string) truncate.Saver {
 		}
 		return file.Name(), nil
 	}
+}
+
+func newFixedLengthSaver(t *testing.T) (truncate.Saver, string) {
+	t.Helper()
+
+	directory := t.TempDir()
+	padded := filepath.Join(directory, strings.Repeat("x", savedDirectoryLength-len(directory)-1))
+	if err := os.Mkdir(padded, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(padded, "output.txt")
+
+	return func(output string) (string, error) {
+		return path, os.WriteFile(path, []byte(output), 0o600)
+	}, path
 }
 
 type Args struct {
@@ -534,7 +551,7 @@ func TestAFrozenSchemaReachesTheToolItWraps(t *testing.T) {
 }
 
 func TestAnOutputTooBigKeepsBothEnds(t *testing.T) {
-	directory := t.TempDir()
+	save, savedPath := newFixedLengthSaver(t)
 	buffer := &tool.OutputBuffer{}
 	for line := range 200000 {
 		if _, err := fmt.Fprintf(buffer, "%d\n", line+1); err != nil {
@@ -543,7 +560,7 @@ func TestAnOutputTooBigKeepsBothEnds(t *testing.T) {
 	}
 	whole := "exit(1):\n" + buffer.Report() + "note: the command failed."
 
-	output := truncate.Output(whole, truncate.NewLimit(limitBytes), newSaver(t, directory))
+	output := truncate.Output(whole, truncate.NewLimit(limitBytes), save)
 
 	if len(output) > limitBytes {
 		t.Errorf("got %d bytes, want at most %d", len(output), limitBytes)
@@ -554,11 +571,10 @@ func TestAnOutputTooBigKeepsBothEnds(t *testing.T) {
 	if !strings.HasSuffix(output, "\n199999\n200000\nnote: the command failed.") {
 		t.Errorf("got %q, want the end of the output kept", output[len(output)-60:])
 	}
-	saved, err := filepath.Glob(filepath.Join(directory, "output-*.txt"))
-	if err != nil || len(saved) != 1 {
-		t.Fatalf("expected the output saved once, got %v and %v", saved, err)
+	if saved, err := os.ReadFile(savedPath); err != nil || string(saved) != whole { //nolint:gosec // a path this test made itself
+		t.Fatalf("expected the whole output saved, got %d bytes and %v", len(saved), err)
 	}
-	if !strings.Contains(output, "\n\n[truncated: kept the first 3.83K and the last 7.68K of 256K; full output in "+saved[0]+"; lines 558-36332 of 37453 are omitted, so read them with the read tool from offset 558]\n\n") {
+	if !strings.Contains(output, "\n\n[truncated: kept the first 3.79K and the last 7.59K of 256K; full output in "+savedPath+"; lines 551-36345 of 37453 are omitted, so read them with the read tool from offset 551]\n\n") {
 		t.Errorf("got %q, want one note between the ends", output)
 	}
 }
