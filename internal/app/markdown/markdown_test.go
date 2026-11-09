@@ -67,6 +67,36 @@ func TestAStreamRendererDrawsEveryPrefixAsARenderFromScratch(t *testing.T) {
 	}
 }
 
+func TestAHeadingResumesItsColourAfterAnInlineStyle(t *testing.T) {
+	t.Cleanup(style.ForceColour())
+
+	headingOpening, _, _ := strings.Cut(style.Heading("\x00"), "\x00")
+	for _, inline := range []string{
+		"*inside*",
+		"**inside**",
+		"***inside***",
+		"`inside`",
+		"[inside](https://example.test)",
+	} {
+		for level := 1; level <= 6; level++ {
+			source := strings.Repeat("#", level) + " before " + inline + " after"
+			rows := Render(source, columns)
+			if len(rows) != 1 {
+				t.Fatalf("Render(%q) drew %d rows, want one", source, len(rows))
+			}
+
+			beforeTail, _, found := strings.Cut(rows[0], " after")
+			if !found {
+				t.Fatalf("Render(%q) lost the text after the inline style: %q", source, rows[0])
+			}
+			afterReset := beforeTail[strings.LastIndex(beforeTail, reset)+len(reset):]
+			if !strings.Contains(afterReset, headingOpening) {
+				t.Errorf("Render(%q) lost the heading colour after the inline style: %q", source, rows[0])
+			}
+		}
+	}
+}
+
 func TestATableWidensAsItsRowsArrive(t *testing.T) {
 	short := Render("| a | b |\n|---|---|\n| x | y |\n", columns)
 	long := Render("| a | b |\n|---|---|\n| x | y |\n| a much wider cell | y |\n", columns)

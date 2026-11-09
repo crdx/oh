@@ -9,7 +9,11 @@ pace = "40ms"
 [[turn]]
 think = ["Laying the answer out."]
 say = """
-# What the tools cost
+# What the *tools* cost
+
+## One concern that does *not* require a fix
+
+### Keep **bold**, `code` and [links](https://example.test) in a heading
 
 The **read** tool is cheap and `bash` is not, so the *order* matters. A run looks like this:
 

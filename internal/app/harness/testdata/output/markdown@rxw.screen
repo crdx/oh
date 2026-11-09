@@ -11,6 +11,11 @@ Laying the answer out.
 
 What the tools cost
 
+One concern that does not require a fix
+
+Keep bold, code and links
+(https://example.test) in a heading
+
 The read tool is cheap and bash is not,
 so the order matters. A run looks like
 this:
@@ -197,6 +202,93 @@ c
 o
 s
 t
+
+O
+n
+e
+c
+o
+n
+c
+e
+r
+n
+t
+h
+a
+t
+d
+o
+e
+s
+n
+o
+t
+r
+e
+q
+u
+i
+r
+e
+a
+f
+i
+x
+
+K
+e
+e
+p
+b
+o
+l
+d
+,
+c
+o
+d
+e
+a
+n
+d
+l
+i
+n
+k
+s
+(
+h
+t
+t
+p
+s
+:
+/
+/
+e
+x
+a
+m
+p
+l
+e
+.
+t
+e
+s
+t
+)
+i
+n
+a
+h
+e
+a
+d
+i
+n
+g
 
 T
 h
@@ -736,6 +828,10 @@ Laying the answer out.
 
 What the tools cost
 
+One concern that does not require a fix
+
+Keep bold, code and links (https://example.test) in a heading
+
 The read tool is cheap and bash is not, so the order matters. A run looks like this:
 
 func main() {
@@ -789,6 +885,18 @@ answer out.
 
 What the
 tools cost
+
+One concern
+that does
+not require
+a fix
+
+Keep bold,
+code and
+links
+(https://exa
+mple.test)
+in a heading
 
 The read
 tool is
@@ -877,6 +985,10 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 Laying the answer out.
 
 What the tools cost
+
+One concern that does not require a fix
+
+Keep bold, code and links (https://example.test) in a heading
 
 The read tool is cheap and bash is not, so the order matters. A run looks like this:
 

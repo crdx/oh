@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Fix additional inline styles within headings
+
 ## [0.32.0] — 2026-11-07
 
 - Refuse to read a FIFO or device, rather than hang

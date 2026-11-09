@@ -212,7 +212,7 @@ func (self *renderer) block(node ast.Node) {
 			return
 		}
 
-		self.appendWrapped(over(col.Bold, style.Heading(heading)))
+		self.appendWrapped(over(col.Bold, style.Heading.Over(heading)))
 
 	case *ast.FencedCodeBlock:
 		language := string(node.Language(self.source))
