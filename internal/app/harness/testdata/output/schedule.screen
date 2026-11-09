@@ -42,13 +42,10 @@
 === git status alone in a repository ===
       +0s
    +100ms  ●
-      +5s  ●
-    +5.1s  ●
      +10s  ●
    +10.1s  ●
 === git status alone outside a repository ===
       +0s
-      +5s
      +10s
 === redraw feedback ticks at its own start and expires ===
       +1s  Redrawn in 42ms (dismissing in 1s)

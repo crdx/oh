@@ -312,6 +312,24 @@ func TestTheSegmentSaysWhenGitFails(t *testing.T) {
 	}
 }
 
+func TestTheDefaultRefreshWaitsTenSecondsAfterReadingGit(testContext *testing.T) {
+	isolateGit(testContext)
+
+	instance := build(testContext, repository(testContext, "git init -q -b main\n"), "")
+	instance.read(gitrepo.Dir(instance.workspaceDir))
+	if !instance.isRead || instance.isFailed {
+		testContext.Fatal("expected the default segment to read the Git repository")
+	}
+	instance.Render(segment.Context{})
+
+	for _, isRunning := range []bool{false, true} {
+		phase := segment.Phase{At: instance.readAt, IsRunning: isRunning}
+		if delay := instance.NextRefresh(phase).Sub(instance.readAt); delay != 10*time.Second {
+			testContext.Errorf("expected a ten-second refresh interval, got %s", delay)
+		}
+	}
+}
+
 func TestTheSegmentAsksForARedrawOnceItHasRead(t *testing.T) {
 	isolateGit(t)
 

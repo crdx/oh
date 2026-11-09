@@ -26,7 +26,7 @@ import (
 var _ segment.Refresher = &state{}
 
 const (
-	defaultRate     = 5 * time.Second
+	defaultRate     = 10 * time.Second
 	readingTimeout  = 10 * time.Second
 	readingInterval = 100 * time.Millisecond
 	treeMark        = "●"
