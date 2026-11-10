@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.33.0] — 2026-11-10
+
 - Fix additional inline styles within headings
 - Poll git status every 10 seconds by default (was 5)
 
