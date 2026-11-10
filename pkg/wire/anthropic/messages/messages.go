@@ -24,7 +24,7 @@ const (
 
 	Beta = "claude-code-20250219,oauth-2025-04-20,fine-grained-tool-streaming-2025-05-14"
 
-	UserAgent = "claude-cli/2.1.280"
+	UserAgent = "claude-cli/2.1.290"
 
 	Identity = "You are Claude Code, Anthropic's official CLI for Claude."
 )
