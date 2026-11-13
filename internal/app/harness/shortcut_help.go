@@ -158,7 +158,7 @@ func (self *App) keyboardShortcuts(inputLine *edit.Input) []keyboardShortcut {
 	}
 	if self.currentTurn.HasInterjections() {
 		shortcuts = append(shortcuts,
-			keyboardShortcut{keys: "^Z / Escape / ^D", action: tr.TakeBackQueuedMessage},
+			keyboardShortcut{keys: "^Z", action: tr.TakeBackQueuedMessage},
 			keyboardShortcut{keys: "Enter twice", action: tr.SendQueuedMessages},
 		)
 	} else {

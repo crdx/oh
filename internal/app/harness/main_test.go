@@ -3375,7 +3375,7 @@ func TestPeelingEveryQueuedMessageRebuildsWhatWouldHaveBeenSent(t *testing.T) {
 	}
 }
 
-func TestAStopKeyStopsTheTurnOnceTheQueueIsEmpty(t *testing.T) {
+func TestAStopKeyStopsTheTurnAndLeavesTheQueue(t *testing.T) {
 	for name, stopKey := range map[string]key.Key{
 		"escape": {Code: key.Escape},
 		"ctrl+d": {Code: key.Rune, Value: 'd', Mod: key.Ctrl},
@@ -3393,16 +3393,14 @@ func TestAStopKeyStopsTheTurnOnceTheQueueIsEmpty(t *testing.T) {
 			typeMessage(t, self, inputLine, history, "queued")
 
 			self.apply(inputLine, history, stopKey)
-			if cancellations != 0 {
-				t.Fatalf("the first press cancelled %d times, want none", cancellations)
-			}
-			if inputLine.Text() != "queued" {
-				t.Fatalf("the first press left %q in the input, want the message back", inputLine.Text())
-			}
-
-			self.apply(inputLine, history, stopKey)
 			if cancellations != 1 {
-				t.Errorf("the second press cancelled %d times, want 1", cancellations)
+				t.Fatalf("the first press cancelled %d times, want 1", cancellations)
+			}
+			if inputLine.Text() != "" {
+				t.Fatalf("the first press left %q in the input, want nothing taken back", inputLine.Text())
+			}
+			if queued := self.currentTurn.GetInterjections(); len(queued) != 1 || queued[0] != "queued" {
+				t.Fatalf("the first press left %q queued, want the message", queued)
 			}
 		})
 	}
@@ -13642,6 +13640,8 @@ const (
 	queuedSnippet
 	queuedTakenBack
 	queuedTakenBackWhileTyping
+	queuedHeldAtEscape
+	queuedHeldAtAStop
 	queuedBesideFeedback
 	queuedFlushed
 	queuedQuickHandoff
@@ -13679,8 +13679,10 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 		"a long message elided":                         func() string { return queuedMessagesStream(t, queuedLongMessage) },
 		"a multiline message":                           func() string { return queuedMessagesStream(t, queuedMultilineMessage) },
 		"a markdown emphasis":                           func() string { return queuedMessagesStream(t, queuedMarkdownEmphasis) },
-		"escape takes the last back":                    func() string { return queuedMessagesStream(t, queuedTakenBack) },
+		"ctrl+z takes the last back":                    func() string { return queuedMessagesStream(t, queuedTakenBack) },
 		"taken back while typing":                       func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
+		"escape stops and holds the queue":              func() string { return queuedMessagesStream(t, queuedHeldAtEscape) },
+		"ctrl+d stops and holds the queue":              func() string { return queuedMessagesStream(t, queuedHeldAtAStop) },
 		"feedback beside the queue":                     func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
 		"flushed at a stopping turn":                    func() string { return queuedMessagesStream(t, queuedFlushed) },
 		"quick delivery shows its queue":                func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
@@ -13789,6 +13791,8 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		queuedMarkdownEmphasis:       {"check the *other* path too"},
 		queuedTakenBack:              {"check the other path too", "and mention what you find"},
 		queuedTakenBackWhileTyping:   {"check the other path too"},
+		queuedHeldAtEscape:           {"check the other path too", "and mention what you find"},
+		queuedHeldAtAStop:            {"check the other path too", "and mention what you find"},
 		queuedBesideFeedback:         {"check the other path too"},
 		queuedFlushed:                {"check the other path too", "and mention what you find"},
 		queuedQuickHandoff:           {"check the other path too"},
@@ -13842,12 +13846,16 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		currentTime = currentTime.Add(queuedNoticeDelay)
 		self.show(inputLine)
 	case queuedTakenBack:
-		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
+		self.handleKeypressAndShowInput(inputLine, history, undoKey('z'))
 	case queuedTakenBackWhileTyping:
 		for _, value := range "and one more" {
 			self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Rune, Value: value})
 		}
+		self.handleKeypressAndShowInput(inputLine, history, undoKey('z'))
+	case queuedHeldAtEscape:
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
+	case queuedHeldAtAStop:
+		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Rune, Value: 'd', Mod: key.Ctrl})
 	case queuedBesideFeedback:
 		self.handleCommand("/help")
 		self.show(inputLine)

@@ -574,9 +574,7 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		if self.stopHostCommand() {
 			break
 		}
-		if !self.takeBackQueuedMessage(inputLine) {
-			self.cancelTurn(stopKeyCause(keypress))
-		}
+		self.cancelTurn(stopKeyCause(keypress))
 
 	case edit.QuitSession:
 		return false
@@ -1215,6 +1213,12 @@ func (self *App) holdsStoppedQueue() bool {
 	return self.currentTurn.Cancelled() && self.interruptionCause() == interrupt.ControlZ && !self.queuedTurn.Peek().Replacement
 }
 
+func (self *App) keepsStoppedQueue() bool {
+	cause := self.interruptionCause()
+
+	return self.holdsStoppedQueue() || self.currentTurn.Cancelled() && (cause == interrupt.Escape || cause == interrupt.ControlD)
+}
+
 func (self *App) cancelTurn(cause interrupt.Cause) {
 	if self.currentTurn.Cancelled() {
 		self.queuedTurn.Drop()
@@ -1376,7 +1380,7 @@ func (self *App) queue(columns int) painter.Queue {
 	}
 
 	messages := self.currentTurn.GetInterjections()
-	isSending := self.currentTurn.Running() && self.currentTurn.Cancelled() && !self.holdsStoppedQueue()
+	isSending := self.currentTurn.Running() && self.currentTurn.Cancelled() && !self.keepsStoppedQueue()
 	if isSending && !self.queueRevealAt.IsZero() && self.getNow().Before(self.queueRevealAt) {
 		messages = nil
 	}
@@ -2753,8 +2757,10 @@ func (self *App) finish() {
 		return
 	}
 
-	if message, isQueued := self.currentTurn.TakeInterjections(); isQueued {
-		self.queuedTurn.Replace(message)
+	if !self.keepsStoppedQueue() {
+		if message, isQueued := self.currentTurn.TakeInterjections(); isQueued {
+			self.queuedTurn.Replace(message)
+		}
 	}
 
 	queuedKind, message := self.queuedTurn.Take()

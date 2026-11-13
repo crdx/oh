@@ -2,6 +2,7 @@ package harness
 
 import (
 	"bytes"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/edit"
@@ -48,7 +49,7 @@ func TestControlCDoesNotStopAHostCommand(t *testing.T) {
 	endHeldHostCommand(t, self)
 }
 
-func TestEscapeClosesHelpBeforeTakingBackTheQueue(t *testing.T) {
+func TestEscapeClosesHelpBeforeStoppingTheTurn(t *testing.T) {
 	self, _, inputLine, history, _ := undoFixture(t)
 	self.currentTurn.Interject("queued message")
 	inputLine.SetText("unfinished draft")
@@ -58,10 +59,39 @@ func TestEscapeClosesHelpBeforeTakingBackTheQueue(t *testing.T) {
 		t.Fatal("the first escape did more than close help")
 	}
 	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
-	if self.currentTurn.Cancelled() || inputLine.Text() != "queued message\n\nunfinished draft" {
-		t.Fatalf("the second escape did not take back the queue: %q", inputLine.Text())
+	if !self.currentTurn.Cancelled() || inputLine.Text() != "unfinished draft" {
+		t.Fatalf("the second escape did not stop the turn alone: %q", inputLine.Text())
 	}
 	self.finish()
+}
+
+func TestAStopKeyStopsTheTurnAndHoldsTheQueue(t *testing.T) {
+	for name, stopKey := range map[string]key.Key{
+		"escape": {Code: key.Escape},
+		"ctrl+d": undoKey('d'),
+	} {
+		t.Run(name, func(t *testing.T) {
+			self, provider, inputLine, history, _ := undoFixture(t)
+			self.currentTurn.Interject("queued message")
+			inputLine.SetText("unfinished draft")
+			self.handleKeypressAndShowInput(inputLine, history, stopKey)
+			if !self.currentTurn.Cancelled() || inputLine.Text() != "unfinished draft" {
+				t.Fatalf("the key took the queue back rather than stop the turn: %q", inputLine.Text())
+			}
+			self.finish()
+			if self.currentTurn.Running() {
+				t.Fatal("the stop started another turn")
+			}
+			for _, item := range provider.items {
+				if strings.Contains(string(item), "queued message") {
+					t.Fatalf("the stop sent the queued message: %s", item)
+				}
+			}
+			if queued := self.currentTurn.GetInterjections(); len(queued) != 1 || queued[0] != "queued message" {
+				t.Fatalf("the stop lost the queued message: %q", queued)
+			}
+		})
+	}
 }
 
 func TestEscapeStopsTheForegroundCommandBeforeTheTurn(t *testing.T) {

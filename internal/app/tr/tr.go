@@ -25,7 +25,7 @@ const (
 	QueueDraft              = "Queue the draft"                             // beside Enter while a turn runs, or Alt+Enter with the enter-interrupts experiment
 	StopTurnAndSendDraft    = "Stop the turn and send the draft"            // beside Alt+Enter while a turn runs, or Enter with the enter-interrupts experiment
 	SendDraft               = "Send the draft"                              // beside Enter / Alt+Enter while nothing runs
-	TakeBackQueuedMessage   = "Take back the newest queued message"         // beside ^Z / Escape / ^D while messages are queued
+	TakeBackQueuedMessage   = "Take back the newest queued message"         // beside ^Z while messages are queued
 	SendQueuedMessages      = "Send the queued messages"                    // beside Enter twice while messages are queued
 	TakeBackLastTurn        = "Take back the last turn"                     // beside ^Z when the last turn can be undone
 	ContinueOrSendNotices   = "Continue, or send the pending notices"       // beside Enter twice while nothing runs

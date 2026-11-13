@@ -8,7 +8,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 )
 
-func TestControlDTakesBackThenStopsThenQuitsWithoutSendingQueuedMessages(t *testing.T) {
+func TestControlDStopsThenQuitsWithoutSendingQueuedMessages(t *testing.T) {
 	rig, endpoint, requested, release := newHeldResponseRig(t, "The held answer.")
 	session := rig.start("--yolo", "-m", "opencode-go/fake", "initial message")
 	select {
@@ -18,10 +18,7 @@ func TestControlDTakesBackThenStopsThenQuitsWithoutSendingQueuedMessages(t *test
 	}
 	session.typeText("must never be delivered" + pressAltEnter)
 	session.waitFor("⏳ must never be delivered")
-	previousDraws := session.Count("must never be delivered")
 	session.typeText(endOfTransmission)
-	session.waitForCount("must never be delivered", previousDraws+1)
-	session.typeText(clearInput + endOfTransmission)
 	session.waitFor("Turn stopped because the user pressed ctrl+d.")
 	session.typeText(endOfTransmission)
 	session.waitToExit()
