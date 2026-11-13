@@ -20,6 +20,7 @@ const (
 	RedrawTimingFeedback   Name = "redraw_timing_feedback"
 	SharedHistory          Name = "shared_history"
 	TaskOutputLines        Name = "task_output_lines"
+	TimePassageNotice      Name = "time_passage_notice"
 	UserCommandTimeout     Name = "user_command_timeout"
 	ResponseTimeout        Name = "response_timeout"
 	StreamIdleTimeout      Name = "stream_idle_timeout"
@@ -33,6 +34,7 @@ const (
 	WholeNumberKind
 	DecimalNumberKind
 	DurationKind
+	OptionalDurationKind
 )
 
 func (self Kind) String() string {
@@ -47,6 +49,8 @@ func (self Kind) String() string {
 		return "a number"
 	case DurationKind:
 		return "a positive duration string, such as 10m"
+	case OptionalDurationKind:
+		return "false or a positive duration string, such as 1h"
 	}
 	return "a value"
 }
@@ -61,6 +65,7 @@ var toggleKinds = map[Name]Kind{
 	RedrawTimingFeedback:   BooleanKind,
 	SharedHistory:          BooleanKind,
 	TaskOutputLines:        WholeNumberKind,
+	TimePassageNotice:      OptionalDurationKind,
 	UserCommandTimeout:     DurationKind,
 	ResponseTimeout:        DurationKind,
 	StreamIdleTimeout:      DurationKind,
@@ -116,6 +121,11 @@ func (self Kind) accepts(value any) bool {
 		text, isText := value.(string)
 		duration, err := time.ParseDuration(text)
 		return isText && err == nil && duration > 0
+	case OptionalDurationKind:
+		if isEnabled, isBoolean := value.(bool); isBoolean {
+			return !isEnabled
+		}
+		return DurationKind.accepts(value)
 	}
 	return false
 }
@@ -171,6 +181,11 @@ func (self *Toggles) GetDuration(name Name, fallback time.Duration) time.Duratio
 		return fallback
 	}
 	return duration
+}
+
+func (self *Toggles) GetOptionalDuration(name Name) (time.Duration, bool) {
+	duration := self.GetDuration(name, 0)
+	return duration, duration > 0
 }
 
 func read[T any](toggles *Toggles, name Name) (T, bool) {

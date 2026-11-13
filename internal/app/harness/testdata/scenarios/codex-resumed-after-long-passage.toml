@@ -1,0 +1,33 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+time-passage-notice = "1h"
+away-before-resume = "50h"
+
+[first]
+prompt = "tidy the notes"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The notes are tidy."}''',
+    '''{"type":"response.output_text.done","text":"The notes are tidy."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The notes are tidy."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The notes are tidy."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Checking the notes again first."}''',
+    '''{"type":"response.output_text.done","text":"Checking the notes again first."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Checking the notes again first."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Checking the notes again first."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

@@ -137,6 +137,7 @@ maximum_running_tasks = 10
 redraw_timing_feedback = false
 shared_history = true
 task_output_lines = 0
+time_passage_notice = false
 user_command_timeout = "10m"
 response_timeout = "10m"
 stream_idle_timeout = "10m"

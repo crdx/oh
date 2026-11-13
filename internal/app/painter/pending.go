@@ -234,6 +234,8 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return oneNotice(portgrant.ForwardNotice(event))
 	case turn.HarnessPoke:
 		return oneNotice(turn.PokeNotice(event))
+	case turn.TimePassage:
+		return oneNotice(turn.PassageNotice(event))
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.CacheRebuildEvent, agent.PrefixRewriteEvent,
 		agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,
 		agent.ToolCallResultEvent, agent.StateChangeEvent, taskrecord.Listing, taskrecord.Finished, agent.InterruptionEvent,
@@ -325,7 +327,7 @@ func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
 	case subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop:
 		return agent.SubagentNote
 	case caps.ModeChange, conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
-		portgrant.ForwardChange:
+		portgrant.ForwardChange, turn.TimePassage:
 		return agent.EnvironmentNote
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.CacheRebuildEvent, agent.PrefixRewriteEvent,
 		agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,

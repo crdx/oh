@@ -1,0 +1,11 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m tidy the notes                                                                                     \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+The notes are tidy.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Checking the notes again first.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r

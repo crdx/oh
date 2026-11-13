@@ -2509,6 +2509,17 @@ func TestAGatedActionTakesItsApprovalTimeoutAsACustomToolDoes(t *testing.T) {
 	}
 }
 
+func TestTheTimePassageNoticeDefaultsToOffAndTakesADuration(t *testing.T) {
+	defaults := configFrom(t, "")
+	if value, isSet := defaults.Experimental["time_passage_notice"]; !isSet || value != false {
+		t.Errorf("got default notice %v", value)
+	}
+	configured := configFrom(t, "[experimental]\ntime_passage_notice = \"1h\"\n")
+	if got := configured.Experimental["time_passage_notice"]; got != "1h" {
+		t.Errorf("got configured notice %v", got)
+	}
+}
+
 func TestUserCommandTimeoutDefaultsToTenMinutesAndCanBeChanged(t *testing.T) {
 	defaults := configFrom(t, "")
 	if got := defaults.Experimental["user_command_timeout"]; got != "10m" {

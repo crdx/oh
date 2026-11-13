@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Add experimental time passage notice
+
 ## [0.33.0] — 2026-11-10
 
 - Fix additional inline styles within headings

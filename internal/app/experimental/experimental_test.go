@@ -199,16 +199,53 @@ func TestNoTogglesAtAllReadAsTheirFallbacks(t *testing.T) {
 
 func TestEveryKindSaysWhatAToggleOfItHolds(t *testing.T) {
 	for kind, want := range map[Kind]string{
-		BooleanKind:       "true or false",
-		TextKind:          "a string",
-		WholeNumberKind:   "a whole number",
-		DecimalNumberKind: "a number",
-		DurationKind:      "a positive duration string, such as 10m",
-		Kind(-1):          "a value",
+		BooleanKind:          "true or false",
+		TextKind:             "a string",
+		WholeNumberKind:      "a whole number",
+		DecimalNumberKind:    "a number",
+		DurationKind:         "a positive duration string, such as 10m",
+		OptionalDurationKind: "false or a positive duration string, such as 1h",
+		Kind(-1):             "a value",
 	} {
 		if got := kind.String(); got != want {
 			t.Errorf("kind %d says %q, want %q", int(kind), got, want)
 		}
+	}
+}
+
+func TestTheTimePassageNoticeIsOffOrAPositiveDuration(t *testing.T) {
+	for name, value := range map[string]any{
+		"valid":    "1h",
+		"off":      false,
+		"on":       true,
+		"empty":    "",
+		"zero":     "0s",
+		"negative": "-1h",
+		"invalid":  "tomorrow",
+		"number":   int64(3600),
+	} {
+		t.Run(name, func(t *testing.T) {
+			values := map[string]any{string(TimePassageNotice): value}
+			isAccepted := name == "valid" || name == "off"
+			if complaints := Check(values); (len(complaints) == 0) != isAccepted {
+				t.Errorf("got complaints %v for %v", complaints, value)
+			}
+			limit, isOn := New(values).GetOptionalDuration(TimePassageNotice)
+			if isOn != (name == "valid") {
+				t.Errorf("%v turned the notice on: %t", value, isOn)
+			}
+			if name == "valid" && limit != time.Hour {
+				t.Errorf("got limit %s, want 1h", limit)
+			}
+		})
+	}
+
+	var absent *Toggles
+	if _, isOn := absent.GetOptionalDuration(TimePassageNotice); isOn {
+		t.Error("absent toggles turned the notice on")
+	}
+	if _, isOn := New(nil).GetOptionalDuration(TimePassageNotice); isOn {
+		t.Error("a missing toggle turned the notice on")
 	}
 }
 

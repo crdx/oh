@@ -28,6 +28,7 @@ func TestReachOfNamesWhenASettingLands(t *testing.T) {
 		"experimental.user_command_timeout":     ReachLive,
 		"experimental.response_timeout":         ReachLive,
 		"experimental.stream_idle_timeout":      ReachLive,
+		"experimental.time_passage_notice":      ReachLive,
 		"ui.currency":                           ReachLive,
 		"default.caps":                          ReachNextSession,
 		"agent.model":                           ReachNextSession,

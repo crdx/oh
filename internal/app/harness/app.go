@@ -257,6 +257,7 @@ type App struct {
 	currentTurn          Turn
 	undo                 undoState
 	startedAt            time.Time
+	quietSince           time.Time
 	keyboard             *os.File
 	termination          terminationState
 	hostCommand          hostCommandState
@@ -2132,6 +2133,9 @@ func (self *App) restore(storedSession *store.Session) {
 		self.agent.AddNotes([]agent.Note{{Kind: agent.InterruptionNote, Text: interruptedSessionNote}})
 	}
 	self.recordedEvents = append(self.recordedEvents, storedSession.Events...)
+	if storedSession.TurnCompletions > 0 {
+		self.quietSince = storedSession.TouchedAt
+	}
 
 	for _, event := range storedSession.Events {
 		self.takeSessionTitle(event)
@@ -2265,6 +2269,7 @@ func (self *App) start(message string) {
 	self.queueReadyChildCompletions()
 	userTurnElapsed := self.turnTiming().UserTurn
 	wereNoticesPending := self.hasUntoldPendingNotices()
+	self.notePassage()
 	self.settleAccess()
 	self.checkpointTurn(message, wereNoticesPending)
 	self.metrics.BeginTurn()
@@ -2279,6 +2284,22 @@ func (self *App) start(message string) {
 	}
 
 	self.screen.ReportProgress(true)
+}
+
+func (self *App) notePassage() {
+	if self.quietSince.IsZero() {
+		return
+	}
+
+	limit, isOn := self.experimental.GetOptionalDuration(experimental.TimePassageNotice)
+	elapsedTime := self.getNow().Sub(self.quietSince)
+	if !isOn || elapsedTime < limit {
+		return
+	}
+
+	if event, isRecorded := turn.PassageEvent(elapsedTime); isRecorded {
+		self.pendingNotices.add(event)
+	}
 }
 
 func (self *App) takeSessionTitle(event agent.Event) {
@@ -2682,6 +2703,7 @@ func (self *App) finish() {
 
 	self.drainForwardChanges()
 	self.currentTurn.MarkFinished(time.Now())
+	self.quietSince = self.getNow()
 	self.screen.ReportProgress(self.children.isBusy())
 
 	var turnError error

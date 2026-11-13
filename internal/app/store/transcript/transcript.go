@@ -166,7 +166,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		output.fence(agent.CacheRebuildNotice(event, self.cacheRebuildCost(event)))
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
-	case turn.HarnessPoke, taskrecord.RunEnded, taskrecord.EndedWithSession, caps.TaskStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop,
+	case turn.HarnessPoke, turn.TimePassage, taskrecord.RunEnded, taskrecord.EndedWithSession, caps.TaskStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.ForwardChange, hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
@@ -190,6 +190,8 @@ func harnessNotice(event agent.Event) (string, bool) {
 	switch event.Kind {
 	case turn.HarnessPoke:
 		return turn.PokeNotice(event)
+	case turn.TimePassage:
+		return turn.PassageNotice(event)
 	case subagentrecord.ReportsDelivered:
 		return event.Text, true
 	case subagentrecord.AccessWithdrawnStop:
@@ -527,6 +529,8 @@ func title(kind agent.Kind) string {
 		return "Port forward"
 	case turn.HarnessPoke:
 		return "Poke"
+	case turn.TimePassage:
+		return "Time passage"
 	case hostcommand.Ran:
 		return "Host command"
 	case caps.TaskStop, taskrecord.RunEnded, taskrecord.EndedWithSession,

@@ -631,7 +631,8 @@ func (self *Picasso) drawConversationEvent(event agent.Event) {
 		self.drawNotices(event, self.drawSubmittedPanel)
 
 	case caps.ModeChange, caps.TaskStop, subagentrecord.AccessWithdrawnStop, taskrecord.EndedWithSession,
-		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
+		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke,
+		turn.TimePassage:
 		self.drawNotices(event, self.drawSubmitted)
 
 	case agent.RetryingEvent:
@@ -693,7 +694,7 @@ func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
 	case caps.ModeChange, caps.TaskStop, subagentrecord.AccessWithdrawnStop, portgrant.ForwardChange,
 		taskrecord.RunEnded, taskrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
-		pathgrant.Change, turn.HarnessPoke,
+		pathgrant.Change, turn.HarnessPoke, turn.TimePassage,
 		hostcommand.Ran, subagentrecord.ReportsDelivered:
 		return true
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,

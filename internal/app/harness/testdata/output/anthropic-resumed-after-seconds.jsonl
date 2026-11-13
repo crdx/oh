@@ -1,0 +1,14 @@
+{"kind":"head","version":24,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsnlg"}}
+{"kind":"event","event":{"kind":"user_message","text":"tidy the notes"}}
+{"kind":"event","event":{"kind":"model_message","text":"The notes are tidy."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"tidy the notes"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The notes are tidy."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"time_passage","state":{"elapsed_seconds":45}}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Checking the notes again first."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nAbout 45 seconds passed since the previous turn ended. Anything read, run, or assumed before then may have changed, so check it again before relying on it.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Checking the notes again first."}]}}
+{"kind":"turn_completion","turn":{}}

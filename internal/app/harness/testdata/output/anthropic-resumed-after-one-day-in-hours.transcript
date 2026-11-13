@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsnlg · +0s
+
+## User · +0s
+
+tidy the notes
+
+## Assistant · +0s
+
+The notes are tidy.
+
+## Time passage · +0s
+
+```
+About 47 hours passed since the previous turn ended. Anything read, run, or assumed before then may have changed, so check it again before relying on it.
+```
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Checking the notes again first.

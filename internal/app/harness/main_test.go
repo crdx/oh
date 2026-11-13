@@ -18016,6 +18016,8 @@ type sessionGoldenScenario struct {
 	TasksRunningIntoResume []string                  `toml:"tasks-running-into-resume"`
 	DiscardedTaskOnResume  string                    `toml:"discarded-task-on-resume"`
 	RunBeforeFirst         string                    `toml:"run-before-first"`
+	AwayBeforeResume       string                    `toml:"away-before-resume"`
+	TimePassageNotice      string                    `toml:"time-passage-notice"`
 	Prices                 *sessionGoldenPrices      `toml:"prices"`
 	Tools                  []sessionGoldenTool       `toml:"tool"`
 	Subagents              []sessionGoldenSubagent   `toml:"subagent"`
@@ -18216,6 +18218,9 @@ func (self sessionGoldenScenario) toggles() map[string]any {
 	toggles := map[string]any{string(experimental.CacheMissNotices): self.CacheMissNotices}
 	if self.TaskOutputLines != nil {
 		toggles[string(experimental.TaskOutputLines)] = *self.TaskOutputLines
+	}
+	if self.TimePassageNotice != "" {
+		toggles[string(experimental.TimePassageNotice)] = self.TimePassageNotice
 	}
 	return toggles
 }
@@ -19707,6 +19712,11 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		firstScreenOutput.String(),
 		screenOutput.String(),
 	)
+	if scenario.AwayBeforeResume != "" {
+		if passage, isNoted := leaveSessionGoldenQuiet(t, resumedHarness, scenario.AwayBeforeResume); isNoted {
+			restoredEvents = append(restoredEvents, passage)
+		}
+	}
 	resumedHarness.settleAccess()
 	resumedAssistant.AddNotes(resumedHarness.prelude())
 	resumeTurns := runSessionGoldenTurn(t, resumedHarness, scenario.ResumeTurn, cancelSignals, children)
@@ -20367,6 +20377,30 @@ func drawPrintedSessionGoldenTurn(
 	}
 
 	return drawn
+}
+
+func leaveSessionGoldenQuiet(t *testing.T, testHarness *App, away string) (agent.Event, bool) {
+	t.Helper()
+
+	awayTime, err := time.ParseDuration(away)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	resumedAt := testHarness.getNow()
+	testHarness.quietSince = resumedAt.Add(-awayTime)
+	previousClock := testHarness.now
+	testHarness.now = func() time.Time { return resumedAt }
+	testHarness.notePassage()
+	testHarness.now = previousClock
+
+	for _, item := range testHarness.pendingNotices.items {
+		if item.state.Kind == turn.TimePassage {
+			return item.state, true
+		}
+	}
+
+	return agent.Event{}, false
 }
 
 func runSessionGoldenTurn(
@@ -22092,6 +22126,118 @@ func TestAStartedTurnRemindsAnUntitledSessionAfterItsFirstRoundOfCalls(t *testin
 	})
 	if len(reminders) != 1 || backend.told()[len(backend.told())-1] != reminders[0] {
 		t.Errorf("the model was told %q, want one reminder after the round of calls", backend.told())
+	}
+}
+
+func passagesTold(backend *notingProvider) []string {
+	return slices.DeleteFunc(backend.told(), func(note string) bool {
+		return !strings.Contains(note, "since the previous turn ended")
+	})
+}
+
+func TestATurnStartedAfterALongPassageOfTimeTellsTheModelToCheckAgain(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	backend := &notingProvider{}
+	self.agent = agent.New("", backend, nil)
+	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): "1h"})
+	now := time.Now()
+	self.now = func() time.Time { return now }
+
+	completeTurn(self)
+	if told := passagesTold(backend); len(told) != 0 {
+		t.Fatalf("the opening turn was told %q, want nothing", told)
+	}
+
+	now = now.Add(time.Hour - time.Second)
+	completeTurn(self)
+	if told := passagesTold(backend); len(told) != 0 {
+		t.Fatalf("a turn after a short passage was told %q, want nothing", told)
+	}
+
+	now = now.Add(3 * time.Hour)
+	completeTurn(self)
+	told := passagesTold(backend)
+	if len(told) != 1 || !strings.Contains(told[0], "About 3 hours passed since the previous turn ended.") {
+		t.Fatalf("a turn after a long passage was told %q, want the passage", told)
+	}
+	if self.undo.blocker != "" {
+		t.Errorf("the passage blocked undo with %q", self.undo.blocker)
+	}
+	passages := 0
+	for _, event := range self.recordedEvents {
+		if event.Kind == turn.TimePassage {
+			passages++
+		}
+	}
+	if passages != 1 {
+		t.Errorf("the journal holds %d passages, want 1", passages)
+	}
+
+	completeTurn(self)
+	if told := passagesTold(backend); len(told) != 1 {
+		t.Errorf("a turn straight after was told %q, want nothing more", told[1:])
+	}
+}
+
+func TestAResumedSessionCountsThePassageOfTimeFromItsLastJournalLine(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	backend := &notingProvider{}
+	self.agent = agent.New("", backend, nil)
+	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): "1h"})
+	now := time.Now()
+	self.now = func() time.Time { return now }
+
+	self.restore(&store.Session{
+		Events:          []agent.Event{{Kind: agent.UserMessageEvent, Text: "tidy the notes"}},
+		TurnCompletions: 1,
+		TouchedAt:       now.Add(-72 * time.Hour),
+	})
+	completeTurn(self)
+
+	told := passagesTold(backend)
+	if len(told) != 1 || !strings.Contains(told[0], "About 3 days passed since the previous turn ended.") {
+		t.Errorf("a session resumed days later was told %q, want the passage", told)
+	}
+}
+
+func TestASessionResumedBeforeAnyTurnCompletedIsToldOfNoPassage(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	backend := &notingProvider{}
+	self.agent = agent.New("", backend, nil)
+	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): "1h"})
+
+	self.restore(&store.Session{TouchedAt: time.Now().Add(-72 * time.Hour)})
+	completeTurn(self)
+
+	if told := passagesTold(backend); len(told) != 0 {
+		t.Errorf("a session with no completed turn was told %q, want nothing", told)
+	}
+}
+
+func TestALongPassageOfTimeIsToldOnlyWhileItsNoticeIsOn(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	backend := &notingProvider{}
+	self.agent = agent.New("", backend, nil)
+	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): false})
+	now := time.Now()
+	self.now = func() time.Time { return now }
+
+	completeTurn(self)
+	now = now.Add(72 * time.Hour)
+	completeTurn(self)
+	if told := passagesTold(backend); len(told) != 0 {
+		t.Fatalf("a turn with the notice off was told %q, want nothing", told)
+	}
+
+	self.experimental.Replace(map[string]any{string(experimental.TimePassageNotice): "30m"})
+	now = now.Add(45 * time.Minute)
+	completeTurn(self)
+	if told := passagesTold(backend); len(told) != 1 || !strings.Contains(told[0], "About 45 minutes passed") {
+		t.Errorf("a turn past a reloaded limit was told %q, want the passage", told)
 	}
 }
 

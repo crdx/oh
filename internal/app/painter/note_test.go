@@ -23,6 +23,7 @@ func TestEveryHarnessNoticeIsToldAsTheKindOfNoteItIs(t *testing.T) {
 		toolset.AvailabilityChange:         agent.EnvironmentNote,
 		pathgrant.Change:                   agent.EnvironmentNote,
 		portgrant.ForwardChange:            agent.EnvironmentNote,
+		turn.TimePassage:                   agent.EnvironmentNote,
 		hostcommand.Ran:                    agent.HostCommandNote,
 		turn.HarnessPoke:                   agent.PokeNote,
 		subagentrecord.ReportsDelivered:    agent.SubagentNote,

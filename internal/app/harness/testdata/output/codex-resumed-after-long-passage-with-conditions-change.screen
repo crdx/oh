@@ -1,0 +1,20 @@
+
+ tidy the notes
+
+
+The notes are tidy.
+
+
+ 🤖 Unix sockets no longer work.
+ 🤖 IPv6 unavailable; use 127.0.0.1.
+ 🤖 The session is non-interactive: questions, approvals, and /! commands for the user are
+    unavailable. Background tasks are unavailable in non-interactive sessions.
+ 🤖 About 2 days passed since the previous turn ended. Anything read, run, or assumed before then
+    may have changed, so check it again before relying on it.
+
+
+
+ carry on
+
+
+Checking the notes again first.
