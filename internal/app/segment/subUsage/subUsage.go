@@ -30,7 +30,7 @@ const (
 	firstEmptyWait   = redrawInterval
 	backoffFactor    = 2
 	barCells         = 8
-	scopeMark        = "⚡"
+	scopeMark        = "💎"
 	limitedMark      = "⊘"
 	staleLabel       = "stale"
 	failureLabel     = "failed"

@@ -230,7 +230,7 @@ func TestScopedWindowsFollowTheirOwnMark(t *testing.T) {
 		},
 	}}, "gpt-5.3-codex-spark", &testClock{now: testNow})
 
-	if got := renderSettled(t, built); got != "● 5h 40% ███░┃░░░ ⚡ 5h 8% ░░░░┃░░░ wk 3% ░┃░░░░░░" {
+	if got := renderSettled(t, built); got != "● 5h 40% ███░┃░░░ 💎 5h 8% ░░░░┃░░░ wk 3% ░┃░░░░░░" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -329,7 +329,7 @@ func TestScopedWindowsAloneStillDrawTheLine(t *testing.T) {
 		Scope:    "opus",
 	}}}, "claude-opus-4-6", &testClock{now: testNow})
 
-	if got := renderSettled(t, built); got != "● ⚡ wk 3% ░┃░░░░░░" {
+	if got := renderSettled(t, built); got != "● 💎 wk 3% ░┃░░░░░░" {
 		t.Errorf("got %q", got)
 	}
 }
