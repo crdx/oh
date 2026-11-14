@@ -51,7 +51,11 @@ Paragraph 23 of something taller than the terminal.
 
 Paragraph 24 of something taller than the terminal.
 
-⋮ 5 more lines
+
+ 🤖 The user ran the following command on the host:
+
+    $ git status --short
+
     Output:
 
     fatal: not a repository
@@ -185,7 +189,11 @@ Paragraph 23 of something taller than the terminal.
 
 Paragraph 24 of something taller than the terminal.
 
-⋮ 5 more lines
+
+ 🤖 The user ran the following command on the host:
+
+    $ git status --short
+
     Output:
 
      M README.md
@@ -285,7 +293,8 @@ the terminal. Paragraph 20 of something taller than the terminal. Paragraph 21 o
 than the terminal. Paragraph 22 of something taller than the terminal. Paragraph 23 of something
 taller than the terminal. Paragraph 24 of something taller than the terminal.
 
-⋮ 2 more lines
+
+ 🤖 The user started the following command on the host, then interrupted it before it finished or
     printed anything:
 
     $ git status --short

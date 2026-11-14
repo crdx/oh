@@ -491,6 +491,22 @@ func TestManyLiveChildrenAlwaysFitTheTerminal(t *testing.T) {
 	}
 }
 
+type paddedPanel struct {
+	*rowsBlock
+}
+
+func (self paddedPanel) Rows(columns int) []string {
+	return slices.Concat(
+		[]string{style.Harness("top")},
+		self.rowsBlock.Rows(columns),
+		[]string{style.Harness(strings.Repeat(" ", columns))},
+	)
+}
+
+func (paddedPanel) KeepsBottomPadding() bool {
+	return true
+}
+
 func TestAWindowedPanelKeepsItsBottomPadding(t *testing.T) {
 	for _, columns := range []int{20, 40} {
 		for _, lines := range []int{7, 9} {
@@ -499,9 +515,7 @@ func TestAWindowedPanelKeepsItsBottomPadding(t *testing.T) {
 			for i := range 20 {
 				block.rows = append(block.rows, "line "+strconv.Itoa(i))
 			}
-			screen.Panel(block, func(rows []string, width int) []string {
-				return slices.Concat([]string{style.Harness("top")}, rows, []string{style.Harness(strings.Repeat(" ", width))})
-			})
+			screen.OpenPanel(paddedPanel{block})
 			screen.Footer([]string{"─", "> ", "─"}, 1, 2)
 
 			shown := drawnTexts(screen)
@@ -519,9 +533,7 @@ func TestAWindowedPanelKeepsItsBottomPadding(t *testing.T) {
 func TestATwoRowPanelWindowPrefersContentOverPadding(t *testing.T) {
 	screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: 40, lines: 6}
 	block := &rowsBlock{rows: []string{"first", "second", "last word"}}
-	screen.Panel(block, func(rows []string, columns int) []string {
-		return slices.Concat([]string{style.Harness("top")}, rows, []string{style.Harness(strings.Repeat(" ", columns))})
-	})
+	screen.OpenPanel(paddedPanel{block})
 	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
 
 	shown := drawnTexts(screen)
@@ -612,5 +624,116 @@ func TestARegionWithRoomToDrawShowsEveryRow(t *testing.T) {
 
 	if !slices.Contains(drawnTexts(screen), "first changed") || !slices.Contains(drawnTexts(screen), "second") {
 		t.Errorf("a region with room to draw lost a row: %q", drawnTexts(screen))
+	}
+}
+
+const tallBlockRows = 100
+
+type numberedBlock struct {
+	prefix string
+	count  int
+}
+
+func (self numberedBlock) Rows(_ int) []string {
+	rows := make([]string, self.count)
+	for i := range rows {
+		rows[i] = self.prefix + " row " + strconv.Itoa(i) + "."
+	}
+
+	return rows
+}
+
+func requireEachRowWrittenOnce(t *testing.T, drawn string, prefix string) {
+	t.Helper()
+
+	at := 0
+	for i := range tallBlockRows {
+		row := prefix + " row " + strconv.Itoa(i) + "."
+		if written := strings.Count(drawn, row); written != 1 {
+			t.Fatalf("%q was written %d times, want once", row, written)
+		}
+
+		next := strings.Index(drawn, row)
+		if next < at {
+			t.Fatalf("%q was written out of order", row)
+		}
+		at = next
+	}
+}
+
+func TestAPanelTallerThanTheRoomCommitsItsSettledRows(t *testing.T) {
+	screen, screenOutput := region()
+
+	screen.Panel(numberedBlock{prefix: "report", count: tallBlockRows}, framed)
+
+	requireEachRowWrittenOnce(t, screenOutput.String(), "report")
+	if strings.Contains(screenOutput.String(), "more lines") {
+		t.Errorf("the panel was windowed rather than committed: %q", screenOutput)
+	}
+	if !slices.Contains(drawnTexts(screen), "bottom") {
+		t.Errorf("the bottom of the frame left the live frame: %q", drawnTexts(screen))
+	}
+	if len(screen.live.committedRows) == 0 || len(screen.blocks) != 1 {
+		t.Fatalf("committed %d rows of %d blocks, want some rows of one open panel", len(screen.live.committedRows), len(screen.blocks))
+	}
+}
+
+func TestANoticeJoinsAPanelThatCommittedRows(t *testing.T) {
+	screen, screenOutput := region()
+
+	screen.Panel(numberedBlock{prefix: "report", count: tallBlockRows}, framed)
+	screen.Panel(numberedBlock{prefix: "notice", count: tallBlockRows}, framed)
+	if committed := width.Texts(screen.live.committedRows); committed[0] != "top" || slices.Contains(committed, "bottom") {
+		t.Errorf("committed %q, want the top of the frame and never its bottom", committed)
+	}
+	screen.Seal()
+
+	drawn := screenOutput.String()
+	requireEachRowWrittenOnce(t, drawn, "report")
+	requireEachRowWrittenOnce(t, drawn, "notice")
+	if strings.LastIndex(drawn, "bottom") < strings.Index(drawn, "notice row "+strconv.Itoa(tallBlockRows-1)+".") {
+		t.Errorf("the frame closed before its last notice: %q", drawn)
+	}
+}
+
+func TestALineBesideAPanelThatCommittedRowsDrawsNoRowTwice(t *testing.T) {
+	screen, screenOutput := region()
+
+	screen.Panel(numberedBlock{prefix: "report", count: tallBlockRows}, framed)
+	screen.Line("a line beside the panel")
+	screen.Refresh()
+	screen.Seal()
+
+	drawn := screenOutput.String()
+	requireEachRowWrittenOnce(t, drawn, "report")
+	if strings.Index(drawn, "a line beside the panel") < strings.Index(drawn, "bottom") {
+		t.Errorf("the line was drawn above the bottom of the frame: %q", drawn)
+	}
+}
+
+func TestAToolBlockTallerThanTheRoomCommitsNothing(t *testing.T) {
+	screen, _ := region()
+
+	screen.OpenTool(numberedBlock{prefix: "call", count: tallBlockRows})
+
+	if len(screen.live.committedRows) != 0 || screen.live.isStarted {
+		t.Errorf("a block that settles no rows committed %d", len(screen.live.committedRows))
+	}
+}
+
+type settledBlock struct {
+	numberedBlock
+}
+
+func (settledBlock) SettledRows(rowCount int) int {
+	return rowCount
+}
+
+func TestABlockThatCommittedRowsIsNotDiscarded(t *testing.T) {
+	screen, _ := region()
+	handle := screen.OpenPanel(settledBlock{numberedBlock{prefix: "report", count: tallBlockRows}})
+
+	if screen.DiscardBlock(handle) {
+		t.Error("a block with rows in scrollback was discarded as though it had none")
 	}
 }

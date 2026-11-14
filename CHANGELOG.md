@@ -4,6 +4,7 @@
 
 - Add experimental time passage notice
 - Remove esc and ctrl+d from the accepted undo keys
+- Seal tall notices as soon as possible
 
 ## [0.33.0] — 2026-11-10
 

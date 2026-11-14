@@ -35,6 +35,14 @@ func (self *framedBlock) KeepsBottomPadding() bool {
 	return true
 }
 
+func (self *framedBlock) SettledRows(rowCount int) int {
+	return max(rowCount-1, 0)
+}
+
+type rowSettler interface {
+	SettledRows(rowCount int) int
+}
+
 type bottomPaddingKeeper interface {
 	KeepsBottomPadding() bool
 }
@@ -194,6 +202,10 @@ func (self *Screen) DiscardBlock(handle *BlockHandle) bool {
 		return false
 	}
 
+	if at == 0 && len(self.live.committedRows) > 0 {
+		return false
+	}
+
 	self.blocks = slices.Delete(self.blocks, at, at+1)
 	self.live.height = 0
 	self.changed()
@@ -242,6 +254,7 @@ type blockSpan struct {
 	gap                int
 	group              Group
 	priority           []int
+	settledRows        int
 	framer             hiddenNoticeFramer
 	keepsBottomPadding bool
 }
@@ -276,6 +289,9 @@ func renderGroupedBlocksWithSpans(blocks []groupedBlock, columns int, grouping G
 		span.framer, _ = block.Block.(hiddenNoticeFramer)
 		if keeper, ok := block.Block.(bottomPaddingKeeper); ok {
 			span.keepsBottomPadding = keeper.KeepsBottomPadding()
+		}
+		if settler, ok := block.Block.(rowSettler); ok && i == 0 {
+			span.settledRows = settler.SettledRows(len(content))
 		}
 		spans = append(spans, span)
 	}

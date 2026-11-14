@@ -31,9 +31,12 @@ var childWindowCases = []childWindowCase{
 	{name: "one call and short report", calls: 1, reports: 1, reportLines: 1},
 	{name: "one call report and notice", calls: 1, reports: 1, reportLines: 40, extraNotice: true},
 	{name: "only one long report", reports: 1, reportLines: 40},
+	{name: "only one long report and notice", reports: 1, reportLines: 40, extraNotice: true},
 	{name: "only three calls", calls: 3},
 	{name: "grouped panel and tool", calls: 1, reports: 1, reportLines: 40, grouping: []string{"panel tool", "notice", "reasoning", "answer"}},
 }
+
+const oneColumnCommittedReportLines = 2
 
 var (
 	childWindowWidths  = []int{oneColumn, tinyColumns, narrowColumns, replayColumns}
@@ -48,6 +51,10 @@ func TestGoldenEveryLiveChildHasAWindow(t *testing.T) {
 		for _, columns := range childWindowWidths {
 			for _, lines := range childWindowHeights {
 				name := fmt.Sprintf("%s at %d columns by %d lines", scene.name, columns, lines)
+				scene := scene
+				if columns == oneColumn && scene.calls == 0 {
+					scene.reportLines = min(scene.reportLines, oneColumnCommittedReportLines)
+				}
 				screenPasses[name] = func() string {
 					live, settled := drawChildWindowCase(t, scene, columns, lines)
 					requireNothingDrawnAboveTheScreen(t, name, live, lines)

@@ -210,30 +210,32 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 	}
 	self.live.height = len(rows)
 
-	if len(self.blocks) > 0 {
-		return self.windowedBlocks(rows, spans, self.liveGap(firstGroup), room)
-	}
-
-	visible := rows[min(len(self.live.committedRows), len(rows)):]
+	committedCount := min(len(self.live.committedRows), len(rows))
+	visible := rows[committedCount:]
 	gap := 0
 	if !self.live.isStarted {
 		gap = self.liveGap(firstGroup)
 	}
 
 	if room >= 0 && gap+len(visible) > room {
-		visibleSettledRows := visible[:max(0, self.live.settledRows-len(self.live.committedRows))]
+		visibleSettledRows := visible[:max(0, self.settledLiveRows(spans)-committedCount)]
 		owedRows := max(0, len(visible)-room)
 		overflow := endingOnARow(visibleSettledRows, min(len(visibleSettledRows), owedRows))
-		if overflow > 0 || owedRows <= len(visibleSettledRows) {
+		if overflow > 0 || (len(self.blocks) == 0 && owedRows <= len(visibleSettledRows)) {
 			self.commit(visible[:overflow], firstGroup, shouldLinkPaths)
+			committedCount += overflow
 			visible = visible[overflow:]
 			gap = 0
 		}
+	}
 
-		if gap+len(visible) > room {
-			visible = self.windowed(visible, gap, room, false)
-			gap = 0
-		}
+	if len(self.blocks) > 0 {
+		return self.windowedBlocks(visible, spansAfter(spans, committedCount), gap, room)
+	}
+
+	if room >= 0 && gap+len(visible) > room {
+		visible = self.windowed(visible, gap, room, false)
+		gap = 0
 	}
 
 	frameRows := make([]width.ScreenRow, gap, gap+len(visible))
@@ -245,6 +247,39 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 	}
 
 	return frameRows
+}
+
+func (self *Screen) settledLiveRows(spans []blockSpan) int {
+	if len(self.blocks) == 0 {
+		return self.live.settledRows
+	}
+
+	return spans[0].settledRows
+}
+
+func spansAfter(spans []blockSpan, committedCount int) []blockSpan {
+	if committedCount == 0 {
+		return spans
+	}
+
+	remainingSpans := slices.Clone(spans)
+	for index, span := range remainingSpans {
+		cut := min(max(committedCount-span.start, 0), span.end-span.start)
+		if cut > 0 {
+			span.priority = make([]int, 0, len(spans[index].priority))
+			for _, row := range spans[index].priority {
+				if row >= cut {
+					span.priority = append(span.priority, row-cut)
+				}
+			}
+		}
+
+		span.start = max(span.start-committedCount, 0)
+		span.end = max(span.end-committedCount, 0)
+		remainingSpans[index] = span
+	}
+
+	return remainingSpans
 }
 
 func endingOnARow(rows []width.ScreenRow, count int) int {
