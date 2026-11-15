@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Fix stale text showing through tabs in the input
+
 ## [0.34.0] — 2026-11-14
 
 - Add experimental time passage notice

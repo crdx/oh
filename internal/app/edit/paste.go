@@ -5,8 +5,6 @@ import (
 	"regexp"
 	"strings"
 	"unicode"
-
-	"crdx.org/oh/internal/util/strutil"
 )
 
 const (
@@ -23,9 +21,7 @@ var (
 )
 
 func preparePastedText(text string, precedingText string, isAtLineEnd bool) string {
-	text = strings.ReplaceAll(text, "\r\n", "\n")
-	text = strings.ReplaceAll(text, "\r", "\n")
-	text = normaliseIndentation(strutil.StripControl(text))
+	text = normaliseIndentation(drawable(text))
 
 	if pastedLineCount(text) < minimumCodeBlockPasteLines || isHostCommand(precedingText+text) {
 		return text

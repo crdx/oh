@@ -1,8 +1,31 @@
 package edit
 
 import (
+	"slices"
+	"strings"
 	"unicode"
+
+	"crdx.org/oh/internal/util/strutil"
 )
+
+const tabStop = 4
+
+var tabExpander = strings.NewReplacer("\t", strings.Repeat(" ", tabStop))
+
+func drawable(text string) string {
+	if !strings.ContainsFunc(text, isUndrawable) {
+		return text
+	}
+
+	text = strings.ReplaceAll(text, "\r\n", "\n")
+	text = strings.ReplaceAll(text, "\r", "\n")
+
+	return tabExpander.Replace(strutil.StripControl(text))
+}
+
+func isUndrawable(character rune) bool {
+	return character != '\n' && unicode.IsControl(character)
+}
 
 type Buffer struct {
 	runes  []rune
@@ -26,11 +49,14 @@ func (self *Buffer) Len() int {
 }
 
 func (self *Buffer) Set(text string) {
-	self.runes = []rune(text)
+	self.runes = []rune(drawable(text))
 	self.cursor = len(self.runes)
 }
 
 func (self *Buffer) Insert(text []rune) {
+	if slices.ContainsFunc(text, isUndrawable) {
+		text = []rune(drawable(string(text)))
+	}
 	rest := append(append([]rune(nil), text...), self.runes[self.cursor:]...)
 	self.runes = append(self.runes[:self.cursor], rest...)
 	self.cursor += len(text)

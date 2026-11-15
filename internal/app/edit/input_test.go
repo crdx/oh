@@ -40,7 +40,7 @@ func TestPastedTextArrivesWithoutWhatTheTerminalWouldObey(t *testing.T) {
 		"clipboard":    {text: "hello \x1b]52;c;cHduZWQ=\x07world", want: "hello world"},
 		"bell":         {text: "ding\x07", want: "ding"},
 		"carriage":     {text: "one\r\ntwo\rthree", want: "one\ntwo\nthree"},
-		"kept":         {text: "one\n\ttwo", want: "one\n\ttwo"},
+		"tab":          {text: "one\n\ttwo", want: "one\n    two"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			input := NewInput(NewHistory("", 0))
@@ -92,7 +92,7 @@ func TestAPasteOfMoreThanFiveLinesBecomesAFencedCodeBlock(t *testing.T) {
 		},
 		"distinctive Go is labelled": {
 			text: "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"hello\")\n}",
-			want: "```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"hello\")\n}\n```",
+			want: "```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"hello\")\n}\n```",
 		},
 		"an inner fence makes the outer fence longer": {
 			text: "one\n```\nthree\nfour\nfive\nsix",
@@ -914,6 +914,44 @@ func TestAPastedTextIsInsertedAtTheCursorWithItsIndentationNormalised(t *testing
 	want := "beforeif isReady {\n    begin()\n}after"
 	if got := self.Text(); got != want {
 		t.Errorf("pasted text is %q, want %q", got, want)
+	}
+}
+
+func TestAClipboardPasteTurnsTabsIntoSpacesBeforeNormalisingIndentation(t *testing.T) {
+	self := NewInput(nil)
+
+	self.InsertPasted("\tif isReady {\n\t\tbegin()\n\t}")
+
+	want := "if isReady {\n" + strings.Repeat(" ", tabStop) + "begin()\n}"
+	if got := self.Text(); got != want {
+		t.Errorf("pasted text is %q, want %q", got, want)
+	}
+}
+
+func TestSetTextKeepsOnlyWhatTheInputCanDraw(t *testing.T) {
+	self := NewInput(nil)
+
+	self.SetText("one\r\n\ttwo\rthree\x1b[31m\x00")
+
+	want := "one\n" + strings.Repeat(" ", tabStop) + "two\nthree"
+	if got := self.Text(); got != want {
+		t.Errorf("text is %q, want %q", got, want)
+	}
+	if got := self.Cursor(); got != len([]rune(want)) {
+		t.Errorf("cursor is %d, want %d", got, len([]rune(want)))
+	}
+}
+
+func TestARecalledEntryHoldingATabIsDrawnWithSpaces(t *testing.T) {
+	history := NewHistory("", 10)
+	history.Add("func main() {\n\treturn\n}")
+	self := NewInput(history)
+
+	self.Apply(key.Key{Code: key.Up}, false)
+
+	want := "func main() {\n" + strings.Repeat(" ", tabStop) + "return\n}"
+	if got := self.Text(); got != want {
+		t.Errorf("recalled text is %q, want %q", got, want)
 	}
 }
 

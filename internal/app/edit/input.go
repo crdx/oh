@@ -401,14 +401,7 @@ func (self *Input) enter(keypress key.Key) Action {
 	return DrawInput
 }
 
-const tabStop = 4
-
 func (self *Input) insert(value rune) {
-	if value == '\t' {
-		self.buffer.Insert([]rune(strings.Repeat(" ", tabStop)))
-		return
-	}
-
 	self.buffer.Insert([]rune{value})
 }
 

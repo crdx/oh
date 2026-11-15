@@ -67,7 +67,7 @@ func requireDrawableInput(t *testing.T, text string) {
 	}
 
 	for _, character := range text {
-		if character == '\n' || character == '\t' {
+		if character == '\n' {
 			continue
 		}
 		if unicode.IsControl(character) {
