@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Refuse to read an image that cannot be decoded
+
 ## [0.34.1] — 2026-11-15
 
 - Fix stale text showing through tabs in the input

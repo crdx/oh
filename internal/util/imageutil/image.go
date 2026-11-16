@@ -194,6 +194,11 @@ func downscale(source image.Image, width int, height int) image.Image {
 	return target
 }
 
+func Verify(data []byte) error {
+	_, _, err := image.Decode(bytes.NewReader(data))
+	return err
+}
+
 func Dimensions(data []byte) (int, int, bool) {
 	config, _, err := image.DecodeConfig(bytes.NewReader(data))
 	return config.Width, config.Height, err == nil

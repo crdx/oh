@@ -18735,6 +18735,14 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 		t.Fatal(err)
 	}
 
+	var picture bytes.Buffer
+	if err := png.Encode(&picture, image.NewRGBA(image.Rect(0, 0, 64, 64))); err != nil {
+		t.Fatal(err)
+	}
+	if err := rootHandle.WriteFile("io/cmd/oh/output/region.png", picture.Bytes()[:picture.Len()/2], 0o600); err != nil {
+		t.Fatal(err)
+	}
+
 	root := file.New(rootHandle, func(string) error { return nil })
 	root.Mount(sandbox.TmpDir, root)
 	return read.New(root, file.NewSnapshots())

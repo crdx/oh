@@ -54,8 +54,19 @@ func exec(t *testing.T, root *file.Root, arguments string) (string, error) {
 	return result.Output, err
 }
 
+func encodedPNG(t *testing.T, width int, height int) string {
+	t.Helper()
+
+	var encoded bytes.Buffer
+	if err := png.Encode(&encoded, image.NewRGBA(image.Rect(0, 0, width, height))); err != nil {
+		t.Fatalf("could not encode the test image: %v", err)
+	}
+
+	return encoded.String()
+}
+
 func TestAnImageIsAttachedForTheModel(t *testing.T) {
-	content := "\x89PNG\r\n\x1a\n" + strings.Repeat("\x00", 24)
+	content := encodedPNG(t, 2, 2)
 	root := testRoot(t, "picture.png", content)
 	call, err := read.New(root, file.NewSnapshots()).Parse(`{"path":"picture.png"}`)
 	if err != nil {
@@ -66,8 +77,8 @@ func TestAnImageIsAttachedForTheModel(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if result.Output != "image/png, 32B" {
-		t.Errorf("expected an image description, got %q", result.Output)
+	if want := fmt.Sprintf("image/png, %dB", len(content)); result.Output != want {
+		t.Errorf("expected %q, got %q", want, result.Output)
 	}
 
 	if result.Image.MediaType != "image/png" || string(result.Image.Data) != content {
@@ -75,13 +86,18 @@ func TestAnImageIsAttachedForTheModel(t *testing.T) {
 	}
 }
 
-func TestAnImageReportsAnEstimateFromItsDimensions(t *testing.T) {
-	var encoded bytes.Buffer
-	if err := png.Encode(&encoded, image.NewRGBA(image.Rect(0, 0, 64, 33))); err != nil {
-		t.Fatalf("could not encode the test image: %v", err)
-	}
+func TestATruncatedImageIsRefused(t *testing.T) {
+	content := encodedPNG(t, 64, 64)
+	root := testRoot(t, "picture.png", content[:len(content)/2])
 
-	root := testRoot(t, "picture.png", encoded.String())
+	_, err := exec(t, root, `{"path":"picture.png"}`)
+	if err == nil || !strings.HasPrefix(err.Error(), "image cannot be decoded: ") {
+		t.Errorf("expected a truncated image to be refused, got %v", err)
+	}
+}
+
+func TestAnImageReportsAnEstimateFromItsDimensions(t *testing.T) {
+	root := testRoot(t, "picture.png", encodedPNG(t, 64, 33))
 	call, err := read.New(root, file.NewSnapshots()).Parse(`{"path":"picture.png"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -97,12 +113,7 @@ func TestAnImageReportsAnEstimateFromItsDimensions(t *testing.T) {
 }
 
 func TestAnOversizedImageIsEstimatedAtTheSizeThatWillBeSent(t *testing.T) {
-	var encoded bytes.Buffer
-	if err := png.Encode(&encoded, image.NewRGBA(image.Rect(0, 0, 3200, 320))); err != nil {
-		t.Fatalf("could not encode the test image: %v", err)
-	}
-
-	root := testRoot(t, "picture.png", encoded.String())
+	root := testRoot(t, "picture.png", encodedPNG(t, 3200, 320))
 	call, err := read.New(root, file.NewSnapshots()).Parse(`{"path":"picture.png"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

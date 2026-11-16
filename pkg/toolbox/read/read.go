@@ -170,6 +170,9 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 		if args.Offset > 0 || args.Limit > 0 {
 			return tool.ToolCallResult{Metrics: metrics}, errors.New("images do not support line ranges")
 		}
+		if err := imageutil.Verify(data); err != nil {
+			return tool.ToolCallResult{}, fmt.Errorf("image cannot be decoded: %w", err)
+		}
 
 		metrics.Kind = tool.MetricImage
 		if width, height, ok := imageutil.Dimensions(data); ok {

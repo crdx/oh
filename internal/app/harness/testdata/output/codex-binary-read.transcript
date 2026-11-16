@@ -12,7 +12,7 @@
 
 ## User · +0s
 
-read the binary file whole, a line of the large binary, then lines two and three of the large text file
+read the binary file whole, a line of the large binary, lines two and three of the large text file, then the truncated picture
 
 ## Tool calls · +0s
 
@@ -20,11 +20,12 @@ read the binary file whole, a line of the large binary, then lines two and three
 read: /tmp/io/cmd/oh/output/region.bin [error, 1 line, 75B, call-1]
 read: /tmp/io/cmd/oh/output/region.large.bin [error, 1 line, 81B, call-2]
 read: /tmp/io/cmd/oh/output/region.go [ok, 2 lines, 25B, call-3]
+read: /tmp/io/cmd/oh/output/region.png [error, 1 line, 67B, call-4]
 ```
 
 ## Assistant · +0s
 
-Both binaries were refused and the text was read.
+Both binaries and the picture were refused and the text was read.
 
 ## User · +0s
 

@@ -7,7 +7,7 @@ name = "read"
 large-read = true
 
 [first]
-prompt = "read the binary file whole, a line of the large binary, then lines two and three of the large text file"
+prompt = "read the binary file whole, a line of the large binary, lines two and three of the large text file, then the truncated picture"
 
 [[first.response]]
 event = [
@@ -29,8 +29,14 @@ event = [
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_text.delta","delta":"Both binaries were refused and the text was read."}''',
-    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Both binaries were refused and the text was read."}]}}''',
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-4","name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.png\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Both binaries and the picture were refused and the text was read."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Both binaries and the picture were refused and the text was read."}]}}''',
     '''{"type":"response.completed"}''',
 ]
 

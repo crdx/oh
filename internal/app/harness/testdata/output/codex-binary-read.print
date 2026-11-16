@@ -1,13 +1,14 @@
 
- read the binary file whole, a line of the large binary, then lines two and three of the large text
- file
+ read the binary file whole, a line of the large binary, lines two and three of the large text
+ file, then the truncated picture
 
 
 read <s>/io/cmd/oh/output/region.bin ✗ /tmp/io/cmd/oh/output/region.bin: file is binary and cannot …
 read <s>/io/cmd/oh/output/region.large.bin 2-2 ✗ /tmp/io/cmd/oh/output/region.large.bin: file is bi…
 read <s>/io/cmd/oh/output/region.go 2-3 2L
+read <s>/io/cmd/oh/output/region.png ✗ image cannot be decoded: png: invalid format: not enough pix…
 
-Both binaries were refused and the text was read.
+Both binaries and the picture were refused and the text was read.
 
 
  finish
