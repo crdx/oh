@@ -3,6 +3,7 @@
 ## [Next]
 
 - Refuse to read an image that cannot be decoded
+- Fix forwarded port connections remaining half-open forever
 
 ## [0.34.1] — 2026-11-15
 

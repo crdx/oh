@@ -5,9 +5,13 @@ import (
 	"io"
 	"net"
 	"sync"
+	"sync/atomic"
+	"time"
 )
 
 const maxBridgeConnections = 64
+
+var finishedIdleTimeout = time.Minute
 
 type bridge struct {
 	cancel   context.CancelFunc
@@ -97,15 +101,18 @@ func (self *bridge) join(ctx context.Context, nearConnection net.Conn) {
 	defer self.untrack(farConnection)
 	defer func() { _ = farConnection.Close() }()
 
+	nearFinished := &atomic.Bool{}
 	connectionFinished := make(chan struct{}, 1)
 	go func() {
 		_, _ = io.Copy(farConnection, nearConnection)
 		if tcp, ok := farConnection.(*net.TCPConn); ok {
 			_ = tcp.CloseWrite()
 		}
+		nearFinished.Store(true)
+		_ = farConnection.SetReadDeadline(time.Now().Add(finishedIdleTimeout))
 		connectionFinished <- struct{}{}
 	}()
-	_, _ = io.Copy(nearConnection, farConnection)
+	_, _ = io.Copy(nearConnection, &finishedReader{connection: farConnection, nearFinished: nearFinished})
 	if tcp, ok := nearConnection.(*net.TCPConn); ok {
 		_ = tcp.CloseWrite()
 	}
@@ -139,4 +146,16 @@ func (self *bridge) untrack(connection net.Conn) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 	delete(self.connections, connection)
+}
+
+type finishedReader struct {
+	connection   net.Conn
+	nearFinished *atomic.Bool
+}
+
+func (self *finishedReader) Read(buffer []byte) (int, error) {
+	if self.nearFinished.Load() {
+		_ = self.connection.SetReadDeadline(time.Now().Add(finishedIdleTimeout))
+	}
+	return self.connection.Read(buffer)
 }
