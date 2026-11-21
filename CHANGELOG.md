@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.34.2] — 2026-11-21
+
 - Refuse to read an image that cannot be decoded
 - Fix forwarded port connections remaining half-open forever
 - Offer GPT-6.2 Astra and Sol through Codex
