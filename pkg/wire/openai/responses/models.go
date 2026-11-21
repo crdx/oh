@@ -11,7 +11,7 @@ const (
 	responsesSuffix = "/responses"
 	modelsSuffix    = "/models"
 
-	ClientVersion = "0.162.1"
+	ClientVersion = "0.171.0"
 
 	listedVisibility = "list"
 	delegationMode   = "ultra"
