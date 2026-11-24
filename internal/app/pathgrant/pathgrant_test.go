@@ -60,7 +60,7 @@ func newTestGrants(t *testing.T) (*Grants, *file.Root, *caps.Mode) {
 
 	mode := caps.NewMode(caps.Read)
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -249,7 +249,7 @@ func TestRelativePathsResolveFromTheWorkspaceAndPathsMayContainSpaces(t *testing
 	workspace := openTestWorkspace(t)
 	mode := caps.NewMode(caps.Read)
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -347,7 +347,7 @@ func TestARestoredHostTmpGrantIsWithdrawn(t *testing.T) {
 	workspace := openTestWorkspace(t)
 	mode := caps.NewMode(caps.Read)
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -366,7 +366,7 @@ func TestExactRestoreNeedsNoNewModelAnnouncement(t *testing.T) {
 	workspace := openTestWorkspace(t)
 	mode := caps.NewMode(caps.Read)
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -386,7 +386,7 @@ func TestRestoreRefusesARecordedPathThatBecameASymlink(t *testing.T) {
 	workspace := openTestWorkspace(t)
 	mode := caps.NewMode(caps.Read)
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -444,7 +444,7 @@ func TestRestoreReopensPresentPathsAndCorrectsMissingOnes(t *testing.T) {
 	workspace := openTestWorkspace(t)
 	mode := caps.NewMode(caps.Read)
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}

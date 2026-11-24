@@ -273,7 +273,7 @@ func TestAGlobalSkillMountCanBeReadButNotWritten(t *testing.T) {
 		t.Fatal(err)
 	}
 	roots := MountGlobalSkills(files, discoveredSkills)
-	defer Close(roots)
+	defer closeRoots(roots)
 
 	resolvedRoot, name, err := files.Resolve(location)
 	if err != nil {
@@ -308,7 +308,7 @@ func TestAGlobalSkillWhoseDirectoryVanishesFailsOnlyItsOwnReads(t *testing.T) {
 		t.Fatal(err)
 	}
 	roots := MountGlobalSkills(files, discoveredSkills)
-	defer Close(roots)
+	defer closeRoots(roots)
 
 	keptRoot, keptName, err := files.Resolve(keptLocation)
 	if err != nil {
@@ -324,5 +324,11 @@ func TestAGlobalSkillWhoseDirectoryVanishesFailsOnlyItsOwnReads(t *testing.T) {
 	}
 	if _, err := goneRoot.ReadFile(goneName); !errors.Is(err, fs.ErrNotExist) {
 		t.Errorf("got %v, want the vanished skill reported missing", err)
+	}
+}
+
+func closeRoots(roots []*file.Root) {
+	for _, root := range roots {
+		_ = root.Close()
 	}
 }

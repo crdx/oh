@@ -114,7 +114,7 @@ func TestASharedSkillIsListedWhereTheShellReachesIt(t *testing.T) {
 		t.Fatal(err)
 	}
 	mode := caps.NewMode(caps.Read | caps.Shell)
-	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{})
+	access, err := NewPathAccessForMode(configuredPathTestRoot(t, mode), mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}

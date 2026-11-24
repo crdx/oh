@@ -55,10 +55,6 @@ func GaugesFor(output *os.File, cellWidth int, cellHeight int, hasGraphics bool)
 	})
 }
 
-func FixedGauges(drawing Graphics) *Gauges {
-	return NewGauges(func() (Graphics, bool) { return drawing, true })
-}
-
 func (self *Gauges) Draw(usedPercent int, expectedPercent *int, pace Pace, cells int) string {
 	if self != nil && self.measure != nil {
 		if drawing, hasGraphics := self.measure(); hasGraphics {

@@ -112,15 +112,6 @@ func bestOf(listing *Listing, candidates []candidate, limit int) []candidate {
 	return best
 }
 
-func Score(text string, query string) (int, bool) {
-	isCaseSensitive := strings.IndexFunc(query, unicode.IsUpper) >= 0
-	if isCaseSensitive {
-		return score(text, text, query)
-	}
-
-	return score(fold(text), text, query)
-}
-
 func fold(text string) string {
 	lowerCaseText := strings.ToLower(text)
 	if len(lowerCaseText) != len(text) {

@@ -99,7 +99,7 @@ func TestDenyNamesAreFoundAtEveryDepthOfGrantedTrees(t *testing.T) {
 		}
 	}
 
-	paths, err := FindDenyPaths([]string{"foo.*"}, root)
+	paths, err := FindDenyPathsSkipping([]string{"foo.*"}, root, "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -118,7 +118,7 @@ func TestAMatchedDirectoryDeniesItsWholeTree(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	paths, err := FindDenyPaths([]string{"private", "foo.txt"}, root)
+	paths, err := FindDenyPathsSkipping([]string{"private", "foo.txt"}, root, "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -137,7 +137,7 @@ func TestAPathDeniedThroughASymlinkResolvesToTheSameContent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	paths, err := FindDenyPaths([]string{"foo.txt"}, root)
+	paths, err := FindDenyPathsSkipping([]string{"foo.txt"}, root, "")
 	if err != nil {
 		t.Fatal(err)
 	}

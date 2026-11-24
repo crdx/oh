@@ -326,10 +326,6 @@ func readOnlySandboxPolicy(
 	return policy, supportedProbe(ctx)
 }
 
-func protectedPolicy(policy sandbox.Policy, roots []string) (sandbox.Policy, error) {
-	return protectedPolicyWithOptionalRoots(policy, roots, nil)
-}
-
 func protectedPolicyWithOptionalRoots(
 	policy sandbox.Policy,
 	roots []string,

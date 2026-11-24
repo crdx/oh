@@ -189,7 +189,7 @@ func TestADrawnGaugeTakesExactlyTheCellsItWasGiven(t *testing.T) {
 	expected := 40
 	limit := Limit{UsedPercent: 62, ExpectedPercent: &expected}
 
-	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+	gauges := NewGauges(func() (Graphics, bool) { return Graphics{CellWidth: 9, CellHeight: 18}, true })
 
 	drawn := gauges.Draw(limit.UsedPercent, limit.ExpectedPercent, PaceAhead, gaugeWidth)
 
@@ -209,7 +209,7 @@ func TestADrawnRowStillLinesUpWithTheRestOfTheReport(t *testing.T) {
 		Reporter: &scriptedReporter{windows: []agent.UsageWindow{sessionWindow(70), weeklyWindow(20)}},
 	}}, nowAt(collectedAt))
 
-	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+	gauges := NewGauges(func() (Graphics, bool) { return Graphics{CellWidth: 9, CellHeight: 18}, true })
 
 	for _, line := range strings.Split(strings.TrimSuffix(Render(report, collectedAt, gauges), "\n"), "\n")[1:] {
 		if got := width.Of(line); got != width.Of(style.Plain(line)) {
@@ -220,7 +220,7 @@ func TestADrawnRowStillLinesUpWithTheRestOfTheReport(t *testing.T) {
 
 func TestEveryDrawingCarriesThePictureItPlaces(t *testing.T) {
 	expected := 40
-	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+	gauges := NewGauges(func() (Graphics, bool) { return Graphics{CellWidth: 9, CellHeight: 18}, true })
 
 	first := gauges.Draw(62, &expected, PaceAhead, gaugeWidth)
 	second := gauges.Draw(62, &expected, PaceAhead, gaugeWidth)
@@ -244,7 +244,7 @@ func TestEveryDrawingCarriesThePictureItPlaces(t *testing.T) {
 
 func TestOneImageIsHeldForEachGaugeHoweverOftenItIsDrawn(t *testing.T) {
 	expected := 40
-	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+	gauges := NewGauges(func() (Graphics, bool) { return Graphics{CellWidth: 9, CellHeight: 18}, true })
 
 	identifiers := map[string]struct{}{}
 
@@ -266,7 +266,7 @@ func TestOneImageIsHeldForEachGaugeHoweverOftenItIsDrawn(t *testing.T) {
 
 func TestAGaugeIsDrawnAfreshOnceThePaletteChanges(t *testing.T) {
 	expected := 40
-	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+	gauges := NewGauges(func() (Graphics, bool) { return Graphics{CellWidth: 9, CellHeight: 18}, true })
 
 	for name, change := range map[string]func() func(){
 		"another background": func() func() { return style.ReportBackground(style.LightBackground) },
@@ -292,7 +292,7 @@ func TestAGaugeIsDrawnAfreshOnceThePaletteChanges(t *testing.T) {
 }
 
 func TestThePlacementsHeldAreBounded(t *testing.T) {
-	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+	gauges := NewGauges(func() (Graphics, bool) { return Graphics{CellWidth: 9, CellHeight: 18}, true })
 
 	for usedPercent := range mostPlacements + 1 {
 		if drawn := gauges.Draw(usedPercent, nil, PaceEven, gaugeWidth); !strings.Contains(drawn, "a=T") {

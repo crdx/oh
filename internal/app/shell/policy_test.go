@@ -89,7 +89,7 @@ func testPlaces(t *testing.T, homeDirectory string, scratchDirectory string) Roo
 func newTestPathAccess(t *testing.T, files *file.Root, mode *caps.Mode) *PathAccess {
 	t.Helper()
 
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -248,7 +248,7 @@ func TestFreshPoliciesFollowTemporaryPathAccess(t *testing.T) {
 
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -307,7 +307,7 @@ func TestASharedSkillRemovedMidSessionDropsOutOfAFreshPolicy(t *testing.T) {
 	mode := caps.NewMode(caps.Read | caps.Shell)
 	files := configuredPathTestRoot(t, mode)
 	configuredDirectory := t.TempDir()
-	access, err := NewPathAccess(files, mode, Paths{Exec: []string{configuredDirectory}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Exec: []string{configuredDirectory}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -911,7 +911,7 @@ func TestAnExactMetadataWritePathIsProtectedFromTheShell(t *testing.T) {
 	}
 
 	for _, path := range []string{target, alias} {
-		policy, err := protectedPolicy(sandbox.Policy{Write: []string{path}}, []string{path})
+		policy, err := protectedPolicyWithOptionalRoots(sandbox.Policy{Write: []string{path}}, []string{path}, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -1038,14 +1038,14 @@ func TestAnUnreadableProtectionRootIsStillRefused(t *testing.T) {
 	root := t.TempDir()
 	makeUnreadable(t, root, 0)
 
-	if _, err := protectedPolicy(sandbox.Policy{}, []string{root}); !errors.Is(err, os.ErrPermission) {
+	if _, err := protectedPolicyWithOptionalRoots(sandbox.Policy{}, []string{root}, nil); !errors.Is(err, os.ErrPermission) {
 		t.Errorf("got %v, want the unreadable root to be refused", err)
 	}
 }
 
 func TestAMissingProtectionRootIsStillRefused(t *testing.T) {
 	root := filepath.Join(t.TempDir(), "missing")
-	if _, err := protectedPolicy(sandbox.Policy{}, []string{root}); !errors.Is(err, os.ErrNotExist) {
+	if _, err := protectedPolicyWithOptionalRoots(sandbox.Policy{}, []string{root}, nil); !errors.Is(err, os.ErrNotExist) {
 		t.Errorf("got %v, want the missing root to be refused", err)
 	}
 }
@@ -1653,7 +1653,7 @@ func TestASymlinkedWorkspaceStillProtectsNestedMetadata(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	policy, err := protectedPolicy(sandbox.Policy{Write: []string{alias}}, []string{alias})
+	policy, err := protectedPolicyWithOptionalRoots(sandbox.Policy{Write: []string{alias}}, []string{alias}, nil)
 	if err != nil {
 		t.Fatal(err)
 	}

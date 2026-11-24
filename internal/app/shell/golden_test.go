@@ -99,7 +99,7 @@ func unreadableSubtreeGolden(t *testing.T, mode os.FileMode, isAdditional bool) 
 	}
 	makeUnreadable(t, unreadable, mode)
 
-	policy, err := protectedPolicy(sandbox.Policy{Write: []string{root}}, []string{root})
+	policy, err := protectedPolicyWithOptionalRoots(sandbox.Policy{Write: []string{root}}, []string{root}, nil)
 	if err != nil {
 		return "error: " + err.Error()
 	}
@@ -122,7 +122,7 @@ func temporaryGrantGolden(t *testing.T, grantedAccess Access, isAvailable bool) 
 	}
 	mode := caps.NewMode(currentCaps)
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	pathAccess, err := NewPathAccess(files, mode, Paths{})
+	pathAccess, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -177,7 +177,7 @@ func configuredPathGolden(t *testing.T) string {
 	currentCaps := caps.Read | caps.Write | caps.Shell
 	mode := caps.NewMode(currentCaps)
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	pathAccess, err := NewPathAccess(files, mode, Paths{Read: []string{configuredPath}})
+	pathAccess, err := NewPathAccessForMode(files, mode, Paths{Read: []string{configuredPath}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -213,7 +213,7 @@ func missingProtectionRootGolden(t *testing.T) string {
 
 	parent := t.TempDir()
 	missing := filepath.Join(parent, "missing")
-	_, err := protectedPolicy(sandbox.Policy{}, []string{missing})
+	_, err := protectedPolicyWithOptionalRoots(sandbox.Policy{}, []string{missing}, nil)
 	if err == nil {
 		return "error: none"
 	}
@@ -271,7 +271,7 @@ func symlinkedWorkspaceGolden(t *testing.T) string {
 	if err := os.Symlink(workspace, alias); err != nil {
 		t.Fatal(err)
 	}
-	policy, err := protectedPolicy(sandbox.Policy{Write: []string{alias}}, []string{alias})
+	policy, err := protectedPolicyWithOptionalRoots(sandbox.Policy{Write: []string{alias}}, []string{alias}, nil)
 	if err != nil {
 		return "error: " + err.Error()
 	}
@@ -286,12 +286,12 @@ func hostTmpAliasGolden(t *testing.T) string {
 	if err := os.Symlink(hostTemporary, alias); err != nil {
 		t.Fatal(err)
 	}
-	_, configuredError := PreparePaths(Paths{Read: []string{alias}}, io.Discard)
-	_, directError := PreparePaths(Paths{Read: []string{hostTemporary}}, io.Discard)
-	_, ordinaryError := PreparePaths(Paths{Read: []string{outside}}, io.Discard)
+	_, configuredError := PreparePathsForMode(Paths{Read: []string{alias}}, io.Discard, false)
+	_, directError := PreparePathsForMode(Paths{Read: []string{hostTemporary}}, io.Discard, false)
+	_, ordinaryError := PreparePathsForMode(Paths{Read: []string{outside}}, io.Discard, false)
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -391,7 +391,7 @@ func changedMountedPathGolden(t *testing.T) string {
 	t.Cleanup(func() { _ = openedRoot.Close() })
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(openedRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{grant}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{grant}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -444,7 +444,7 @@ func aliasedWriteGrantGolden(t *testing.T) string {
 	t.Cleanup(func() { _ = root.Close() })
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{writable}, Home: []string{alias}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{writable}, Home: []string{alias}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -468,7 +468,7 @@ func nestedWriteGrantGolden(t *testing.T) string {
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(root, caps.RefuseWrite(mode))
 	paths := Paths{Read: []string{readOnly}, Write: []string{writable}}
-	access, err := NewPathAccess(files, mode, paths)
+	access, err := NewPathAccessForMode(files, mode, paths, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -494,7 +494,7 @@ func workspaceWriteGrantGolden(t *testing.T) string {
 	t.Cleanup(func() { _ = root.Close() })
 	mode := caps.NewMode(caps.Read | caps.Shell)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -529,7 +529,7 @@ func absoluteDenyGolden(t *testing.T) string {
 	t.Cleanup(func() { _ = root.Close() })
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Deny: []string{secret}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Deny: []string{secret}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -568,7 +568,7 @@ func hardLinkGolden(t *testing.T) string {
 	t.Cleanup(func() { _ = root.Close() })
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -598,7 +598,7 @@ func gitOnlyGolden(t *testing.T) string {
 	t.Cleanup(func() { _ = root.Close() })
 	mode := caps.NewMode(caps.Read | caps.Git)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -227,9 +227,12 @@ func TestAWaivedSandboxCompletesOnlyTheCapabilitiesItCanTake(t *testing.T) {
 }
 
 func TestToolCompletionsComeFromTheRuntime(t *testing.T) {
-	got, isWanted := Complete([]string{"--complete", completeTool, "g"}, Sources{ToolNames: []string{"read", "grep"}})
-	if !isWanted || !slices.Equal(got, []string{"grep"}) {
-		t.Errorf("got %v, wanted %v", got, isWanted)
+	var out bytes.Buffer
+	isWanted := WriteCompletions(&out, []string{"--complete", completeTool, "g"}, func() Sources {
+		return Sources{ToolNames: []string{"read", "grep"}}
+	})
+	if !isWanted || out.String() != "grep\n" {
+		t.Errorf("got %q and wanted %t", out.String(), isWanted)
 	}
 }
 
@@ -273,9 +276,12 @@ func TestSessionCompletionsNameTheWorkspaceNewestFirst(t *testing.T) {
 	if !slices.Equal(anyNames, []string{"archived-ibis", "newer-jaguar", "older-badger"}) {
 		t.Errorf("got any session names %v", anyNames)
 	}
-	anyCompletions, isWanted := Complete([]string{completeFlag, completeAnySession, "arch"}, Sources{SessionsDir: directory})
-	if !isWanted || !slices.Equal(anyCompletions, []string{"archived-ibis"}) {
-		t.Errorf("got any session completions %v and wanted %t", anyCompletions, isWanted)
+	var out bytes.Buffer
+	isWanted := WriteCompletions(&out, []string{completeFlag, completeAnySession, "arch"}, func() Sources {
+		return Sources{SessionsDir: directory}
+	})
+	if !isWanted || out.String() != "archived-ibis\n" {
+		t.Errorf("got any session completions %q and wanted %t", out.String(), isWanted)
 	}
 
 	missingDirectory := filepath.Join(directory, "missing")

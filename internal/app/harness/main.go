@@ -337,11 +337,8 @@ func Main() {
 	inputArgs := cli.Bind()
 	startupConfig := readConfig(inputArgs.Settings)
 
-	hooks := cycle.NewHooks(func(err error) {
-		fmt.Fprintln(os.Stderr, style.Error(fmt.Errorf("session hook: %w", err)))
-	})
 	transition := cycle.Transition{}
-	chosenSession, err := run(hooks, &transition, inputArgs, startupConfig)
+	chosenSession, err := run(&transition, inputArgs, startupConfig)
 	if err != nil {
 		if interruption, isSignal := errors.AsType[terminationSignalError](err); isSignal {
 			tty.Reraise(interruption.signal)
@@ -772,20 +769,11 @@ func applySimulationOptions(options *cli.Options) {
 
 //nolint:gocyclo // lol no
 func run(
-	hooks *cycle.Hooks,
 	requestedTransition *cycle.Transition,
 	inputArgs *cli.Input,
 	initial initialConfig,
 ) (string, error) {
 	ctx := context.Background()
-	var sessionInfo cycle.Session
-	hasStarted := false
-	stopReason := cycle.StoppedByFailure
-	defer func() {
-		if hasStarted {
-			hooks.EmitSessionStopped(ctx, cycle.SessionStopped{Session: sessionInfo, Reason: stopReason})
-		}
-	}()
 
 	isPromptPiped := !tty.Is(os.Stdin)
 
@@ -1152,7 +1140,7 @@ func run(
 	}
 	client.UseSession(log.ID())
 
-	sessionInfo = cycle.Session{
+	sessionInfo := cycle.Session{
 		Name:         log.Name(),
 		ID:           log.ID(),
 		Directory:    filepath.Join(sessionsDir, log.Name()),
@@ -1173,7 +1161,6 @@ func run(
 	if settings.Debug.ShouldProfileHeap {
 		defer diagnostics.ProfileHeap(sessionInfo.Directory).Close()
 	}
-	hooks.EmitSessionStarting(ctx, cycle.SessionStarting{Session: sessionInfo})
 	client.ObserveHTTP(log.Observer())
 
 	tmpDir, err := sessions.PrepareTemporaryDirectory(log.Name())
@@ -1864,8 +1851,6 @@ func run(
 		app.notify(startup.NewEvent(startupElapsed, startupInfo))
 	}
 
-	hasStarted = true
-	hooks.EmitSessionStarted(ctx, cycle.SessionStarted{Session: sessionInfo})
 	transition := app.begin(args.Message)
 	if err := app.endTasks(); err != nil {
 		_, _ = fmt.Fprintln(notices, style.Error(fmt.Errorf("the final task state could not be stored: %w", err)))
@@ -1873,8 +1858,6 @@ func run(
 	app.endChildren()
 	questionNotifications.WithdrawAll(notificationWithdrawalGrace)
 	*requestedTransition = transition
-	stopReason = transition.StopReason()
-	hooks.EmitSessionStopping(ctx, cycle.SessionStopping{Session: sessionInfo, Reason: stopReason})
 
 	if isSessionLeftToResume(log.IsPersisted(), isSimulated, transition.Kind) {
 		_, _ = fmt.Fprintf(notices, "\n%s\n", style.Subtle(sessions.ResumeCommand(os.Args[0], log.Name())))

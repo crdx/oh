@@ -94,12 +94,6 @@ func FlagsBy(event agent.Event) (string, error) {
 	return grantedCaps.Flags() + record.Groups, nil
 }
 
-func Notice(swappedCaps Set, grantedCaps Set) ([]string, bool) {
-	notices := changeNotices(swappedCaps, grantedCaps, false)
-
-	return notices, len(notices) > 0
-}
-
 func ModeNotice(event agent.Event) ([]string, bool) {
 	record, err := decodeMode(event)
 	if err != nil || event.Name == "" {
@@ -124,10 +118,6 @@ func ModeNotice(event agent.Event) ([]string, bool) {
 	}
 
 	return notices, len(notices) > 0
-}
-
-func ModeWithout(event agent.Event, swappedCaps Set) agent.Event {
-	return ModeWithoutFlag(event, swappedCaps.Flag())
 }
 
 func ModeWithoutFlag(event agent.Event, swappedFlag string) agent.Event {

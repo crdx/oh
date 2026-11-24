@@ -585,9 +585,8 @@ func TestASessionIsMeasuredByWhatItsFilesOccupy(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	Measure(directory, loadedSessions)
 
-	if got := loadedSessions[0].Bytes; got < 1<<20 {
+	if got := Occupied(Path(directory, loadedSessions[0])); got < 1<<20 {
 		t.Errorf("expected a session holding a 1MB drop to measure at least that, got %d bytes", got)
 	}
 }
@@ -603,13 +602,12 @@ func TestAnArchivedSessionIsMeasuredByItsArchive(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	Measure(directory, archivedSessions)
 
 	info, err := os.Stat(session.ArchivePath(directory, name))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := archivedSessions[0].Bytes; got < info.Size() {
+	if got := Occupied(Path(directory, archivedSessions[0])); got < info.Size() {
 		t.Errorf("expected the archive of %d bytes to be measured, got %d bytes", info.Size(), got)
 	}
 }

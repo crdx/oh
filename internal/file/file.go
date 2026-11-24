@@ -28,14 +28,6 @@ func InGitDir(name string) bool {
 	return slices.Contains(segments, ".git")
 }
 
-func RefuseGitDir(name string) error {
-	if InGitDir(name) {
-		return ErrGitDir
-	}
-
-	return nil
-}
-
 type mountedRoot struct {
 	root      *Root
 	name      string

@@ -160,8 +160,9 @@ func TestResolveFallsBackToTheConfig(t *testing.T) {
 		Model:    "configured-model",
 		Effort:   "medium",
 	}}
-	selection, err := Resolve(
+	selection, err := ResolveAvailable(
 		model.Selection{}, model.Selection{}, configured, filepath.Join(t.TempDir(), "round-robin.json"),
+		isAvailable,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -182,11 +183,12 @@ func TestResolveRefusesToSwapTheModelOfAResumedConversation(t *testing.T) {
 		Model:    "requested-model",
 		Effort:   "high",
 	}
-	selection, err := Resolve(
+	selection, err := ResolveAvailable(
 		requested,
 		resumed,
 		[]model.Selection{{Provider: codexProvider, Model: "configured-model", Effort: "medium"}},
 		"",
+		isAvailable,
 	)
 	if err == nil || !strings.Contains(err.Error(), "a model is chosen when a session is created") {
 		t.Fatalf("got selection %s and error %v", selection, err)
@@ -197,7 +199,7 @@ func TestResolveRefusesToSwapTheEffortOfAResumedConversation(t *testing.T) {
 	resumed := model.Selection{Provider: opencodeGoProvider, Model: "saved-model", Effort: "low"}
 	requested := model.Selection{Provider: opencodeGoProvider, Model: "saved-model", Effort: "high"}
 
-	selection, err := Resolve(requested, resumed, nil, "")
+	selection, err := ResolveAvailable(requested, resumed, nil, "", isAvailable)
 	if err == nil || !strings.Contains(err.Error(), "a model is chosen when a session is created") {
 		t.Fatalf("got selection %s and error %v", selection, err)
 	}
@@ -206,11 +208,12 @@ func TestResolveRefusesToSwapTheEffortOfAResumedConversation(t *testing.T) {
 func TestResolveRefusesToResumeUnderAnotherProvider(t *testing.T) {
 	resumed := model.Selection{Provider: opencodeGoProvider, Model: "saved-model"}
 
-	selection, err := Resolve(
+	selection, err := ResolveAvailable(
 		model.Selection{Provider: codexProvider, Model: "requested-model", Effort: "high"},
 		resumed,
 		nil,
 		"",
+		isAvailable,
 	)
 	if err == nil || !strings.Contains(err.Error(), "cannot resume a conversation held with opencode-go/saved-model under") {
 		t.Fatalf("got selection %s and error %v", selection, err)
@@ -220,7 +223,7 @@ func TestResolveRefusesToResumeUnderAnotherProvider(t *testing.T) {
 func TestResolveAcceptsTheModelAResumedConversationWasLeftOn(t *testing.T) {
 	resumed := model.Selection{Provider: opencodeGoProvider, Model: "saved-model", Effort: "low"}
 
-	selection, err := Resolve(resumed, resumed, nil, "")
+	selection, err := ResolveAvailable(resumed, resumed, nil, "", isAvailable)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -232,11 +235,12 @@ func TestResolveAcceptsTheModelAResumedConversationWasLeftOn(t *testing.T) {
 func TestResolveResumesUnderTheRecordedProvider(t *testing.T) {
 	resumed := model.Selection{Provider: opencodeGoProvider, Model: "saved-model", Effort: "low"}
 
-	selection, err := Resolve(
+	selection, err := ResolveAvailable(
 		model.Selection{},
 		resumed,
 		[]model.Selection{{Provider: codexProvider, Model: "configured-model", Effort: "medium"}},
 		"",
+		isAvailable,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -281,7 +285,7 @@ func TestResolveAvailableStillOpensARecordedProviderForReplay(t *testing.T) {
 }
 
 func TestResolveRequiresAModel(t *testing.T) {
-	selection, err := Resolve(model.Selection{}, model.Selection{}, nil, "")
+	selection, err := ResolveAvailable(model.Selection{}, model.Selection{}, nil, "", isAvailable)
 	if err == nil || !strings.Contains(err.Error(), "-m provider/model@effort") {
 		t.Fatalf("got selection %s and error %v", selection, err)
 	}
@@ -290,7 +294,7 @@ func TestResolveRequiresAModel(t *testing.T) {
 func TestAnExplicitModelDoesNotAdvanceTheConfiguredRotation(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "round-robin.json")
 	requested := model.Selection{Provider: codexProvider, Model: "requested", Effort: "high"}
-	selection, err := Resolve(requested, model.Selection{}, testModelSelections(), path)
+	selection, err := ResolveAvailable(requested, model.Selection{}, testModelSelections(), path, isAvailable)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -305,7 +309,7 @@ func TestAnExplicitModelDoesNotAdvanceTheConfiguredRotation(t *testing.T) {
 func TestAResumedModelDoesNotAdvanceTheConfiguredRotation(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "round-robin.json")
 	resumed := model.Selection{Provider: codexProvider, Model: "saved", Effort: "high"}
-	selection, err := Resolve(model.Selection{}, resumed, testModelSelections(), path)
+	selection, err := ResolveAvailable(model.Selection{}, resumed, testModelSelections(), path, isAvailable)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -693,3 +697,5 @@ func TestOnlyAMeteredProviderOnItsOwnEndpointHasAUsagePage(t *testing.T) {
 		}
 	}
 }
+
+func isAvailable(model.Selection) bool { return true }

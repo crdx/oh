@@ -165,7 +165,7 @@ func TestMarkdownLinksAndBareURLsCanBeTerminalHyperlinks(t *testing.T) {
 		t.Errorf("plain rendering contains a terminal hyperlink: %q", plain)
 	}
 
-	linked := strings.Join(RenderWithHyperlinks(source, columns), "\n")
+	linked := strings.Join(RenderWithHyperlinksUnder(source, columns, link.Roots{}), "\n")
 	if got := strings.Count(linked, "\x1b]8;;"); got != 6 {
 		t.Errorf("got %d OSC 8 openings and closings, want 6: %q", got, linked)
 	}
@@ -181,7 +181,7 @@ func TestMarkdownLinksAndBareURLsCanBeTerminalHyperlinks(t *testing.T) {
 }
 
 func TestUnsupportedMarkdownDestinationsStayPlain(t *testing.T) {
-	got := strings.Join(RenderWithHyperlinks("[unsafe](javascript:alert(1))", columns), "\n")
+	got := strings.Join(RenderWithHyperlinksUnder("[unsafe](javascript:alert(1))", columns, link.Roots{}), "\n")
 	if strings.Contains(got, "\x1b]8;;") {
 		t.Errorf("unsupported destination became a terminal hyperlink: %q", got)
 	}

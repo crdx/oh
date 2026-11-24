@@ -36,7 +36,7 @@ func TestKittyNotificationWritesEscapeCodeAndMapsIcon(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !notice.IsSent() {
+	if !notice.isSent {
 		t.Fatal("the notification was not sent")
 	}
 

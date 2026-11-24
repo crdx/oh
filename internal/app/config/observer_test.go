@@ -19,7 +19,7 @@ const watchTestTimeout = 2 * time.Second
 func observeConfig(t *testing.T, path string) (Config, *Observer) {
 	t.Helper()
 
-	settings, observer, err := Observe(path)
+	settings, observer, err := observe(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -239,7 +239,7 @@ func TestCreatingAnObservedOverrideReplacesTheGlobalConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	overridePath := filepath.Join(directory, "oh.toml")
-	settings, observer, err := ObserveSources(
+	settings, observer, err := observeSources(
 		Source{Path: globalPath},
 		Source{Path: overridePath, IsOverride: true},
 	)
@@ -273,7 +273,7 @@ func TestEditingAnObservedOverrideReplacesItsLiveSettings(t *testing.T) {
 	if err := os.WriteFile(overridePath, []byte("[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	_, observer, err := ObserveSources(
+	_, observer, err := observeSources(
 		Source{Path: globalPath},
 		Source{Path: overridePath, IsOverride: true},
 	)
@@ -304,7 +304,7 @@ func TestAtomicallyReplacingAnObservedOverrideLoadsItsNewSettings(t *testing.T) 
 	if err := os.WriteFile(overridePath, []byte("[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	_, observer, err := ObserveSources(
+	_, observer, err := observeSources(
 		Source{Path: globalPath},
 		Source{Path: overridePath, IsOverride: true},
 	)
@@ -339,7 +339,7 @@ func TestDeletingAnObservedOverrideRestoresTheGlobalConfig(t *testing.T) {
 	if err := os.WriteFile(overridePath, []byte("[ui]\ncurrency = \"CAD\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	settings, observer, err := ObserveSources(
+	settings, observer, err := observeSources(
 		Source{Path: globalPath},
 		Source{Path: overridePath, IsOverride: true},
 	)
@@ -434,7 +434,7 @@ func TestAnAppliedReloadNamesTheFileThatChangedAndWhatItSupplies(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, observer, err := ObserveSources(
+	_, observer, err := observeSources(
 		Source{Path: globalPath},
 		Source{Path: overridePath, IsOverride: true},
 	)
@@ -607,7 +607,7 @@ func TestAReloadReportsAnOverrideThatWentAway(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, observer, err := ObserveSources(
+	_, observer, err := observeSources(
 		Source{Path: globalPath},
 		Source{Path: overridePath, IsOverride: true},
 	)
@@ -821,7 +821,7 @@ func TestObserveReportsAnInvalidInitialConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, _, err := Observe(path)
+	_, _, err := observe(path)
 	if err == nil || !strings.Contains(err.Error(), "config.toml") {
 		t.Errorf("got %v", err)
 	}
@@ -832,7 +832,7 @@ func TestClosingAnObserverClosesItsChanges(t *testing.T) {
 	if err := writeConfigFile(path, "[ui]\ncurrency = \"GBP\"\n"); err != nil {
 		t.Fatal(err)
 	}
-	_, observer, err := Observe(path)
+	_, observer, err := observe(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1030,4 +1030,17 @@ func TestReloadRecoveryDistinguishesRestorationFromAnUnchangedFailure(t *testing
 			}
 		})
 	}
+}
+
+func observe(path string) (Config, *Observer, error) {
+	return observeSources(Source{Path: path})
+}
+
+func observeSources(sources ...Source) (Config, *Observer, error) {
+	observable, err := Read(sources...)
+	if err != nil {
+		return Config{}, nil, err
+	}
+
+	return observable.Observe()
 }

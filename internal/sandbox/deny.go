@@ -84,10 +84,6 @@ func (self Policy) DiscoverDenyPathsWith(search DenySearch) ([]string, error) {
 	return outermostPaths(matches), nil
 }
 
-func FindDenyPaths(patterns []string, root string) ([]string, error) {
-	return FindDenyPathsSkipping(patterns, root, "")
-}
-
 func FindDenyPathsSkipping(patterns []string, root string, skip string) ([]string, error) {
 	return findDenyPathsWithWalk(patterns, root, skip, filepath.WalkDir)
 }

@@ -56,10 +56,6 @@ type pendingDenySearch struct {
 	err   error
 }
 
-func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess, error) {
-	return NewPathAccessForMode(files, mode, paths, false)
-}
-
 func NewPathAccessForMode(files *file.Root, mode *caps.Mode, paths Paths, isYolo bool) (*PathAccess, error) {
 	denials, err := newPathDenials(paths.Deny)
 	if err != nil {
@@ -442,10 +438,6 @@ func reportContainment(warnings io.Writer, pair containment) {
 			)
 		}
 	}
-}
-
-func PreparePaths(paths Paths, warnings io.Writer) (Paths, error) {
-	return PreparePathsForMode(paths, warnings, false)
 }
 
 func PreparePathsForMode(paths Paths, warnings io.Writer, isYolo bool) (Paths, error) {

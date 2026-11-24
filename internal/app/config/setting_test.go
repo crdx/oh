@@ -331,7 +331,7 @@ func TestACommandLineSettingSurvivesAReload(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	settings, observer, err := ObserveSources(Source{Path: globalPath}, CommandLineSetting(directory, "ui.currency=GBP"))
+	settings, observer, err := observeSources(Source{Path: globalPath}, CommandLineSetting(directory, "ui.currency=GBP"))
 	if err != nil {
 		t.Fatal(err)
 	}

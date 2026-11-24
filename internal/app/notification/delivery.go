@@ -42,10 +42,6 @@ type Notification struct {
 	isSent     bool
 }
 
-func (self Notification) IsSent() bool {
-	return self.isSent
-}
-
 func (self Notification) Withdraw(ctx context.Context, writeEscape EscapeWriter) error {
 	if self.identifier == "" {
 		return nil

@@ -279,3 +279,11 @@ func TestRevokeOffersEveryPathAndPortItCanClose(t *testing.T) {
 		t.Errorf("got %v, want the path and the port", subjects)
 	}
 }
+
+func pathGrantPaths(grants []pathgrant.Grant) []string {
+	paths := make([]string, 0, len(grants))
+	for _, grant := range grants {
+		paths = append(paths, grant.Path)
+	}
+	return paths
+}

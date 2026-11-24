@@ -259,12 +259,6 @@ type blockSpan struct {
 	keepsBottomPadding bool
 }
 
-func renderGroupedBlocks(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group) {
-	rows, firstGroup, lastGroup, _ := renderGroupedBlocksWithSpans(blocks, columns, grouping)
-
-	return rows, firstGroup, lastGroup
-}
-
 func renderGroupedBlocksWithSpans(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group, []blockSpan) {
 	var rows []string
 	spans := make([]blockSpan, 0, len(blocks))

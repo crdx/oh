@@ -34,17 +34,22 @@ func TestAnExplicitDirectoryIsHeldOnce(t *testing.T) {
 	}
 }
 
-func TestScoreNeedsEveryCharacterInOrder(t *testing.T) {
-	if _, isMatch := pathref.Score("internal/app/harness/app.go", "harapp"); !isMatch {
+func TestAMatchNeedsEveryCharacterInOrder(t *testing.T) {
+	matches := func(path string, query string) bool {
+		var matcher pathref.Matcher
+		paths, _ := matcher.Match(pathref.NewListing([]string{path}), query, 1)
+		return slices.Contains(paths, path)
+	}
+	if !matches("internal/app/harness/app.go", "harapp") {
 		t.Error("a subsequence did not match")
 	}
-	if _, isMatch := pathref.Score("internal/app/harness/app.go", "ppah"); isMatch {
+	if matches("internal/app/harness/app.go", "ppah") {
 		t.Error("characters out of order matched")
 	}
-	if _, isMatch := pathref.Score("README.md", "readme"); !isMatch {
+	if !matches("README.md", "readme") {
 		t.Error("a lowercase query did not match an uppercase path")
 	}
-	if _, isMatch := pathref.Score("readme.md", "README"); isMatch {
+	if matches("readme.md", "README") {
 		t.Error("an uppercase query matched a lowercase path")
 	}
 }

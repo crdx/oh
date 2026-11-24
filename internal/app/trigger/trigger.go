@@ -38,10 +38,6 @@ type Source interface {
 	Results(word Word, limit int) Results
 }
 
-func FindWord(runes []rune, cursor int, symbol rune) (Word, bool) {
-	return FindWordWithMarker(runes, cursor, symbol, 0)
-}
-
 func FindWordWithMarker(runes []rune, cursor int, symbol rune, marker rune) (Word, bool) {
 	if cursor < 0 || cursor > len(runes) {
 		return Word{}, false

@@ -90,7 +90,7 @@ func TestAChangeTakenBackLeavesTheOnesAfterItSayingWhatTheySaid(t *testing.T) {
 	event := ModeToggleEvent(Write, Read|Git)
 	said, _ := ModeNotice(event)
 
-	event = ModeWithout(event, Git)
+	event = ModeWithoutFlag(event, Git.Flag())
 
 	if again, _ := ModeNotice(event); !slices.Equal(again, said) {
 		t.Errorf("expected %q, got %q", said, again)

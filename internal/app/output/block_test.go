@@ -737,3 +737,9 @@ func TestABlockThatCommittedRowsIsNotDiscarded(t *testing.T) {
 		t.Error("a block with rows in scrollback was discarded as though it had none")
 	}
 }
+
+func renderGroupedBlocks(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group) {
+	rows, firstGroup, lastGroup, _ := renderGroupedBlocksWithSpans(blocks, columns, grouping)
+
+	return rows, firstGroup, lastGroup
+}

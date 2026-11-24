@@ -30,7 +30,7 @@ func (self *fakeSource) Elision() dropdown.Elision {
 }
 
 func (self *fakeSource) Find(runes []rune, cursor int) (trigger.Word, bool) {
-	return trigger.FindWord(runes, cursor, self.symbol)
+	return trigger.FindWordWithMarker(runes, cursor, self.symbol, 0)
 }
 
 func (self *fakeSource) Open(announceChange func()) {
@@ -141,7 +141,7 @@ func TestFindReadsTheWordUnderTheCursor(t *testing.T) {
 		"no symbol":                  {text: "plain", cursor: 5},
 	} {
 		t.Run(name, func(t *testing.T) {
-			got, found := trigger.FindWord([]rune(test.text), test.cursor, '@')
+			got, found := trigger.FindWordWithMarker([]rune(test.text), test.cursor, '@', 0)
 			if found != test.wantFound {
 				t.Fatalf("found %v, want %v", found, test.wantFound)
 			}

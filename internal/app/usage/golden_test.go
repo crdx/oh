@@ -421,7 +421,7 @@ func drawnGauges(t *testing.T) string {
 			repaints: 1,
 		},
 	} {
-		gauges := FixedGauges(drawing)
+		gauges := NewGauges(func() (Graphics, bool) { return drawing, true })
 
 		drawn.WriteString("=== ")
 		drawn.WriteString(test.name)

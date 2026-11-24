@@ -39,10 +39,6 @@ var ErrNoSelection = errors.New(
 	"no model selected: use -m provider/model@effort[+fast] or configure agent.model or agent.round_robin",
 )
 
-func ReserveRoundRobin(path string, selections []Selection) (Selection, error) {
-	return ReserveAvailableRoundRobin(path, selections, func(Selection) bool { return true })
-}
-
 func ReserveAvailableRoundRobin(
 	path string, selections []Selection, isAvailable func(Selection) bool,
 ) (Selection, error) {

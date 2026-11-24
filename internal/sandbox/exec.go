@@ -204,10 +204,6 @@ type Result struct {
 	PeakMemory uint64
 }
 
-func Run(ctx context.Context, directory string, command string, policy Policy) (Result, error) {
-	return Direct().Run(ctx, directory, command, policy)
-}
-
 func collect(child *exec.Cmd) keeper.Status {
 	var status keeper.Status
 	if child.ProcessState == nil {

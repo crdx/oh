@@ -48,24 +48,3 @@ func TestConfigPathIgnoresARelativeXDGConfigHome(t *testing.T) {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
-
-func TestCachePathUsesAnAbsoluteXDGCacheHome(t *testing.T) {
-	root := t.TempDir()
-	t.Setenv("XDG_CACHE_HOME", root)
-
-	want := filepath.Join(root, "somewhere", "analysis.json")
-	if got := xdg.CachePath("somewhere", "analysis.json"); got != want {
-		t.Errorf("got %q, want %q", got, want)
-	}
-}
-
-func TestCachePathIgnoresARelativeXDGCacheHome(t *testing.T) {
-	home := t.TempDir()
-	t.Setenv("HOME", home)
-	t.Setenv("XDG_CACHE_HOME", filepath.Join("inside", "workspace"))
-
-	want := filepath.Join(home, ".cache", "somewhere")
-	if got := xdg.CachePath("somewhere"); got != want {
-		t.Errorf("got %q, want %q", got, want)
-	}
-}

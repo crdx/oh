@@ -52,15 +52,6 @@ type Sources struct {
 	IsLoggedIn     func(providerName string) bool
 }
 
-func Complete(args []string, sources Sources) ([]string, bool) {
-	kind, word, isWanted := completionRequest(args)
-	if !isWanted {
-		return nil, false
-	}
-
-	return completions(kind, word, sources), true
-}
-
 func WriteCompletions(out io.Writer, args []string, getSources func() Sources) bool {
 	kind, word, isWanted := completionRequest(args)
 	if !isWanted {

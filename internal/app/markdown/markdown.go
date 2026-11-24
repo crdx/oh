@@ -40,10 +40,6 @@ func Render(markdown string, columns int) []string {
 	return width.Texts(render(markdown, Options{Columns: columns}, nil))
 }
 
-func RenderWithHyperlinks(markdown string, columns int) []string {
-	return width.Texts(render(markdown, Options{Columns: columns, ShouldRenderHyperlinks: true}, nil))
-}
-
 func RenderWithHyperlinksUnder(markdown string, columns int, linkRoot link.Roots) []string {
 	return width.Texts(render(markdown, Options{
 		Columns:                columns,

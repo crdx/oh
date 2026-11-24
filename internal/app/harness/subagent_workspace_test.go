@@ -108,7 +108,7 @@ func TestAChildFollowUpNeedsItsParentToReadItsWorkspaceNow(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = workspace.Close() })
 	files := file.New(workspace.GetRoot(), func(string) error { return file.ErrReadOnly })
-	access, err := shell.NewPathAccess(files, caps.NewMode(caps.Read), shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, caps.NewMode(caps.Read), shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"testing"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/file"
 )
 
@@ -283,7 +284,7 @@ func TestARefusalAppliesAfterFollowingSymlinks(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	guardedRoot := file.New(root, file.RefuseGitDir)
+	guardedRoot := file.New(root, caps.RefuseGitWrite(caps.NewMode(caps.Read)))
 	if err := guardedRoot.WriteFile("alias", []byte("changed"), 0o600); !errors.Is(err, file.ErrGitDir) {
 		t.Errorf("expected the symlink destination to be refused, got %v", err)
 	}
@@ -297,7 +298,7 @@ func TestARefusalAppliesAfterFollowingSymlinks(t *testing.T) {
 func TestMakingADirectoryIsAskedAboutItsOwnName(t *testing.T) {
 	root, directory := openRoot(t)
 
-	guardedRoot := file.New(root, file.RefuseGitDir)
+	guardedRoot := file.New(root, caps.RefuseGitWrite(caps.NewMode(caps.Read)))
 
 	if err := guardedRoot.MkdirAll(filepath.Join(".git", "hooks"), 0o755); !errors.Is(err, file.ErrGitDir) {
 		t.Errorf("expected the directory to be refused, got %v", err)
@@ -308,16 +309,16 @@ func TestMakingADirectoryIsAskedAboutItsOwnName(t *testing.T) {
 	}
 }
 
-func TestRefuseGitDir(t *testing.T) {
+func TestInGitDir(t *testing.T) {
 	for _, name := range []string{".git", ".git/config", "a/.git/config", "./.git/HEAD"} {
-		if err := file.RefuseGitDir(name); !errors.Is(err, file.ErrGitDir) {
-			t.Errorf("expected %q to be refused, got %v", name, err)
+		if !file.InGitDir(name) {
+			t.Errorf("expected %q to be in a .git directory", name)
 		}
 	}
 
 	for _, name := range []string{".", "plain.txt", "a.git/config", "git/config", "a/.gitignore"} {
-		if err := file.RefuseGitDir(name); err != nil {
-			t.Errorf("expected %q to be allowed, got %v", name, err)
+		if file.InGitDir(name) {
+			t.Errorf("expected %q to be outside a .git directory", name)
 		}
 	}
 }

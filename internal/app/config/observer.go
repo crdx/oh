@@ -382,10 +382,6 @@ type Observer struct {
 	watcher         *fileWatcher
 }
 
-func Observe(path string) (Config, *Observer, error) {
-	return ObserveSources(Source{Path: path})
-}
-
 type Observable struct {
 	Config  Config
 	sources []Source
@@ -395,15 +391,6 @@ type Observable struct {
 func Read(sources ...Source) (Observable, error) {
 	settings, current, err := readRevision(sources)
 	return Observable{Config: settings, sources: slices.Clone(sources), current: current}, err
-}
-
-func ObserveSources(sources ...Source) (Config, *Observer, error) {
-	observable, err := Read(sources...)
-	if err != nil {
-		return Config{}, nil, err
-	}
-
-	return observable.Observe()
 }
 
 func (self Observable) Observe() (Config, *Observer, error) {

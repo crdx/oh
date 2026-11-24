@@ -217,7 +217,7 @@ func drawEachCase(t *testing.T, isPlain bool, page string) string {
 
 		gauges := usage.NewGauges(nil)
 		if test.hasImages {
-			gauges = usage.FixedGauges(usage.Graphics{CellWidth: 9, CellHeight: 18})
+			gauges = usage.NewGauges(func() (usage.Graphics, bool) { return usage.Graphics{CellWidth: 9, CellHeight: 18}, true })
 		}
 
 		segment := &state{

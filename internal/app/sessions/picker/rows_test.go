@@ -427,3 +427,7 @@ func unreadable() func(*Session, int) ([]string, error) {
 		return nil, errors.New("the journal could not be read: no such file or directory")
 	}
 }
+
+func row(storedSession *Session, isChosen bool, room int) string {
+	return rowInView(storedSession, isChosen, room, false)
+}

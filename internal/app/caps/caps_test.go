@@ -231,7 +231,7 @@ func TestSwitchingHostNetworkAccessIsAnnounced(t *testing.T) {
 }
 
 func TestEachToolAffectedByAChangeSaysSoOnItsOwn(t *testing.T) {
-	notices, areSaid := Notice(Network, Read|Network)
+	notices, areSaid := ModeNotice(ModeToggleEvent(Network, Read|Network))
 	if !areSaid {
 		t.Fatal("expected the network capability to say something")
 	}
@@ -249,10 +249,7 @@ func TestEachToolAffectedByAChangeSaysSoOnItsOwn(t *testing.T) {
 }
 
 func TestSeveralCapabilitiesChangedAtOnceSayOneNoticeEach(t *testing.T) {
-	notices, areSaid := Notice(Write|Git, Read)
-	if !areSaid {
-		t.Fatal("expected the changed capabilities to say something")
-	}
+	notices := changeNotices(Write|Git, Read, false)
 
 	want := []string{workspaceNotice(false), repositoryNotice(false)}
 	if !slices.Equal(notices, want) {

@@ -162,7 +162,7 @@ func testRegistry() segment.Registry {
 		Session:           cycle.Session{Name: "endless-bulldog", Model: "one", Effort: "high"},
 		ModelEffortLevels: []string{"low", "high"},
 		UsageCachePath:    filepath.Join(os.TempDir(), "usage-absent.json"),
-		UsageGauges:       usage.FixedGauges(usage.Graphics{}),
+		UsageGauges:       usage.NewGauges(func() (usage.Graphics, bool) { return usage.Graphics{}, true }),
 		SandboxHostname:   "127.0.0.1",
 		Sources: bar.Sources{
 			IsTurnRunning:      func() bool { return false },

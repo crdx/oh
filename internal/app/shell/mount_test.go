@@ -73,7 +73,7 @@ func TestConfiguredAliasesCrossingTheTmpBoundaryAreRefused(t *testing.T) {
 			"home":  {Home: []string{alias}},
 		} {
 			t.Run(name+"/"+filepath.Base(alias), func(t *testing.T) {
-				if _, err := PreparePaths(paths, io.Discard); err == nil || !strings.Contains(err.Error(), "/tmp boundary") {
+				if _, err := PreparePathsForMode(paths, io.Discard, false); err == nil || !strings.Contains(err.Error(), "/tmp boundary") {
 					t.Errorf("configured alias %s was not refused: %v", alias, err)
 				}
 			})
@@ -81,13 +81,13 @@ func TestConfiguredAliasesCrossingTheTmpBoundaryAreRefused(t *testing.T) {
 	}
 
 	missing := filepath.Join(intoTmp, "not-created")
-	if _, err := PreparePaths(Paths{Write: []string{missing}}, io.Discard); err == nil {
+	if _, err := PreparePathsForMode(Paths{Write: []string{missing}}, io.Discard, false); err == nil {
 		t.Error("a missing path under an alias into host tmp was accepted")
 	}
 	if _, err := os.Stat(filepath.Join(hostTemporary, "not-created")); !errors.Is(err, fs.ErrNotExist) {
 		t.Errorf("preparing the alias created a host tmp path: %v", err)
 	}
-	if _, err := PreparePaths(Paths{Read: []string{hostTemporary}}, io.Discard); err == nil {
+	if _, err := PreparePathsForMode(Paths{Read: []string{hostTemporary}}, io.Discard, false); err == nil {
 		t.Error("a direct host tmp path was accepted despite the scratch overlay")
 	}
 }
@@ -95,7 +95,7 @@ func TestConfiguredAliasesCrossingTheTmpBoundaryAreRefused(t *testing.T) {
 func TestTemporaryGrantsCannotCrossTheTmpBoundaryThroughAliases(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -248,12 +248,12 @@ func TestMissingConfiguredPathsAreCreatedAndKept(t *testing.T) {
 	missingHome := filepath.Join(t.TempDir(), "missing-home")
 
 	var warnings strings.Builder
-	filtered, err := PreparePaths(Paths{
+	filtered, err := PreparePathsForMode(Paths{
 		Read:  []string{existingRead, missingRead},
 		Write: []string{existingWrite, missingWrite},
 		Exec:  []string{existingExec, missingExec},
 		Home:  []string{existingHome, missingHome},
-	}, &warnings)
+	}, &warnings, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -292,11 +292,11 @@ func TestAReadPathAlreadyCoveredByAnotherListIsWarnedAbout(t *testing.T) {
 	readOnly := t.TempDir()
 
 	var warnings strings.Builder
-	filtered, err := PreparePaths(Paths{
+	filtered, err := PreparePathsForMode(Paths{
 		Read:  []string{readOnly, written, executed, both},
 		Write: []string{written, both},
 		Exec:  []string{executed, both},
-	}, &warnings)
+	}, &warnings, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -325,10 +325,10 @@ func TestAPathInBothWriteAndExecIsNotWarnedAbout(t *testing.T) {
 	shared := t.TempDir()
 
 	var warnings strings.Builder
-	if _, err := PreparePaths(Paths{
+	if _, err := PreparePathsForMode(Paths{
 		Write: []string{shared},
 		Exec:  []string{shared},
-	}, &warnings); err != nil {
+	}, &warnings, false); err != nil {
 		t.Fatal(err)
 	}
 	if warnings.String() != "" {
@@ -377,11 +377,11 @@ func TestConfiguredPathsAreMountedWithTheirRequestedFileAccess(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	access, err := NewPathAccess(files, mode, Paths{
+	access, err := NewPathAccessForMode(files, mode, Paths{
 		Read:  []string{readDirectory},
 		Write: []string{writeDirectory},
 		Exec:  []string{execDirectory},
-	})
+	}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -439,10 +439,10 @@ func TestAWriteGrantKeepsItsAccessThroughASymlinkedSpelling(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	access, err := NewPathAccess(files, mode, Paths{
+	access, err := NewPathAccessForMode(files, mode, Paths{
 		Read:  []string{readDirectory},
 		Write: []string{granted},
-	})
+	}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -469,7 +469,7 @@ func TestTemporaryAccessOverridesAndThenRestoresConfiguredAccess(t *testing.T) {
 	files := configuredPathTestRoot(t, mode)
 	configuredDirectory := t.TempDir()
 
-	access, err := NewPathAccess(files, mode, Paths{Read: []string{configuredDirectory}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Read: []string{configuredDirectory}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -513,7 +513,7 @@ func TestTemporaryAccessOverridesAndThenRestoresConfiguredAccess(t *testing.T) {
 func TestRevokingANewTemporaryPathRemovesItFromBothEnforcers(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -548,7 +548,7 @@ func TestRevokingANewTemporaryPathRemovesItFromBothEnforcers(t *testing.T) {
 func TestAReadGrantIsExecutableByTheShell(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -580,7 +580,7 @@ func TestAReadGrantIsExecutableByTheShell(t *testing.T) {
 func TestATemporaryGrantNeedsAPathThatExists(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -594,7 +594,7 @@ func TestATemporaryGrantNeedsAPathThatExists(t *testing.T) {
 func TestTemporaryMountsCanChangeWhileFileToolsResolvePaths(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -633,10 +633,10 @@ func TestConfiguredFilesAreMountedWithoutTheirSiblings(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	access, err := NewPathAccess(files, mode, Paths{
+	access, err := NewPathAccessForMode(files, mode, Paths{
 		Read:  []string{readPath, writePath},
 		Write: []string{writePath},
-	})
+	}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -682,7 +682,7 @@ func TestAConfiguredFileSymlinkCannotDisguiseRepositoryMetadata(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{alias}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{alias}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -724,11 +724,11 @@ func TestAGrantIsHeldByItsRealPathWhileAHomeMappingKeepsItsSpelling(t *testing.T
 	system, spelled := spelledThroughASymlink(t)
 	homeMapping := filepath.Join(spelled, "oh", "skills")
 
-	prepared, err := PreparePaths(Paths{
+	prepared, err := PreparePathsForMode(Paths{
 		Read:  []string{filepath.Join(spelled, "oh")},
 		Write: []string{filepath.Join(spelled, "oh", "skills")},
 		Home:  []string{homeMapping},
-	}, io.Discard)
+	}, io.Discard, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -767,7 +767,7 @@ func TestAGrantSwallowedByAWiderGrantIsReported(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			var warnings strings.Builder
-			if _, err := PreparePaths(test.paths, &warnings); err != nil {
+			if _, err := PreparePathsForMode(test.paths, &warnings, false); err != nil {
 				t.Fatal(err)
 			}
 			if !strings.Contains(warnings.String(), test.want) {
@@ -791,7 +791,7 @@ func TestAGrantRefiningAReadGrantIsNotReported(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			var warnings strings.Builder
-			if _, err := PreparePaths(paths, &warnings); err != nil {
+			if _, err := PreparePathsForMode(paths, &warnings, false); err != nil {
 				t.Fatal(err)
 			}
 			if warnings.String() != "" {
@@ -810,7 +810,7 @@ func TestNestedGrantsOnTheirOwnAreNotReported(t *testing.T) {
 	}
 
 	var warnings strings.Builder
-	if _, err := PreparePaths(Paths{Read: []string{outer, inner}}, &warnings); err != nil {
+	if _, err := PreparePathsForMode(Paths{Read: []string{outer, inner}}, &warnings, false); err != nil {
 		t.Fatal(err)
 	}
 	if warnings.String() != "" {
@@ -829,15 +829,15 @@ func TestAWriteGrantIsReachedThroughTheSpellingTheConfigurationUsed(t *testing.T
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
 
-	prepared, err := PreparePaths(Paths{
+	prepared, err := PreparePathsForMode(Paths{
 		Read:  []string{filepath.Join(spelled, "oh")},
 		Write: []string{filepath.Join(spelled, "oh", "skills")},
-	}, io.Discard)
+	}, io.Discard, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	access, err := NewPathAccess(files, mode, prepared)
+	access, err := NewPathAccessForMode(files, mode, prepared, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -862,7 +862,7 @@ func TestBaselineSystemPathsAreMountedReadOnlyForFileTools(t *testing.T) {
 	defer func() { _ = workspaceRoot.Close() }()
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
 
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -939,7 +939,7 @@ func TestBaselineSystemPathsAreMountedReadOnlyForFileTools(t *testing.T) {
 func TestRevokingTemporaryAccessRestoresBaselineSystemAccess(t *testing.T) {
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := configuredPathTestRoot(t, mode)
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -985,7 +985,7 @@ func TestInheritedPathDirectoriesAreReadableByFileToolsAndExecutableByShells(t *
 
 	mode := caps.NewMode(caps.Read | caps.Shell)
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1052,7 +1052,7 @@ func TestHomeMappingsAreReadableByFileToolsBeforeAShellRuns(t *testing.T) {
 			homeRoot := file.NewLazy(privateHome, RefuseHomeWrite(mode))
 			files.Mount(privateHome, homeRoot)
 			defer func() { _ = homeRoot.Close() }()
-			access, err := NewPathAccess(files, mode, paths)
+			access, err := NewPathAccessForMode(files, mode, paths, false)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1078,7 +1078,7 @@ func TestASharedSkillIsReadableAndExecutableByTheShell(t *testing.T) {
 	mode := caps.NewMode(caps.Read | caps.Shell)
 	files := configuredPathTestRoot(t, mode)
 	configuredDirectory := t.TempDir()
-	access, err := NewPathAccess(files, mode, Paths{Exec: []string{configuredDirectory}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Exec: []string{configuredDirectory}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1141,7 +1141,7 @@ func TestPathAccessHoldsADescriptorOnlyForWhatIsRead(t *testing.T) {
 	}
 
 	before := openDescriptors(t)
-	access, err := NewPathAccess(files, mode, Paths{Read: readDirectories})
+	access, err := NewPathAccessForMode(files, mode, Paths{Read: readDirectories}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1193,7 +1193,7 @@ func TestGitAloneCannotCreateMetadataOrFollowItsAlias(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read | caps.Git)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1234,7 +1234,7 @@ func TestAWorkspaceWriteGrantLetsFileToolsWriteUntilItIsRevoked(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Deny: []string{"*.env"}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Deny: []string{"*.env"}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1276,7 +1276,7 @@ func TestAWriteGrantInsideTheWorkspaceDoesNotUnlockItsSiblings(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{granted}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{granted}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1307,12 +1307,12 @@ func TestNestedReadAndExecPathsNarrowWorkspaceFileToolWrites(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{
+	access, err := NewPathAccessForMode(files, mode, Paths{
 		Read:  []string{filepath.Join(workspace, "read")},
 		Exec:  []string{filepath.Join(workspace, "exec")},
 		Path:  []string{filepath.Join(workspace, "path")},
 		Write: []string{filepath.Join(workspace, "read", "writable")},
-	})
+	}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1343,7 +1343,7 @@ func TestTemporaryReadNarrowsAConfiguredWriteUntilRevoked(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{parent}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{parent}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1378,7 +1378,7 @@ func TestATemporaryReadKeepsAConfiguredWriteAtTheSamePath(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{shared}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{shared}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1415,7 +1415,7 @@ func TestWriteAndHomeAliasOfTheSameDirectoryChooseWriteEveryTime(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{writable}, Home: []string{alias}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{writable}, Home: []string{alias}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1447,7 +1447,7 @@ func TestAConfiguredReadMountCannotChangeBeforeItsFirstRead(t *testing.T) {
 	defer func() { _ = openedRoot.Close() }()
 	mode := caps.NewMode(caps.Read)
 	files := file.New(openedRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Read: []string{granted}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Read: []string{granted}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1492,7 +1492,7 @@ func TestAConfiguredMountCannotMoveIntoGitBeforeItsFirstWrite(t *testing.T) {
 	defer func() { _ = openedRoot.Close() }()
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(openedRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{Write: []string{grant}})
+	access, err := NewPathAccessForMode(files, mode, Paths{Write: []string{grant}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1537,7 +1537,7 @@ func TestAFileToolCannotAlterHardlinkedMetadataInEitherMode(t *testing.T) {
 	defer func() { _ = openedRoot.Close() }()
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(openedRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1591,7 +1591,7 @@ func TestAnExactWriteGrantCannotAlterHardlinkedMetadata(t *testing.T) {
 	defer func() { _ = openedRoot.Close() }()
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(openedRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1633,7 +1633,7 @@ func TestAChangingSymlinkCannotRedirectAFileToolWriteIntoGit(t *testing.T) {
 	defer func() { _ = root.Close() }()
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := file.New(root, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
+	access, err := NewPathAccessForMode(files, mode, Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1681,12 +1681,12 @@ func TestTemporaryMountIsWritableBeneathAConfiguredReadPath(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	paths, err := PreparePaths(Paths{Read: []string{farm}}, io.Discard)
+	paths, err := PreparePathsForMode(Paths{Read: []string{farm}}, io.Discard, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	mode := caps.NewMode(caps.Read | caps.Shell | caps.Subagents)
-	access, err := NewPathAccess(files, mode, paths)
+	access, err := NewPathAccessForMode(files, mode, paths, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1725,10 +1725,10 @@ func TestAConfiguredExactFileCannotBeRedirectedToASiblingByASymlinkSwap(t *testi
 				t.Fatal(err)
 			}
 
-			access, err := NewPathAccess(files, mode, Paths{
+			access, err := NewPathAccessForMode(files, mode, Paths{
 				Read:  []string{grantedPath},
 				Write: []string{grantedPath},
-			})
+			}, false)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1803,7 +1803,7 @@ func TestAHomeMappedExactFileCannotBeRedirectedToASiblingByASymlinkSwap(t *testi
 	files.Mount(privateHome, homeRoot)
 	defer func() { _ = homeRoot.Close() }()
 
-	access, err := NewPathAccess(files, mode, paths)
+	access, err := NewPathAccessForMode(files, mode, paths, false)
 	if err != nil {
 		t.Fatal(err)
 	}

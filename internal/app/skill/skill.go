@@ -289,9 +289,3 @@ func MountGlobalSkills(root *file.Root, skills []Skill) []*file.Root {
 
 	return mountedRoots
 }
-
-func Close(roots []*file.Root) {
-	for _, root := range roots {
-		_ = root.Close()
-	}
-}

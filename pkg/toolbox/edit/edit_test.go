@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
@@ -183,7 +184,7 @@ func gitGuardedRoot(t *testing.T) (*file.Root, string) {
 
 	t.Cleanup(func() { _ = root.Close() })
 
-	return file.New(root, file.RefuseGitDir), directory
+	return file.New(root, caps.RefuseGitWrite(caps.NewMode(caps.Read))), directory
 }
 
 func switchableRoot(t *testing.T, writable *bool) (*file.Root, string) {

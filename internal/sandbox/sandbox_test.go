@@ -74,7 +74,7 @@ func TestACancelledContextStartsNoCommand(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
 
-	_, err := sandbox.Run(ctx, directory, "printf started > "+marker, policy)
+	_, err := sandbox.Direct().Run(ctx, directory, "printf started > "+marker, policy)
 	if err == nil {
 		t.Error("the command with an already cancelled context was allowed to run")
 	}
@@ -91,7 +91,7 @@ func TestAGrantTheScratchWouldCoverIsRefused(t *testing.T) {
 		Write:  []string{filepath.Join(sandbox.TmpDir, "elsewhere")},
 	}
 
-	_, err := sandbox.Run(t.Context(), t.TempDir(), "true", policy)
+	_, err := sandbox.Direct().Run(t.Context(), t.TempDir(), "true", policy)
 	if err == nil || !strings.Contains(err.Error(), "granted but unreachable") {
 		t.Errorf("expected the covered grant to be named, got %v", err)
 	}
@@ -100,7 +100,7 @@ func TestAGrantTheScratchWouldCoverIsRefused(t *testing.T) {
 func TestTheScratchItselfIsNotRefused(t *testing.T) {
 	policy := sandbox.Policy{TmpDir: t.TempDir(), Write: []string{sandbox.TmpDir}}
 
-	_, err := sandbox.Run(t.Context(), t.TempDir(), "true", policy)
+	_, err := sandbox.Direct().Run(t.Context(), t.TempDir(), "true", policy)
 	if err != nil && strings.Contains(err.Error(), "granted but unreachable") {
 		t.Errorf("expected the scratch to be granted, got %v", err)
 	}
@@ -111,7 +111,7 @@ func TestALimitThatCouldNeverBeMetIsRefused(t *testing.T) {
 
 	directory := t.TempDir()
 
-	_, err := sandbox.Run(context.Background(), directory, "true", sandbox.Policy{
+	_, err := sandbox.Direct().Run(context.Background(), directory, "true", sandbox.Policy{
 		Write:      []string{directory},
 		MaxCPUTime: time.Millisecond,
 	})
@@ -126,7 +126,7 @@ func TestAPolicyNamingAMissingPathIsRefused(t *testing.T) {
 
 	directory := t.TempDir()
 
-	_, err := sandbox.Run(context.Background(), directory, "true", sandbox.Policy{
+	_, err := sandbox.Direct().Run(context.Background(), directory, "true", sandbox.Policy{
 		Read: []string{filepath.Join(directory, "nowhere")},
 	})
 
@@ -137,7 +137,7 @@ func TestAPolicyNamingAMissingPathIsRefused(t *testing.T) {
 
 func TestAPolicyWithALimitThatIsNotALimitIsRefusedBeforeAnythingRuns(t *testing.T) {
 	for _, policy := range []sandbox.Policy{{MaxFileSize: -1}, {MaxOpenFiles: -1}} {
-		if _, err := sandbox.Run(t.Context(), t.TempDir(), "true", policy); err == nil {
+		if _, err := sandbox.Direct().Run(t.Context(), t.TempDir(), "true", policy); err == nil {
 			t.Errorf("%+v was accepted", policy)
 		}
 	}
@@ -156,7 +156,7 @@ func TestAGrantThroughAModelSymlinkRefusesTheCommand(t *testing.T) {
 	directory := t.TempDir()
 	command := "touch " + filepath.Join(victim, "pwned")
 
-	_, err := sandbox.Run(t.Context(), directory, command, sandbox.Policy{
+	_, err := sandbox.Direct().Run(t.Context(), directory, command, sandbox.Policy{
 		Write: []string{home, planted},
 		Env:   []string{"PATH"},
 	})
@@ -174,7 +174,7 @@ func TestAYoloCommandRunsAtLowerPriority(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	result, err := sandbox.Run(t.Context(), t.TempDir(), "nice", sandbox.Policy{Yolo: true, Env: []string{"PATH"}})
+	result, err := sandbox.Direct().Run(t.Context(), t.TempDir(), "nice", sandbox.Policy{Yolo: true, Env: []string{"PATH"}})
 	if err != nil {
 		t.Fatal(err)
 	}

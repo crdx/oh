@@ -16,14 +16,6 @@ type personWait struct {
 	changes chan struct{}
 }
 
-func (self *personWait) add(waitedTime time.Duration) {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	self.total += waitedTime
-	self.changed()
-}
-
 func (self *personWait) get() time.Duration {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -38,15 +30,6 @@ func Track(ctx context.Context) (context.Context, func() time.Duration) {
 	wait := &personWait{changes: make(chan struct{}, 1)}
 
 	return context.WithValue(ctx, key{}, wait), wait.get
-}
-
-func Record(ctx context.Context, waitedTime time.Duration) {
-	wait, isTracked := ctx.Value(key{}).(*personWait)
-	if !isTracked || waitedTime <= 0 {
-		return
-	}
-
-	wait.add(waitedTime)
 }
 
 func Begin(ctx context.Context) func() {

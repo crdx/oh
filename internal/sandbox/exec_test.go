@@ -150,7 +150,7 @@ func TestACommandStoppedByItsTimeoutSaysSo(t *testing.T) {
 }
 
 func TestAConfinedCommandActuallyRuns(t *testing.T) {
-	result, err := Run(
+	result, err := Direct().Run(
 		t.Context(),
 		t.TempDir(),
 		"printf hello",
@@ -197,7 +197,7 @@ func TestACommandStoppedForAReasonRepeatsIt(t *testing.T) {
 }
 
 func TestAYoloCommandRunsWithNothingAroundIt(t *testing.T) {
-	result, err := Run(
+	result, err := Direct().Run(
 		t.Context(),
 		t.TempDir(),
 		"printf %s \"$IO_SANDBOX_MARKER\"",
@@ -226,7 +226,7 @@ func TestAYoloCommandIsNotHeldToAPolicyItCannotKeep(t *testing.T) {
 		t.Fatal("expected a confined run of this policy to be refused")
 	}
 
-	result, err := Run(t.Context(), t.TempDir(), "exit 3", unkeepable)
+	result, err := Direct().Run(t.Context(), t.TempDir(), "exit 3", unkeepable)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -236,7 +236,7 @@ func TestAYoloCommandIsNotHeldToAPolicyItCannotKeep(t *testing.T) {
 }
 
 func TestAYoloCommandIsStoppedWhenItRunsOutOfTime(t *testing.T) {
-	result, err := Run(
+	result, err := Direct().Run(
 		t.Context(),
 		t.TempDir(),
 		"sleep 30",
@@ -318,7 +318,7 @@ func TestAYoloCommandSettlesWhenItsShellExitsAndTakesItsChildrenWithIt(t *testin
 	directory := t.TempDir()
 
 	startedAt := time.Now()
-	result, err := Run(
+	result, err := Direct().Run(
 		t.Context(),
 		directory,
 		"sleep 300 & echo $! > child; echo done",
@@ -352,7 +352,7 @@ func TestAYoloCommandSettlesThoughSomethingThatLeftItsGroupHoldsItsOutput(t *tes
 	directory := t.TempDir()
 
 	startedAt := time.Now()
-	result, err := Run(
+	result, err := Direct().Run(
 		t.Context(),
 		directory,
 		"setsid sh -c 'echo $$ > child.tmp; mv child.tmp child; exec sleep 300' & "+
@@ -383,7 +383,7 @@ func readChildPid(directory string) (int, error) {
 }
 
 func TestAYoloCommandIsNotMistakenForASandboxThatCouldNotStart(t *testing.T) {
-	result, err := Run(
+	result, err := Direct().Run(
 		t.Context(),
 		t.TempDir(),
 		"printf 'sandbox: mine'; exit 125",

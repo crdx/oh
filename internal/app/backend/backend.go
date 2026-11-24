@@ -182,21 +182,6 @@ func ListModels(ctx context.Context, providerName string, endpoints EndpointSett
 	return lister.Models(ctx)
 }
 
-func Resolve(
-	requestedSelection model.Selection,
-	resumedSelection model.Selection,
-	configuredSelections []model.Selection,
-	roundRobinPath string,
-) (model.Selection, error) {
-	return ResolveAvailable(
-		requestedSelection,
-		resumedSelection,
-		configuredSelections,
-		roundRobinPath,
-		func(model.Selection) bool { return true },
-	)
-}
-
 func ResolveAvailable(
 	requestedSelection model.Selection,
 	resumedSelection model.Selection,

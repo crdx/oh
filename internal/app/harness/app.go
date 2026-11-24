@@ -113,16 +113,6 @@ func (self *pendingNotices) hasStoppedWorkAfter(index int, whichCaps caps.Set) b
 	return false
 }
 
-func (self *pendingNotices) notices() []string {
-	var notices []string
-	for _, item := range self.items {
-		if itemNotices, areSaid := painter.HarnessNotices(item.state); areSaid {
-			notices = append(notices, itemNotices...)
-		}
-	}
-	return notices
-}
-
 func (self *pendingNotices) drawnNotices(drawing painter.NoticeDrawing) []painter.Notice {
 	var notices []painter.Notice
 	for _, item := range self.items {

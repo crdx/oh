@@ -29,7 +29,7 @@ func TestAnAbsoluteDenyPathProtectsAHomeWorkspace(t *testing.T) {
 	}
 	defer func() { _ = root.Close() }()
 	files := file.New(root, func(string) error { return nil })
-	access, err := NewPathAccess(files, caps.NewMode(caps.All()), Paths{Deny: []string{secret}})
+	access, err := NewPathAccessForMode(files, caps.NewMode(caps.All()), Paths{Deny: []string{secret}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -123,9 +123,9 @@ func TestPathToolsCannotReadDeniedPathsOrGrantThem(t *testing.T) {
 	defer func() { _ = workspaceRoot.Close() }()
 
 	files := file.New(workspaceRoot, func(string) error { return nil })
-	access, err := NewPathAccess(files, caps.NewMode(caps.All()), Paths{
+	access, err := NewPathAccessForMode(files, caps.NewMode(caps.All()), Paths{
 		Deny: []string{"*.env"},
-	})
+	}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -175,7 +175,7 @@ func TestADanglingSymlinkCannotWriteIntoADeniedDirectory(t *testing.T) {
 	}
 	defer func() { _ = root.Close() }()
 	files := file.New(root, func(string) error { return nil })
-	access, err := NewPathAccess(files, caps.NewMode(caps.All()), Paths{Deny: []string{"private"}})
+	access, err := NewPathAccessForMode(files, caps.NewMode(caps.All()), Paths{Deny: []string{"private"}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -205,7 +205,7 @@ func TestDenySearchKeyDependsOnThePatternSetRatherThanItsOrder(t *testing.T) {
 
 func TestANameAppearingAfterTheFirstSearchIsDeniedOnTheNextCommand(t *testing.T) {
 	mode := caps.NewMode(caps.All())
-	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"auth.json"}})
+	access, err := NewPathAccessForMode(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"auth.json"}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -227,7 +227,7 @@ func TestANameAppearingAfterTheFirstSearchIsDeniedOnTheNextCommand(t *testing.T)
 
 func TestAPathIsGrantedWhileADenySearchIsStillWalking(t *testing.T) {
 	mode := caps.NewMode(caps.All())
-	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}})
+	access, err := NewPathAccessForMode(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -278,7 +278,7 @@ func TestAPathIsGrantedWhileADenySearchIsStillWalking(t *testing.T) {
 
 func TestConcurrentPoliciesShareOneSearchOfTheSameRoot(t *testing.T) {
 	mode := caps.NewMode(caps.All())
-	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}})
+	access, err := NewPathAccessForMode(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}}, false)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -440,10 +440,6 @@ func titled(title string, minimum int) int {
 	return max(minimum, width.Of(title))
 }
 
-func row(storedSession *Session, isChosen bool, room int) string {
-	return rowInView(storedSession, isChosen, room, false)
-}
-
 func rowInView(storedSession *Session, isChosen bool, room int, isWorkspaceShown bool) string {
 	cells := []string{menu.Mark(isChosen) + " " + sessionAnimal(storedSession)}
 	if isWorkspaceShown {

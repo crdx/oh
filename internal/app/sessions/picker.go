@@ -97,12 +97,6 @@ func InWorkspace(sessions []*picker.Session, workspace *work.Space) []*picker.Se
 	return chosenSessions
 }
 
-func Measure(directory string, sessions []*picker.Session) {
-	for _, storedSession := range sessions {
-		storedSession.Bytes = Occupied(Path(directory, storedSession))
-	}
-}
-
 func Occupied(path string) int64 {
 	occupiedBytes, err := diskutil.Occupied(path)
 	if err != nil {

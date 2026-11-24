@@ -128,7 +128,6 @@ func TestStateDataUsesOneDirectory(t *testing.T) {
 		"model cache":          location.GetModelCachePath(),
 		"model rotation":       location.GetModelRoundRobinPath(),
 		"seen models":          location.GetSeenModelsPath(),
-		"subagent rotation":    location.GetSubagentRoundRobinPath(),
 		"provider usage cache": location.GetUsageCachePath("codex", false),
 	}
 	want := map[string]string{

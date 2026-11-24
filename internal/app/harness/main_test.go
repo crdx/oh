@@ -4566,13 +4566,9 @@ func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 
 	var output strings.Builder
 	for _, request := range requests {
-		completions, wanted := cli.Complete(request.args, sources)
-		if !wanted {
-			t.Fatalf("%s completion request was not recognised", request.name)
-		}
 		_, _ = output.WriteString("=== " + request.name + " ===\n")
-		for _, completion := range completions {
-			_, _ = output.WriteString(completion + "\n")
+		if !cli.WriteCompletions(&output, request.args, func() cli.Sources { return sources }) {
+			t.Fatalf("%s completion request was not recognised", request.name)
 		}
 	}
 
@@ -11653,7 +11649,11 @@ func prepareLiveConfig(t *testing.T, self *App, path string) {
 func prepareLiveConfigSources(t *testing.T, self *App, sources ...config.Source) {
 	t.Helper()
 
-	settings, observer, err := config.ObserveSources(sources...)
+	observable, err := config.Read(sources...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	settings, observer, err := observable.Observe()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -16046,7 +16046,7 @@ func TestRestoredGrantCorrectionRemainsPendingUntilATurnCanTellTheModel(t *testi
 	self := testConversation(t, &bytes.Buffer{})
 	workspace := openTestWorkspace(t, t.TempDir())
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(self.mode))
-	pathAccess, err := shell.NewPathAccess(files, self.mode, shell.Paths{})
+	pathAccess, err := shell.NewPathAccessForMode(files, self.mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -16534,7 +16534,7 @@ func portForwardGoldenStream(t *testing.T, scenario portForwardGoldenScenario) s
 	}
 	self.forwards = forwards
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(self.mode))
-	pathAccess, err := shell.NewPathAccess(files, self.mode, shell.Paths{})
+	pathAccess, err := shell.NewPathAccessForMode(files, self.mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17024,7 +17024,7 @@ func pathGrantAccess(t *testing.T, mode *caps.Mode, workspace *work.Space) *shel
 	t.Helper()
 
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17687,7 +17687,7 @@ func preparePathGrantCommands(t *testing.T, self *App, workspace *work.Space) *p
 	t.Helper()
 
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(self.mode))
-	pathAccess, err := shell.NewPathAccess(files, self.mode, shell.Paths{})
+	pathAccess, err := shell.NewPathAccessForMode(files, self.mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19054,7 +19054,7 @@ func newSessionGoldenShell(t *testing.T, grantedCaps caps.Set, isYolo bool) tool
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(grantedCaps)
-	pathAccess, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	pathAccess, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19103,7 +19103,7 @@ func newSessionGoldenRefusingShell(t *testing.T) tool.Tool {
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read | caps.Shell | caps.Network)
-	pathAccess, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	pathAccess, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25038,4 +25038,14 @@ func priorityApprovalStream(t *testing.T, columns int, isResolved bool) string {
 		return approvalStream
 	}
 	return screenOutput.String()
+}
+
+func (self *pendingNotices) notices() []string {
+	var notices []string
+	for _, item := range self.items {
+		if itemNotices, areSaid := painter.HarnessNotices(item.state); areSaid {
+			notices = append(notices, itemNotices...)
+		}
+	}
+	return notices
 }

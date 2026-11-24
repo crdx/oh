@@ -369,9 +369,9 @@ func TestAResultLeavesOutTheTimeItSpentWaitingOnThePerson(t *testing.T) {
 				return tool.CallRendering{Subject: "", Qualifier: ""}
 			},
 		).IsEmbarrassinglyParallel().Plain(func(ctx context.Context, _ struct{}) (string, error) {
-			askedAt := time.Now()
+			finishWaiting := waiting.Begin(ctx)
 			time.Sleep(asked)
-			waiting.Record(ctx, time.Since(askedAt))
+			finishWaiting()
 			time.Sleep(worked)
 
 			return "done", nil

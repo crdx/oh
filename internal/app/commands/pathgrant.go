@@ -241,14 +241,6 @@ func revocableSubjects(registry *revocation.Registry) []string {
 	return subjects
 }
 
-func pathGrantPaths(grants []pathgrant.Grant) []string {
-	paths := make([]string, 0, len(grants))
-	for _, grant := range grants {
-		paths = append(paths, grant.Path)
-	}
-	return paths
-}
-
 func formatGrants(
 	grants PathGrants,
 	forwards Forwards,

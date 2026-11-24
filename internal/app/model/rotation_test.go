@@ -88,7 +88,7 @@ func TestRepeatedRoundRobinSelectionsWeightTheRotation(t *testing.T) {
 
 	var selected []Selection
 	for range len(selections) * 2 {
-		selection, err := ReserveRoundRobin(path, selections)
+		selection, err := ReserveAvailableRoundRobin(path, selections, isAvailable)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -161,7 +161,7 @@ func TestOneRoundRobinSelectionNeedsNoState(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "round-robin.json")
 	selection := Selection{Provider: CodexProvider, Model: "only", Effort: "high"}
 
-	selected, err := ReserveRoundRobin(path, []Selection{selection})
+	selected, err := ReserveAvailableRoundRobin(path, []Selection{selection}, isAvailable)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -185,7 +185,7 @@ func TestConcurrentRoundRobinReservationsShareTheStateLock(t *testing.T) {
 	var wait sync.WaitGroup
 	for range calls {
 		wait.Go(func() {
-			selection, err := ReserveRoundRobin(path, selections)
+			selection, err := ReserveAvailableRoundRobin(path, selections, isAvailable)
 			if err != nil {
 				t.Error(err)
 				return
@@ -231,7 +231,7 @@ func TestRoundRobinStateFromANewerOhIsRefusedBeforeItsShapeIsRead(t *testing.T) 
 		{Provider: "anthropic", Model: "opus", Effort: "high"},
 	}
 
-	_, err := ReserveRoundRobin(path, selections)
+	_, err := ReserveAvailableRoundRobin(path, selections, isAvailable)
 	if err == nil || !strings.Contains(err.Error(), "newer build") {
 		t.Fatalf("expected the newer state to be named as one, got %v", err)
 	}
@@ -257,7 +257,7 @@ func TestARotationTakesTurnsWithAnEffortlessModel(t *testing.T) {
 
 	var reserved []string
 	for range 4 {
-		selection, err := ReserveRoundRobin(path, selections)
+		selection, err := ReserveAvailableRoundRobin(path, selections, isAvailable)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -274,3 +274,5 @@ func TestARotationTakesTurnsWithAnEffortlessModel(t *testing.T) {
 		t.Errorf("got %v, want %v", reserved, want)
 	}
 }
+
+func isAvailable(Selection) bool { return true }
