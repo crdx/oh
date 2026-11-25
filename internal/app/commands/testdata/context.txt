@@ -1,33 +1,36 @@
 === every context category (120 columns) ===
 [38;2;129;162;190mSystem:[0m
-  [38;2;150;152;150m~12Kt[0m  harness instructions
-  [38;2;150;152;150m ~2Kt[0m  /config/SYSTEM.md
-  [38;2;150;152;150m~300t[0m  12 tool definitions
+  [38;2;150;152;150m ~12Kt[0m  harness instructions
+  [38;2;150;152;150m~1.8Kt[0m  model guidance
+  [38;2;150;152;150m  ~2Kt[0m  /config/SYSTEM.md
+  [38;2;150;152;150m ~300t[0m  12 tool definitions
 [38;2;129;162;190mProject:[0m
-  [38;2;150;152;150m ~4Kt[0m  /workspace/AGENTS.md
+  [38;2;150;152;150m  ~4Kt[0m  /workspace/AGENTS.md
 [38;2;129;162;190mSession:[0m
-  [38;2;150;152;150m~300t[0m  29 skill definitions
-  [38;2;150;152;150m ~1Kt[0m  /config/skills/[38;2;201;166;212mgolang[0m/SKILL.md
+  [38;2;150;152;150m ~300t[0m  29 skill definitions
+  [38;2;150;152;150m  ~1Kt[0m  /config/skills/[38;2;201;166;212mgolang[0m/SKILL.md
 === every context category (60 columns) ===
 [38;2;129;162;190mSystem:[0m
-  [38;2;150;152;150m~12Kt[0m  harness instructions
-  [38;2;150;152;150m ~2Kt[0m  /config/SYSTEM.md
-  [38;2;150;152;150m~300t[0m  12 tool definitions
+  [38;2;150;152;150m ~12Kt[0m  harness instructions
+  [38;2;150;152;150m~1.8Kt[0m  model guidance
+  [38;2;150;152;150m  ~2Kt[0m  /config/SYSTEM.md
+  [38;2;150;152;150m ~300t[0m  12 tool definitions
 [38;2;129;162;190mProject:[0m
-  [38;2;150;152;150m ~4Kt[0m  /workspace/AGENTS.md
+  [38;2;150;152;150m  ~4Kt[0m  /workspace/AGENTS.md
 [38;2;129;162;190mSession:[0m
-  [38;2;150;152;150m~300t[0m  29 skill definitions
-  [38;2;150;152;150m ~1Kt[0m  /config/skills/[38;2;201;166;212mgolang[0m/SKILL.md
+  [38;2;150;152;150m ~300t[0m  29 skill definitions
+  [38;2;150;152;150m  ~1Kt[0m  /config/skills/[38;2;201;166;212mgolang[0m/SKILL.md
 === every context category (30 columns) ===
 [38;2;129;162;190mSystem:[0m
-  [38;2;150;152;150m~12Kt[0m  harness instructions
-  [38;2;150;152;150m ~2Kt[0m  /config/SYSTEM.md
-  [38;2;150;152;150m~300t[0m  12 tool definitions
+  [38;2;150;152;150m ~12Kt[0m  harness instructions
+  [38;2;150;152;150m~1.8Kt[0m  model guidance
+  [38;2;150;152;150m  ~2Kt[0m  /config/SYSTEM.md
+  [38;2;150;152;150m ~300t[0m  12 tool definitions
 [38;2;129;162;190mProject:[0m
-  [38;2;150;152;150m ~4Kt[0m  /workspace/AGENTS.md
+  [38;2;150;152;150m  ~4Kt[0m  /workspace/AGENTS.md
 [38;2;129;162;190mSession:[0m
-  [38;2;150;152;150m~300t[0m  29 skill definitions
-  [38;2;150;152;150m ~1Kt[0m  /config/skills/[38;2;201;166;212mgolan…[0m
+  [38;2;150;152;150m ~300t[0m  29 skill definitions
+  [38;2;150;152;150m  ~1Kt[0m  /config/skills/[38;2;201;166;212mgola…[0m
 === system sources only (120 columns) ===
 [38;2;129;162;190mSystem:[0m
   [38;2;150;152;150m ~4Kt[0m  harness instructions

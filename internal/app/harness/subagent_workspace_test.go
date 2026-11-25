@@ -265,6 +265,9 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 	skilledBrief.skills = skills
 	workspaceSkilledBrief.skills = workspaceSkills
 	codexBrief.notes = codex.Notes
+	guidedBrief := plainBrief
+	guidedBrief.guidance = "## Rule\n\nFinish the job."
+
 	prompt := func(
 		isParentUnconfined bool,
 		childCaps caps.Set,
@@ -315,6 +318,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 		"with its parent's scratch readable":                       prompt(false, caps.Read|caps.Shell, childPromptTexts{}, plainBrief, farmReadable),
 		"with sibling scratch readable under an unconfined parent": prompt(true, caps.Read|caps.Shell, childPromptTexts{}, plainBrief, farmReadable),
 		"with an identity from its listed model":                   prompt(false, caps.Read|caps.Shell, childPromptTexts{shared: "Answer in one sentence.", model: "You are a careful explorer."}, plainBrief),
+		"with guidance for its model":                              prompt(false, caps.Read|caps.Shell, childPromptTexts{shared: "Answer in one sentence.", model: "You are a careful explorer."}, guidedBrief),
 	})
 }
 

@@ -221,6 +221,7 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 			sources: ContextSources{
 				SystemSources: []contextsource.Source{
 					{Kind: contextsource.HarnessInstructions, EstimatedTokens: 12_000},
+					{Kind: contextsource.ModelGuidance, EstimatedTokens: 1_800},
 					{Path: "/config/SYSTEM.md", EstimatedTokens: 2_000},
 					{Kind: contextsource.ToolDefinitions, Count: 12, EstimatedTokens: 300},
 				},

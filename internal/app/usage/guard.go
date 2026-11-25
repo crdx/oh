@@ -85,6 +85,10 @@ func (self *guardedProvider) NoteFormat() agent.NoteFormat {
 	return agent.NoteFormatOf(self.provider)
 }
 
+func (self *guardedProvider) Guidance() string {
+	return agent.GuidanceOf(self.provider)
+}
+
 func (self *guardedProvider) AddUserMessage(text string) {
 	self.provider.AddUserMessage(text)
 }

@@ -736,6 +736,32 @@ func TestAGuardWrapsNotesTheWayTheProviderItGuardsDoes(t *testing.T) {
 	}
 }
 
+type guidedProvider struct {
+	providerStub
+}
+
+func (*guidedProvider) Guidance() string { return "Finish the job." }
+
+func TestAGuardPassesOnTheGuidanceOfTheProviderItGuards(t *testing.T) {
+	clock := &testClock{now: testNow}
+
+	for name, testCase := range map[string]struct {
+		provider usage.StatefulProvider
+		want     string
+	}{
+		"a provider with guidance":     {provider: &guidedProvider{}, want: "Finish the job."},
+		"a provider that says nothing": {provider: &providerStub{}, want: ""},
+	} {
+		t.Run(name, func(t *testing.T) {
+			guarded := usage.Guard(stoppedContext(t), testCase.provider, guardSettings(cachePath(t), "gpt-5.6-sol", clock))
+
+			if got := agent.GuidanceOf(guarded); got != testCase.want {
+				t.Errorf("got %q, want %q", got, testCase.want)
+			}
+		})
+	}
+}
+
 func TestASelectionIsAvailableUnlessItsModelIsLimited(t *testing.T) {
 	path := cachePath(t)
 	clock := &testClock{now: testNow}

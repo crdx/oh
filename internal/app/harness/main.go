@@ -1265,6 +1265,7 @@ func run(
 	}
 
 	var systemPrompt string
+	guidance := agent.GuidanceOf(client.Client)
 	var fixedContextSources staticContextSources
 	var contextFiles []prompt.File
 	if resumedSession != nil && resumedSession.Meta.SystemPrompt != "" {
@@ -1299,6 +1300,7 @@ func run(
 			GroupStatus:            mode.Groups(),
 			Yolo:                   args.Yolo,
 			Notes:                  agent.NoteFormatOf(client.Client),
+			Guidance:               guidance,
 		})
 		if err != nil {
 			return "", err
@@ -1306,7 +1308,7 @@ func run(
 	}
 	systemPrompt = prompt.WithDropsDirectory(systemPrompt, dropKeeper.GetDirectory())
 	if resumedSession == nil {
-		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills)
+		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills, guidance)
 	}
 
 	pathGrants := pathgrant.New(workspace, pathAccess)

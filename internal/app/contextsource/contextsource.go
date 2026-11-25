@@ -6,6 +6,7 @@ type Kind string
 
 const (
 	HarnessInstructions Kind = "harness_instructions"
+	ModelGuidance       Kind = "model_guidance"
 	SkillDefinitions    Kind = "skill_definitions"
 	ToolDefinitions     Kind = "tool_definitions"
 )
@@ -44,6 +45,8 @@ func (self Source) DisplayName() string {
 	switch self.Kind {
 	case HarnessInstructions:
 		return "harness instructions"
+	case ModelGuidance:
+		return "model guidance"
 	case SkillDefinitions:
 		return util.Plural(self.Count, "skill definition")
 	case ToolDefinitions:

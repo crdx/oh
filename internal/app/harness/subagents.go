@@ -56,6 +56,7 @@ type childBrief struct {
 	skills         []skill.Skill
 	dropsDirectory string
 	notes          agent.NoteFormat
+	guidance       string
 }
 
 func userHome() string {
@@ -239,6 +240,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 				skills:         skills,
 				dropsDirectory: state.drops.GetDirectory(),
 				notes:          agent.NoteFormatOf(connection.Client),
+				guidance:       agent.GuidanceOf(connection.Client),
 			})
 		}
 		connection.UseSession(options.sessionName + "-" + child.Name)
@@ -341,6 +343,7 @@ func childPrompt(
 		SharedPrompt:       child.SharedPrompt,
 		ModelPrompt:        child.ModelPrompt,
 		Notes:              brief.notes,
+		Guidance:           brief.guidance,
 	})
 }
 

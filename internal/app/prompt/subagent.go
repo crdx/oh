@@ -28,6 +28,7 @@ type SubagentConfig struct {
 	SharedPrompt       string
 	ModelPrompt        string
 	Notes              agent.NoteFormat
+	Guidance           string
 }
 
 func Subagent(config SubagentConfig) string {
@@ -40,6 +41,7 @@ func Subagent(config SubagentConfig) string {
 		subagentStateSection(config),
 		skill.Context(config.Skills),
 		config.SharedPrompt,
+		GuidanceSection(config.Guidance),
 		config.ModelPrompt,
 		subagentIdentitySection(config),
 	)

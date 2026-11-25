@@ -21,6 +21,7 @@ func identifyStaticContextSources(
 	systemPrompt string,
 	files []prompt.File,
 	skills []skill.Skill,
+	guidance string,
 ) staticContextSources {
 	var sources staticContextSources
 	contextFileBytes := 0
@@ -36,9 +37,16 @@ func identifyStaticContextSources(
 	}
 
 	skillCatalogue := skill.Context(skills)
-	harnessBytes := max(len(systemPrompt)-contextFileBytes-len(skillCatalogue), 0)
+	guidanceSection := prompt.GuidanceSection(guidance)
+	harnessBytes := max(len(systemPrompt)-contextFileBytes-len(skillCatalogue)-len(guidanceSection), 0)
 	sources.systemSources = []contextsource.Source{
 		contextsource.KindFromBytes(contextsource.HarnessInstructions, harnessBytes),
+	}
+	if guidanceSection != "" {
+		sources.systemSources = append(
+			sources.systemSources,
+			contextsource.KindFromBytes(contextsource.ModelGuidance, len(guidanceSection)),
+		)
 	}
 	if skillCatalogue != "" {
 		sources.sessionSources = append(sources.sessionSources, contextsource.CountedFromBytes(

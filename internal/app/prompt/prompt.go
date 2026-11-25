@@ -192,6 +192,7 @@ type Config struct {
 	GroupStatus            caps.GroupStatus
 	Yolo                   bool
 	Notes                  agent.NoteFormat
+	Guidance               string
 }
 
 func Load(config Config) (string, []File, error) {
@@ -217,6 +218,7 @@ func Load(config Config) (string, []File, error) {
 
 	return mergeContexts(
 		harnessContext(config),
+		GuidanceSection(config.Guidance),
 		globalContext(globalFile),
 		projectContext(projectFiles),
 		skill.Context(config.Skills),

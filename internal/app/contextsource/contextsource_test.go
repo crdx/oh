@@ -19,6 +19,7 @@ func TestCountedSourcesAreNamedWhenDrawn(t *testing.T) {
 		source Source
 		want   string
 	}{
+		{source: Source{Kind: ModelGuidance}, want: "model guidance"},
 		{source: Source{Kind: SkillDefinitions, Count: 1}, want: "1 skill definition"},
 		{source: Source{Kind: SkillDefinitions, Count: 26}, want: "26 skill definitions"},
 		{source: Source{Kind: ToolDefinitions, Count: 1}, want: "1 tool definition"},

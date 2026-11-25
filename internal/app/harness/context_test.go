@@ -27,7 +27,7 @@ func TestStaticContextSourcesAccountForEveryPromptContribution(t *testing.T) {
 		{Name: "AGENTS.md", Path: "/workspace/AGENTS.md", Body: projectBody},
 	}
 
-	got := identifyStaticContextSources(systemPrompt, files, skills)
+	got := identifyStaticContextSources(systemPrompt, files, skills, "")
 	wantSystemFiles := []contextsource.Source{contextsource.FileFromBytes("/config/SYSTEM.md", len(systemBody))}
 	wantProjectFiles := []contextsource.Source{contextsource.FileFromBytes("/workspace/AGENTS.md", len(projectBody))}
 	wantSystemSources := []contextsource.Source{contextsource.KindFromBytes(contextsource.HarnessInstructions, len(harnessBody))}
@@ -52,13 +52,28 @@ func TestStaticContextSourcesAccountForEveryPromptContribution(t *testing.T) {
 func TestStaticContextWithNoFilesOrSkillsIsEntirelyHarness(t *testing.T) {
 	const systemPrompt = "generated context"
 
-	got := identifyStaticContextSources(systemPrompt, nil, nil)
+	got := identifyStaticContextSources(systemPrompt, nil, nil, "")
 	want := []contextsource.Source{contextsource.KindFromBytes(contextsource.HarnessInstructions, len(systemPrompt))}
 	if !slices.Equal(got.systemSources, want) {
 		t.Errorf("system sources = %v, want %v", got.systemSources, want)
 	}
 	if len(got.systemFiles) != 0 || len(got.projectFiles) != 0 || len(got.sessionSources) != 0 {
 		t.Errorf("unexpected non-harness sources: %+v", got)
+	}
+}
+
+func TestModelGuidanceIsCountedApartFromTheHarness(t *testing.T) {
+	harnessBody := strings.Repeat("h", 5_600)
+	guidance := "## Rule\n\n" + strings.Repeat("g", 2_800)
+	guidanceSection := prompt.GuidanceSection(guidance)
+
+	got := identifyStaticContextSources(harnessBody+guidanceSection, nil, nil, guidance)
+	want := []contextsource.Source{
+		contextsource.KindFromBytes(contextsource.HarnessInstructions, len(harnessBody)),
+		contextsource.KindFromBytes(contextsource.ModelGuidance, len(guidanceSection)),
+	}
+	if !slices.Equal(got.systemSources, want) {
+		t.Errorf("system sources = %v, want %v", got.systemSources, want)
 	}
 }
 

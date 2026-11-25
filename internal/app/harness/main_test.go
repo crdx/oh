@@ -8810,6 +8810,7 @@ type promptGolden struct {
 	hasCustomTool       bool
 	hasProjectSkillOnly bool
 	notes               agent.NoteFormat
+	guidance            string
 }
 
 func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
@@ -8832,7 +8833,7 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 		"context-lookup":        {isLookupGranted: true},
 		"context-custom-tool":   {hasCustomTool: true},
 		"context-project-skill": {hasProjectSkillOnly: true},
-		"context-codex":         {notes: codex.Notes},
+		"context-codex":         {notes: codex.Notes, guidance: "## Rule\n\nFinish the job."},
 		"context-repository-print": {
 			isRepository: true,
 			isPrinting:   true,
@@ -8965,6 +8966,7 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		NetworkGranted:         currentCaps.Has(caps.Network),
 		Yolo:                   shape.isYolo,
 		Notes:                  shape.notes,
+		Guidance:               shape.guidance,
 	})
 	if err != nil {
 		t.Fatal(err)
