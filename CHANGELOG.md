@@ -3,8 +3,8 @@
 ## [Next]
 
 - Overhaul subagent model configuration
-- Promote time passage notice, default to 1h
-- Promote agent forward hostname default to unset
+- Promote time passage notice, default 1h
+- Promote agent forward hostname, default unset
 - Add encouraging context, taken from the official harnesses
 
 ## [0.34.2] — 2026-11-21
