@@ -186,10 +186,6 @@ func RenderRetry(event agent.Event) string {
 	return notice
 }
 
-func RenderSubmittedMessage(text string, columns int) string {
-	return renderSubmittedMessage(submittedMessage{text: text}, columns, false, link.Roots{})
-}
-
 func renderSubmittedMessage(
 	message submittedMessage,
 	columns int,
@@ -344,26 +340,6 @@ func getState(status agent.Status, isSuccessMarked bool) dynamic.RowState {
 	}
 
 	return dynamic.Done
-}
-
-func RenderReasoning(thought string, columns int, rendering output.ReasoningRendering) []string {
-	var renderer markdown.IncrementalRenderer
-	var plain plainThought
-	var reflow paragraphReflow
-	var styles rowMemory
-
-	return renderReasoningWith(
-		&renderer,
-		&plain,
-		&reflow,
-		&styles,
-		thought,
-		columns,
-		rendering,
-		true,
-		false,
-		link.Roots{},
-	)
 }
 
 func renderReasoningWith(

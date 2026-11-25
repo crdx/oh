@@ -15,7 +15,6 @@ import (
 	"golang.org/x/sys/unix"
 
 	"crdx.org/oh/internal/app/config"
-	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/menu"
 	"crdx.org/oh/internal/app/model"
@@ -608,7 +607,7 @@ func TestOnboardingIsOnlyRequiredWithoutAnotherModelSelection(t *testing.T) {
 }
 
 func visibleTranscript(rendered string) string {
-	rendered = link.Plain(rendered)
+	rendered = style.Plain(rendered)
 	rendered = strings.ReplaceAll(rendered, "\r\n", "\n")
 
 	lines := strings.Split(rendered, "\n")

@@ -84,10 +84,6 @@ func webURL(address string) (string, bool) {
 	return target.String(), true
 }
 
-func Plain(text string) string {
-	return visibleTextOf(text).text
-}
-
 type Roots struct {
 	Workspace string
 	Scratch   string

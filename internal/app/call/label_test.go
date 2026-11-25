@@ -75,7 +75,7 @@ func TestAnElidedPathKeepsItsCompleteLinkTarget(t *testing.T) {
 	elidedLabel, _ := label.Elide(room).(call.Label)
 	rendered := elidedLabel.Render()
 
-	if got := link.Plain(rendered); got != "commit record progress "+shownParent+width.Ellipsis {
+	if got := style.Plain(rendered); got != "commit record progress "+shownParent+width.Ellipsis {
 		t.Errorf("visible call is %q", got)
 	}
 	wantAddress := "\x1b]8;;" + link.PathURL(path) + "\x1b\\"
@@ -97,7 +97,7 @@ func TestAnElidedMissingPathDoesNotLinkItsExistingPrefix(t *testing.T) {
 	elidedLabel, _ := label.Elide(room).(call.Label)
 	rendered := elidedLabel.Render()
 
-	if got := link.Plain(rendered); got != "read "+parent+width.Ellipsis {
+	if got := style.Plain(rendered); got != "read "+parent+width.Ellipsis {
 		t.Errorf("visible call is %q", got)
 	}
 	if strings.Contains(rendered, "\x1b]8;;file://") {
@@ -190,7 +190,7 @@ func TestAReadOfModelScratchShowsAndLinksTheHostScratchAlias(t *testing.T) {
 	label.PathRoots = roots
 	rendered := label.Render()
 
-	if got := link.Plain(rendered); got != "read <s>/io/cmd/oh/output/region.go 100-214" {
+	if got := style.Plain(rendered); got != "read <s>/io/cmd/oh/output/region.go 100-214" {
 		t.Errorf("visible call is %q", got)
 	}
 	wantAddress := "file://" + filepath.ToSlash(path) + "#100"

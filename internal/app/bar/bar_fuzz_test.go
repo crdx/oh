@@ -101,14 +101,13 @@ func FuzzWhatIsDrawnNeverOutgrowsTheRoomItWasGiven(fuzzer *testing.F) {
 func requireEverySegmentFits(t *testing.T, layout segment.Layout, ladders [][]string, room int) {
 	t.Helper()
 
-	context := segment.Context{}
-	drawn := RenderWithin(layout, segment.TopLeft, context, room)
+	drawn := drawBarWithin(layout, room)
 
 	if width := style.Width(drawn); width > room {
 		t.Fatalf("%d cells drew %q, %d cells wide", room, drawn, width)
 	}
 
-	if again := RenderWithin(layout, segment.TopLeft, context, room); again != drawn {
+	if again := drawBarWithin(layout, room); again != drawn {
 		t.Fatalf("drawing twice in %d cells gave %q and then %q", room, drawn, again)
 	}
 
@@ -124,7 +123,7 @@ func requireEverySegmentFits(t *testing.T, layout segment.Layout, ladders [][]st
 		}
 	}
 
-	whole := Render(layout, segment.TopLeft, context)
+	whole := Render(layout, segment.TopLeft, segment.Context{})
 	if room >= addedWidth(whole) && drawn != whole {
 		t.Fatalf("%d cells hold the whole bar %q, but drew %q", room, whole, drawn)
 	}

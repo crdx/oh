@@ -165,11 +165,7 @@ func segmentSeparator() string {
 }
 
 func Render(layout segment.Layout, position segment.Position, context segment.Context) string {
-	return render(layout, position, context, -1)
-}
-
-func RenderWithin(layout segment.Layout, position segment.Position, context segment.Context, cells int) string {
-	return render(layout, position, context, max(cells, 0))
+	return newFittingPosition(layout[position], context).text()
 }
 
 type fittingPosition struct {
@@ -191,15 +187,6 @@ func newFittingPosition(instances []segment.Segment, context segment.Context) fi
 		}
 	}
 	return position
-}
-
-func render(layout segment.Layout, position segment.Position, context segment.Context, cells int) string {
-	fittingPosition := newFittingPosition(layout[position], context)
-	for _, priority := range []segment.Priority{segment.Normal, segment.Important} {
-		for cells >= 0 && style.Width(fittingPosition.text()) > cells && fittingPosition.stepDown(priority) {
-		}
-	}
-	return fittingPosition.text()
 }
 
 func (self fittingPosition) stepDown(priority segment.Priority) bool {

@@ -13,6 +13,11 @@ import (
 	"crdx.org/oh/internal/app/style"
 )
 
+var barRulers = [][3]segment.Position{
+	{segment.TopLeft, segment.TopCenter, segment.TopRight},
+	{segment.BottomLeft, segment.BottomCenter, segment.BottomRight},
+}
+
 func FuzzABarIsBuiltAndDrawnWithoutFallingOver(fuzzer *testing.F) {
 	for _, seed := range []string{
 		"[bar.top]\nleft = [{ segment = \"activity-spinner\", idle = \"·\", frames = [\"·\"], rate = \"1s\" }]\n",
@@ -61,14 +66,14 @@ func FuzzABarIsBuiltAndDrawnWithoutFallingOver(fuzzer *testing.F) {
 			return
 		}
 
-		for _, position := range segment.Positions {
+		for _, positions := range barRulers {
 			context := segment.Context{HiddenLinesAbove: 3, HiddenLinesBelow: 0}
 
 			for _, room := range []int{int(cells), 0} {
-				drawn := bar.RenderWithin(layout, position, context, room)
+				ruler := bar.RenderRuler(layout, positions, context, room)
 
-				if width := style.Width(drawn); width > room {
-					t.Fatalf("%s drew %q in %d cells, %d cells wide", position, drawn, room, width)
+				if !ruler.Fits(room) {
+					t.Fatalf("ruler at %v did not fit %d cells: %+v", positions, room, ruler)
 				}
 			}
 		}

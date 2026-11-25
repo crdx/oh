@@ -94,6 +94,12 @@ func TestInfoDrawsEveryAvailableNonemptySegmentAndSummarisesTheEmptyOnes(t *test
 	}
 }
 
+func drawBarWithin(layout segment.Layout, cells int) string {
+	const centerRulerGutters = 2
+	positions := [3]segment.Position{segment.TopCenter, segment.TopLeft, segment.TopRight}
+	return RenderRuler(layout, positions, segment.Context{}, cells+centerRulerGutters).Center
+}
+
 func TestDetailIsShedFromTheRightBeforeAnySegmentIsDroppedFromTheLeft(t *testing.T) {
 	layout := segment.Layout{
 		segment.TopLeft: {
@@ -112,7 +118,7 @@ func TestDetailIsShedFromTheRightBeforeAnySegmentIsDroppedFromTheLeft(t *testing
 		{cells: 4, want: "br"},
 		{cells: 1, want: ""},
 	} {
-		got := RenderWithin(layout, segment.TopLeft, segment.Context{}, test.cells)
+		got := drawBarWithin(layout, test.cells)
 		if style.Plain(got) != test.want || style.Width(got) > test.cells {
 			t.Errorf(
 				"%d cells drew %q at width %d, want %q",
@@ -262,7 +268,7 @@ func TestImportantSegmentsKeepTheirDetailUntilOrdinarySegmentsDisappear(t *testi
 			{cells: 8, want: "imp"},
 			{cells: 2, want: ""},
 		} {
-			if got := style.Plain(RenderWithin(layout, segment.TopLeft, segment.Context{}, test.cells)); got != test.want {
+			if got := style.Plain(drawBarWithin(layout, test.cells)); got != test.want {
 				t.Errorf("important at %d in %d cells: got %q, want %q", importantAt, test.cells, got, test.want)
 			}
 		}

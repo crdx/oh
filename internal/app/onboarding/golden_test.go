@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/menu"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/style"
@@ -75,7 +74,7 @@ func TestGoldenAuthenticationFlowsMatchTheGoldens(t *testing.T) {
 					return nil
 				},
 				openBrowser: func(got string) error {
-					if !strings.Contains(link.Plain(output.String()), address) {
+					if !strings.Contains(style.Plain(output.String()), address) {
 						t.Error("browser was opened before the complete address was printed")
 					}
 					openedAddress = got

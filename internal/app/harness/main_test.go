@@ -4910,7 +4910,12 @@ func TestWhatWasAskedIsRenderedIntoTheConversation(t *testing.T) {
 }
 
 func TestASubmittedMessageHasBackgroundRowsAboveAndBelowIt(t *testing.T) {
-	got := style.Plain(painter.RenderSubmittedMessage("hello", 8))
+	var screenOutput bytes.Buffer
+	screen := output.NewTerminalOfSize(&screenOutput, 8, replayLines).AppendOnly().WithoutMessageMarks()
+	paint := newTestPainter(screen, false)
+	paint.DrawEvent(agent.Event{Kind: agent.UserMessageEvent, Text: "hello"})
+	paint.End()
+	got := strings.TrimSuffix(strings.ReplaceAll(style.Plain(screenOutput.String()), "\r\n", "\n"), "\n")
 	want := "        \n hello  \n        "
 
 	if got != want {
@@ -5252,8 +5257,22 @@ func TestTheWholeConversationIsDrawnTheSameLiveAndReplayed(t *testing.T) {
 	}
 }
 
+func drawReasoningRows(thought string, columns int, rendering output.ReasoningRendering) []string {
+	var screenOutput bytes.Buffer
+	screen := output.NewTerminalOfSize(&screenOutput, columns, replayLines).AppendOnly()
+	paint := newTestPainter(screen, false)
+	paint.RenderReasoningAs(rendering)
+	paint.DrawEvent(agent.Event{Kind: agent.ModelReasoningEvent, Text: thought})
+	paint.End()
+
+	if screenOutput.Len() == 0 {
+		return nil
+	}
+	return strings.Split(strings.TrimSuffix(screenOutput.String(), "\r\n"), "\r\n")
+}
+
 func TestAThoughtHasMarkdownStripped(t *testing.T) {
-	rows := painter.RenderReasoning("## **Checking** `one.go`", 40, output.ReasoningPlain)
+	rows := drawReasoningRows("## **Checking** `one.go`", 40, output.ReasoningPlain)
 	for i := range rows {
 		rows[i] = style.Plain(rows[i])
 	}
@@ -5264,7 +5283,7 @@ func TestAThoughtHasMarkdownStripped(t *testing.T) {
 }
 
 func TestAThoughtKeepsItsMarkdownWhenItIsAskedFor(t *testing.T) {
-	rows := painter.RenderReasoning("## **Checking** `one.go`\n\n- first\n- second\n", 40, output.ReasoningMarkdown)
+	rows := drawReasoningRows("## **Checking** `one.go`\n\n- first\n- second\n", 40, output.ReasoningMarkdown)
 
 	if got := strings.Join(rows, "\n"); got == style.Plain(got) {
 		t.Errorf("got reasoning %q with nothing styled", got)
@@ -5290,7 +5309,7 @@ func TestAThoughtIsItalicAndDimWhicheverWayItIsDrawn(t *testing.T) {
 		"flattened": output.ReasoningPlain,
 		"kept":      output.ReasoningMarkdown,
 	} {
-		drawn := strings.Join(painter.RenderReasoning(thought, 40, rendering), "\n")
+		drawn := strings.Join(drawReasoningRows(thought, 40, rendering), "\n")
 		if !strings.Contains(drawn, italicSequence) {
 			t.Errorf("a %s thought drew %q without the italic that says it is a thought", name, drawn)
 		}
@@ -5301,7 +5320,7 @@ func TestAThoughtIsItalicAndDimWhicheverWayItIsDrawn(t *testing.T) {
 }
 
 func TestAKeptThoughtResumesItsOwnStyleUnderTheMarkdown(t *testing.T) {
-	rows := painter.RenderReasoning("## Checking `one.go`\n\n- first\n", 40, output.ReasoningMarkdown)
+	rows := drawReasoningRows("## Checking `one.go`\n\n- first\n", 40, output.ReasoningMarkdown)
 
 	for _, row := range rows {
 		if !strings.HasPrefix(row, italicSequence+dimSequence) {
@@ -5330,7 +5349,7 @@ func TestAThoughtRunsDirectlyIntoAToolCall(t *testing.T) {
 }
 
 func TestAThoughtWrapsAtWordBoundaries(t *testing.T) {
-	rows := painter.RenderReasoning("one two three four", 9, output.ReasoningPlain)
+	rows := drawReasoningRows("one two three four", 9, output.ReasoningPlain)
 	for i := range rows {
 		rows[i] = style.Plain(rows[i])
 	}
@@ -9472,7 +9491,7 @@ func drawWrappedReasoningPath(t *testing.T, rendering output.ReasoningRendering,
 func TestAKeptThoughtClosesEveryRowSoItCannotBleed(t *testing.T) {
 	for name, columns := range everyThinkingWidth() {
 		t.Run(name, func(t *testing.T) {
-			rows := painter.RenderReasoning(structuredThought, columns, output.ReasoningMarkdown)
+			rows := drawReasoningRows(structuredThought, columns, output.ReasoningMarkdown)
 			if len(rows) == 0 {
 				t.Fatal("a thought drew nothing")
 			}
@@ -14718,14 +14737,14 @@ func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 func goldenShedPass(t *testing.T, instances ...segment.Segment) func() string {
 	t.Helper()
 
-	const position = segment.TopLeft
-
-	layout := segment.Layout{position: instances}
+	const centerRulerGutters = 2
+	positions := [3]segment.Position{segment.TopLeft, segment.TopCenter, segment.TopRight}
+	layout := segment.Layout{segment.TopCenter: instances}
 
 	return func() string {
 		var drawn strings.Builder
 
-		widest := style.Width(bar.Render(layout, position, segment.Context{}))
+		widest := style.Width(bar.Render(layout, segment.TopCenter, segment.Context{}))
 		lastDrawing := ""
 		widestFitting := 0
 
@@ -14744,7 +14763,7 @@ func goldenShedPass(t *testing.T, instances ...segment.Segment) func() string {
 		}
 
 		for cells := widest; cells >= 0; cells-- {
-			drawing := bar.RenderWithin(layout, position, segment.Context{}, cells)
+			drawing := bar.RenderRuler(layout, positions, segment.Context{}, cells+centerRulerGutters).Center
 
 			if width := style.Width(drawing); width > cells {
 				t.Errorf("%d cells drew %q, %d cells wide", cells, style.Plain(drawing), width)

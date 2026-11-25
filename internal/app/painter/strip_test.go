@@ -1,11 +1,13 @@
 package painter
 
 import (
+	"bytes"
 	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestAThoughtLosesOnlyTheMarkdownThatWouldHaveBeenDrawn(t *testing.T) {
@@ -71,12 +73,13 @@ func TestAThoughtLosesOnlyTheMarkdownThatWouldHaveBeenDrawn(t *testing.T) {
 		{"~~~\ncode_x *y*\n~~~", "code_x *y*"},
 		{"```\none\n~~~\ntwo_x\n```", "one ~~~ two_x"},
 	} {
-		rows := RenderReasoning(testCase.thought, 80, output.ReasoningPlain)
-		for i := range rows {
-			rows[i] = style.Plain(rows[i])
-		}
+		var screenOutput bytes.Buffer
+		paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24).AppendOnly(), false, nil, nil, output.StreamingModeLine)
+		paint.RenderReasoningAs(output.ReasoningPlain)
+		paint.DrawEvent(agent.Event{Kind: agent.ModelReasoningEvent, Text: testCase.thought})
+		paint.End()
 
-		if got := strings.Join(rows, "\n"); got != testCase.want {
+		if got := strings.TrimSuffix(strings.ReplaceAll(style.Plain(screenOutput.String()), "\r\n", "\n"), "\n"); got != testCase.want {
 			t.Errorf("thought %q drew %q, want %q", testCase.thought, got, testCase.want)
 		}
 	}

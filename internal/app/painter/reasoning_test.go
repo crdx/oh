@@ -109,7 +109,12 @@ func TestAReasoningHeadingArrivingADeltaAtATimeDrawsWhatArrived(t *testing.T) {
 						}
 					}
 					rows := renderReasoningWith(&renderer, &plain, &reflow, &styles, testCase.thought, columns, rendering, true, false, link.Roots{})
-					if want := RenderReasoning(testCase.thought, columns, rendering); !slices.Equal(rows, want) {
+					var freshRenderer markdown.IncrementalRenderer
+					var freshPlain plainThought
+					var freshReflow paragraphReflow
+					var freshStyles rowMemory
+					want := renderReasoningWith(&freshRenderer, &freshPlain, &freshReflow, &freshStyles, testCase.thought, columns, rendering, true, false, link.Roots{})
+					if !slices.Equal(rows, want) {
 						t.Fatalf("finished at %d columns drew %q, want %q", columns, rows, want)
 					}
 				}

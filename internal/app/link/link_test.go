@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/sandbox"
 )
 
@@ -18,8 +19,8 @@ func TestURLLinkKeepsTheCompleteAddressVisible(t *testing.T) {
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
-	if Plain(got) != address {
-		t.Errorf("visible address is %q", Plain(got))
+	if style.Plain(got) != address {
+		t.Errorf("visible address is %q", style.Plain(got))
 	}
 }
 
@@ -42,8 +43,8 @@ func TestWebURLsAreLinkedOnlyForSupportedSchemes(t *testing.T) {
 		if wasRendered != test.shouldRender {
 			t.Errorf("%s: rendered=%t: %q", name, wasRendered, got)
 		}
-		if Plain(got) != "label" {
-			t.Errorf("%s: visible label = %q", name, Plain(got))
+		if style.Plain(got) != "label" {
+			t.Errorf("%s: visible label = %q", name, style.Plain(got))
 		}
 	}
 }
@@ -105,8 +106,8 @@ func TestAShortenedPathUsesItsCompleteSourceAsTheTarget(t *testing.T) {
 	if address := linkAddress(t, got); address.Path != filepath.ToSlash(path) {
 		t.Errorf("got address %q, want complete path %q", address, path)
 	}
-	if Plain(got) != shown {
-		t.Errorf("visible path is %q, want %q", Plain(got), shown)
+	if style.Plain(got) != shown {
+		t.Errorf("visible path is %q, want %q", style.Plain(got), shown)
 	}
 }
 
@@ -183,8 +184,8 @@ func TestPathsWithSpacesBecomeLinks(t *testing.T) {
 	if addresses[1].Path != filepath.ToSlash(absolutePath) || addresses[1].Fragment != "12:3" {
 		t.Errorf("second address is %q", addresses[1])
 	}
-	if Plain(got) != text {
-		t.Errorf("visible text is %q, want %q", Plain(got), text)
+	if style.Plain(got) != text {
+		t.Errorf("visible text is %q, want %q", style.Plain(got), text)
 	}
 }
 
@@ -205,8 +206,8 @@ func TestAPathSpanningThreeSpacesLinksButOneSpanningFourDoesNot(t *testing.T) {
 			t.Errorf("a path spanning four spaces was linked in %q", spanned)
 		}
 	}
-	if Plain(spanned) != "read notes/one two three four five.md now" {
-		t.Errorf("visible text is %q", Plain(spanned))
+	if style.Plain(spanned) != "read notes/one two three four five.md now" {
+		t.Errorf("visible text is %q", style.Plain(spanned))
 	}
 }
 
@@ -255,8 +256,8 @@ func TestAWebAddressClosingASentenceLinksToTheAddressAlone(t *testing.T) {
 	if len(addresses) != 1 || addresses[0].String() != address {
 		t.Errorf("got addresses %q, want only %q", addresses, address)
 	}
-	if Plain(got) != text {
-		t.Errorf("visible text is %q, want %q", Plain(got), text)
+	if style.Plain(got) != text {
+		t.Errorf("visible text is %q, want %q", style.Plain(got), text)
 	}
 	if want := "Trellis is at " + RenderURL(address, address) + "."; got != want {
 		t.Errorf("got %q, want %q", got, want)
@@ -568,8 +569,8 @@ func TestTheScratchAliasLinksToTheHostScratchAlias(t *testing.T) {
 	if address.Path != filepath.ToSlash(path) {
 		t.Errorf("linked %q, want %q", address.Path, path)
 	}
-	if Plain(got) != "read "+text {
-		t.Errorf("visible text is %q, want the compact scratch path", Plain(got))
+	if style.Plain(got) != "read "+text {
+		t.Errorf("visible text is %q, want the compact scratch path", style.Plain(got))
 	}
 }
 
@@ -583,8 +584,8 @@ func TestAPathUnderTheModelsOwnTmpLinksToTheScratchItMapsTo(t *testing.T) {
 	if address.Path != filepath.ToSlash(path) {
 		t.Errorf("linked %q, want %q", address.Path, path)
 	}
-	if Plain(got) != "see /tmp/zoom-on.png for it" {
-		t.Errorf("visible text is %q, want the path as the model wrote it", Plain(got))
+	if style.Plain(got) != "see /tmp/zoom-on.png for it" {
+		t.Errorf("visible text is %q, want the path as the model wrote it", style.Plain(got))
 	}
 }
 
@@ -603,7 +604,7 @@ func TestAPathUnderTmpIsTakenAsTheHostsOwnWhereNoScratchStandsForIt(t *testing.T
 
 	got := Render("read "+path, Roots{})
 
-	if !strings.Contains(got, openPrefix) || Plain(got) != "read "+path {
+	if !strings.Contains(got, openPrefix) || style.Plain(got) != "read "+path {
 		t.Errorf("got %q, want the host's own path linked", got)
 	}
 }
@@ -614,7 +615,7 @@ func TestAPathOutsideTmpIsStillFoundUnderTheWorkspace(t *testing.T) {
 
 	got := Render("read notes.md", Roots{Workspace: workspace, Scratch: t.TempDir()})
 
-	if Plain(got) != "read notes.md" || !strings.Contains(got, openPrefix) {
+	if style.Plain(got) != "read notes.md" || !strings.Contains(got, openPrefix) {
 		t.Errorf("got %q, want the workspace path linked", got)
 	}
 }

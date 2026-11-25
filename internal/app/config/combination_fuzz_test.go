@@ -191,9 +191,9 @@ func exercise(t *testing.T, settings config.Config) {
 		t.Fatalf("a sound config would not build: %v", err)
 	}
 
-	for _, position := range segment.Positions {
+	for _, positions := range barRulers {
 		for _, cells := range []int{0, 1, 2, 7, 40, 200} {
-			_ = bar.RenderWithin(live.SegmentLayout, position, segment.Context{
+			_ = bar.RenderRuler(live.SegmentLayout, positions, segment.Context{
 				HiddenLinesAbove: 3,
 				HiddenLinesBelow: 4,
 			}, cells)
