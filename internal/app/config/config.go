@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"slices"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/BurntSushi/toml"
@@ -148,6 +149,8 @@ type Subagent struct {
 
 type Agent struct {
 	ModelChoice
+
+	Resync ResyncThreshold `toml:"resync"`
 }
 
 func (self Agent) Setting() string {
@@ -295,6 +298,7 @@ type LiveConfig struct {
 	ToolOutputBytes    int
 	Permissions        permission.Set
 	Experimental       map[string]any
+	ResyncThreshold    time.Duration
 	Subagent           Subagent
 	SelectionDefaults  model.Defaults
 	Currency           string
@@ -331,6 +335,7 @@ func (self Config) BuildLive(registry segment.Registry) (LiveConfig, error) {
 		ToolOutputBytes:    self.Defaults.ToolOutput.Bytes,
 		Permissions:        permissions,
 		Experimental:       maps.Clone(self.Experimental),
+		ResyncThreshold:    self.Agent.Resync.Duration,
 		Subagent:           self.Subagent,
 		SelectionDefaults:  self.Defaults.ForSelections(),
 		Currency:           self.Ui.Currency,

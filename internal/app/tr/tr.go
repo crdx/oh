@@ -341,11 +341,12 @@ const (
 // The errors in a config file. The file and the setting come first, as in "oh.toml: input.nudge is
 // empty". The code passes in each setting name.
 const (
-	SettingEmpty         = "%s is empty"                                                                   // as in "input.nudge is empty"
-	SettingMissing       = "%s is missing"                                                                 // as in "rule is missing"
-	SettingNotText       = "%s is not text"                                                                // as in "rule is not text"
-	SettingNotDuration   = "%s is not a duration"                                                          // as in "timeout is not a duration"
-	SettingDurationShape = "%s is not a duration such as %q"                                               // as in `timeout is not a duration such as "30s"`
+	SettingEmpty         = "%s is empty"                     // as in "input.nudge is empty"
+	SettingMissing       = "%s is missing"                   // as in "rule is missing"
+	SettingNotText       = "%s is not text"                  // as in "rule is not text"
+	SettingNotDuration   = "%s is not a duration"            // as in "timeout is not a duration"
+	SettingDurationShape = "%s is not a duration such as %q" // as in `timeout is not a duration such as "30s"`
+	DurationOrOffShape   = `expected false or a positive duration string such as "1h"`
 	SettingNotPositive   = "%s must be positive, got %q"                                                   // as in `timeout must be positive, got "0s"`
 	SettingNegative      = "%s must not be negative"                                                       // as in "timeout must not be negative"
 	SettingMinimum       = "%s must be at least %d, got %d"                                                // as in "subagent.concurrency must be at least 1, got 0"

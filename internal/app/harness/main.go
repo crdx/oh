@@ -1781,6 +1781,7 @@ func run(
 	app.permissions = permissions
 	app.notifyUnknownSettings(liveConfig.UnknownSettings)
 	app.nudge = liveConfig.Nudge
+	app.resyncThreshold = liveConfig.ResyncThreshold
 	app.speedDial.Configure(liveConfig.SpeedDial)
 	app.display.streamingMode = liveConfig.StreamingMode
 	app.display.reasoningRendering = liveConfig.ReasoningRendering

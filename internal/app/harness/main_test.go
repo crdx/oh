@@ -11705,6 +11705,7 @@ func prepareLiveConfigSources(t *testing.T, self *App, sources ...config.Source)
 		self.experimental.Replace(live.Experimental)
 	}
 	self.nudge = live.Nudge
+	self.resyncThreshold = live.ResyncThreshold
 	self.speedDial.Configure(live.SpeedDial)
 	self.display.streamingMode = live.StreamingMode
 	self.display.reasoningRendering = live.ReasoningRendering
@@ -18046,7 +18047,7 @@ type sessionGoldenScenario struct {
 	DiscardedTaskOnResume  string                    `toml:"discarded-task-on-resume"`
 	RunBeforeFirst         string                    `toml:"run-before-first"`
 	AwayBeforeResume       string                    `toml:"away-before-resume"`
-	TimePassageNotice      string                    `toml:"time-passage-notice"`
+	Resync                 config.ResyncThreshold    `toml:"resync"`
 	Prices                 *sessionGoldenPrices      `toml:"prices"`
 	Tools                  []sessionGoldenTool       `toml:"tool"`
 	Subagents              []sessionGoldenSubagent   `toml:"subagent"`
@@ -18139,7 +18140,7 @@ func TestToolDriftGoldenKeepsWireDefinitionsByteIdentical(t *testing.T) {
 func readSessionGoldenScenario(t *testing.T, path string) sessionGoldenScenario {
 	t.Helper()
 
-	var scenario sessionGoldenScenario
+	scenario := sessionGoldenScenario{Resync: builtInConfig(t).Agent.Resync}
 	metadata, err := toml.DecodeFile(path, &scenario)
 	if err != nil {
 		t.Fatal(err)
@@ -18248,9 +18249,6 @@ func (self sessionGoldenScenario) toggles() map[string]any {
 	toggles := map[string]any{string(experimental.CacheMissNotices): self.CacheMissNotices}
 	if self.TaskOutputLines != nil {
 		toggles[string(experimental.TaskOutputLines)] = *self.TaskOutputLines
-	}
-	if self.TimePassageNotice != "" {
-		toggles[string(experimental.TimePassageNotice)] = self.TimePassageNotice
 	}
 	return toggles
 }
@@ -19718,6 +19716,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if children != nil {
 		resumedHarness.now = children.now
 	}
+	resumedHarness.resyncThreshold = scenario.Resync.Duration
 	settleResumedSessionGoldenMode(resumedHarness, storedSession.Events)
 	restoredEvents := restoreSessionGoldenConditions(
 		t, resumedHarness, storedSession, sessionGoldenConditions(t, resumeConditionsOf(scenario)),
@@ -22178,7 +22177,7 @@ func TestATurnStartedAfterALongPassageOfTimeTellsTheModelToCheckAgain(t *testing
 	self := testConversation(t, &screenOutput)
 	backend := &notingProvider{}
 	self.agent = agent.New("", backend, nil)
-	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): "1h"})
+	self.resyncThreshold = builtInConfig(t).Agent.Resync.Duration
 	now := time.Now()
 	self.now = func() time.Time { return now }
 
@@ -22223,7 +22222,7 @@ func TestAResumedSessionCountsThePassageOfTimeFromItsLastJournalLine(t *testing.
 	self := testConversation(t, &screenOutput)
 	backend := &notingProvider{}
 	self.agent = agent.New("", backend, nil)
-	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): "1h"})
+	self.resyncThreshold = time.Hour
 	now := time.Now()
 	self.now = func() time.Time { return now }
 
@@ -22245,7 +22244,7 @@ func TestASessionResumedBeforeAnyTurnCompletedIsToldOfNoPassage(t *testing.T) {
 	self := testConversation(t, &screenOutput)
 	backend := &notingProvider{}
 	self.agent = agent.New("", backend, nil)
-	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): "1h"})
+	self.resyncThreshold = time.Hour
 
 	self.restore(&store.Session{TouchedAt: time.Now().Add(-72 * time.Hour)})
 	completeTurn(self)
@@ -22260,7 +22259,9 @@ func TestALongPassageOfTimeIsToldOnlyWhileItsNoticeIsOn(t *testing.T) {
 	self := testConversation(t, &screenOutput)
 	backend := &notingProvider{}
 	self.agent = agent.New("", backend, nil)
-	self.experimental = experimental.New(map[string]any{string(experimental.TimePassageNotice): false})
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "[agent]\nresync = false\n")
+	prepareLiveConfig(t, self, path)
 	now := time.Now()
 	self.now = func() time.Time { return now }
 
@@ -22271,11 +22272,20 @@ func TestALongPassageOfTimeIsToldOnlyWhileItsNoticeIsOn(t *testing.T) {
 		t.Fatalf("a turn with the notice off was told %q, want nothing", told)
 	}
 
-	self.experimental.Replace(map[string]any{string(experimental.TimePassageNotice): "30m"})
+	writeLiveConfig(t, path, "[agent]\nresync = \"30m\"\n")
+	settleLiveConfig(t, self)
 	now = now.Add(45 * time.Minute)
 	completeTurn(self)
 	if told := passagesTold(backend); len(told) != 1 || !strings.Contains(told[0], "About 45 minutes passed") {
 		t.Errorf("a turn past a reloaded limit was told %q, want the passage", told)
+	}
+
+	writeLiveConfig(t, path, "[agent]\nresync = false\n")
+	settleLiveConfig(t, self)
+	now = now.Add(72 * time.Hour)
+	completeTurn(self)
+	if told := passagesTold(backend); len(told) != 1 {
+		t.Errorf("disabling the notice left it on: %q", told)
 	}
 }
 

@@ -1,7 +1,6 @@
 provider = "anthropic"
 model = "claude-opus-5"
 effort = "medium"
-time-passage-notice = "1h"
 away-before-resume = "50h"
 conditions = "unix-sockets ipv6 interactive"
 conditions-on-resume = "none"

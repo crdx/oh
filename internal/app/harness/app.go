@@ -248,6 +248,7 @@ type App struct {
 	undo                 undoState
 	startedAt            time.Time
 	quietSince           time.Time
+	resyncThreshold      time.Duration
 	keyboard             *os.File
 	termination          terminationState
 	hostCommand          hostCommandState
@@ -1825,6 +1826,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		self.screen.SetGrouping(result.LiveConfig.Grouping)
 		self.toolOutputLimit.Replace(result.LiveConfig.ToolOutputBytes)
 		self.experimental.Replace(result.LiveConfig.Experimental)
+		self.resyncThreshold = result.LiveConfig.ResyncThreshold
 		if self.tasks != nil {
 			configureTaskManager(self.tasks, self.experimental)
 		}
@@ -2276,13 +2278,12 @@ func (self *App) start(message string) {
 }
 
 func (self *App) notePassage() {
-	if self.quietSince.IsZero() {
+	if self.quietSince.IsZero() || self.resyncThreshold == 0 {
 		return
 	}
 
-	limit, isOn := self.experimental.GetOptionalDuration(experimental.TimePassageNotice)
 	elapsedTime := self.getNow().Sub(self.quietSince)
-	if !isOn || elapsedTime < limit {
+	if elapsedTime < self.resyncThreshold {
 		return
 	}
 

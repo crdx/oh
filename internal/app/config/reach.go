@@ -21,6 +21,7 @@ var reaches = map[string]Reach{
 }
 
 var settingReaches = map[string]Reach{
+	"agent.resync":                  ReachLive,
 	"debug.wire":                    ReachNextSession,
 	"default.tool_output":           ReachLive,
 	"experimental.forward_hostname": ReachNextRun,

@@ -2507,14 +2507,34 @@ func TestAGatedActionTakesItsApprovalTimeoutAsACustomToolDoes(t *testing.T) {
 	}
 }
 
-func TestTheTimePassageNoticeDefaultsToOffAndTakesADuration(t *testing.T) {
+func TestResyncDefaultsToOneHourAndCanBeChanged(t *testing.T) {
 	defaults := configFrom(t, "")
-	if value, isSet := defaults.Experimental["time_passage_notice"]; !isSet || value != false {
-		t.Errorf("got default notice %v", value)
+	if got := defaults.Agent.Resync.Duration; got != time.Hour {
+		t.Errorf("got default notice threshold %s, want 1h", got)
 	}
-	configured := configFrom(t, "[experimental]\ntime_passage_notice = \"1h\"\n")
-	if got := configured.Experimental["time_passage_notice"]; got != "1h" {
-		t.Errorf("got configured notice %v", got)
+	configured := configFrom(t, "[agent]\nresync = \"30m\"\n")
+	if got := configured.Agent.Resync.Duration; got != 30*time.Minute {
+		t.Errorf("got notice threshold %s, want 30m", got)
+	}
+	disabled := configFrom(t, "[agent]\nresync = false\n")
+	if got := disabled.Agent.Resync.Duration; got != 0 {
+		t.Errorf("got disabled notice threshold %s, want off", got)
+	}
+}
+
+func TestResyncRefusesInvalidSettings(t *testing.T) {
+	for _, value := range []string{`true`, `""`, `"0s"`, `"-1h"`, `"tomorrow"`, `3600`} {
+		t.Run(value, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			text := fmt.Sprintf("version = %d\n[agent]\nresync = %s\n", Format, value)
+			if err := os.WriteFile(path, []byte(text), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			_, err := Load(path)
+			if err == nil || !strings.Contains(err.Error(), "agent.resync") || !strings.Contains(err.Error(), tr.DurationOrOffShape) {
+				t.Errorf("got %v for %s, want a notice setting error", err, value)
+			}
+		})
 	}
 }
 
