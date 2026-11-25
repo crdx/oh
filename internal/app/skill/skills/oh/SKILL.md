@@ -24,7 +24,7 @@ Global and workspace files are watched and auto-reload. Most changes apply live.
 
 | Setting                                                              | Applies             |
 |----------------------------------------------------------------------|---------------------|
-| `[grants]`, `[skill]`, `[provider]`, `experimental.forward_hostname` | when oh next starts |
+| `[grants]`, `[skill]`, `[provider]`, `agent.forward_hostname`        | when oh next starts |
 | `[default]` except `tool_output`, model selection, `[tool]`, toolbox | to new sessions     |
 
 The first group belongs to the process, so a restart that resumes this very conversation picks it up. The second is frozen into the session when it is first created, and a resumed conversation restores what was frozen, so only a new session reads it afresh.
@@ -41,6 +41,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 - `[agent]` — the model a new session talks to: `model`, one `provider/model@effort` selection (written `provider/model` for a model that takes no effort), or `round_robin`, an array of selections or a path, relative to the supplying config, to a file with one selection per line; blank lines are skipped, lines whose first non-whitespace character is `#` are comments, and duplicates add weight. One file may set only one of the two, and a later file's choice replaces an earlier one's whichever it writes
 - `agent.resync` defaults to `"1h"`. When the gap between turns reaches that threshold, oh tells the model how much time has passed and asks it to recheck earlier observations. Set a different positive duration or `false` to disable the notice. Changes apply to subsequent turns without a restart
+- `agent.forward_hostname` names the host shown for forwarded ports. Include `{session}` exactly once, as in `"{session}.example.test"`. Leave it out to show the numeric address. Changes apply when oh next starts
 - `[default]` — what anything new starts with: `caps`, the capabilities a new session opens with; `effort` and `fast`, filling in whatever any model selection leaves out; and `tool_output`, the cap on a tool result
 - `[subagent]` — `concurrency` caps how many run at once and reloads live while subagents are offered. The parent chooses a model and effort for each task from the automatic cheap and free model pool. Local sessions delegate only to Ollama models, and remote sessions only to remote models. A follow-up stays on the model its subagent started on
 - `[provider.ollama]` — `host` for a local or LAN endpoint
@@ -51,9 +52,9 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
 - `[editor]` — editor command
-- `[experimental]` — opt-in settings; `forward_hostname` names the forwarded-port host, `maximum_running_tasks` caps concurrent tasks at 10 by default and reloads live without stopping running tasks, `background_after_seconds` defaults to 5 and reloads for subsequent foreground calls, and `task_output_lines` keeps that many lines at each end of a task's output in the notice the person sees, none by default, while the model reads it whole
+- `[experimental]` — opt-in settings; `maximum_running_tasks` caps concurrent tasks at 10 by default and reloads live without stopping running tasks, `background_after_seconds` defaults to 5 and reloads for subsequent foreground calls, and `task_output_lines` keeps that many lines at each end of a task's output in the notice the person sees, none by default, while the model reads it whole
 - `experimental.user_command_timeout` limits `/!` commands. `experimental.response_timeout` limits the wait for conversation response headers. `experimental.stream_idle_timeout` limits silence before and during a conversation stream, resetting whenever bytes arrive. Each defaults to `"10m"` and accepts a positive duration string. Changes apply to subsequent commands or requests, including subagent requests; open work keeps its original limits. Aside, lookup and authentication requests keep their own limits
-- A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `experimental.forward_hostname` to use the numeric address, and `editor.command` to find an editor
+- A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars and `editor.command` to find an editor
 - With no `editor.command`, oh takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
 
 ## Workspace Config
@@ -70,6 +71,7 @@ A workspace file comes with whatever repository you cloned, so it may not set wh
 - `[grants]`, which says where the agent may read, write, and execute
 - `[skill]`, which says what instructions reach the model
 - `[provider]`, which says which endpoint the conversation goes to
+- `agent.forward_hostname`, which names the host shown for forwarded ports
 - `[tool]`, which can name host commands and change the instructions or permissions offered to the model
 - `[experimental]`, which is unknown by definition
 

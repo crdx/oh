@@ -15,7 +15,7 @@ func TestReachOfNamesWhenASettingLands(t *testing.T) {
 		"grants.read":                           ReachNextRun,
 		"skill.include":                         ReachNextRun,
 		"provider.ollama":                       ReachNextRun,
-		"experimental.forward_hostname":         ReachNextRun,
+		"agent.forward_hostname":                ReachNextRun,
 		"experimental.maximum_running_tasks":    ReachLive,
 		"experimental.background_after_seconds": ReachLive,
 		"debug.stalls":                          ReachNextRun,

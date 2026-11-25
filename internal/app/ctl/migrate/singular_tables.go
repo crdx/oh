@@ -39,7 +39,7 @@ type entryMove struct {
 }
 
 var entryMoves = []entryMove{
-	{formerTable: "ports", formerKey: "hostname", table: "experimental", key: "forward_hostname"},
+	{formerTable: "ports", formerKey: "hostname", table: "agent", key: "forward_hostname"},
 	{formerTable: "permissions", formerKey: "network", table: "tool.bash", key: "host_network"},
 	{formerTable: "permissions", formerKey: "fetch", table: "tool.fetch", key: "permission"},
 	{formerTable: "permissions", formerKey: "lookup", table: "tool.lookup", key: "permission"},

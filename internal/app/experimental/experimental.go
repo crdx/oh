@@ -15,7 +15,6 @@ const (
 	CacheMissNotices       Name = "cache_miss_notices"
 	CommandStartsTurn      Name = "command_starts_turn"
 	EnterInterrupts        Name = "enter_interrupts"
-	ForwardHostname        Name = "forward_hostname"
 	MaximumRunningTasks    Name = "maximum_running_tasks"
 	RedrawTimingFeedback   Name = "redraw_timing_feedback"
 	SharedHistory          Name = "shared_history"
@@ -56,7 +55,6 @@ var toggleKinds = map[Name]Kind{
 	CacheMissNotices:       BooleanKind,
 	CommandStartsTurn:      BooleanKind,
 	EnterInterrupts:        BooleanKind,
-	ForwardHostname:        TextKind,
 	MaximumRunningTasks:    WholeNumberKind,
 	RedrawTimingFeedback:   BooleanKind,
 	SharedHistory:          BooleanKind,

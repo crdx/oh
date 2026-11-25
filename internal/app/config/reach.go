@@ -21,13 +21,13 @@ var reaches = map[string]Reach{
 }
 
 var settingReaches = map[string]Reach{
-	"agent.resync":                  ReachLive,
-	"debug.wire":                    ReachNextSession,
-	"default.tool_output":           ReachLive,
-	"experimental.forward_hostname": ReachNextRun,
-	"tool.bash.host_network":        ReachLive,
-	"tool.fetch.permission":         ReachLive,
-	"tool.lookup.permission":        ReachLive,
+	"agent.forward_hostname": ReachNextRun,
+	"agent.resync":           ReachLive,
+	"debug.wire":             ReachNextSession,
+	"default.tool_output":    ReachLive,
+	"tool.bash.host_network": ReachLive,
+	"tool.fetch.permission":  ReachLive,
+	"tool.lookup.permission": ReachLive,
 }
 
 func ReachOf(setting string) Reach {

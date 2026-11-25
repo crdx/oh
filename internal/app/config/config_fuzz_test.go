@@ -32,8 +32,8 @@ func FuzzAConfigFileIsReadWithoutFallingOver(fuzzer *testing.F) {
 		"[default]\ntool_output = \"12K\"\n",
 		"[default]\ncaps = \"rwxng\"\n",
 		"[agent]\nround_robin = [\"a\", \"b\"]\n",
-		"[experimental]\nforward_hostname = \"{session}\"\n",
-		"[experimental]\nforward_hostname = \"\x1b[2J{session}\"\n",
+		"[agent]\nforward_hostname = \"{session}\"\n",
+		"[agent]\nforward_hostname = \"\x1b[2J{session}\"\n",
 		"[experimental]\nx = 1\n",
 	} {
 		fuzzer.Add(seed)

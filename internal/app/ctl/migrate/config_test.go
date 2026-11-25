@@ -1214,7 +1214,7 @@ func TestTheThirteenthConfigMigrationLeavesSettingsThatSaySomethingAlone(t *test
 	written := migratedConfig(t, original)
 
 	want := strings.Replace(original, "version = 13", currentVersionLine(), 1)
-	want = strings.Replace(want, "[ports]\nhostname", "[experimental]\nforward_hostname", 1)
+	want = strings.Replace(want, "[ports]\nhostname", "[agent]\nforward_hostname", 1)
 	if written != want {
 		t.Errorf("got:\n%s\nwant:\n%s", written, want)
 	}
@@ -1497,8 +1497,6 @@ caps = "rxs"
 
 [experimental]
 shared_history = true
-# the hostname forwards announce
-forward_hostname = "{session}.agent" # per session
 
 [snippet]
 gold = { prompt = "golden?", description = "check goldens" }
@@ -1509,6 +1507,10 @@ read = []
 
 [debug]
 wire = true
+
+# the hostname forwards announce
+[agent]
+forward_hostname = "{session}.agent" # per session
 
 [provider.ollama]
 host = "http://127.0.0.1:11434"
@@ -1628,7 +1630,7 @@ prompt = "review it"
 default.caps = "rx"
 "grants".read = ["/etc"]
 tool.lookup.permission = "ask"
-experimental.forward_hostname = "{session}.agent"
+agent.forward_hostname = "{session}.agent"
 
 [ "snippet" . review ]
 prompt = "review it"
@@ -1644,28 +1646,28 @@ func TestTheSixteenthConfigFormatKeepsTheFormOfEachLine(t *testing.T) {
 	}{
 		{
 			name:     "final line without a newline",
-			original: "version = 15\n\n[experimental]\nshared_history = true\n\n[ports]\nhostname = \"{session}\"",
-			want:     "\n\n[experimental]\nshared_history = true\nforward_hostname = \"{session}\"\n",
+			original: "version = 15\n\n[ports]\nhostname = \"{session}\"",
+			want:     "\n\n[agent]\nforward_hostname = \"{session}\"",
 		},
 		{
 			name:     "a comment beside the header",
-			original: "version = 15\n[experimental]\nshared_history = true\n[ports] # forwarding names\nhostname = \"{session}\"\n",
-			want:     "\n[experimental]\nshared_history = true\n# forwarding names\nforward_hostname = \"{session}\"\n",
+			original: "version = 15\n[agent]\nmodel = \"ollama/llama\"\n[ports] # forwarding names\nhostname = \"{session}\"\n",
+			want:     "\n[agent]\nmodel = \"ollama/llama\"\n# forwarding names\nforward_hostname = \"{session}\"\n",
 		},
 		{
 			name:     "a header renamed in place",
 			original: "version = 15\n[ports] # forwarding names\nhostname = \"{session}\"\n",
-			want:     "\n[experimental] # forwarding names\nforward_hostname = \"{session}\"\n",
+			want:     "\n[agent] # forwarding names\nforward_hostname = \"{session}\"\n",
 		},
 		{
 			name:     "windows line endings",
-			original: "version = 15\r\n[experimental]\r\nshared_history = true\r\n[ports]\r\nhostname = \"{session}\"",
-			want:     "\r\n[experimental]\r\nshared_history = true\r\nforward_hostname = \"{session}\"\r\n",
+			original: "version = 15\r\n[agent]\r\nmodel = \"ollama/llama\"\r\n[ports]\r\nhostname = \"{session}\"",
+			want:     "\r\n[agent]\r\nmodel = \"ollama/llama\"\r\nforward_hostname = \"{session}\"\r\n",
 		},
 		{
 			name:     "a stray key beside the hostname",
-			original: "version = 15\n[experimental]\nwait_tool = true\n[ports]\nhostname = \"{session}\"\nshared_history = true\n",
-			want:     "\n[experimental]\nwait_tool = true\nforward_hostname = \"{session}\"\n[ports]\nshared_history = true\n",
+			original: "version = 15\n[agent]\nmodel = \"ollama/llama\"\n[ports]\nhostname = \"{session}\"\nshared_history = true\n",
+			want:     "\n[agent]\nmodel = \"ollama/llama\"\nforward_hostname = \"{session}\"\n[ports]\nshared_history = true\n",
 		},
 		{
 			name:     "a stray key alone",
@@ -1697,18 +1699,18 @@ func TestTheSixteenthConfigFormatRefusesWhatItCannotSingularise(t *testing.T) {
 		},
 		{
 			name:     "both hostnames",
-			original: "version = 15\n[ports]\nhostname = \"{session}\"\n[experimental]\nforward_hostname = \"{session}.agent\"\n",
-			refusal:  "both ports.hostname and experimental.forward_hostname are defined",
+			original: "version = 15\n[ports]\nhostname = \"{session}\"\n[agent]\nforward_hostname = \"{session}.agent\"\n",
+			refusal:  "both ports.hostname and agent.forward_hostname are defined",
 		},
 		{
-			name:     "experimental written as dotted keys",
-			original: "version = 15\nexperimental.shared_history = true\n[ports]\nhostname = \"{session}\"\n",
-			refusal:  "by hand, move ports.hostname to experimental.forward_hostname",
+			name:     "agent written as dotted keys",
+			original: "version = 15\nagent.model = \"ollama/llama\"\n[ports]\nhostname = \"{session}\"\n",
+			refusal:  "by hand, move ports.hostname to agent.forward_hostname",
 		},
 		{
-			name:     "a dotted hostname beside an experimental table",
-			original: "version = 15\nports.hostname = \"{session}.agent\"\n\n[experimental]\nshared_history = true\n",
-			refusal:  "by hand, move ports.hostname to experimental.forward_hostname",
+			name:     "a dotted hostname beside an agent table",
+			original: "version = 15\nports.hostname = \"{session}.agent\"\n\n[agent]\nmodel = \"ollama/llama\"\n",
+			refusal:  "by hand, move ports.hostname to agent.forward_hostname",
 		},
 		{
 			name:     "an inline tool table",
@@ -1718,7 +1720,7 @@ func TestTheSixteenthConfigFormatRefusesWhatItCannotSingularise(t *testing.T) {
 		{
 			name:     "only what applies",
 			original: "version = 15\nports = { hostname = \"{session}\" }\n[experimental]\nshared_history = true\n",
-			refusal:  "the config could not be changed safely; by hand, move ports.hostname to experimental.forward_hostname",
+			refusal:  "the config could not be changed safely; by hand, move ports.hostname to agent.forward_hostname",
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {

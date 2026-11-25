@@ -66,7 +66,8 @@ const (
 	roundRobinSetting   = "round_robin"
 	subagentSetting     = "subagent"
 
-	forwardHostnameSetting = experimentalSetting + "." + string(experimental.ForwardHostname)
+	forwardHostnameKey     = "forward_hostname"
+	forwardHostnameSetting = agentSetting + "." + forwardHostnameKey
 	migrateCommand         = "oh --ctl migrate"
 )
 
@@ -150,7 +151,8 @@ type Subagent struct {
 type Agent struct {
 	ModelChoice
 
-	Resync ResyncThreshold `toml:"resync"`
+	Resync          ResyncThreshold `toml:"resync"`
+	ForwardHostname string          `toml:"forward_hostname"`
 }
 
 func (self Agent) Setting() string {
@@ -215,7 +217,7 @@ type Ollama struct {
 }
 
 func (self Config) GetHostname(sessionName string, fallbackHostname string) string {
-	hostname := self.getHostname()
+	hostname := self.Agent.ForwardHostname
 	if hostname == "" {
 		return fallbackHostname
 	}
@@ -511,11 +513,6 @@ func (self Config) UnknownSettings() []string {
 	}
 
 	return append(reports, self.experimentalReports()...)
-}
-
-func (self Config) getHostname() string {
-	hostname, _ := self.Experimental[string(experimental.ForwardHostname)].(string)
-	return hostname
 }
 
 func (self Config) experimentalReports() []string {
@@ -1028,7 +1025,7 @@ func refuseWorkspaceSettings(meta toml.MetaData) error {
 			continue
 		}
 
-		if slices.Contains(settingsAWorkspaceMayNotSet, key[0]) {
+		if slices.Contains(settingsAWorkspaceMayNotSet, key[0]) || key.String() == forwardHostnameSetting {
 			return fmt.Errorf(tr.WorkspaceOverride, key.String(), "oh.toml")
 		}
 	}
@@ -1074,29 +1071,17 @@ func validateExperimentalMinimum(config *Config, meta toml.MetaData, name experi
 
 func normaliseHosts(config *Config, meta toml.MetaData) error {
 	config.Provider.Ollama.Host = strings.TrimSpace(config.Provider.Ollama.Host)
-	hasHostname := meta.IsDefined(experimentalSetting, string(experimental.ForwardHostname))
-	hostname, isText := config.Experimental[string(experimental.ForwardHostname)].(string)
-	if hasHostname && isText {
-		config.Experimental[string(experimental.ForwardHostname)] = strings.TrimSpace(hostname)
-	}
-	return validateHostSettings(
-		config.Provider.Ollama.Host,
-		meta.IsDefined("provider", "ollama", "host"),
-		config.getHostname(),
-		hasHostname && isText && config.getHostname() == "",
-	)
-}
-
-func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string, isHostnameEmpty bool) error {
-	if hasOllamaHost && ollamaHost == "" {
+	if meta.IsDefined("provider", "ollama", "host") && config.Provider.Ollama.Host == "" {
 		return fmt.Errorf(tr.SettingEmpty, "provider.ollama.host")
 	}
-	if isHostnameEmpty {
-		return fmt.Errorf(tr.HostnameEmpty, forwardHostnameSetting)
-	}
-	if hostname == "" {
+	if !meta.IsDefined(agentSetting, forwardHostnameKey) {
 		return nil
 	}
+	hostname := strings.TrimSpace(config.Agent.ForwardHostname)
+	if hostname == "" {
+		return fmt.Errorf(tr.HostnameEmpty, forwardHostnameSetting)
+	}
+	config.Agent.ForwardHostname = hostname
 	if strings.Count(hostname, sessionPlaceholder) != 1 {
 		return fmt.Errorf(tr.HostnamePlaceholder, forwardHostnameSetting, sessionPlaceholder)
 	}

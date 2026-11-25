@@ -100,8 +100,8 @@ func soundSettings() []setting {
 		{"experimental", []string{
 			"",
 			"[experimental]\n",
-			"[experimental]\nforward_hostname = \"{session}\"\n",
-			"[experimental]\nforward_hostname = \"{session}.oh.test\"\n",
+			"[agent]\nforward_hostname = \"{session}\"\n",
+			"[agent]\nforward_hostname = \"{session}.oh.test\"\n",
 		}},
 		{"bar", []string{
 			"",

@@ -377,8 +377,8 @@ const (
 	PriorityChoice       = "priority must be %s or %s"                                                     // as in "priority must be normal or important"
 	CurrencyEmpty        = "%s is empty; leave it out to count in dollars"                                 // as in "ui.currency is empty; …"
 	EditorCommandEmpty   = "%s is empty; leave it out to find an editor automatically"                     // as in "editor.command is empty; …"
-	HostnameEmpty        = "%s is empty; leave it out to use the numeric address"                          // as in "experimental.forward_hostname is empty; …"
-	HostnamePlaceholder  = "%s must contain %s exactly once"                                               // as in "experimental.forward_hostname must contain {session} exactly once"
+	HostnameEmpty        = "%s is empty; leave it out to use the numeric address"                          // as in "agent.forward_hostname is empty; …"
+	HostnamePlaceholder  = "%s must contain %s exactly once"                                               // as in "agent.forward_hostname must contain {session} exactly once"
 	HostnameTooLong      = "%s is %d characters long, and a hostname is at most %d"                        // when the forward hostname is too long
 	HostnameCharacter    = "%s holds %q, and a hostname is letters, digits, dots and dashes"               // when the forward hostname holds another character
 	SelectionNotText     = "model selection %d is not text"                                                // when a round_robin entry is not text, as in "model selection 2 is not a string"

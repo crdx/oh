@@ -4,6 +4,7 @@
 
 - Overhaul subagent model configuration
 - Promote time passage notice, default to 1h
+- Promote agent forward hostname default to unset
 
 ## [0.34.2] — 2026-11-21
 

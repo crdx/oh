@@ -1,8 +1,8 @@
 === command line settings / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
-ippets ⧸ ~1.6Kt context ⧸ --set: grants.
-read, grants.write.
+ippets ⧸ ~1.6Kt context ⧸ --set: agent.f
+orward_hostname, grants.write.
 === command line settings / ordinary / one column ===
 A
 g
@@ -116,17 +116,28 @@ e
 t
 :
 
-g
-r
 a
+g
+e
 n
 t
-s
 .
+f
+o
 r
-e
+w
 a
+r
 d
+_
+h
+o
+s
+t
+n
+a
+m
+e
 ,
 
 g
@@ -152,20 +163,21 @@ with 4 skill
 s ⧸ 2 snippe
 ts ⧸ ~1.6Kt
 context ⧸ --
-set: grants.
-read, grants
-.write.
+set: agent.f
+orward_hostn
+ame, grants.
+write.
 === command line settings / ordinary / wide ===
 Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
-ext ⧸ --set: grants.read, grants.write.
+ext ⧸ --set: agent.forward_hostname, grants.write.
 === command line settings / sized / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
-ippets ⧸ ~1.6Kt context ⧸ --set: grants.
-read, grants.write.
+ippets ⧸ ~1.6Kt context ⧸ --set: agent.f
+orward_hostname, grants.write.
 === command line settings / sized / wide ===
  🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ --set: grants.read, grants.write
+       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ --set: agent.forward_hostname, grants.write
 === empty local config / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
@@ -533,11 +545,11 @@ day, 2 October 2026 with 4 skills ⧸ 2 sn
 ippets ⧸ ~1.6Kt context ⧸ oh.toml: agent
 .round_robin, bar.bottom.left, bar.top.c
 enter, default.caps, default.tool_output
-, editor.command, experimental.forward_h
-ostname, provider.ollama.host, grants.re
-ad, grants.write, skill.exclude, skill.i
-nclude, snippet.review, ui.currency, ui.
-grouping, ui.reasoning, ui.streaming.
+, editor.command, agent.resync, provider
+.ollama.host, grants.read, grants.write,
+ skill.exclude, skill.include, snippet.r
+eview, ui.currency, ui.grouping, ui.reas
+oning, ui.streaming.
 === many local settings / ordinary / one column ===
 A
 g
@@ -756,35 +768,18 @@ n
 d
 ,
 
-e
-x
-p
-e
-r
-i
-m
+a
+g
 e
 n
 t
-a
-l
 .
-f
-o
 r
-w
-a
-r
-d
-_
-h
-o
-s
-t
-n
-a
-m
 e
+s
+y
+n
+c
 ,
 
 p
@@ -954,45 +949,42 @@ efault.caps,
  default.too
 l_output, ed
 itor.command
-, experiment
-al.forward_h
-ostname, pro
-vider.ollama
-.host, grant
-s.read, gran
-ts.write, sk
-ill.exclude,
- skill.inclu
-de, snippet.
-review, ui.c
-urrency, ui.
-grouping, ui
-.reasoning,
-ui.streaming
-.
+, agent.resy
+nc, provider
+.ollama.host
+, grants.rea
+d, grants.wr
+ite, skill.e
+xclude, skil
+l.include, s
+nippet.revie
+w, ui.curren
+cy, ui.group
+ing, ui.reas
+oning, ui.st
+reaming.
 === many local settings / ordinary / wide ===
 Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
 ext ⧸ oh.toml: agent.round_robin, bar.bottom.left, bar.top.center, default.caps, default.tool_output
-, editor.command, experimental.forward_hostname, provider.ollama.host, grants.read, grants.write, sk
-ill.exclude, skill.include, snippet.review, ui.currency, ui.grouping, ui.reasoning, ui.streaming.
+, editor.command, agent.resync, provider.ollama.host, grants.read, grants.write, skill.exclude, skil
+l.include, snippet.review, ui.currency, ui.grouping, ui.reasoning, ui.streaming.
 === many local settings / sized / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn
 ippets ⧸ ~1.6Kt context ⧸ oh.toml: agent
 .round_robin, bar.bottom.left, bar.top.c
 enter, default.caps, default.tool_output
-, editor.command, experimental.forward_h
-ostname, provider.ollama.host, grants.re
-ad, grants.write, skill.exclude, skill.i
-nclude, snippet.review, ui.currency, ui.
-grouping, ui.reasoning, ui.streaming.
+, editor.command, agent.resync, provider
+.ollama.host, grants.read, grants.write,
+ skill.exclude, skill.include, snippet.r
+eview, ui.currency, ui.grouping, ui.reas
+oning, ui.streaming.
 === many local settings / sized / wide ===
  🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: agent.round_robin, bar.bottom.left,
-       bar.top.center, default.caps, default.tool_output, editor.command,
-       experimental.forward_hostname, provider.ollama.host, grants.read, grants.write,
-       skill.exclude, skill.include, snippet.review, ui.currency, ui.grouping, ui.reasoning,
-       ui.streaming
+       bar.top.center, default.caps, default.tool_output, editor.command, agent.resync,
+       provider.ollama.host, grants.read, grants.write, skill.exclude, skill.include,
+       snippet.review, ui.currency, ui.grouping, ui.reasoning, ui.streaming
 === mixed global and local settings / ordinary / narrow ===
 Agent tame-impala 🦌 ready in 2ms on Fri
 day, 2 October 2026 with 4 skills ⧸ 2 sn

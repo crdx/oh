@@ -10944,7 +10944,7 @@ func TestGoldenTheStartupLineDrawsWhatItDrewBefore(t *testing.T) {
 		"agent.round_robin",
 		"default.caps",
 		"editor.command",
-		"experimental.forward_hostname",
+		"agent.resync",
 		"skill.include",
 		"ui.currency",
 		"ui.streaming",
@@ -11068,7 +11068,7 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 			},
 		},
 		"command line settings": {
-			CommandLine: []string{"grants.read", "grants.write"},
+			CommandLine: []string{"agent.forward_hostname", "grants.write"},
 		},
 		"local and command line settings": {
 			LocalConfig: &startup.LocalConfig{Name: "oh.toml", Settings: []string{"default.caps", "ui.currency"}},
@@ -11084,7 +11084,7 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 					"default.caps",
 					"default.tool_output",
 					"editor.command",
-					"experimental.forward_hostname",
+					"agent.resync",
 					"provider.ollama.host",
 					"grants.read",
 					"grants.write",
@@ -11795,11 +11795,11 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		},
 		"an experiment read once at startup": {
 			changes: []config.SourceChange{
-				{Path: "config.toml", Settings: []string{"experimental.forward_hostname", "experimental.shared_history"}},
+				{Path: "config.toml", Settings: []string{"agent.forward_hostname", "experimental.shared_history"}},
 			},
 			want: tr.ReloadConfirmation + "\n" +
-				"config.toml: experimental.forward_hostname, experimental.shared_history\n" +
-				tr.NextRunReach + ": experimental.forward_hostname",
+				"config.toml: agent.forward_hostname, experimental.shared_history\n" +
+				tr.NextRunReach + ": agent.forward_hostname",
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
@@ -18509,7 +18509,7 @@ func goldenForwardedPorts(ports ...uint16) forwardedPorts.Routes {
 
 func newSessionGoldenPorts(sessionName string, hostnameTemplate string) *portgrant.Forwards {
 	address := portgrant.AddressFor(sessionName)
-	hostname := config.Config{Experimental: map[string]any{string(experimental.ForwardHostname): hostnameTemplate}}.GetHostname(sessionName, address)
+	hostname := config.Config{Agent: config.Agent{ForwardHostname: hostnameTemplate}}.GetHostname(sessionName, address)
 	return portgrant.NewForwards(portgrant.Forwarder{
 		Forward: func(uint16) error { return nil },
 		Revoke:  func(uint16) error { return nil },
