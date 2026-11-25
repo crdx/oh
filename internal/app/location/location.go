@@ -71,6 +71,10 @@ func GetModelRoundRobinPath() string {
 	return GetDataDir("model-round-robin.json")
 }
 
+func GetSubagentRoundRobinDir() string {
+	return GetDataDir("subagent-round-robin")
+}
+
 func GetHistoryPath() string {
 	return GetDataDir("history")
 }

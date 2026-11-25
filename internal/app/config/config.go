@@ -63,6 +63,7 @@ const (
 	agentSetting        = "agent"
 	modelSetting        = "model"
 	roundRobinSetting   = "round_robin"
+	subagentSetting     = "subagent"
 
 	forwardHostnameSetting = experimentalSetting + "." + string(experimental.ForwardHostname)
 	migrateCommand         = "oh --ctl migrate"
@@ -140,7 +141,9 @@ type Input struct {
 }
 
 type Subagent struct {
-	Concurrency int `toml:"concurrency"`
+	Concurrency int             `toml:"concurrency"`
+	IsFree      bool            `toml:"free"`
+	Models      []SubagentModel `toml:"model"`
 }
 
 type Agent struct {
@@ -732,6 +735,9 @@ func applyDocument(config *Config, source Source, displayPath string, data []byt
 	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
 		return fmt.Errorf("%s: %s", displayPath, fmt.Sprintf(tr.SettingMinimum, "subagent.concurrency", 1, config.Subagent.Concurrency))
 	}
+	if err := applySubagentModels(&config.Subagent, meta, data, source.directory()); err != nil {
+		return fmt.Errorf("%s: %w", displayPath, err)
+	}
 	if err := validateExperimentalMinimums(config, meta); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
@@ -945,6 +951,12 @@ func (self Config) rotationFiles() (map[string]snapshot, map[string][]string) {
 	for path, current := range self.Agent.rotationFile {
 		snapshots[path] = current
 		settings[path] = []string{agentSetting + "." + roundRobinSetting}
+	}
+	for _, entry := range self.Subagent.Models {
+		for path, current := range entry.rotationFile {
+			snapshots[path] = current
+			settings[path] = append(settings[path], subagentModelSetting)
+		}
 	}
 	return snapshots, settings
 }

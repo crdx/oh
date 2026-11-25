@@ -49,6 +49,7 @@ type childOptions struct {
 	userHome           string
 	toolOutputLimit    *truncate.Limit
 	skillDirectories   []string
+	rotationDirectory  string
 }
 
 type childBrief struct {
@@ -66,27 +67,24 @@ func userHome() string {
 }
 
 type preparedChildManager struct {
-	manager *subagents.Manager
-	rotate  func(config.Subagent, model.Defaults) (subagents.Rotation, error)
+	manager     *subagents.Manager
+	catalogueOf func(config.Subagent, model.Defaults) subagents.Catalogue
 }
 
 func prepareChildManager(options childOptions, choices []model.Choice, isPrinting bool) (preparedChildManager, error) {
 	if isPrinting {
 		return preparedChildManager{}, nil
 	}
-	rotate := func(settings config.Subagent, defaults model.Defaults) (subagents.Rotation, error) {
-		return childRotationOf(options.parentChoice, settings, defaults, choices)
+	catalogueOf := func(settings config.Subagent, defaults model.Defaults) subagents.Catalogue {
+		return childCatalogueOf(options.parentChoice, settings, defaults, choices)
 	}
-	rotation, err := rotate(options.settings.Subagent, options.settings.Defaults.ForSelections())
-	if err != nil {
-		return preparedChildManager{}, err
-	}
+	catalogue := catalogueOf(options.settings.Subagent, options.settings.Defaults.ForSelections())
 	manager, err := subagents.New(subagents.Options{
 		Directory:   session.ChildrenDir(options.sessionsDir, options.sessionName),
 		Scratch:     options.scratchParent,
 		Parent:      options.sessionName,
-		Models:      rotation.Models,
-		Concurrency: rotation.Concurrency,
+		Models:      catalogue.Models,
+		Concurrency: catalogue.Concurrency,
 		Meta: store.Meta{
 			WorkspaceDir:   options.workspace.GetDir(),
 			ShouldSkipWire: !options.recordsWire,
@@ -100,8 +98,9 @@ func prepareChildManager(options childOptions, choices []model.Choice, isPrintin
 		Caps: func() caps.Set {
 			return options.parentCaps() & (caps.Read | caps.Shell)
 		},
+		ReserveMember: reserveChildMember(options.rotationDirectory),
 	})
-	return preparedChildManager{manager: manager, rotate: rotate}, err
+	return preparedChildManager{manager: manager, catalogueOf: catalogueOf}, err
 }
 
 func canStartChildren(
@@ -109,31 +108,98 @@ func canStartChildren(
 	settings config.Config,
 	choices []model.Choice,
 ) bool {
-	rotation, err := childRotationOf(
-		parentChoice, settings.Subagent, settings.Defaults.ForSelections(), choices,
-	)
-	return err == nil && len(rotation.Models) > 0
+	catalogue := childCatalogueOf(parentChoice, settings.Subagent, settings.Defaults.ForSelections(), choices)
+	return len(catalogue.Models) > 0
 }
 
-func childRotationOf(
+func childCatalogueOf(
 	parentChoice model.Choice,
 	settings config.Subagent,
 	defaults model.Defaults,
 	choices []model.Choice,
-) (subagents.Rotation, error) {
+) subagents.Catalogue {
 	defaults.IsFast = false
-	models := make([]subagents.ChildModel, 0, len(choices))
-	for _, choice := range choices {
-		if !model.CanDelegateTo(parentChoice, choice) {
+	var models []subagents.ChildModel
+	isOfferedBare := func(candidate subagents.ChildModel) bool {
+		return slices.ContainsFunc(models, func(other subagents.ChildModel) bool {
+			return other.Label == "" && other.Selection == candidate.Selection
+		})
+	}
+	for _, entry := range settings.Models {
+		members := childMembersOf(parentChoice, entry, defaults, choices)
+		if len(members) == 0 {
 			continue
 		}
-		selection, err := model.ParseSelection([]model.Choice{choice}, choice.Provider+"/"+choice.ID, defaults)
-		if err != nil {
-			return subagents.Rotation{}, err
+		if entry.Label != "" {
+			models = append(models, subagents.ChildModel{
+				Label:        entry.Label,
+				Description:  entry.Description,
+				SystemPrompt: entry.SystemPrompt,
+				Members:      members,
+			})
+			continue
 		}
-		models = append(models, subagents.ChildModel{Choice: choice, Selection: selection})
+		candidate := members[0]
+		candidate.Description = entry.Description
+		candidate.SystemPrompt = entry.SystemPrompt
+		if !isOfferedBare(candidate) {
+			models = append(models, candidate)
+		}
 	}
-	return subagents.Rotation{Models: models, Concurrency: settings.Concurrency}, nil
+	if settings.IsFree {
+		for _, choice := range choices {
+			isListed := slices.ContainsFunc(models, func(other subagents.ChildModel) bool {
+				return other.Label == "" && other.Choice.Provider == choice.Provider && other.Choice.ID == choice.ID
+			})
+			if isListed || !model.IsFreeSubagentModel(choice) || !model.CanDelegateTo(parentChoice, choice, true) {
+				continue
+			}
+			selection, err := model.ParseSelection([]model.Choice{choice}, choice.Provider+"/"+choice.ID, defaults)
+			if err == nil {
+				models = append(models, subagents.ChildModel{Choice: choice, Selection: selection})
+			}
+		}
+	}
+	return subagents.Catalogue{Models: models, Concurrency: settings.Concurrency}
+}
+
+func childMembersOf(
+	parentChoice model.Choice,
+	entry config.SubagentModel,
+	defaults model.Defaults,
+	choices []model.Choice,
+) []subagents.ChildModel {
+	isAvailableToAll := entry.Availability == config.AvailableToAll
+	delegable := slices.DeleteFunc(slices.Clone(choices), func(choice model.Choice) bool {
+		return !model.CanDelegateTo(parentChoice, choice, isAvailableToAll)
+	})
+	var members []subagents.ChildModel
+	for _, writtenSelection := range entry.Rotation() {
+		selection, err := model.ParseSelection(delegable, writtenSelection, defaults)
+		if err != nil {
+			continue
+		}
+		index := slices.IndexFunc(delegable, func(choice model.Choice) bool {
+			return choice.Provider == selection.Provider && choice.ID == selection.Model
+		})
+		members = append(members, subagents.ChildModel{Choice: delegable[index], Selection: selection})
+	}
+	return members
+}
+
+func reserveChildMember(directory string) func(string, []subagents.ChildModel) (subagents.ChildModel, error) {
+	return func(label string, members []subagents.ChildModel) (subagents.ChildModel, error) {
+		selections := make([]model.Selection, len(members))
+		for index, member := range members {
+			selections[index] = member.Selection
+		}
+		isAvailable := func(model.Selection) bool { return true }
+		selection, err := model.ReserveAvailableRoundRobin(filepath.Join(directory, label+".json"), selections, isAvailable)
+		if err != nil {
+			return subagents.ChildModel{}, err
+		}
+		return members[slices.Index(selections, selection)], nil
+	}
 }
 
 func newChildFactory(options childOptions) subagents.Factory {
@@ -273,6 +339,7 @@ func childPrompt(
 		Skills:             brief.skills,
 		DropsDirectory:     brief.dropsDirectory,
 		SharedPrompt:       child.SharedPrompt,
+		ModelPrompt:        child.ModelPrompt,
 		Notes:              brief.notes,
 	})
 }

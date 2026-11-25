@@ -1,32 +1,16 @@
 package model
 
 import (
-	"regexp"
-	"slices"
+	"strings"
 )
 
-var subagentModelsByProvider = map[string][]string{
-	CodexProvider: {
-		"gpt-6-luna",
-	},
-	AnthropicProvider: {
-		"claude-haiku-5-5",
-	},
-	OpencodeGoProvider: {
-		"deepseek-v4.1-flash",
-	},
-}
-
-var freeSubagentModelPattern = regexp.MustCompile(`-free$`)
-
-func CanDelegateTo(parent Choice, candidate Choice) bool {
-	if parent.Provider == OllamaProvider || candidate.Provider == OllamaProvider {
-		return parent.Provider == OllamaProvider && candidate.Provider == OllamaProvider
+func CanDelegateTo(parent Choice, candidate Choice, isAvailableToAll bool) bool {
+	if (parent.Provider == OllamaProvider) != (candidate.Provider == OllamaProvider) {
+		return false
 	}
-	return parent.Provider == candidate.Provider && slices.Contains(subagentModelsByProvider[parent.Provider], candidate.ID) ||
-		IsFreeSubagentModel(candidate)
+	return isAvailableToAll || IsFreeSubagentModel(candidate) || parent.Provider == candidate.Provider
 }
 
 func IsFreeSubagentModel(candidate Choice) bool {
-	return candidate.Provider != OllamaProvider && freeSubagentModelPattern.MatchString(candidate.ID)
+	return candidate.Provider != OllamaProvider && strings.HasSuffix(candidate.ID, freeModelSuffix)
 }

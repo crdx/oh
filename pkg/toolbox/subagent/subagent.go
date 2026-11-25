@@ -68,11 +68,10 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			"send one a message, which a running subagent reads once its current step finishes and a finished one takes as a follow-up, " +
 			"or send every running subagent the same message by leaving out the name, " +
 			"and inspect or control them by name, or by the alias a task gave its subagent; " +
-			"call models to list valid models and their supported efforts, " +
-			"then give every task an explicit provider/model@effort selection from that list; use provider/model when no efforts are listed; " +
+			"call models to list the valid selections, then give every task one of them exactly as listed; " +
 			"a follow-up keeps the model the subagent started on; " +
 			"only a limited number run at once, and start says how many are running against the limit; " +
-			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
+			"a subagent knows only a short description of its sandbox, your system_prompt, any system prompt configured for its listed model, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
 			"each subagent can read but not write its workspace, and has a shell only while you do, " +
 			"it can also read your configured read, home, and executable search paths, " +
@@ -95,7 +94,7 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			tool.String("message", "the message to send (for send)").Optional(),
 			tool.String("system_prompt", "the only instructions every subagent shares, beside a short description of its sandbox (for start)").Optional(),
 			tool.ObjectArray("subagents", "one task per independent subagent (for start)", tool.Schema{
-				tool.String("model", "the exact provider/model@effort selection from action=models; omit @effort only for a model that takes no effort"),
+				tool.String("model", "one selection exactly as action=models lists it"),
 				tool.String("prompt", "the whole task for this subagent, with whatever context it needs"),
 				tool.String("intent", "what this subagent is for, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as \"Reviewing the parser for missed errors\""),
 				tool.String("workspace", "the subagent's read-only workspace, any directory you can read outside your /tmp; absent means yours").Optional(),
@@ -281,9 +280,6 @@ func validate(args Args) error {
 			}
 			if strings.TrimSpace(task.Model) == "" {
 				return fmt.Errorf("subagents[%d].model is required; call action=models for valid selections", index)
-			}
-			if strings.Contains(task.Model, "+") {
-				return fmt.Errorf("subagents[%d].model must use provider/model@effort or provider/model", index)
 			}
 			if strings.TrimSpace(task.Prompt) == "" {
 				return fmt.Errorf("subagents[%d].prompt is empty", index)

@@ -26,6 +26,7 @@ type SubagentConfig struct {
 	Skills             []skill.Skill
 	DropsDirectory     string
 	SharedPrompt       string
+	ModelPrompt        string
 	Notes              agent.NoteFormat
 }
 
@@ -39,6 +40,7 @@ func Subagent(config SubagentConfig) string {
 		subagentStateSection(config),
 		skill.Context(config.Skills),
 		config.SharedPrompt,
+		config.ModelPrompt,
 		subagentIdentitySection(config),
 	)
 }

@@ -72,6 +72,8 @@ var (
 	readmeReader = regexp.MustCompile(`(\S+) done(?: \([^)]*\))?: ` + regexp.QuoteMeta(firstChildAnswer))
 )
 
+const listedSubagentModel = "[[subagent.model]]\nmodel = \"opencode-go/deepseek-v4.1-flash@low\"\n\n[[subagent.model]]\nmodel = \"opencode-go/deepseek-v4.1-flash@high\"\n"
+
 func newRespondingRig(t *testing.T, respond sim.Responder) (*interactiveRig, *sim.Endpoint) {
 	t.Helper()
 
@@ -80,7 +82,7 @@ func newRespondingRig(t *testing.T, respond sim.Responder) (*interactiveRig, *si
 	t.Cleanup(server.Close)
 
 	stateDirectory := reachableWorkspaceDir(t)
-	return &interactiveRig{
+	rig := &interactiveRig{
 		t:              t,
 		binary:         buildTestBinary(t),
 		workspace:      reachableWorkspaceDir(t),
@@ -90,7 +92,9 @@ func newRespondingRig(t *testing.T, respond sim.Responder) (*interactiveRig, *si
 			backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Completions],
 			"TERM=xterm-256color",
 		),
-	}, endpoint
+	}
+	writeRigConfig(t, rig, listedSubagentModel)
+	return rig, endpoint
 }
 
 func encodedArguments(arguments any) string {
@@ -302,7 +306,7 @@ func TestSubagentsReportBackThroughTheBinaryAndAreListed(t *testing.T) {
 	}
 }
 
-func TestANewSessionOffersSubagentsWithoutAConfiguredRotation(t *testing.T) {
+func TestANewSessionOffersSubagentsOnlyWithAnEligibleModelUnlessChosen(t *testing.T) {
 	for _, test := range []struct {
 		name      string
 		config    string
@@ -310,17 +314,22 @@ func TestANewSessionOffersSubagentsWithoutAConfiguredRotation(t *testing.T) {
 		want      caps.Set
 	}{
 		{
-			name:   "defaulted on with no subagent model",
+			name:   "defaulted on with a listed model",
+			config: "[default]\ncaps = \"rs\"\n\n" + listedSubagentModel,
+			want:   caps.Unconfined() | caps.Subagents,
+		},
+		{
+			name:   "defaulted on with a listed model and a concurrency limit",
+			config: "[default]\ncaps = \"rs\"\n\n[subagent]\nconcurrency = 2\n\n" + listedSubagentModel,
+			want:   caps.Unconfined() | caps.Subagents,
+		},
+		{
+			name:   "defaulted on with nothing listed",
 			config: "[default]\ncaps = \"rs\"\n",
-			want:   caps.Unconfined() | caps.Subagents,
+			want:   caps.Unconfined(),
 		},
 		{
-			name:   "defaulted on with a concurrency limit",
-			config: "[default]\ncaps = \"rs\"\n\n[subagent]\nconcurrency = 2\n",
-			want:   caps.Unconfined() | caps.Subagents,
-		},
-		{
-			name:      "chosen with no subagent model",
+			name:      "chosen with nothing listed",
 			arguments: []string{"-c", "s"},
 			want:      caps.Unconfined() | caps.Subagents,
 		},

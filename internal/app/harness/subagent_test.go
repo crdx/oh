@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -16,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/output"
@@ -661,21 +664,19 @@ func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
 	}
 }
 
-func TestReloadingConfigChangesTheSubagentLimitForTheNextStart(t *testing.T) {
+func TestReloadingConfigChangesTheSubagentLimitAndModelsForTheNextStart(t *testing.T) {
+	const listedHaiku = "[[subagent.model]]\nmodel = \"anthropic/haiku\"\n"
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "[subagent]\nconcurrency = 2\n")
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 2\n"+listedHaiku)
 
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	prepareLiveConfig(t, self, path)
 	choice := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
-	rotate := func(settings config.Subagent, defaults model.Defaults) (subagents.Rotation, error) {
-		return childRotationOf(choice, settings, defaults, []model.Choice{choice})
+	catalogueOf := func(settings config.Subagent, defaults model.Defaults) subagents.Catalogue {
+		return childCatalogueOf(choice, settings, defaults, []model.Choice{choice})
 	}
-	initial, err := rotate(config.Subagent{Concurrency: 2}, model.Defaults{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	initial := catalogueOf(configFrom(t, "[subagent]\nconcurrency = 2\n"+listedHaiku).Subagent, model.Defaults{})
 	manager, err := subagents.New(subagents.Options{
 		Directory:   filepath.Join(t.TempDir(), "subagents"),
 		Scratch:     t.TempDir(),
@@ -687,79 +688,161 @@ func TestReloadingConfigChangesTheSubagentLimitForTheNextStart(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(manager.Close)
-	self.children = childState{manager: manager, rotate: rotate}
+	self.children = childState{manager: manager, catalogueOf: catalogueOf}
 
-	writeLiveConfig(t, path, "[subagent]\nconcurrency = 7\n")
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 7\n"+listedHaiku)
 	settleLiveConfig(t, self)
 	if got := manager.Concurrency(); got != 7 {
 		t.Errorf("the limit after a reload is %d, want 7", got)
 	}
-	if got := manager.Model(); got != choice.ID {
-		t.Errorf("the automatic pool after a reload names %q, want %q", got, choice.ID)
+	listedHaikuModels := manager.Models()
+	if !strings.Contains(listedHaikuModels, "- anthropic/claude-haiku-5-5@high") {
+		t.Errorf("the listed models after a reload are %q, want haiku", listedHaikuModels)
 	}
 
-	writeLiveConfig(t, path, "[subagent]\nconcurrency = 0\n")
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 0\n"+listedHaiku)
 	settleLiveConfig(t, self)
-	if got := manager.Concurrency(); got != 7 || manager.Model() != choice.ID {
-		t.Errorf("an invalid limit replaced the one standing: %d, %q", got, manager.Model())
+	if got := manager.Concurrency(); got != 7 || manager.Models() != listedHaikuModels {
+		t.Errorf("an invalid limit replaced the one standing: %d, %q", got, manager.Models())
 	}
 	if message := self.feedback.Message(); message.Status != agent.ErrorStatus || !strings.Contains(message.Text, "subagent.concurrency") {
 		t.Errorf("an invalid limit said %+v", message)
 	}
+
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 7\n"+listedHaiku+"availability = \"everyone\"\n")
+	settleLiveConfig(t, self)
+	if got := manager.Models(); got != listedHaikuModels {
+		t.Errorf("an invalid availability replaced the models standing with %q", got)
+	}
+	if message := self.feedback.Message(); message.Status != agent.ErrorStatus || !strings.Contains(message.Text, "subagent.model[1].availability") {
+		t.Errorf("an invalid availability said %+v", message)
+	}
+
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 7\n")
+	settleLiveConfig(t, self)
+	if got := manager.Models(); strings.Contains(got, "claude-haiku") {
+		t.Errorf("a config listing nothing still offers %q", got)
+	}
 }
 
 func TestAnEmptySubagentCatalogueKeepsItsConcurrency(t *testing.T) {
-	rotation, err := childRotationOf(model.Choice{}, config.Subagent{Concurrency: 4}, model.Defaults{}, nil)
-	if err != nil {
-		t.Fatal(err)
+	catalogue := childCatalogueOf(model.Choice{}, config.Subagent{Concurrency: 4, IsFree: true}, model.Defaults{}, nil)
+	if catalogue.Concurrency != 4 || len(catalogue.Models) != 0 {
+		t.Fatalf("an empty catalogue came back as %+v", catalogue)
 	}
-	if rotation.Concurrency != 4 || len(rotation.Models) != 0 {
-		t.Fatalf("an empty rotation came back as %+v", rotation)
+}
+
+func offeredTitles(catalogue subagents.Catalogue) []string {
+	titles := make([]string, 0, len(catalogue.Models))
+	for _, offered := range catalogue.Models {
+		if offered.Label == "" {
+			titles = append(titles, offered.Selection.String())
+			continue
+		}
+		members := make([]string, 0, len(offered.Members))
+		for _, member := range offered.Members {
+			members = append(members, member.Selection.String())
+		}
+		titles = append(titles, offered.Label+" = "+strings.Join(members, " | "))
 	}
+	return titles
 }
 
 func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"none"}}
 	other := model.Choice{Provider: model.OllamaProvider, ID: "muse-glimmer-128k:latest", EffortLevels: []string{"none"}}
 	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
-	choices := []model.Choice{local, other, hosted}
+	free := model.Choice{Provider: model.OpencodeGoProvider, ID: "cat-jam-free"}
+	choices := []model.Choice{local, other, hosted, free}
+	settings := configFrom(t, `
+		[subagent]
+		free = true
+
+		[[subagent.model]]
+		model = "ollama/qwen"
+		availability = "all"
+
+		[[subagent.model]]
+		model = "anthropic/haiku"
+		availability = "all"
+
+		[[subagent.model]]
+		label = "mixed"
+		round_robin = ["ollama/qwen", "anthropic/haiku", "opencode-go/cat-jam-free"]
+		availability = "all"
+	`).Subagent
 	for _, test := range []struct {
 		parent model.Choice
 		want   []string
 	}{
-		{local, []string{"qwen3.8:27b-mtp-q8_0-256k", "muse-glimmer-128k:latest"}},
-		{hosted, []string{"claude-haiku-5-5"}},
+		{other, []string{"ollama/qwen3.8:27b-mtp-q8_0-256k@none", "mixed = ollama/qwen3.8:27b-mtp-q8_0-256k@none"}},
+		{hosted, []string{"anthropic/claude-haiku-5-5@high", "mixed = anthropic/claude-haiku-5-5@high | opencode-go/cat-jam-free", "opencode-go/cat-jam-free"}},
 	} {
-		rotation, err := childRotationOf(test.parent, config.Subagent{Concurrency: 4}, model.Defaults{}, choices)
-		if err != nil {
-			t.Fatal(err)
-		}
-		var got []string
-		for _, child := range rotation.Models {
-			got = append(got, child.Choice.ID)
-		}
-		if !slices.Equal(got, test.want) {
-			t.Errorf("a session on %s rotates over %v, want %v", test.parent.Provider, got, test.want)
+		if got := offeredTitles(childCatalogueOf(test.parent, settings, model.Defaults{}, choices)); !slices.Equal(got, test.want) {
+			t.Errorf("a session on %s offers %v, want %v", test.parent.Provider, got, test.want)
 		}
 	}
 }
 
-func TestASessionCanStartChildrenFromTheCatalogueWithoutARotation(t *testing.T) {
+func TestALabelledEntryCarriesItsDescriptionAndSystemPromptToEveryMember(t *testing.T) {
+	parent := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5-5"}
+	settings := configFrom(t, `
+		[subagent]
+		free = false
+
+		[[subagent.model]]
+		label = "explorer"
+		round_robin = ["anthropic/haiku@high", "anthropic/fable@low"]
+		description = "reading code"
+		system_prompt = "You explore."
+
+		[[subagent.model]]
+		model = "anthropic/fable@high"
+		description = "deep reviews"
+		system_prompt = "You review."
+	`).Subagent
+	catalogue := childCatalogueOf(parent, settings, model.Defaults{}, subagentCatalogueChoices)
+	if len(catalogue.Models) != 2 {
+		t.Fatalf("offered %v", offeredTitles(catalogue))
+	}
+	explorer, reviewer := catalogue.Models[0], catalogue.Models[1]
+	if explorer.Label != "explorer" || explorer.Description != "reading code" || explorer.SystemPrompt != "You explore." || len(explorer.Members) != 2 {
+		t.Errorf("the explorer is %+v", explorer)
+	}
+	for _, member := range explorer.Members {
+		if member.Label != "" || member.SystemPrompt != "" || member.Choice.ID == "" {
+			t.Errorf("a member carries its own identity or lacks a model: %+v", member)
+		}
+	}
+	if reviewer.Label != "" || reviewer.Selection.String() != "anthropic/claude-fable-5-1@high" || reviewer.SystemPrompt != "You review." || reviewer.Description != "deep reviews" {
+		t.Errorf("the reviewer is %+v", reviewer)
+	}
+}
+
+func TestASessionCanStartChildrenOnlyWithAnEligibleModel(t *testing.T) {
 	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"none"}}
 	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
-	choices := []model.Choice{local, hosted}
+	free := model.Choice{Provider: model.OpencodeGoProvider, ID: "cat-jam-free"}
+	listed := config.Subagent{Models: []config.SubagentModel{
+		{ModelChoice: config.ModelChoice{Model: "ollama/qwen"}},
+		{ModelChoice: config.ModelChoice{Model: "anthropic/haiku"}},
+	}}
 	for _, test := range []struct {
 		name     string
 		parent   model.Choice
-		settings config.Config
+		settings config.Subagent
+		choices  []model.Choice
 		want     bool
 	}{
-		{"no configured subagent model", hosted, config.Config{}, true},
-		{"an ollama session keeps its local pool", local, config.Config{}, true},
-		{"a concurrency limit keeps the automatic pool", hosted, config.Config{Subagent: config.Subagent{Concurrency: 2}}, true},
-		{"a hosted session cannot use local or another provider's paid models", model.Choice{Provider: model.CodexProvider}, config.Config{}, false},
+		{"nothing listed or free", hosted, config.Subagent{IsFree: true}, []model.Choice{local, hosted}, false},
+		{"a listed model of the parent's provider", hosted, listed, []model.Choice{local, hosted}, true},
+		{"an ollama session with a listed local model", local, listed, []model.Choice{local, hosted}, true},
+		{"a free model with nothing listed", hosted, config.Subagent{IsFree: true}, []model.Choice{hosted, free}, true},
+		{"a free model while free models are off", hosted, config.Subagent{}, []model.Choice{hosted, free}, false},
+		{"an ollama session beside a free model", local, config.Subagent{IsFree: true}, []model.Choice{local, free}, false},
+		{"a hosted session beside another provider's listed model", model.Choice{Provider: model.CodexProvider}, listed, []model.Choice{local, hosted}, false},
 	} {
-		if got := canStartChildren(test.parent, test.settings, choices); got != test.want {
+		if got := canStartChildren(test.parent, config.Config{Subagent: test.settings}, test.choices); got != test.want {
 			t.Errorf("%s: canStartChildren is %t, want %t", test.name, got, test.want)
 		}
 	}
@@ -771,7 +854,7 @@ func TestGoldenSubagentProviderPools(t *testing.T) {
 		{Provider: model.CodexProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
 		{Provider: model.AnthropicProvider, ID: "claude-opus-5-5", EffortLevels: []string{"high"}},
 		{Provider: model.AnthropicProvider, ID: "claude-sonnet-5-5", EffortLevels: []string{"high"}},
-		{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}},
+		{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"medium", "high"}},
 		{Provider: model.OpencodeGoProvider, ID: "deepseek-v4.1-flash", EffortLevels: []string{"high"}},
 		{Provider: model.OpencodeGoProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
 		{Provider: model.OpencodeGoProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}},
@@ -781,14 +864,32 @@ func TestGoldenSubagentProviderPools(t *testing.T) {
 		{Provider: model.OllamaProvider, ID: "muse-glimmer-128k:latest", EffortLevels: []string{"high"}},
 		{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"high"}},
 	}
+	settings := configFrom(t, `
+		[subagent]
+		free = true
+
+		[[subagent.model]]
+		model = "haiku@high"
+		description = "exploration work"
+
+		[[subagent.model]]
+		model = "haiku@medium"
+		description = "exploration work"
+
+		[[subagent.model]]
+		model = "luna"
+
+		[[subagent.model]]
+		model = "deepseek-v4.1-flash@high"
+
+		[[subagent.model]]
+		model = "qwen"
+	`).Subagent
 	passes := map[string]func() string{}
 	for _, provider := range model.ProviderNames() {
 		passes[provider] = func() string {
-			rotation, err := childRotationOf(model.Choice{Provider: provider}, config.Subagent{}, model.Defaults{}, choices)
-			if err != nil {
-				t.Fatal(err)
-			}
-			manager, err := subagents.New(subagents.Options{Directory: t.TempDir(), Scratch: t.TempDir(), Models: rotation.Models})
+			catalogue := childCatalogueOf(model.Choice{Provider: provider}, settings, model.Defaults{}, choices)
+			manager, err := subagents.New(subagents.Options{Directory: t.TempDir(), Scratch: t.TempDir(), Models: catalogue.Models})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -801,8 +902,269 @@ func TestGoldenSubagentProviderPools(t *testing.T) {
 
 func TestSubagentCatalogueIgnoresFastDefaults(t *testing.T) {
 	choice := model.Choice{Provider: model.CodexProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}}
-	rotation, err := childRotationOf(choice, config.Subagent{}, model.Defaults{IsFast: true}, []model.Choice{choice})
-	if err != nil || len(rotation.Models) != 1 || rotation.Models[0].Selection.IsFast {
-		t.Errorf("fast defaults reached the subagent catalogue: %+v, %v", rotation, err)
+	settings := config.Subagent{Models: []config.SubagentModel{
+		{ModelChoice: config.ModelChoice{Model: "codex/luna"}},
+		{ModelChoice: config.ModelChoice{RoundRobin: config.RoundRobin{"codex/luna"}}, Label: "explorer"},
+	}}
+	catalogue := childCatalogueOf(choice, settings, model.Defaults{IsFast: true}, []model.Choice{choice})
+	if len(catalogue.Models) != 2 || catalogue.Models[0].Selection.IsFast || catalogue.Models[1].Members[0].Selection.IsFast {
+		t.Errorf("fast defaults reached the subagent catalogue: %+v", catalogue)
 	}
+}
+
+var subagentCatalogueChoices = []model.Choice{
+	{Provider: model.AnthropicProvider, ID: "claude-opus-5-5", EffortLevels: []string{"low", "medium", "high", "max"}},
+	{Provider: model.AnthropicProvider, ID: "claude-fable-5-1", EffortLevels: []string{"low", "medium", "high"}},
+	{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"low", "medium", "high"}},
+	{Provider: model.CodexProvider, ID: "gpt-6.1-sol", EffortLevels: []string{"low", "medium", "high"}},
+	{Provider: model.CodexProvider, ID: "gpt-6-luna", EffortLevels: []string{"low", "medium", "high"}},
+	{Provider: model.OpencodeGoProvider, ID: "glm-5.3"},
+	{Provider: model.OpencodeGoProvider, ID: "deepseek-v4.1-flash", EffortLevels: []string{"high"}},
+	{Provider: model.OpencodeGoProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}},
+	{Provider: model.OpencodeGoProvider, ID: "step-5-preview-free", EffortLevels: []string{"low", "high"}},
+	{Provider: model.OpencodeGoProvider, ID: "cat-jam-free"},
+	{Provider: model.OllamaProvider, ID: "qwen3.8:27b", EffortLevels: []string{"none"}},
+	{Provider: model.OllamaProvider, ID: "muse-glimmer:latest", EffortLevels: []string{"none"}},
+}
+
+func drawnSubagentCatalogue(t *testing.T, parent string, body string) string {
+	t.Helper()
+
+	provider, id, _ := strings.Cut(parent, "/")
+	parentChoice := model.Choice{Provider: provider, ID: id}
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := os.WriteFile(path, fmt.Appendf(nil, "version = %d\n%s", config.Format, body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	var drawn strings.Builder
+	fmt.Fprintf(&drawn, "parent: %s\n", parent)
+	for line := range strings.Lines(body) {
+		if strings.TrimSpace(line) == "" {
+			drawn.WriteString(">\n")
+			continue
+		}
+		fmt.Fprintf(&drawn, "> %s", line)
+	}
+	drawn.WriteString("\n")
+	settings, err := config.Load(path)
+	if err != nil {
+		fmt.Fprintf(&drawn, "refused: %s\n", strings.ReplaceAll(err.Error(), path, "config.toml"))
+		return drawn.String()
+	}
+	for _, unknown := range settings.UnknownSettings() {
+		fmt.Fprintf(&drawn, "warned: %s\n", strings.ReplaceAll(unknown, path, "config.toml"))
+	}
+	catalogue := childCatalogueOf(parentChoice, settings.Subagent, settings.Defaults.ForSelections(), subagentCatalogueChoices)
+	manager, err := subagents.New(subagents.Options{Directory: t.TempDir(), Scratch: t.TempDir(), Models: catalogue.Models})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer manager.Close()
+	fmt.Fprintf(&drawn, "%s\n", manager.Models())
+	for _, offered := range catalogue.Models {
+		if offered.Label == "" && offered.SystemPrompt == "" {
+			continue
+		}
+		title := offered.Label
+		if title == "" {
+			title = offered.Selection.String()
+		}
+		fmt.Fprintf(&drawn, "\nhidden from the parent, for %s:\n", title)
+		for _, member := range offered.Members {
+			fmt.Fprintf(&drawn, "  member: %s\n", member.Selection)
+		}
+		if offered.SystemPrompt != "" {
+			fmt.Fprintf(&drawn, "  system prompt: %s\n", offered.SystemPrompt)
+		}
+	}
+	return drawn.String()
+}
+
+func TestGoldenSubagentModelCatalogue(t *testing.T) {
+	const anthropic = "anthropic/claude-opus-5-5"
+	const codex = "codex/gpt-6.1-sol"
+	const opencodeGo = "opencode-go/glm-5.3"
+	const ollama = "ollama/muse-glimmer:latest"
+	cases := []struct {
+		name   string
+		parent string
+		body   string
+	}{
+		{"01 the defaults offer nothing", anthropic, ""},
+		{"02 free models switched on are offered to every hosted parent", anthropic, "[subagent]\nfree = true\n"},
+		{"03 a model carries its effort", anthropic, "[[subagent.model]]\nmodel = \"anthropic/haiku@medium\"\n"},
+		{"04 a model without an effort takes the automatic effort", anthropic, "[[subagent.model]]\nmodel = \"anthropic/haiku\"\n"},
+		{"05 the automatic effort follows the default effort", anthropic, "[default]\neffort = \"max\"\n\n[[subagent.model]]\nmodel = \"opus\"\n"},
+		{"06 a description follows its line", anthropic, "[[subagent.model]]\nmodel = \"anthropic/haiku@high\"\ndescription = \"exploration work\"\n\n[[subagent.model]]\nmodel = \"anthropic/haiku@low\"\ndescription = \"quick checks\"\n"},
+		{"07 entries keep config order", anthropic, "[[subagent.model]]\nmodel = \"haiku\"\n\n[[subagent.model]]\nmodel = \"fable\"\n\n[[subagent.model]]\nmodel = \"opus@low\"\n"},
+		{"08 same provider is the default availability", codex, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"anthropic/haiku\"\n\n[[subagent.model]]\nmodel = \"codex/luna\"\n"},
+		{"09 availability all reaches another provider", codex, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"anthropic/haiku\"\navailability = \"all\"\n"},
+		{"10 a model matching several providers is passed over", codex, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"haiku\"\navailability = \"all\"\n\n[[subagent.model]]\nmodel = \"opencode-go/haiku\"\navailability = \"all\"\n"},
+		{"11 same provider settles which provider a name means", opencodeGo, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"haiku\"\n"},
+		{"12 an effort the model lacks is passed over", anthropic, "[[subagent.model]]\nmodel = \"fable@max\"\n\n[[subagent.model]]\nmodel = \"fable@high\"\n"},
+		{"13 a model with no effort levels takes no effort", opencodeGo, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"glm@high\"\n\n[[subagent.model]]\nmodel = \"glm\"\n"},
+		{"14 an entry naming a free model replaces its default line", anthropic, "[subagent]\nfree = true\n\n[[subagent.model]]\nmodel = \"step@low\"\ndescription = \"quick lookups\"\n"},
+		{"15 an entry keeps a free model while free models are off", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"step\"\n"},
+		{"16 a duplicate selection keeps the first entry", anthropic, "[[subagent.model]]\nmodel = \"haiku@high\"\ndescription = \"exploration work\"\n\n[[subagent.model]]\nmodel = \"claude-haiku-5-5@high\"\ndescription = \"anything\"\n"},
+		{"17 a model matching nothing is passed over", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"nonexistent\"\n\n[[subagent.model]]\nmodel = \"haiku\"\n"},
+		{"18 a local parent sees only listed local models", ollama, "[[subagent.model]]\nmodel = \"qwen\"\n\n[[subagent.model]]\nmodel = \"anthropic/haiku\"\navailability = \"all\"\n"},
+		{"19 a local parent with nothing listed has nothing", ollama, ""},
+		{"20 a hosted parent never sees a local model", codex, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"ollama/qwen\"\navailability = \"all\"\n"},
+		{"21 a label hides its model", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\nmodel = \"anthropic/haiku@high\"\ndescription = \"reading code and finding where things live\"\nsystem_prompt = \"You are a careful explorer. Report paths and line numbers, never guesses.\"\n"},
+		{"22 a system prompt can sit behind a visible model", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"anthropic/fable@high\"\nsystem_prompt = \"You review finished changes.\"\n"},
+		{"23 a labelled rotation lists its label once", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\nround_robin = [\"anthropic/haiku@high\", \"codex/luna@medium\", \"opencode-go/deepseek-v4.1-flash\"]\navailability = \"all\"\ndescription = \"reading code\"\n"},
+		{"24 same provider drops other providers from a rotation", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\nround_robin = [\"anthropic/haiku@high\", \"codex/luna@medium\", \"opencode-go/step-5-preview-free@low\"]\n"},
+		{"25 a rotation keeps repeated members as weights", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\nround_robin = [\"anthropic/haiku@high\", \"anthropic/haiku@high\", \"anthropic/fable@high\"]\n"},
+		{"26 a rotation with no member left drops its label", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\nround_robin = [\"codex/luna@medium\", \"anthropic/nonexistent\"]\n\n[[subagent.model]]\nmodel = \"haiku\"\n"},
+		{"27 a label and a bare line can share a model", anthropic, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\nmodel = \"anthropic/haiku@high\"\n\n[[subagent.model]]\nmodel = \"anthropic/haiku@high\"\n"},
+		{"28 a labelled free model keeps the default free line", anthropic, "[subagent]\nfree = true\n\n[[subagent.model]]\nlabel = \"scout\"\nmodel = \"step@low\"\n"},
+		{"29 a local parent takes a labelled local rotation", ollama, "[[subagent.model]]\nlabel = \"local\"\nround_robin = [\"qwen\", \"muse\", \"anthropic/haiku\"]\navailability = \"all\"\n"},
+		{"30 an entry without a model or rotation is refused", anthropic, "[[subagent.model]]\nlabel = \"explorer\"\n"},
+		{"31 a model beside a rotation is refused", anthropic, "[[subagent.model]]\nlabel = \"explorer\"\nmodel = \"anthropic/haiku\"\nround_robin = [\"anthropic/fable\"]\n"},
+		{"32 a rotation without a label is refused", anthropic, "[[subagent.model]]\nround_robin = [\"anthropic/haiku\", \"anthropic/fable\"]\n"},
+		{"33 an empty rotation is refused", anthropic, "[[subagent.model]]\nlabel = \"explorer\"\nround_robin = []\n"},
+		{"34 a label outside lowercase letters, digits, and hyphens is refused", anthropic, "[[subagent.model]]\nlabel = \"Explorer\"\nmodel = \"anthropic/haiku\"\n"},
+		{"35 a repeated label is refused", anthropic, "[[subagent.model]]\nlabel = \"explorer\"\nmodel = \"anthropic/haiku\"\n\n[[subagent.model]]\nlabel = \"explorer\"\nmodel = \"anthropic/fable\"\n"},
+		{"36 an unknown availability is refused", anthropic, "[[subagent.model]]\nmodel = \"anthropic/haiku\"\navailability = \"everyone\"\n"},
+		{"37 a mistyped setting is warned about", anthropic, "[[subagent.model]]\nmodel = \"anthropic/haiku\"\ndescriptions = \"exploration work\"\n"},
+		{"38 the earlier name and effort keys are refused", anthropic, "[[subagent.model]]\nname = \"haiku\"\neffort = \"high\"\n"},
+		{"39 the removed single model form is refused", anthropic, "[subagent]\nmodel = \"anthropic/claude-haiku-5-5\"\n"},
+	}
+	passes := map[string]func() string{}
+	for _, test := range cases {
+		passes[test.name] = func() string {
+			return drawnSubagentCatalogue(t, test.parent, test.body)
+		}
+	}
+	compareWithGolden(t, "subagent-model-catalogue", ".txt", passes)
+}
+
+func TestGoldenSubagentRotationsTakeTurns(t *testing.T) {
+	parent := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5-5"}
+	cases := []struct {
+		name   string
+		body   string
+		reload string
+	}{
+		{"1 each start takes the next member", "round_robin = [\"anthropic/haiku@high\", \"codex/luna@medium\", \"opencode-go/deepseek-v4.1-flash\"]\navailability = \"all\"\n", ""},
+		{"2 a repeated member takes more turns", "round_robin = [\"anthropic/haiku@high\", \"anthropic/haiku@high\", \"anthropic/fable@high\"]\n", ""},
+		{"3 a single model never moves", "model = \"anthropic/haiku@high\"\n", ""},
+		{
+			"4 the turn carries on after a reload adds a member",
+			"round_robin = [\"anthropic/haiku@high\", \"anthropic/fable@high\"]\n",
+			"round_robin = [\"anthropic/haiku@high\", \"anthropic/fable@high\", \"anthropic/opus@low\"]\n",
+		},
+		{
+			"5 a reload that drops the last member starts afresh",
+			"round_robin = [\"anthropic/haiku@high\", \"anthropic/fable@high\"]\n",
+			"round_robin = [\"anthropic/opus@low\", \"anthropic/haiku@high\"]\n",
+		},
+	}
+	passes := map[string]func() string{}
+	for _, test := range cases {
+		passes[test.name] = func() string {
+			directory := t.TempDir()
+			reserve := reserveChildMember(directory)
+			var drawn strings.Builder
+			turns := func(body string, count int) {
+				settings := configFrom(t, "[subagent]\nfree = false\n\n[[subagent.model]]\nlabel = \"explorer\"\n"+body).Subagent
+				offered := childCatalogueOf(parent, settings, model.Defaults{}, subagentCatalogueChoices).Models[0]
+				for line := range strings.Lines(body) {
+					fmt.Fprintf(&drawn, "> %s", line)
+				}
+				for turn := 1; turn <= count; turn++ {
+					member, err := reserve(offered.Label, offered.Members)
+					if err != nil {
+						t.Fatal(err)
+					}
+					fmt.Fprintf(&drawn, "start %d: %s\n", turn, member.Selection)
+				}
+			}
+			turns(test.body, 4)
+			if test.reload != "" {
+				drawn.WriteString("--- reload ---\n")
+				turns(test.reload, 4)
+			}
+			return drawn.String()
+		}
+	}
+	compareWithGolden(t, "subagent-model-rotation", ".txt", passes)
+}
+
+func TestGoldenSubagentModelsReloadLive(t *testing.T) {
+	const explorerAndFable = `
+		[subagent]
+		concurrency = 2
+		free = false
+
+		[[subagent.model]]
+		label = "explorer"
+		round_robin = ["anthropic/haiku@high", "anthropic/haiku@low"]
+		description = "exploration work"
+
+		[[subagent.model]]
+		model = "anthropic/fable"
+	`
+	stages := []struct {
+		name  string
+		body  string
+		probe string
+	}{
+		{"1 starts with haiku and free models listed", "[subagent]\nfree = true\n\n[[subagent.model]]\nmodel = \"anthropic/haiku@high\"\n", ""},
+		{"2 a reload adds a labelled rotation and fable, turns free models off, and lowers the limit", explorerAndFable, ""},
+		{"3 an invalid availability is refused and the list stands", explorerAndFable + "availability = \"everyone\"\n", ""},
+		{"4 a mistyped setting is warned about", explorerAndFable + "descriptions = \"deep reviews\"\n", ""},
+		{"5 a corrected setting applies", explorerAndFable + "description = \"deep reviews\"\n", ""},
+		{"6 removing the explorer refuses a stale explorer selection", "[subagent]\nfree = false\n\n[[subagent.model]]\nmodel = \"anthropic/fable\"\n", "explorer"},
+	}
+	passes := map[string]func() string{}
+	for index, stage := range stages {
+		passes[stage.name] = func() string {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			writeLiveConfig(t, path, stages[0].body)
+			self := testConversation(t, &bytes.Buffer{})
+			prepareLiveConfig(t, self, path)
+			parent := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5-5"}
+			catalogueOf := func(settings config.Subagent, defaults model.Defaults) subagents.Catalogue {
+				return childCatalogueOf(parent, settings, defaults, subagentCatalogueChoices)
+			}
+			initial := configFrom(t, stages[0].body)
+			catalogue := catalogueOf(initial.Subagent, initial.Defaults.ForSelections())
+			manager, err := subagents.New(subagents.Options{
+				Directory:   filepath.Join(t.TempDir(), "subagents"),
+				Scratch:     t.TempDir(),
+				Parent:      "tame-impala",
+				Models:      catalogue.Models,
+				Concurrency: catalogue.Concurrency,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(manager.Close)
+			self.children = childState{manager: manager, catalogueOf: catalogueOf}
+
+			for _, earlier := range stages[1 : index+1] {
+				writeLiveConfig(t, path, earlier.body)
+				settleLiveConfig(t, self)
+			}
+
+			var drawn strings.Builder
+			self.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
+			if !self.feedback.IsEmpty() {
+				message := self.feedback.Message()
+				message.Text = strings.ReplaceAll(message.Text, path, "config.toml")
+				self.feedback.Show(feedback.Config, message, self.getNow())
+			}
+			self.show(edit.NewInput(nil))
+			var result strings.Builder
+			result.WriteString(shown(t, drawn.String(), replayColumns))
+			fmt.Fprintf(&result, "\n--- action=models, at most %d at once ---\n%s\n", manager.Concurrency(), manager.Models())
+			if stage.probe != "" {
+				_, err := manager.Start(t.Context(), "", []subagent.Task{{Model: stage.probe, Prompt: "Review the parser", Intent: "Reviewing the parser"}})
+				fmt.Fprintf(&result, "--- start %s ---\n%v\n", stage.probe, err)
+			}
+			return result.String()
+		}
+	}
+	compareWithGolden(t, "subagent-model-reload", ".screen", passes)
 }

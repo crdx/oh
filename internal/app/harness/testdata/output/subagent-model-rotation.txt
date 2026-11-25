@@ -1,0 +1,47 @@
+=== 1 each start takes the next member ===
+> round_robin = ["anthropic/haiku@high", "codex/luna@medium", "opencode-go/deepseek-v4.1-flash"]
+> availability = "all"
+start 1: anthropic/claude-haiku-5-5@high
+start 2: codex/gpt-6-luna@medium
+start 3: opencode-go/deepseek-v4.1-flash@high
+start 4: anthropic/claude-haiku-5-5@high
+
+=== 2 a repeated member takes more turns ===
+> round_robin = ["anthropic/haiku@high", "anthropic/haiku@high", "anthropic/fable@high"]
+start 1: anthropic/claude-haiku-5-5@high
+start 2: anthropic/claude-haiku-5-5@high
+start 3: anthropic/claude-fable-5-1@high
+start 4: anthropic/claude-haiku-5-5@high
+
+=== 3 a single model never moves ===
+> model = "anthropic/haiku@high"
+start 1: anthropic/claude-haiku-5-5@high
+start 2: anthropic/claude-haiku-5-5@high
+start 3: anthropic/claude-haiku-5-5@high
+start 4: anthropic/claude-haiku-5-5@high
+
+=== 4 the turn carries on after a reload adds a member ===
+> round_robin = ["anthropic/haiku@high", "anthropic/fable@high"]
+start 1: anthropic/claude-haiku-5-5@high
+start 2: anthropic/claude-fable-5-1@high
+start 3: anthropic/claude-haiku-5-5@high
+start 4: anthropic/claude-fable-5-1@high
+--- reload ---
+> round_robin = ["anthropic/haiku@high", "anthropic/fable@high", "anthropic/opus@low"]
+start 1: anthropic/claude-opus-5-5@low
+start 2: anthropic/claude-haiku-5-5@high
+start 3: anthropic/claude-fable-5-1@high
+start 4: anthropic/claude-opus-5-5@low
+
+=== 5 a reload that drops the last member starts afresh ===
+> round_robin = ["anthropic/haiku@high", "anthropic/fable@high"]
+start 1: anthropic/claude-haiku-5-5@high
+start 2: anthropic/claude-fable-5-1@high
+start 3: anthropic/claude-haiku-5-5@high
+start 4: anthropic/claude-fable-5-1@high
+--- reload ---
+> round_robin = ["anthropic/opus@low", "anthropic/haiku@high"]
+start 1: anthropic/claude-opus-5-5@low
+start 2: anthropic/claude-haiku-5-5@high
+start 3: anthropic/claude-opus-5-5@low
+start 4: anthropic/claude-haiku-5-5@high

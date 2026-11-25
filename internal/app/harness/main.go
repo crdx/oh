@@ -1358,6 +1358,7 @@ func run(
 		userHome:           userHome(),
 		toolOutputLimit:    toolOutputLimit,
 		skillDirectories:   globalSkillDirs,
+		rotationDirectory:  location.GetSubagentRoundRobinDir(),
 		parentWritable: func() []string {
 			return slices.Concat([]string{workspace.GetDir(), homeDir, tmpDir}, pathAccess.GetPaths().Write)
 		},
@@ -1666,9 +1667,9 @@ func run(
 		}),
 		recorder: record.New(log),
 		children: childState{
-			manager:   childManager,
-			rotate:    preparedChildren.rotate,
-			directory: session.ChildrenDir(sessionsDir, log.Name()),
+			manager:     childManager,
+			catalogueOf: preparedChildren.catalogueOf,
+			directory:   session.ChildrenDir(sessionsDir, log.Name()),
 		},
 		editorConfig:     editorConfiguration,
 		draftStash:       draftStash,

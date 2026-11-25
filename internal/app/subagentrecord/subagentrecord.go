@@ -47,6 +47,7 @@ func (self State) Status() agent.Status {
 
 type Origin struct {
 	Choice    model.Choice `json:"choice"`
+	Label     string       `json:"label,omitempty"`
 	Workspace string       `json:"workspace"`
 	Intent    string       `json:"intent,omitempty"`
 	Alias     string       `json:"alias,omitempty"`

@@ -1,0 +1,94 @@
+provider = "anthropic"
+model = "claude-haiku-5-5"
+effort = "medium"
+subagent-config = '''
+[subagent]
+free = false
+
+[[subagent.model]]
+label = "reviewer"
+model = "anthropic/haiku@medium"
+description = "second opinions on parsers"
+system_prompt = "You are a strict reviewer. Name the line of every fault you find."
+'''
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Line 12 drops the final token."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[first]
+prompt = "list the subagent models, then have the reviewer look at the parser"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"models\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_2","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"reviewer\",\"prompt\":\"Review the parser\",\"intent\":\"Reviewing the parser for missed errors\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_3","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"status\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The reviewer is looking at the parser."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The reviewer found a fault on line 12."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The labelled reviewer survives replay."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

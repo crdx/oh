@@ -241,7 +241,6 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 		`{"action":"status","wait_seconds":5}`,
 		`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`,
 		`{"action":"start","subagents":[{"model":" ","prompt":"x","intent":"Doing x"}]}`,
-		`{"action":"start","subagents":[{"model":"codex/gpt-6-luna@high+fast","prompt":"x","intent":"Doing x"}]}`,
 		`{"action":"status","names":["frugal-otter"],"subagents":[{"model":"anthropic/claude-opus-5","prompt":"x"}]}`,
 		`{"action":"send","name":"frugal-otter"}`,
 		`{"action":"send","message":" "}`,
@@ -342,9 +341,9 @@ func TestModelsListsValidSelectionsWithoutNamingAChild(t *testing.T) {
 	}
 }
 
-func TestTheDescriptionExplainsValidSelectionRatherThanProviderExceptions(t *testing.T) {
+func TestTheDescriptionAsksForAListedSelectionRatherThanProviderExceptions(t *testing.T) {
 	description := New(&fakeManager{}, isGranted).Description()
-	if !strings.Contains(description, "provider/model@effort") || strings.Contains(description, "+fast") || strings.Contains(description, "ollama") {
+	if !strings.Contains(description, "exactly as listed") || strings.Contains(description, "+fast") || strings.Contains(description, "ollama") {
 		t.Errorf("the description does not explain just the valid selection format: %s", description)
 	}
 }

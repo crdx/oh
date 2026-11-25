@@ -1,0 +1,23 @@
+
+ list the subagent models, then have the reviewer look at the parser
+
+
+list models 3L
+spawn subagent · reviewer (Reviewing the parser for missed errors)
+status all
+
+The reviewer is looking at the parser.
+
+
+ 🐍 Subagent tame-adder has finished:
+
+    Line 12 drops the final token.
+
+
+The reviewer found a fault on line 12.
+
+
+ carry on
+
+
+The labelled reviewer survives replay.

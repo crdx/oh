@@ -1,0 +1,57 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-haiku-5-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsnlg · +0s
+
+## User · +0s
+
+list the subagent models, then have the reviewer look at the parser
+
+## Tool calls · +0s
+
+```
+subagent models: models [ok, 3 lines, 101B, toolu_1]
+subagent start: subagent · reviewer [ok, 1 line, 41B, toolu_2]
+subagent status: all [ok, 1 line, 53B, toolu_3]
+```
+
+## Assistant · +0s
+
+The reviewer is looking at the parser.
+
+## Subagent started · tame-adder · +0s
+
+Review the parser
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+Line 12 drops the final token.
+
+## Subagent reports · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): Line 12 drops the final token.
+```
+
+## Assistant · +0s
+
+The reviewer found a fault on line 12.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+The labelled reviewer survives replay.

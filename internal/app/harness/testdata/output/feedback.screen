@@ -140,7 +140,7 @@ Approve the second operation?
 === removed subagent model settings ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Ignored unknown settings:                                                                      │
- │ config.toml: unknown: subagent.model, subagent.round_robin                                     │
+ │ config.toml: unknown: subagent.round_robin                                                     │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -1834,12 +1834,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		self.display.bar.ReplaceLayout(result.LiveConfig.SegmentLayout)
 		self.feedback.Clear(feedback.Config)
 		self.followCurrency(result.LiveConfig.Currency)
-		if err := self.children.reconfigure(result.LiveConfig); err != nil {
-			self.showFeedback(feedback.Config, feedback.Message{
-				Text:   fmt.Sprintf(tr.SubagentReloadFailure, err.Error()),
-				Status: agent.ErrorStatus,
-			})
-		}
+		self.children.reconfigure(result.LiveConfig)
 		if len(result.LiveConfig.UnknownSettings) > 0 {
 			self.notifyUnknownSettings(result.LiveConfig.UnknownSettings)
 			return true

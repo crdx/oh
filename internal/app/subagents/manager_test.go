@@ -850,34 +850,6 @@ func TestAFollowUpIsToldWhichOfItsToolsChanged(t *testing.T) {
 	}
 }
 
-func TestAManagerNamesItsModelsAsPeopleKnowThem(t *testing.T) {
-	opus := model.Choice{ID: "claude-opus-5", Name: "Claude Opus 5"}
-	haiku := model.Choice{ID: "claude-haiku-5", Name: "Claude Haiku 5"}
-	local := model.Choice{ID: "local-model"}
-	for _, run := range []struct {
-		choices []model.Choice
-		want    string
-	}{
-		{[]model.Choice{opus}, "Claude Opus 5"},
-		{[]model.Choice{local}, "local-model"},
-		{[]model.Choice{opus, opus, haiku}, "Claude Opus 5 or Claude Haiku 5"},
-		{[]model.Choice{haiku, local, opus, local}, "Claude Haiku 5, local-model or Claude Opus 5"},
-	} {
-		var models []ChildModel
-		for _, choice := range run.choices {
-			models = append(models, ChildModel{Choice: choice})
-		}
-		manager, err := New(Options{Directory: t.TempDir(), Scratch: t.TempDir(), Models: models})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if got := manager.Model(); got != run.want {
-			t.Errorf("%d choices were named %q, want %q", len(run.choices), got, run.want)
-		}
-		manager.Close()
-	}
-}
-
 func TestAStartWithAnUnavailableModelStartsNothing(t *testing.T) {
 	family := newTestFamily(t)
 	manager, err := New(Options{
@@ -894,7 +866,7 @@ func TestAStartWithAnUnavailableModelStartsNothing(t *testing.T) {
 	}
 	t.Cleanup(manager.Close)
 
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "one"}}); err == nil || !strings.Contains(err.Error(), "not available") {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "one"}}); err == nil || err.Error() != noEligibleModelsError {
 		t.Fatalf("got %v, want an unavailable-model refusal", err)
 	}
 	if snapshots := manager.ListSnapshots(); len(snapshots) != 0 {
@@ -1395,14 +1367,20 @@ func TestInvalidSelectionsRefuseTheWholeBatchBeforePersisting(t *testing.T) {
 	}
 }
 
-func TestTheCatalogueListsExactSelectionsAndSupportedEfforts(t *testing.T) {
+func TestTheCatalogueListsEachSelectionWithItsDescription(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
-	manager.Reconfigure(Rotation{Models: []ChildModel{
-		{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5.5", EffortLevels: []string{"low", "high"}, ContextWindowTokens: 200000}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5.5", Effort: "high"}},
+	haiku := model.Choice{Provider: "anthropic", ID: "claude-haiku-5.5", EffortLevels: []string{"low", "high"}, ContextWindowTokens: 200000}
+	manager.Reconfigure(Catalogue{Models: []ChildModel{
+		{Choice: haiku, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5.5", Effort: "high"}, Description: "exploration work"},
+		{Choice: haiku, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5.5", Effort: "low"}, Description: "exploration work"},
 		{Choice: model.Choice{Provider: "opencode-go", ID: "step-5-preview-free"}, Selection: model.Selection{Provider: "opencode-go", Model: "step-5-preview-free"}},
 		{Choice: model.Choice{Provider: "ollama", ID: "future-local-model", EffortLevels: []string{"high"}}, Selection: model.Selection{Provider: "ollama", Model: "future-local-model", Effort: "high"}},
 	}})
-	want := modelSelectionGuide + "\n\n- anthropic/claude-haiku-5.5; cheap; efforts: low, high\n- opencode-go/step-5-preview-free; free\n- ollama/future-local-model; free; efforts: high"
+	want := modelSelectionGuide + "\n\n" +
+		"- anthropic/claude-haiku-5.5@high: exploration work\n" +
+		"- anthropic/claude-haiku-5.5@low: exploration work\n" +
+		"- opencode-go/step-5-preview-free\n" +
+		"- ollama/future-local-model@high"
 	if got := manager.Models(); got != want {
 		t.Errorf("models returned %q, want %q", got, want)
 	}
@@ -1410,26 +1388,32 @@ func TestTheCatalogueListsExactSelectionsAndSupportedEfforts(t *testing.T) {
 	if err != nil || len(selected) != 2 || selected[0].Selection.Effort != "low" || selected[1].Selection.Effort != "" {
 		t.Errorf("catalogue selections resolved to %+v, %v", selected, err)
 	}
-	manager.Reconfigure(Rotation{})
-	if got := manager.Models(); got != "No eligible subagent models are available." {
+	manager.Reconfigure(Catalogue{})
+	if got := manager.Models(); got != noEligibleModels {
 		t.Errorf("an empty catalogue returned %q", got)
+	}
+	if _, err := manager.selectModels([]subagent.Task{{Model: "anthropic/claude-haiku-5.5@low"}}); err == nil || err.Error() != noEligibleModelsError {
+		t.Errorf("an empty catalogue selected with %v", err)
 	}
 }
 
-func TestSubagentsNeverSelectFastMode(t *testing.T) {
+func TestASelectionMustBeCopiedExactlyFromTheCatalogue(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
-	manager.Reconfigure(Rotation{Models: []ChildModel{{
+	manager.Reconfigure(Catalogue{Models: []ChildModel{{
 		Choice:    model.Choice{Provider: "codex", ID: "gpt-6-luna", EffortLevels: []string{"low", "high"}},
-		Selection: model.Selection{Provider: "codex", Model: "gpt-6-luna", Effort: "high", IsFast: true},
+		Selection: model.Selection{Provider: "codex", Model: "gpt-6-luna", Effort: "high"},
 	}}})
-	for _, written := range []string{"codex/gpt-6-luna", "codex/gpt-6-luna@h", "codex/gpt-6-luna+fast", "codex/gpt-6-luna@high+fast"} {
-		if _, err := manager.selectModels([]subagent.Task{{Model: written}}); err == nil {
-			t.Errorf("accepted fast selection %q", written)
+	for _, written := range []string{"codex/gpt-6-luna", "codex/gpt-6-luna@h", "codex/gpt-6-luna@low", "luna@high", "codex/gpt-6-luna@high+fast"} {
+		_, err := manager.selectModels([]subagent.Task{{Model: written}})
+		if err == nil {
+			t.Errorf("accepted %q, which the catalogue does not list", written)
+		} else if !strings.Contains(err.Error(), "- codex/gpt-6-luna@high") {
+			t.Errorf("refusing %q did not repeat the catalogue: %v", written, err)
 		}
 	}
 	selectedModels, err := manager.selectModels([]subagent.Task{{Model: "codex/gpt-6-luna@high"}})
 	if err != nil || len(selectedModels) != 1 || selectedModels[0].Selection.IsFast {
-		t.Errorf("inherited fast mode reached a subagent: %+v, %v", selectedModels, err)
+		t.Errorf("the listed selection resolved to %+v, %v", selectedModels, err)
 	}
 }
 
@@ -1586,5 +1570,110 @@ func TestTwoTasksInOneCallCannotClaimTheSameAlias(t *testing.T) {
 	})
 	if err == nil || !strings.Contains(err.Error(), "already taken") {
 		t.Fatalf("two tasks claimed one alias in one call: %v", err)
+	}
+}
+
+func TestALabelledStartTakesAReservedMemberAndCarriesItsIdentity(t *testing.T) {
+	family := newTestFamily(t)
+	var opened []Child
+	var openedMutex sync.Mutex
+	factory := func(ctx context.Context, child Child) (Worker, error) {
+		openedMutex.Lock()
+		opened = append(opened, child)
+		openedMutex.Unlock()
+		return waiting()(ctx, child)
+	}
+	haiku := ChildModel{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5", Name: "Claude Haiku 5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5", Effort: "high"}}
+	luna := ChildModel{Choice: model.Choice{Provider: "codex", ID: "gpt-6-luna"}, Selection: model.Selection{Provider: "codex", Model: "gpt-6-luna", Effort: "medium"}}
+	var reservedLabels []string
+	turn := 0
+	manager, err := New(Options{
+		Directory: family.directory,
+		Scratch:   family.scratch,
+		Parent:    parentName,
+		Models: []ChildModel{{
+			Label:        "explorer",
+			Description:  "reading code",
+			SystemPrompt: "You explore.",
+			Members:      []ChildModel{haiku, luna},
+		}},
+		Factory:   factory,
+		PickName:  func(int) int { return 0 },
+		Workspace: func(string) (string, error) { return family.workspace, nil },
+		Caps:      func() caps.Set { return caps.Read },
+		ReserveMember: func(label string, members []ChildModel) (ChildModel, error) {
+			reservedLabels = append(reservedLabels, label)
+			member := members[turn%len(members)]
+			turn++
+			return member, nil
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+
+	if got := manager.Models(); got != modelSelectionGuide+"\n\n- explorer: reading code" {
+		t.Errorf("the catalogue reads %q", got)
+	}
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{
+		{Model: "explorer", Prompt: "one", Intent: "Exploring one"},
+		{Model: "explorer", Prompt: "two", Intent: "Exploring two"},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(reservedLabels, []string{"explorer", "explorer"}) {
+		t.Errorf("reserved %v", reservedLabels)
+	}
+	var started []agent.Event
+	for len(started) < 2 {
+		if event := <-manager.Events(); event.Kind == subagentrecord.Started {
+			started = append(started, event)
+		}
+	}
+	for _, event := range started {
+		origin, _ := subagentrecord.DecodeOrigin(event)
+		if origin.Label != "explorer" {
+			t.Errorf("%s started without its label: %+v", event.Subagent, origin)
+		}
+	}
+	deadline := time.Now().Add(5 * time.Second)
+	for {
+		openedMutex.Lock()
+		count := len(opened)
+		openedMutex.Unlock()
+		if count == 2 {
+			break
+		}
+		if time.Now().After(deadline) {
+			t.Fatal("the children never opened")
+		}
+		time.Sleep(time.Millisecond)
+	}
+	openedMutex.Lock()
+	var models []string
+	for _, child := range opened {
+		models = append(models, child.Selection.String())
+		if child.ModelPrompt != "You explore." {
+			t.Errorf("%s opened with model prompt %q", child.Name, child.ModelPrompt)
+		}
+	}
+	openedMutex.Unlock()
+	slices.Sort(models)
+	if !slices.Equal(models, []string{"anthropic/claude-haiku-5@high", "codex/gpt-6-luna@medium"}) {
+		t.Errorf("the explorers opened on %v", models)
+	}
+
+	status, err := manager.Status(nil)
+	if err != nil || !strings.Contains(status, "as explorer") || strings.Contains(status, "haiku") || strings.Contains(status, "luna") {
+		t.Errorf("the status shown to the parent reads %q, %v", status, err)
+	}
+	var shownModels []string
+	for _, progress := range manager.Progress() {
+		shownModels = append(shownModels, progress.Model)
+	}
+	slices.Sort(shownModels)
+	if !slices.Equal(shownModels, []string{"explorer (Claude Haiku 5@high)", "explorer (gpt-6-luna@medium)"}) {
+		t.Errorf("the person sees %v", shownModels)
 	}
 }

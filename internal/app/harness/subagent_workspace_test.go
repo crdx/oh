@@ -268,7 +268,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 	prompt := func(
 		isParentUnconfined bool,
 		childCaps caps.Set,
-		sharedPrompt string,
+		texts childPromptTexts,
 		brief childBrief,
 		options ...childOptions,
 	) func() string {
@@ -278,7 +278,8 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 				Workspace:    workspaceDirectory,
 				Caps:         childCaps,
 				Scratch:      "/state/farm/tame-impala/subagents/tame-adder",
-				SharedPrompt: sharedPrompt,
+				SharedPrompt: texts.shared,
+				ModelPrompt:  texts.model,
 			}
 			promptOptions := childOptions{userHome: "/users/person", settings: childPromptSettings, scratchParent: "/state/farm/tame-impala"}
 			if len(options) > 0 {
@@ -302,18 +303,24 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 		settings:      config.Config{Grants: shell.Paths{Read: []string{"/state/farm"}}},
 	}
 	compareWithGolden(t, "subagent-prompt", ".txt", map[string]func() string{
-		"confined with a shell":                                    prompt(false, caps.Read|caps.Shell, "", plainBrief),
-		"confined without a shell":                                 prompt(false, caps.Read, "", plainBrief),
-		"confined under an unconfined parent":                      prompt(true, caps.Read|caps.Shell, "", plainBrief),
-		"with shared instructions":                                 prompt(false, caps.Read|caps.Shell, "Answer in one sentence.", plainBrief),
-		"with nothing configured and no known home":                prompt(false, caps.Read|caps.Shell, "", plainBrief, childOptions{}),
-		"with skills and a shell":                                  prompt(false, caps.Read|caps.Shell, "Use the skills.", skilledBrief),
-		"with skills and no shell":                                 prompt(false, caps.Read, "Use the skills.", skilledBrief),
-		"with only workspace skills and a shell":                   prompt(false, caps.Read|caps.Shell, "", workspaceSkilledBrief),
-		"on a provider with its own note format":                   prompt(false, caps.Read|caps.Shell, "", codexBrief),
-		"with its parent's scratch readable":                       prompt(false, caps.Read|caps.Shell, "", plainBrief, farmReadable),
-		"with sibling scratch readable under an unconfined parent": prompt(true, caps.Read|caps.Shell, "", plainBrief, farmReadable),
+		"confined with a shell":                                    prompt(false, caps.Read|caps.Shell, childPromptTexts{}, plainBrief),
+		"confined without a shell":                                 prompt(false, caps.Read, childPromptTexts{}, plainBrief),
+		"confined under an unconfined parent":                      prompt(true, caps.Read|caps.Shell, childPromptTexts{}, plainBrief),
+		"with shared instructions":                                 prompt(false, caps.Read|caps.Shell, childPromptTexts{shared: "Answer in one sentence."}, plainBrief),
+		"with nothing configured and no known home":                prompt(false, caps.Read|caps.Shell, childPromptTexts{}, plainBrief, childOptions{}),
+		"with skills and a shell":                                  prompt(false, caps.Read|caps.Shell, childPromptTexts{shared: "Use the skills."}, skilledBrief),
+		"with skills and no shell":                                 prompt(false, caps.Read, childPromptTexts{shared: "Use the skills."}, skilledBrief),
+		"with only workspace skills and a shell":                   prompt(false, caps.Read|caps.Shell, childPromptTexts{}, workspaceSkilledBrief),
+		"on a provider with its own note format":                   prompt(false, caps.Read|caps.Shell, childPromptTexts{}, codexBrief),
+		"with its parent's scratch readable":                       prompt(false, caps.Read|caps.Shell, childPromptTexts{}, plainBrief, farmReadable),
+		"with sibling scratch readable under an unconfined parent": prompt(true, caps.Read|caps.Shell, childPromptTexts{}, plainBrief, farmReadable),
+		"with an identity from its listed model":                   prompt(false, caps.Read|caps.Shell, childPromptTexts{shared: "Answer in one sentence.", model: "You are a careful explorer."}, plainBrief),
 	})
+}
+
+type childPromptTexts struct {
+	shared string
+	model  string
 }
 
 func stubTool(name string) tool.Tool {

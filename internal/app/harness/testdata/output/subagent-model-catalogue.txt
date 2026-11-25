@@ -1,0 +1,488 @@
+=== 01 the defaults offer nothing ===
+parent: anthropic/claude-opus-5-5
+
+No eligible subagent models are available.
+
+=== 02 free models switched on are offered to every hosted parent ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = true
+
+Choose a model for each task, and copy its selection exactly.
+
+- opencode-go/step-5-preview-free@high
+- opencode-go/cat-jam-free
+
+=== 03 a model carries its effort ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "anthropic/haiku@medium"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@medium
+
+=== 04 a model without an effort takes the automatic effort ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "anthropic/haiku"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+
+=== 05 the automatic effort follows the default effort ===
+parent: anthropic/claude-opus-5-5
+> [default]
+> effort = "max"
+>
+> [[subagent.model]]
+> model = "opus"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-opus-5-5@max
+
+=== 06 a description follows its line ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "anthropic/haiku@high"
+> description = "exploration work"
+>
+> [[subagent.model]]
+> model = "anthropic/haiku@low"
+> description = "quick checks"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high: exploration work
+- anthropic/claude-haiku-5-5@low: quick checks
+
+=== 07 entries keep config order ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "haiku"
+>
+> [[subagent.model]]
+> model = "fable"
+>
+> [[subagent.model]]
+> model = "opus@low"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+- anthropic/claude-fable-5-1@high
+- anthropic/claude-opus-5-5@low
+
+=== 08 same provider is the default availability ===
+parent: codex/gpt-6.1-sol
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "anthropic/haiku"
+>
+> [[subagent.model]]
+> model = "codex/luna"
+
+Choose a model for each task, and copy its selection exactly.
+
+- codex/gpt-6-luna@high
+
+=== 09 availability all reaches another provider ===
+parent: codex/gpt-6.1-sol
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "anthropic/haiku"
+> availability = "all"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+
+=== 10 a model matching several providers is passed over ===
+parent: codex/gpt-6.1-sol
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "haiku"
+> availability = "all"
+>
+> [[subagent.model]]
+> model = "opencode-go/haiku"
+> availability = "all"
+
+Choose a model for each task, and copy its selection exactly.
+
+- opencode-go/claude-haiku-5-5@high
+
+=== 11 same provider settles which provider a name means ===
+parent: opencode-go/glm-5.3
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "haiku"
+
+Choose a model for each task, and copy its selection exactly.
+
+- opencode-go/claude-haiku-5-5@high
+
+=== 12 an effort the model lacks is passed over ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "fable@max"
+>
+> [[subagent.model]]
+> model = "fable@high"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-fable-5-1@high
+
+=== 13 a model with no effort levels takes no effort ===
+parent: opencode-go/glm-5.3
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "glm@high"
+>
+> [[subagent.model]]
+> model = "glm"
+
+Choose a model for each task, and copy its selection exactly.
+
+- opencode-go/glm-5.3
+
+=== 14 an entry naming a free model replaces its default line ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = true
+>
+> [[subagent.model]]
+> model = "step@low"
+> description = "quick lookups"
+
+Choose a model for each task, and copy its selection exactly.
+
+- opencode-go/step-5-preview-free@low: quick lookups
+- opencode-go/cat-jam-free
+
+=== 15 an entry keeps a free model while free models are off ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "step"
+
+Choose a model for each task, and copy its selection exactly.
+
+- opencode-go/step-5-preview-free@high
+
+=== 16 a duplicate selection keeps the first entry ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "haiku@high"
+> description = "exploration work"
+>
+> [[subagent.model]]
+> model = "claude-haiku-5-5@high"
+> description = "anything"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high: exploration work
+
+=== 17 a model matching nothing is passed over ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "nonexistent"
+>
+> [[subagent.model]]
+> model = "haiku"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+
+=== 18 a local parent sees only listed local models ===
+parent: ollama/muse-glimmer:latest
+> [[subagent.model]]
+> model = "qwen"
+>
+> [[subagent.model]]
+> model = "anthropic/haiku"
+> availability = "all"
+
+Choose a model for each task, and copy its selection exactly.
+
+- ollama/qwen3.8:27b@none
+
+=== 19 a local parent with nothing listed has nothing ===
+parent: ollama/muse-glimmer:latest
+
+No eligible subagent models are available.
+
+=== 20 a hosted parent never sees a local model ===
+parent: codex/gpt-6.1-sol
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "ollama/qwen"
+> availability = "all"
+
+No eligible subagent models are available.
+
+=== 21 a label hides its model ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> label = "explorer"
+> model = "anthropic/haiku@high"
+> description = "reading code and finding where things live"
+> system_prompt = "You are a careful explorer. Report paths and line numbers, never guesses."
+
+Choose a model for each task, and copy its selection exactly.
+
+- explorer: reading code and finding where things live
+
+hidden from the parent, for explorer:
+  member: anthropic/claude-haiku-5-5@high
+  system prompt: You are a careful explorer. Report paths and line numbers, never guesses.
+
+=== 22 a system prompt can sit behind a visible model ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> model = "anthropic/fable@high"
+> system_prompt = "You review finished changes."
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-fable-5-1@high
+
+hidden from the parent, for anthropic/claude-fable-5-1@high:
+  system prompt: You review finished changes.
+
+=== 23 a labelled rotation lists its label once ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> label = "explorer"
+> round_robin = ["anthropic/haiku@high", "codex/luna@medium", "opencode-go/deepseek-v4.1-flash"]
+> availability = "all"
+> description = "reading code"
+
+Choose a model for each task, and copy its selection exactly.
+
+- explorer: reading code
+
+hidden from the parent, for explorer:
+  member: anthropic/claude-haiku-5-5@high
+  member: codex/gpt-6-luna@medium
+  member: opencode-go/deepseek-v4.1-flash@high
+
+=== 24 same provider drops other providers from a rotation ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> label = "explorer"
+> round_robin = ["anthropic/haiku@high", "codex/luna@medium", "opencode-go/step-5-preview-free@low"]
+
+Choose a model for each task, and copy its selection exactly.
+
+- explorer
+
+hidden from the parent, for explorer:
+  member: anthropic/claude-haiku-5-5@high
+  member: opencode-go/step-5-preview-free@low
+
+=== 25 a rotation keeps repeated members as weights ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> label = "explorer"
+> round_robin = ["anthropic/haiku@high", "anthropic/haiku@high", "anthropic/fable@high"]
+
+Choose a model for each task, and copy its selection exactly.
+
+- explorer
+
+hidden from the parent, for explorer:
+  member: anthropic/claude-haiku-5-5@high
+  member: anthropic/claude-haiku-5-5@high
+  member: anthropic/claude-fable-5-1@high
+
+=== 26 a rotation with no member left drops its label ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> label = "explorer"
+> round_robin = ["codex/luna@medium", "anthropic/nonexistent"]
+>
+> [[subagent.model]]
+> model = "haiku"
+
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+
+=== 27 a label and a bare line can share a model ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = false
+>
+> [[subagent.model]]
+> label = "explorer"
+> model = "anthropic/haiku@high"
+>
+> [[subagent.model]]
+> model = "anthropic/haiku@high"
+
+Choose a model for each task, and copy its selection exactly.
+
+- explorer
+- anthropic/claude-haiku-5-5@high
+
+hidden from the parent, for explorer:
+  member: anthropic/claude-haiku-5-5@high
+
+=== 28 a labelled free model keeps the default free line ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> free = true
+>
+> [[subagent.model]]
+> label = "scout"
+> model = "step@low"
+
+Choose a model for each task, and copy its selection exactly.
+
+- scout
+- opencode-go/step-5-preview-free@high
+- opencode-go/cat-jam-free
+
+hidden from the parent, for scout:
+  member: opencode-go/step-5-preview-free@low
+
+=== 29 a local parent takes a labelled local rotation ===
+parent: ollama/muse-glimmer:latest
+> [[subagent.model]]
+> label = "local"
+> round_robin = ["qwen", "muse", "anthropic/haiku"]
+> availability = "all"
+
+Choose a model for each task, and copy its selection exactly.
+
+- local
+
+hidden from the parent, for local:
+  member: ollama/qwen3.8:27b@none
+  member: ollama/muse-glimmer:latest@none
+
+=== 30 an entry without a model or rotation is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> label = "explorer"
+
+refused: config.toml: subagent.model[1] needs a model or a round_robin
+
+=== 31 a model beside a rotation is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> label = "explorer"
+> model = "anthropic/haiku"
+> round_robin = ["anthropic/fable"]
+
+refused: config.toml: subagent.model[1].model and subagent.model[1].round_robin cannot both be set
+
+=== 32 a rotation without a label is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> round_robin = ["anthropic/haiku", "anthropic/fable"]
+
+refused: config.toml: subagent.model[1] needs a label, since a rotation has no single model to show
+
+=== 33 an empty rotation is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> label = "explorer"
+> round_robin = []
+
+refused: config.toml: subagent.model[1].round_robin is empty, so there is nothing to ask
+
+=== 34 a label outside lowercase letters, digits, and hyphens is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> label = "Explorer"
+> model = "anthropic/haiku"
+
+refused: config.toml: subagent.model[1].label is "Explorer"; write a label in lowercase letters, digits, and hyphens
+
+=== 35 a repeated label is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> label = "explorer"
+> model = "anthropic/haiku"
+>
+> [[subagent.model]]
+> label = "explorer"
+> model = "anthropic/fable"
+
+refused: config.toml: subagent.model[2].label repeats the label "explorer"
+
+=== 36 an unknown availability is refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "anthropic/haiku"
+> availability = "everyone"
+
+refused: config.toml: subagent.model[1].availability must be all or same-provider
+
+=== 37 a mistyped setting is warned about ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> model = "anthropic/haiku"
+> descriptions = "exploration work"
+
+warned: config.toml: unknown: subagent.model.descriptions
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+
+=== 38 the earlier name and effort keys are refused ===
+parent: anthropic/claude-opus-5-5
+> [[subagent.model]]
+> name = "haiku"
+> effort = "high"
+
+refused: config.toml: subagent.model[1] needs a model or a round_robin
+
+=== 39 the removed single model form is refused ===
+parent: anthropic/claude-opus-5-5
+> [subagent]
+> model = "anthropic/claude-haiku-5-5"
+
+refused: config.toml: toml: line 3 (last key "subagent.model"): incompatible types: TOML value has type string; destination has type slice

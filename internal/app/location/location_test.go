@@ -127,6 +127,7 @@ func TestStateDataUsesOneDirectory(t *testing.T) {
 		"history":              location.GetHistoryPath(),
 		"model cache":          location.GetModelCachePath(),
 		"model rotation":       location.GetModelRoundRobinPath(),
+		"subagent rotations":   location.GetSubagentRoundRobinDir(),
 		"seen models":          location.GetSeenModelsPath(),
 		"provider usage cache": location.GetUsageCachePath("codex", false),
 	}
@@ -136,8 +137,8 @@ func TestStateDataUsesOneDirectory(t *testing.T) {
 		"history":              filepath.Join(root, "data", "history"),
 		"model cache":          filepath.Join(root, "data", "models.json"),
 		"model rotation":       filepath.Join(root, "data", "model-round-robin.json"),
+		"subagent rotations":   filepath.Join(root, "data", "subagent-round-robin"),
 		"seen models":          filepath.Join(root, "data", "seen_models.json"),
-		"subagent rotation":    filepath.Join(root, "data", "subagent-round-robin.json"),
 		"provider usage cache": filepath.Join(root, "usage", "codex.json"),
 	}
 	for name, path := range paths {

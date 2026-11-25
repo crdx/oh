@@ -150,6 +150,7 @@ wire = false
 
 [subagent]
 concurrency = 5
+free = false
 
 [provider.ollama]
 

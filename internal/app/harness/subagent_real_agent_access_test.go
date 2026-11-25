@@ -13,6 +13,7 @@ import (
 
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/drops"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/prompt"
@@ -76,6 +77,10 @@ func newRealSubagentFixture(t *testing.T, responder sim.Responder, extraSkills [
 	t.Cleanup(func() { _ = writer.Close() })
 
 	settings := builtInConfig(t)
+	for _, effort := range realSubagentChoice.EffortLevels {
+		listed := config.ModelChoice{Model: realSubagentChoice.Provider + "/" + realSubagentChoice.ID + "@" + effort}
+		settings.Subagent.Models = append(settings.Subagent.Models, config.SubagentModel{ModelChoice: listed})
+	}
 	settings.Skills.Include = slices.Concat(settings.Skills.Include, extraSkills)
 	globalSkillDirectories := slices.Concat(
 		[]string{filepath.Join(t.TempDir(), "builtin-skills")}, settings.Skills.Include,

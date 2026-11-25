@@ -272,16 +272,15 @@ const (
 // each file, as in "oh.toml: editor.command". A reach row names the settings that wait, as in
 // "applies when oh next starts: grants.read".
 const (
-	ReloadConfirmation    = "Reloaded the config:"                                                  // heads the rows of changed files
-	RemovedSource         = "%s: gone"                                                              // a removed file that set nothing, as in "oh.toml: gone"
-	RemovedSourceDropping = "%s: gone, dropping %s"                                                 // a removed file and its settings, as in "oh.toml: gone, dropping ui.streaming"
-	UnchangedSource       = "%s: no setting changed"                                                // a changed file that changed no setting
-	NextRunReach          = "applies when oh next starts"                                           // before the settings that wait for a restart
-	NextSessionReach      = "applies to new sessions"                                               // before the settings that wait for a new session
-	UnknownSettings       = "Ignored unknown settings:"                                             // above one row for each unknown setting
-	ReloadFailure         = "Could not reload the config: %s"                                       // when a changed config file is not valid, with the reason
-	SnippetReloadFailure  = "Could not reload the snippets: %s"                                     // when the new snippets cannot replace the old ones, with the reason
-	SubagentReloadFailure = "Could not reload the subagent settings, so the earlier ones stand: %s" // when the subagent settings cannot change, with the reason
+	ReloadConfirmation    = "Reloaded the config:"              // heads the rows of changed files
+	RemovedSource         = "%s: gone"                          // a removed file that set nothing, as in "oh.toml: gone"
+	RemovedSourceDropping = "%s: gone, dropping %s"             // a removed file and its settings, as in "oh.toml: gone, dropping ui.streaming"
+	UnchangedSource       = "%s: no setting changed"            // a changed file that changed no setting
+	NextRunReach          = "applies when oh next starts"       // before the settings that wait for a restart
+	NextSessionReach      = "applies to new sessions"           // before the settings that wait for a new session
+	UnknownSettings       = "Ignored unknown settings:"         // above one row for each unknown setting
+	ReloadFailure         = "Could not reload the config: %s"   // when a changed config file is not valid, with the reason
+	SnippetReloadFailure  = "Could not reload the snippets: %s" // when the new snippets cannot replace the old ones, with the reason
 )
 
 // The hints and notes in the frame around the conversation. Each hint names its key. A retry row
@@ -387,6 +386,11 @@ const (
 	RoundRobinFileEmpty  = "the file contains no model selections, so there is nothing to ask"             // when a round_robin file holds no selections
 	EmptySelection       = "%s contains an empty selection"                                                // as in "agent.round_robin contains an empty selection"
 	EmptyEntry           = "%s contains an empty entry"                                                    // as in "input.speed_dial contains an empty entry"
+	SubagentModelMissing = "%s needs a %s or a %s"                                                         // as in "subagent.model[1] needs a model or a round_robin"
+	RotationNeedsLabel   = "%s needs a label, since a rotation has no single model to show"                // as in "subagent.model[2] needs a label, …"
+	LabelShape           = "%s is %q; write a label in lowercase letters, digits, and hyphens"             // as in `subagent.model[1].label is "Explorer"; …`
+	LabelRepeated        = "%s repeats the label %q"                                                       // as in `subagent.model[3].label repeats the label "explorer"`
+	AvailabilityChoice   = "%s must be %s or %s"                                                           // as in "subagent.model[2].availability must be all or same-provider"
 	PermissionShape      = "%s is not a rule or a table"                                                   // as in "permission is not a rule or a table"
 	TimeoutOnlyWhenRule  = "%s applies only when %s is %q"                                                 // as in `timeout applies only when rule is "ask"`
 	UngroupedDenial      = "%s has no effect without a group; add a group or remove the setting"           // as in "granted = false has no effect without a group; …"

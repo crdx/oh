@@ -21,7 +21,7 @@ const (
 
 type childState struct {
 	manager            *subagents.Manager
-	rotate             func(config.Subagent, model.Defaults) (subagents.Rotation, error)
+	catalogueOf        func(config.Subagent, model.Defaults) subagents.Catalogue
 	directory          string
 	reportsDue         []agent.Event
 	deliveryAt         time.Time
@@ -290,16 +290,11 @@ func withoutDelivered(pendingReports []agent.Event, delivery agent.Event) []agen
 	return pendingReports
 }
 
-func (self childState) reconfigure(live config.LiveConfig) error {
-	if self.manager == nil || self.rotate == nil {
-		return nil
+func (self childState) reconfigure(live config.LiveConfig) {
+	if self.manager == nil || self.catalogueOf == nil {
+		return
 	}
-	rotation, err := self.rotate(live.Subagent, live.SelectionDefaults)
-	if err != nil {
-		return err
-	}
-	self.manager.Reconfigure(rotation)
-	return nil
+	self.manager.Reconfigure(self.catalogueOf(live.Subagent, live.SelectionDefaults))
 }
 
 func (self childState) reachOf(setting string) config.Reach {

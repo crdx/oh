@@ -1,0 +1,10 @@
+
+ list the subagent models, then try to start one anyway
+
+
+list models 1L
+spawn subagent · anthropic/claude-haiku-5-5@medium ✗ no eligible subagent models are available
+
+No subagent model is eligible, so I did the review myself.
+
+Finished.

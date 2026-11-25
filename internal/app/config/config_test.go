@@ -2438,11 +2438,11 @@ func TestARotationLeftInTheModelTableIsReportedAsUnknown(t *testing.T) {
 	}
 }
 
-func TestRemovedSubagentModelSettingsAreReportedAsUnknown(t *testing.T) {
+func TestTheRemovedSubagentRotationIsReportedAsUnknown(t *testing.T) {
 	for _, source := range []Source{{}, {IsOverride: true}} {
 		for _, body := range []string{
-			"model = \"anthropic/one\"\nround_robin = [\"anthropic/two\"]\n",
-			"model = \"\"\nround_robin = \"missing.models\"\n",
+			"round_robin = [\"anthropic/two\"]\n",
+			"round_robin = \"missing.models\"\n",
 		} {
 			path := filepath.Join(t.TempDir(), "config.toml")
 			if err := writeConfigFile(path, "[agent]\nmodel = \"anthropic/parent\"\n[subagent]\nconcurrency = 3\n"+body); err != nil {
@@ -2457,10 +2457,8 @@ func TestRemovedSubagentModelSettingsAreReportedAsUnknown(t *testing.T) {
 				t.Fatalf("removed settings changed the agent or concurrency: %+v, %+v", settings.Agent, settings.Subagent)
 			}
 			warnings := strings.Join(settings.UnknownSettings(), "\n")
-			for _, name := range []string{"subagent.model", "subagent.round_robin"} {
-				if !strings.Contains(warnings, name) {
-					t.Errorf("unknown settings %q did not name %s", warnings, name)
-				}
+			if !strings.Contains(warnings, "subagent.round_robin") {
+				t.Errorf("unknown settings %q did not name subagent.round_robin", warnings)
 			}
 			if _, settings := settings.rotationFiles(); len(settings) != 0 {
 				t.Errorf("removed settings watched model files: %v", settings)

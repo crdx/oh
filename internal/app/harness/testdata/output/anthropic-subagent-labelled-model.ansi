@@ -1,0 +1,23 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m list the subagent models, then have the reviewer look at the parser                                \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mmodels\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · reviewer\e[0m \e[3m\e[38;2;150;152;150m(Reviewing the parser for missed errors)\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mall\e[0m\r
+\r
+The reviewer is looking at the parser.\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent \e]8;;oh://subagent-conversation?session=tame-impala&subagent=tame-adder\e\\tame-adder\e]8;;\e\\ has finished:                                                               \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    Line 12 drops the final token.                                                                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+The reviewer found a fault on line 12.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+The labelled reviewer survives replay.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\r

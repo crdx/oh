@@ -1,0 +1,78 @@
+=== 1 starts with haiku and free models listed ===
+── ·✦· ─ rxw snlg ─────────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──
+
+── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
+--- action=models, at most 5 at once ---
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-haiku-5-5@high
+- opencode-go/step-5-preview-free@high
+- opencode-go/cat-jam-free
+
+=== 2 a reload adds a labelled rotation and fable, turns free models off, and lowers the limit ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Reloaded the config:                                                                           │
+ │ config.toml: subagent.concurrency, subagent.free, subagent.model (dismissing in 10s)           │
+─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
+
+── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
+--- action=models, at most 2 at once ---
+Choose a model for each task, and copy its selection exactly.
+
+- explorer: exploration work
+- anthropic/claude-fable-5-1@high
+
+=== 3 an invalid availability is refused and the list stands ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Could not reload the config: config.toml: subagent.model[2].availability must be all or        │
+ │ same-provider                                                                                  │
+─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
+
+── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
+--- action=models, at most 2 at once ---
+Choose a model for each task, and copy its selection exactly.
+
+- explorer: exploration work
+- anthropic/claude-fable-5-1@high
+
+=== 4 a mistyped setting is warned about ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Ignored unknown settings:                                                                      │
+ │ config.toml: unknown: subagent.model.descriptions                                              │
+─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
+
+── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
+--- action=models, at most 2 at once ---
+Choose a model for each task, and copy its selection exactly.
+
+- explorer: exploration work
+- anthropic/claude-fable-5-1@high
+
+=== 5 a corrected setting applies ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Reloaded the config:                                                                           │
+ │ config.toml: subagent.model (dismissing in 10s)                                                │
+─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
+
+── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
+--- action=models, at most 2 at once ---
+Choose a model for each task, and copy its selection exactly.
+
+- explorer: exploration work
+- anthropic/claude-fable-5-1@high: deep reviews
+
+=== 6 removing the explorer refuses a stale explorer selection ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Reloaded the config:                                                                           │
+ │ config.toml: subagent.concurrency, subagent.model (dismissing in 10s)                          │
+─┴── ·✦· ─ rxw snlg ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
+
+── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
+--- action=models, at most 5 at once ---
+Choose a model for each task, and copy its selection exactly.
+
+- anthropic/claude-fable-5-1@high
+--- start explorer ---
+subagents[0].model "explorer" is not listed; copy one of these selections exactly:
+
+- anthropic/claude-fable-5-1@high

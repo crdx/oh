@@ -6019,6 +6019,9 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"subagent-bar":             {".ansi", ".screen"},
 		"subagent-prompt":          {".txt"},
 		"subagent-provider-pools":  {".txt"},
+		"subagent-model-catalogue": {".txt"},
+		"subagent-model-rotation":  {".txt"},
+		"subagent-model-reload":    {".screen"},
 		"subagent-conversation":    {".ansi", ".screen"},
 		"startup-model-selection":  {".txt"},
 		"daily-model-refresh":      {".txt"},
@@ -13392,7 +13395,6 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.show(inputLine)
 	case feedbackRemovedSubagentSettings:
 		settings := configFrom(t, `[subagent]
-			model = "missing/model"
 			round_robin = "missing.models"
 			concurrency = 2
 		`)
@@ -18049,6 +18051,7 @@ type sessionGoldenScenario struct {
 	Tools                  []sessionGoldenTool       `toml:"tool"`
 	Subagents              []sessionGoldenSubagent   `toml:"subagent"`
 	SubagentsKilled        bool                      `toml:"subagents-killed-with-session"`
+	SubagentConfig         string                    `toml:"subagent-config"`
 	ToolOutputBytes        int                       `toml:"tool-output-bytes"`
 	FirstTurn              sessionGoldenTurn         `toml:"first"`
 	ResumeTurn             sessionGoldenTurn         `toml:"resume"`

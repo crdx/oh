@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Overhaul subagent model configuration
+
 ## [0.34.2] — 2026-11-21
 
 - Refuse to read an image that cannot be decoded

@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagentrecord"
@@ -223,6 +224,9 @@ func (self *sessionGoldenChildren) manager(
 			if child.SharedPrompt != "" {
 				prompt += "\n\n" + child.SharedPrompt
 			}
+			if child.ModelPrompt != "" {
+				prompt += "\n\n" + child.ModelPrompt
+			}
 		}
 		state, err := buildChildState(
 			childOptions{scratchParent: self.scratch, toolOutputLimit: parentLimit}, child, openSessionGoldenWorkspace(self.t), nil,
@@ -245,17 +249,24 @@ func (self *sessionGoldenChildren) manager(
 		worker.TakeRetryWaitsAtOnce()
 		return subagents.Worker{Agent: worker, Tools: tools, SystemPrompt: prompt, Close: state.Close}, nil
 	}
+	settings := configFrom(self.t, self.scenario.SubagentConfig)
+	if self.scenario.SubagentConfig == "" {
+		listed := self.scenario.Provider + "/" + self.scenario.Model
+		if self.scenario.Effort != "" {
+			listed += "@" + self.scenario.Effort
+		}
+		settings.Subagent.Models = []config.SubagentModel{{ModelChoice: config.ModelChoice{Model: listed}, Availability: config.AvailableToSameProvider}}
+	}
+	catalogue := childCatalogueOf(choice, settings.Subagent, settings.Defaults.ForSelections(), []model.Choice{choice})
 	manager, err := subagents.New(subagents.Options{
-		Directory: childrenDirectory,
-		Scratch:   self.scratch,
-		Parent:    goldenSessionName,
-		Models: []subagents.ChildModel{{
-			Choice:    choice,
-			Selection: model.Selection{Provider: self.scenario.Provider, Model: self.scenario.Model, Effort: self.scenario.Effort},
-		}},
-		Meta:     store.Meta{WorkspaceDir: sessionGoldenWorkspace},
-		Factory:  factory,
-		PickName: func(int) int { return 0 },
+		Directory:     childrenDirectory,
+		Scratch:       self.scratch,
+		Parent:        goldenSessionName,
+		Models:        catalogue.Models,
+		ReserveMember: reserveChildMember(self.t.TempDir()),
+		Meta:          store.Meta{WorkspaceDir: sessionGoldenWorkspace},
+		Factory:       factory,
+		PickName:      func(int) int { return 0 },
 		Workspace: func(directory string) (string, error) {
 			switch directory {
 			case "":

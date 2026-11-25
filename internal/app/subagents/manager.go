@@ -30,9 +30,11 @@ import (
 )
 
 const (
-	defaultConcurrency  = 5
-	maxChildLife        = 30 * time.Minute
-	modelSelectionGuide = "Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model."
+	defaultConcurrency    = 5
+	maxChildLife          = 30 * time.Minute
+	modelSelectionGuide   = "Choose a model for each task, and copy its selection exactly."
+	noEligibleModels      = "No eligible subagent models are available."
+	noEligibleModelsError = "no eligible subagent models are available"
 )
 
 type Child struct {
@@ -47,6 +49,7 @@ type Child struct {
 	Scratch         string
 	ScratchRoot     *os.Root
 	SharedPrompt    string
+	ModelPrompt     string
 	SystemPrompt    string
 	Observer        req.Observer
 	EnsurePersisted func() error
@@ -64,8 +67,19 @@ type Worker struct {
 type Factory func(context.Context, Child) (Worker, error)
 
 type ChildModel struct {
-	Choice    model.Choice
-	Selection model.Selection
+	Choice       model.Choice
+	Selection    model.Selection
+	Label        string
+	Description  string
+	SystemPrompt string
+	Members      []ChildModel
+}
+
+func (self ChildModel) title() string {
+	if self.Label != "" {
+		return self.Label
+	}
+	return self.Selection.String()
 }
 
 type Options struct {
@@ -84,6 +98,7 @@ type Options struct {
 	Concurrency         int
 	Now                 func() time.Time
 	JournalPath         func(name string) string
+	ReserveMember       func(label string, members []ChildModel) (ChildModel, error)
 }
 
 type Snapshot struct {
@@ -120,6 +135,8 @@ type child struct {
 	caps         caps.Set
 	choice       model.Choice
 	selection    model.Selection
+	label        string
+	modelPrompt  string
 	usage        agent.Usage
 	inbox        *agent.Interjections
 	toolCalls    int
@@ -128,13 +145,13 @@ type child struct {
 	liveActivity string
 }
 
-type Rotation struct {
+type Catalogue struct {
 	Models      []ChildModel
 	Concurrency int
 }
 
 type Manager struct {
-	rotation    Rotation
+	catalogue   Catalogue
 	launchMutex sync.Mutex
 	eventMutex  sync.Mutex
 	mutex       sync.Mutex
@@ -169,7 +186,7 @@ func New(options Options) (*Manager, error) {
 		options.JournalPath = func(name string) string { return session.JournalPath(options.Directory, name) }
 	}
 	return &Manager{
-		rotation:    withDefaultConcurrency(Rotation{Models: options.Models, Concurrency: options.Concurrency}),
+		catalogue:   withDefaultConcurrency(Catalogue{Models: options.Models, Concurrency: options.Concurrency}),
 		options:     options,
 		children:    make(map[string]*child),
 		scratchRoot: scratchRoot,
@@ -332,7 +349,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	self.launchMutex.Lock()
 	defer self.launchMutex.Unlock()
 	self.mutex.Lock()
-	isClosed, liveCount, siblings, concurrency := self.closed, self.liveCount(), self.takenNames(), self.rotation.Concurrency
+	isClosed, liveCount, siblings, concurrency := self.closed, self.liveCount(), self.takenNames(), self.catalogue.Concurrency
 	self.mutex.Unlock()
 	if isClosed {
 		return "", errors.New("subagent manager is closed")
@@ -356,6 +373,10 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 		if err := self.options.EnsureParent(); err != nil {
 			return "", err
 		}
+	}
+	selectedModels, err = self.reserveMembers(selectedModels)
+	if err != nil {
+		return "", err
 	}
 	type reservation struct {
 		current *child
@@ -386,7 +407,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 			discard()
 			return "", err
 		}
-		current := &child{choice: childModel.Choice, selection: childModel.Selection, Snapshot: Snapshot{
+		current := &child{choice: childModel.Choice, selection: childModel.Selection, label: childModel.Label, modelPrompt: childModel.SystemPrompt, Snapshot: Snapshot{
 			Name: name, Alias: task.Alias, Task: task.Prompt, Intent: task.Intent, Workspace: workspace, SessionID: writer.ID(), State: subagentrecord.Running, StartedAt: self.options.Now(),
 		}}
 		childContext := self.prepare(ctx, current)
@@ -405,7 +426,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	for _, place := range reservations {
 		current := place.current
 		self.events <- subagentrecord.StartedEvent(current.Name, current.SessionID, current.Task, subagentrecord.Origin{
-			Choice: current.choice, Workspace: current.Workspace, Intent: current.Intent, Alias: current.Alias,
+			Choice: current.choice, Label: current.label, Workspace: current.Workspace, Intent: current.Intent, Alias: current.Alias,
 		})
 		place.start()
 	}
@@ -559,55 +580,35 @@ func (self *Manager) Alias(name string) string {
 func (self *Manager) Concurrency() int {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
-	return self.rotation.Concurrency
+	return self.catalogue.Concurrency
 }
 
-func (self *Manager) Reconfigure(rotation Rotation) {
+func (self *Manager) Reconfigure(catalogue Catalogue) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
-	self.rotation = withDefaultConcurrency(rotation)
-}
-
-func (self *Manager) Model() string {
-	self.mutex.Lock()
-	models := self.rotation.Models
-	self.mutex.Unlock()
-	var names []string
-	for _, candidate := range models {
-		name := candidate.Choice.Name
-		if name == "" {
-			name = candidate.Choice.ID
-		}
-		if !slices.Contains(names, name) {
-			names = append(names, name)
-		}
-	}
-	if len(names) < 2 {
-		return strings.Join(names, "")
-	}
-	return strings.Join(names[:len(names)-1], ", ") + " or " + names[len(names)-1]
+	self.catalogue = withDefaultConcurrency(catalogue)
 }
 
 func (self *Manager) Models() string {
 	self.mutex.Lock()
-	models := self.rotation.Models
+	models := self.catalogue.Models
 	self.mutex.Unlock()
 	if len(models) == 0 {
-		return "No eligible subagent models are available."
+		return noEligibleModels
 	}
-	var lines []string
+	return modelSelectionGuide + "\n\n" + listedSelections(models)
+}
+
+func listedSelections(models []ChildModel) string {
+	lines := make([]string, 0, len(models))
 	for _, candidate := range models {
-		group := "cheap"
-		if candidate.Choice.Provider == model.OllamaProvider || model.IsFreeSubagentModel(candidate.Choice) {
-			group = "free"
-		}
-		line := "- " + candidate.Choice.Provider + "/" + candidate.Choice.ID + "; " + group
-		if len(candidate.Choice.EffortLevels) > 0 {
-			line += "; efforts: " + strings.Join(candidate.Choice.EffortLevels, ", ")
+		line := "- " + candidate.title()
+		if candidate.Description != "" {
+			line += ": " + candidate.Description
 		}
 		lines = append(lines, line)
 	}
-	return modelSelectionGuide + "\n\n" + strings.Join(lines, "\n")
+	return strings.Join(lines, "\n")
 }
 
 func (self *Manager) LiveSpend() (float64, bool) {
@@ -679,6 +680,9 @@ func (self *child) displayModel() string {
 	}
 	if name != "" && self.selection.Effort != "" {
 		name += "@" + self.selection.Effort
+	}
+	if self.label != "" {
+		return self.label + " (" + name + ")"
 	}
 	return name
 }
@@ -768,43 +772,54 @@ func (self *Manager) Close() {
 
 func (self *Manager) selectModels(tasks []subagent.Task) ([]ChildModel, error) {
 	self.mutex.Lock()
-	models := self.rotation.Models
+	models := self.catalogue.Models
 	self.mutex.Unlock()
+	if len(models) == 0 {
+		return nil, errors.New(noEligibleModelsError)
+	}
 	selectedModels := make([]ChildModel, len(tasks))
 	for index, task := range tasks {
-		if strings.Contains(task.Model, "+") {
-			return nil, fmt.Errorf("subagents[%d].model: use provider/model@effort, or provider/model for an effort-less model", index)
-		}
-		modelName, _, _ := strings.Cut(task.Model, "@")
 		candidate := slices.IndexFunc(models, func(candidate ChildModel) bool {
-			return modelName == candidate.Choice.Provider+"/"+candidate.Choice.ID
+			return candidate.title() == task.Model
 		})
 		if candidate < 0 {
-			return nil, fmt.Errorf("subagents[%d].model %q is not available; call action=models for valid selections", index, task.Model)
+			return nil, fmt.Errorf("subagents[%d].model %q is not listed; copy one of these selections exactly:\n\n%s", index, task.Model, listedSelections(models))
 		}
-		chosenModel := models[candidate]
-		if len(chosenModel.Choice.EffortLevels) > 0 && !strings.Contains(task.Model, "@") {
-			return nil, fmt.Errorf("subagents[%d].model: choose an effort for %s: %s", index, chosenModel.Choice.ID, strings.Join(chosenModel.Choice.EffortLevels, ", "))
-		}
-		selection, err := model.ParseSelection([]model.Choice{chosenModel.Choice}, task.Model, model.Defaults{
-			Effort: model.Effort(chosenModel.Selection.Effort),
-		})
-		if err != nil {
-			return nil, fmt.Errorf("subagents[%d].model: %w", index, err)
-		}
-		if selection.String() != task.Model {
-			return nil, fmt.Errorf("subagents[%d].model: use the exact selection %s", index, selection)
-		}
-		selectedModels[index] = ChildModel{Choice: chosenModel.Choice, Selection: selection}
+		selectedModels[index] = models[candidate]
 	}
 	return selectedModels, nil
 }
 
-func withDefaultConcurrency(rotation Rotation) Rotation {
-	if rotation.Concurrency <= 0 {
-		rotation.Concurrency = defaultConcurrency
+func (self *Manager) reserveMembers(lines []ChildModel) ([]ChildModel, error) {
+	models := make([]ChildModel, len(lines))
+	for index, line := range lines {
+		if line.Label == "" {
+			models[index] = line
+			continue
+		}
+		member := line.Members[0]
+		if self.options.ReserveMember != nil {
+			var err error
+			member, err = self.options.ReserveMember(line.Label, line.Members)
+			if err != nil {
+				return nil, err
+			}
+		}
+		models[index] = ChildModel{
+			Choice:       member.Choice,
+			Selection:    member.Selection,
+			Label:        line.Label,
+			SystemPrompt: line.SystemPrompt,
+		}
 	}
-	return rotation
+	return models, nil
+}
+
+func withDefaultConcurrency(catalogue Catalogue) Catalogue {
+	if catalogue.Concurrency <= 0 {
+		catalogue.Concurrency = defaultConcurrency
+	}
+	return catalogue
 }
 
 func (self *Manager) restoreStart(event agent.Event) {
@@ -812,7 +827,7 @@ func (self *Manager) restoreStart(event agent.Event) {
 		return
 	}
 	origin, _ := subagentrecord.DecodeOrigin(event)
-	self.children[event.Subagent] = &child{choice: origin.Choice, Snapshot: Snapshot{
+	self.children[event.Subagent] = &child{choice: origin.Choice, label: origin.Label, Snapshot: Snapshot{
 		Name: event.Subagent, Alias: origin.Alias, Task: event.Text, Intent: origin.Intent, Workspace: origin.Workspace, SessionID: event.ID, State: subagentrecord.Running,
 	}, over: closedOver()}
 	self.order = append(self.order, event.Subagent)
@@ -910,6 +925,7 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 		Scratch:         filepath.Join(self.options.Scratch, ScratchName, current.Name),
 		ScratchRoot:     scratchRoot,
 		SharedPrompt:    sharedPrompt,
+		ModelPrompt:     current.modelPrompt,
 		SystemPrompt:    systemPrompt,
 		Observer:        writer.Observer(),
 		EnsurePersisted: writer.EnsurePersisted,
@@ -1307,8 +1323,8 @@ func (self *Manager) refuseSend(name string, current *child) error {
 		return fmt.Errorf("%s is stopping, so it cannot take a message", name)
 	case current.State.IsLive():
 		return fmt.Errorf("%s is still running; wait for it before sending it anything", name)
-	case self.liveCount()+1 > self.rotation.Concurrency:
-		return fmt.Errorf("at most %d subagents may run at once", self.rotation.Concurrency)
+	case self.liveCount()+1 > self.catalogue.Concurrency:
+		return fmt.Errorf("at most %d subagents may run at once", self.catalogue.Concurrency)
 	}
 	return nil
 }
@@ -1425,7 +1441,9 @@ func (self *Manager) statusOf(current *child) string {
 		}
 		parts = append(parts, util.FormatDuration(endedAt.Sub(current.StartedAt)))
 	}
-	if modelName := current.modelName(); modelName != "" {
+	if current.label != "" {
+		parts = append(parts, "as "+current.label)
+	} else if modelName := current.modelName(); modelName != "" {
 		parts = append(parts, "on "+modelName)
 	}
 	if !current.StartedAt.IsZero() {
@@ -1488,5 +1506,5 @@ func (self *Manager) attestation(name string) string {
 func (self *Manager) runningAgainstLimit() string {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
-	return fmt.Sprintf("%d/%d subagents running", self.liveCount(), self.rotation.Concurrency)
+	return fmt.Sprintf("%d/%d subagents running", self.liveCount(), self.catalogue.Concurrency)
 }

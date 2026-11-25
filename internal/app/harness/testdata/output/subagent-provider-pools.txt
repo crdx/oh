@@ -1,26 +1,28 @@
 === anthropic ===
-Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+Choose a model for each task, and copy its selection exactly.
 
-- anthropic/claude-haiku-5-5; cheap; efforts: high
-- opencode-go/longcat-2.5-preview-free; free
-- opencode-go/step-5-preview-free; free; efforts: high
-- opencode-go/cat-jam-free; free; efforts: high
+- anthropic/claude-haiku-5-5@high: exploration work
+- anthropic/claude-haiku-5-5@medium: exploration work
+- opencode-go/longcat-2.5-preview-free
+- opencode-go/step-5-preview-free@high
+- opencode-go/cat-jam-free@high
 === codex ===
-Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+Choose a model for each task, and copy its selection exactly.
 
-- codex/gpt-6-luna; cheap; efforts: high
-- opencode-go/longcat-2.5-preview-free; free
-- opencode-go/step-5-preview-free; free; efforts: high
-- opencode-go/cat-jam-free; free; efforts: high
+- codex/gpt-6-luna@high
+- opencode-go/longcat-2.5-preview-free
+- opencode-go/step-5-preview-free@high
+- opencode-go/cat-jam-free@high
 === ollama ===
-Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+Choose a model for each task, and copy its selection exactly.
 
-- ollama/muse-glimmer-128k:latest; free; efforts: high
-- ollama/qwen3.8:27b-mtp-q8_0-256k; free; efforts: high
+- ollama/qwen3.8:27b-mtp-q8_0-256k@high
 === opencode-go ===
-Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+Choose a model for each task, and copy its selection exactly.
 
-- opencode-go/deepseek-v4.1-flash; cheap; efforts: high
-- opencode-go/longcat-2.5-preview-free; free
-- opencode-go/step-5-preview-free; free; efforts: high
-- opencode-go/cat-jam-free; free; efforts: high
+- opencode-go/claude-haiku-5-5@high: exploration work
+- opencode-go/gpt-6-luna@high
+- opencode-go/deepseek-v4.1-flash@high
+- opencode-go/longcat-2.5-preview-free
+- opencode-go/step-5-preview-free@high
+- opencode-go/cat-jam-free@high
