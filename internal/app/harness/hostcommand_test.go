@@ -176,7 +176,7 @@ func TestALongHostCommandDoesNotLeaveItsPendingWindowInScrollback(t *testing.T) 
 	self.inputLine = inputLine
 	self.show(inputLine)
 
-	command := "ssh sparrow '\ncd home-assistant\nls -la . state state/.storage\n'"
+	command := "ssh host '\ncd dir\nls -la . bar bar/.storage\n'"
 	held := holdHostCommands(self)
 	if err := self.startHostCommand(t.TempDir(), command); err != nil {
 		t.Fatal(err)
@@ -203,7 +203,7 @@ func TestALongHostCommandDoesNotLeaveItsPendingWindowInScrollback(t *testing.T) 
 	if strings.Contains(copied, "more lines") {
 		t.Errorf("the pending window was copied into scrollback after its block was sealed:\n%s", copied)
 	}
-	if count := strings.Count(copied, "$ ssh sparrow '"); count != 1 {
+	if count := strings.Count(copied, "$ ssh host '"); count != 1 {
 		t.Errorf("the settled command appeared %d times in scrollback, want once", count)
 	}
 	requireNothingDrawnAboveTheScreen(t, "sealing a long host command", screenOutput.String(), terminalLines)
@@ -359,7 +359,7 @@ func TestGoldenARunningHostCommandStandsAboveTheInput(t *testing.T) {
 		"showing what it printed last": drawnPrinting("sudo pacman -Syu", fingerprintPrompt, 3*time.Second, replayColumns),
 		"cutting what it printed last": drawnPrinting("sudo pacman -Syu", fingerprintPrompt, 3*time.Second, 40),
 		"overwriting its progress":     drawnPrinting("git clone https://example.com/repo", "Cloning into 'repo'...\nReceiving objects:  10%\rReceiving objects:  57%\r", 3*time.Second, replayColumns),
-		"multiline command":            drawnPrinting("ssh sparrow '\ncd home-assistant\nls -la state\n'", "last item\n", 3*time.Second, replayColumns),
+		"multiline command":            drawnPrinting("ssh host '\ncd dir\nls -la bar\n'", "last item\n", 3*time.Second, replayColumns),
 		"just started":                 drawnAfter("git push", 0, replayColumns),
 		"spinning":                     drawnAfter("git push", 2250*time.Millisecond, replayColumns),
 		"counting to its end":          drawnAfter("git push", 12*time.Second, replayColumns),
