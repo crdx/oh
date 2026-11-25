@@ -249,3 +249,21 @@ func TestRestoreEscapesKeepsABackslashItDoesNotKnow(t *testing.T) {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
+
+func TestTextItemsNamesTheFirstItemThatIsNotText(t *testing.T) {
+	for _, test := range []struct {
+		values   []any
+		texts    []string
+		position int
+	}{
+		{nil, []string{}, 0},
+		{[]any{"vim", "-f"}, []string{"vim", "-f"}, 0},
+		{[]any{"high", 3, true}, nil, 2},
+		{[]any{int64(1)}, nil, 1},
+	} {
+		texts, position := strutil.TextItems(test.values)
+		if !reflect.DeepEqual(texts, test.texts) || position != test.position {
+			t.Errorf("%v gave %q at %d, want %q at %d", test.values, texts, position, test.texts, test.position)
+		}
+	}
+}

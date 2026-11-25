@@ -14,6 +14,8 @@ import (
 	"syscall"
 
 	"golang.org/x/sys/unix"
+
+	"crdx.org/oh/internal/util/strutil"
 )
 
 type Command []string
@@ -45,13 +47,9 @@ func (self *Command) UnmarshalTOML(value any) error {
 		*self = Command{strings.TrimSpace(configuredValue)}
 		return nil
 	case []any:
-		command := make(Command, len(configuredValue))
-		for i, argument := range configuredValue {
-			text, ok := argument.(string)
-			if !ok {
-				return fmt.Errorf("editor argument %d is not a string", i+1)
-			}
-			command[i] = text
+		command, nonTextPosition := strutil.TextItems(configuredValue)
+		if nonTextPosition > 0 {
+			return fmt.Errorf("editor argument %d is not a string", nonTextPosition)
 		}
 		if len(command) > 0 {
 			command[0] = strings.TrimSpace(command[0])

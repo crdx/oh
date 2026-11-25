@@ -240,3 +240,15 @@ func RestoreEscapes(text string) string {
 
 	return out.String()
 }
+
+func TextItems(values []any) ([]string, int) {
+	texts := make([]string, len(values))
+	for i, value := range values {
+		text, isText := value.(string)
+		if !isText {
+			return nil, i + 1
+		}
+		texts[i] = text
+	}
+	return texts, 0
+}

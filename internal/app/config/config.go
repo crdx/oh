@@ -30,6 +30,7 @@ import (
 
 	"crdx.org/oh/internal/format"
 	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 //go:embed defaults.toml
@@ -181,13 +182,9 @@ func (self *RoundRobin) UnmarshalTOML(value any) error {
 		*self = RoundRobin{roundRobinFileMarker + configuredValue}
 		return nil
 	case []any:
-		selections := make(RoundRobin, len(configuredValue))
-		for i, selection := range configuredValue {
-			text, isText := selection.(string)
-			if !isText {
-				return fmt.Errorf(tr.SelectionNotText, i+1)
-			}
-			selections[i] = text
+		selections, nonTextPosition := strutil.TextItems(configuredValue)
+		if nonTextPosition > 0 {
+			return fmt.Errorf(tr.SelectionNotText, nonTextPosition)
 		}
 		*self = selections
 		return nil
