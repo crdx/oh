@@ -463,10 +463,14 @@ func (self *Agent) Stream(ctx context.Context, message string, interjections *In
 					return
 				}
 				if reply.PrefixRewrite != "" {
-					yieldEvent(Event{Kind: PrefixRewriteEvent, Text: reply.PrefixRewrite}, nil)
+					if !yieldEvent(Event{Kind: PrefixRewriteEvent, Text: reply.PrefixRewrite}, nil) {
+						return
+					}
 				}
 				if notice, wasRebuilt := self.readCache(reply.Usage, askedAt); wasRebuilt {
-					yieldEvent(notice, nil)
+					if !yieldEvent(notice, nil) {
+						return
+					}
 				}
 				if self.interjectFinalNotes(ctx, interjections) {
 					continue

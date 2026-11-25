@@ -107,6 +107,42 @@ func TestStreamAnswersEveryCallOfAnAbandonedTurn(t *testing.T) {
 	}
 }
 
+type closingProvider struct {
+	reply agent.Reply
+}
+
+func (self *closingProvider) Configure(string, []tool.Definition)   {}
+func (self *closingProvider) AddUserMessage(string)                 {}
+func (self *closingProvider) AddToolResults([]agent.ToolCallResult) {}
+
+func (self *closingProvider) Send(context.Context, agent.Yield) (agent.Reply, error) {
+	return self.reply, nil
+}
+
+func TestStreamStopsWhenDroppedOnAClosingNotice(t *testing.T) {
+	for stopOn, reply := range map[agent.Kind]agent.Reply{
+		agent.PrefixRewriteEvent: {PrefixRewrite: "changed"},
+		agent.CacheRebuildEvent:  {Usage: cachedAs(0, 1000)},
+	} {
+		t.Run(string(stopOn), func(t *testing.T) {
+			assistant := agent.New("", &closingProvider{reply: reply}, nil)
+			moment := time.Unix(123456, 0)
+			assistant.TakeTimeFrom(func() time.Time { return moment })
+			assistant.RestoreCache(agent.CacheReading{ReadTokens: 1000, At: moment.Add(-time.Minute)})
+
+			for update, err := range assistant.Stream(t.Context(), "go", nil) {
+				if err != nil {
+					t.Fatal(err)
+				}
+				if update.Event != nil && update.Event.Kind == stopOn {
+					return
+				}
+			}
+			t.Fatalf("expected %s", stopOn)
+		})
+	}
+}
+
 func TestStreamAnswersWithWhateverRanBeforeTheTurnWasDropped(t *testing.T) {
 	provider := &callProvider{}
 	assistant := agent.New("", provider, []tool.Tool{noop()})
