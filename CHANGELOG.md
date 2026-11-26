@@ -2,6 +2,8 @@
 
 ## [Next]
 
+- Let the sessions ctl command work lock-free
+
 ## [0.35.0] — 2026-11-25
 
 - Overhaul subagent model configuration

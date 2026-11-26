@@ -71,7 +71,7 @@ func Run(arguments []string, drawJournal render.DrawJournal) int {
 		fmt.Print(usage)
 		return 2
 	}
-	if arguments[0] != "migrate" && arguments[0] != "render" {
+	if arguments[0] != "migrate" && arguments[0] != "render" && arguments[0] != "sessions" {
 		if err := location.RequireCurrentDataLayout(); err != nil {
 			fmt.Fprintln(os.Stderr, style.Error(err))
 			return 1

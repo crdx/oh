@@ -91,6 +91,9 @@ func Run() error {
 func run(options *inputOpts, output console.Output) error {
 	directory := location.GetSessionsDir()
 	if options.Delete {
+		if err := location.RequireCurrentDataLayout(); err != nil {
+			return err
+		}
 		if !session.Exists(directory, options.Label) {
 			return fmt.Errorf(tr.NoSessionToDelete, options.Label)
 		}
