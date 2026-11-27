@@ -112,7 +112,7 @@ var (
 
 		{{ stateRules . }}
 
-		These states can change at any time. You will be told what changes.
+		These states can change at any time. A later message reports each change and overrides this prompt.
 		If a state blocks the work and no workflow below covers it, ask the user to change it.
 
 		{{ titleSection . }}{{ userCommandSection . }}{{ waitingForUserSection . }}{{ readOnlyWorkspaceSection . }}
@@ -860,7 +860,8 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 	lines := []string{
 		"# Read-only Workspaces",
 		"",
-		"- To change a read-only workspace, use this workflow; do not ask for write access:",
+		"- While the workspace is read-write, edit it directly; do not use this workflow",
+		"- While the workspace is read-only, use this workflow to change it; do not ask for write access:",
 	}
 	if data.IsRepository {
 		lines = append(

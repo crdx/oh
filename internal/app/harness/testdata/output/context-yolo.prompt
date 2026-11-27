@@ -81,7 +81,7 @@
 - A background tool call keeps running after its receipt returns, while this session is open; use the task tool to inspect or stop it
 - The subagent tool is refused; do not call it unless the user grants subagents with ctrl+x s
 
-These states can change at any time. You will be told what changes.
+These states can change at any time. A later message reports each change and overrides this prompt.
 If a state blocks the work and no workflow below covers it, ask the user to change it.
 
 # Titles

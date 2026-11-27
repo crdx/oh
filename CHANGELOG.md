@@ -3,6 +3,7 @@
 ## [Next]
 
 - Let the sessions ctl command work lock-free
+- Clarify that later state changes override the system prompt
 
 ## [0.35.0] — 2026-11-25
 

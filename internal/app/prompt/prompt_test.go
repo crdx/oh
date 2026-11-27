@@ -990,8 +990,10 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 
 	for _, rule := range []string{
 		"no workflow below covers it",
+		"A later message reports each change and overrides this prompt.",
 		"# Read-only Workspaces",
-		"use this workflow; do not ask for write access",
+		"While the workspace is read-write, edit it directly; do not use this workflow",
+		"While the workspace is read-only, use this workflow to change it; do not ask for write access",
 		"git clone --shared <workspace> <destination>",
 		"git -C <workspace> diff --binary HEAD",
 		"Do the work and run its checks in the scratch copy",

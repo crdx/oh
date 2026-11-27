@@ -87,7 +87,7 @@
 - A process that a bash call leaves running dies when the call ends
 - The subagent tool is refused; do not call it
 
-These states can change at any time. You will be told what changes.
+These states can change at any time. A later message reports each change and overrides this prompt.
 If a state blocks the work and no workflow below covers it, ask the user to change it.
 
 # Titles
@@ -100,7 +100,8 @@ If a state blocks the work and no workflow below covers it, ask the user to chan
 
 # Read-only Workspaces
 
-- To change a read-only workspace, use this workflow; do not ask for write access:
+- While the workspace is read-write, edit it directly; do not use this workflow
+- While the workspace is read-only, use this workflow to change it; do not ask for write access:
     - A repository above the workspace makes git apply skip its paths and still succeed
     - GIT_CEILING_DIRECTORIES prevents this: run each git apply below exactly as written
     - Copy it into scratch: cp -r <workspace> <destination>
