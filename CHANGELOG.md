@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.36.0] — 2026-11-28
+
 - Let the sessions ctl command work lock-free
 - Clarify that later state changes override the system prompt
 
